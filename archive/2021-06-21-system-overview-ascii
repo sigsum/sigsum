@@ -1,0 +1,26 @@
+                          +----------+                           
+               +----------| Claimant |-------+                   
+            [1]|          +----------+       |Data               
+            [2]|                |            |Proofs             
+            [3]|                |H(vk)       |                   
+               v                v            v                   
+          +---------+  H(vk) +-----+      +------------+         
+          |   Log   |<-------| DNS |      | Repository |         
+          +---------+        +-----+      +------------+         
+             ^    |                           | |                
+          [4]|    |leaves                     | |Data            
+          [5]|    |costh   +---------+   Data | |Proofs          
+          [6]|    +------> | Monitor | <------+ |         policy 
+             v             +---------+          v           |    
+          +---------+                       +----------+    |    
+          | Witness |                       | Believer |<---+    
+          +---------+                       +----------+         
+                                                                 
+   # Claimant                Log    # Witness                Log 
+ [1]|---------add-leaf--------->| [4]|--get-tree-head-to-sign-->|
+    |<-----------OK-------------|    |<----------sth------------|
+    |    ...wait inclusion...   | [5]|--get-consistency-proof-->|
+ [2]|--get-tree-head-cosigned-->|    |<---------proof-----------|
+    |<----------costh-----------|    |      ...cosign sth...    |
+ [3]|-----get-proof-by-hash---->| [6]|-----add-cosignature----->|
+    |<-------index+proof--------|    |<----------OK-------------|

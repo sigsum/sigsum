@@ -1,0 +1,75 @@
+Meeting agenda template.
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* <insert nick here>
+
+Status round
+	* <insert status report here>
+
+Discuss
+	* <insert discuss item here>
+
+Next steps
+	* <insert next step here>
+
+Other useful links
+	* <insert useful link here>
+
+Weekly process.
+	* Our conversations happen on irc
+	* Use etherpads if it is helpful, e.g., to summarize a discusison, conclusion, etc.
+		* Use 60 days expiry
+		* Add link to meeting agenda if it should be persisted ("status report")
+		* We keep the next meeting agenda etherpad in our irc channel topic
+	* Tuesday
+		* Open video/voice meeting
+			* Jitsi
+			* 1300-1400 CEST
+			* We keep the meeting link in the announced meeting pad
+		* After the meeting
+			* Meeting chair persists all etherpad links that were added to the agenda as is
+			* Meeting chair cleans up the resulting meeting minutes if need be
+			* Meeting chair persists the meeting minutes etherpad
+			* Meeting chair posts the link to the next week's meeting agenda / minutes on irc.
+
+fixme: think about git process, issues, PRSs, etc., based on where we move.
+	* CONTRIBUTING.md?
+	* defer until after vaccay, stay on github for now
+	* create new repos there as we see fit
+
+fixme: do we need a mailing list?
+	* defer until after vaccay
+
+Repos
+	* sigsum, sigsum-project?
+		* redirect sigsum.org here for now?
+		* example structure below
+
+$ tree
+.
+├── archive
+│   ├── 2021-06-22--minutes
+│   ├── 2021-06-22-sketch-on-how-we-work-together
+│   └── 2021-06-22-witness-timestamp-verification
+├── doc
+│   ├── api.md
+│   ├── claimant.md
+│   └── design.md
+├── LICENCE.md
+├── README.md
+└── website
+
+	* sigsum-lib-go
+		* cmd: sigsum-format
+		* cmd: sigsum-verify
+	* sigsum-log-go
+		* Trillian personality
+	* sigsum-witness-py
+
+

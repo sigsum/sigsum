@@ -1,0 +1,119 @@
+This document investigates possibilities for self hosting all online
+services needed for the development and management of the Sigsum
+project.
+
+The goal is to host all the services we're using ourselves. The
+primary driving force for this is to avoid forcing contributors to
+sign up for and expose their online habits to centralised services
+like GitHub, Google, Slack and similar.
+
+An overarching goal for the development process is openness both with
+regards to transparency of project governance and opportunity to
+influence decisoins.
+
+
+## tl;dr
+
+TODO summary of recommendations
+
+
+## Considerations
+
+### Stable references -- URL's that survive
+
+Stable references, i.e. URL's, are valuable for long lived data like
+code repositories, presentations, project guidelines and such with an
+archiving function. Less persistent data, like online chat, have less
+need for stable references.
+
+### Functionality
+
+* git repos
+* ticketing system
+* text publishing
+* direct communication
+  between users, developers, administrators, sponsors
+
+### Availability -- uptime guarantees
+
+### Cost -- agony, time, money
+
+
+## Possible steps forward
+
+Moving from something to something else.
+
+### Sigsum current situation, June 2021
+
+Here's where we are at.
+
+- Meeting minutes in Google docs
+- Code and issues on GitHub
+- Code review available on GitHub, not currently used
+- Web site: missing
+- Mailing list: missing
+- Video meetings: Jitsi @ friends
+- Chat on OFTC (IRC) and matrix.org (Matrix), bridged
+- Pads: wherever, mostly on riseup
+- Pastebin: wherever
+
+### Potentially useful software packages and services
+
+- [GitLab](https://about.gitlab.com/) is a company and software
+  package with features like what GitHub has
+
+  The full thing, with CI runners and all that jazz. There's a
+  considerable amount of systems administration to take into account
+  when chosing GitLab.
+
+- [Codeberg](https://codeberg.org/) is a non-profit organisation,
+  hosting a [gitea](https://gitea.io/en-us/) server
+
+  The GitLab replacement for skeptics of GitLab the company or the
+  Ruby monster (?). It might be easier to keep upgraded and running
+  than GitLab but to what extent is unclear.
+
+  Paying for hosting:
+  - https://hostedgitea.com/ $24/month
+  - https://www.stellarhosted.com/gitea/#pricing $49..$249/month
+
+- [cgit](https://git.zx2c4.com/cgit/about/) is a software package (by
+  Jason, coincidentally)
+
+  Lean, no frills, no(*) dependencies easy to upgrade and keep
+  running.
+
+  Lacks a ticketing system and code review. This is typically handled
+  in mail, chat and pads instead.
+
+  (*) libzip, openssl
+
+### Sigsum future
+
+Here's where we want to get to during the fall of 2021.
+
+- Meeting minutes in an archive
+  - Contenders: a git repo, a mailing list archive
+- Code: GitLab/gitea/cgit at git.sigsum.org
+- Issues: TBD
+- Code review: TBD
+- Web site: www.sigsum.org
+- Mailing list: mlmmj or Mailman @ lists.sigsum.org
+- Video meetings: Jitsi @ meet.sigsum.org
+- Chat: OFTC bridged to #Sigsum@matrix.sigsum.org
+- Pastebin: paste.sigsum.org
+- Pads: pads.sigsum.org
+
+
+#### TBD possible more services
+
+- Nextcloud can help with
+  - Shared documents
+    - Markdown out of the box
+    - "Office documents" with some extra work and with some user
+      quirks
+  - Shared calendars
+  - Shared task lists
+  - Kanban-like boards for project tracking
+  - A [million more things](https://apps.nextcloud.com/)
+

@@ -1,0 +1,79 @@
+https://github.com/system-transparency/stfe/compare/refactor-tree-heads
+	* link will become broken during repo migration
+
+Summary of proposed changes
+	* Leaf (Trunnel serialized)
+		* The name "message" for shard_hint+checksum is misleading. It is the core of our transparency log, and it is not called "message transparency". 
+		* Present leaf as we do on slides. Four fields.
+			* shard_hint
+			* checksum
+			* signature
+			* key_hash
+		* Signature is computed over the bytes that preceded it.
+	* Tree head (Trunnel serialized)
+		* No changes
+	* Signed tree head (Trunnel serialized, we did not need that before!)
+		* tree_head
+		* signature
+			* Singular, only computed by the log.
+			* This simplifies parsing and makes it explicit where the log's signature is located. Implementations will need to distinguish between log and witness, and our structures should make that distinction as easy as possible.
+			* Note that there is no corresponding key_hash, it is implicit that the signature is produced by the log that you are talking to.
+				* Q: Is this going to become an annoyance for:
+					* Witness?
+						* Seems fine after looking at Linus code
+					* Monitor
+						* Probably fine too, you fetch cosigned tree heads yourself
+					* Data publisher, end-user?
+						* Assumes that the retrieved ASCII blob is repackaged in a way that the end-user knows which log a cosigned tree head + proof refers to.
+						* I don't think it is enough to fix this by adding the log identifier though. You would also need versioning, which is also implicit now.
+							* E.g., st/v0 prefix is on endpoints
+						* Key question: is the above assumption what we want? Because when we designed this format it was not supposed to be a disk format. Just the simplest possible way to talk with the log.
+							* [rgdd] I think we should make explicit that this is not necessarily a suitable "on-the-fly" or "storage format". To use it it for that, information from the url need to be conveyed somehow.
+								* st/v0 (determine protocol version)
+								* which log (determine log public key)
+								* what is it (determine how to parse)
+									* signed tree head
+									* cosigned tree head
+									* inclusion proof
+									* consistency proof
+									* leaf list
+	* Cosigned tree head
+		* Witnesses sign signed_tree_head
+		* This is in contrast to the log, which signs tree_head.
+		* This separation of messages ensures that a log signature can not be confused with a witness cosignature.
+
+Naming of ASCII keys / behavior of log endpoints
+	* Leaf
+		* shard_hint (same)
+		* checksum (same)
+		* signature (modified, was before signature_over_message)
+		* key_hash (same)
+	* Signed tree head
+		* timestamp (same)
+		* tree_size (same)
+		* root_hash (same)
+		* signature (modified)
+			* exactly one
+			* no corresponding key_hash because it is always created by the log
+	* Cosigned tree head
+		* timestamp (same)
+		* tree_size (same)
+		* root_hash (same)
+		* signature (modified, same as above)
+		* cosignature (new)
+			* List of cosignatures, cf. "signature" before but now only for witnesses.
+		* key_hash (modified)
+			* List of key hashes. Used to identify which witnesses produces the above cosignatures.  Cf. "key_hash" before, but now only for witnesses.
+		* Error
+			* The log returns an error if there are no cosignatures available
+	* add-cosignature
+		* cosignature (was signature)
+		* key_hash (same)
+
+Other
+	* Maybe should present get-tree-head-latest first because it is simpler, then get-tree-head-cosigned, then tree-head-to-sign with input/output comment "same formatting as get-tree-head-latest"
+	* Look at, e.g., get-tree-head-cosigned. When we describe what "signature" and "cosignature" are computed over, I think it is more clear if we just refer to serialized tree_head and signed_tree_head.
+		* I think I made this inconsistent now btw.
+	* I realized that our Trunnel usage right now is 100% compatible with TLS record serialization. We don't have any variable length buffers anymore.
+	* Log ID (= public key?) must be unique.
+		* If log is shutdown -> cannot reuse key when a new shard is opened.

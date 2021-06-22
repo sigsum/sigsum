@@ -1,0 +1,33 @@
+According to api.md witnesses must only cosign a tree head if it is not backdated or future-dated more than 12 hours.
+	* https://github.com/system-transparency/stfe/blob/c8400f98809fbc245f040598e8471fd833e5c1a5/doc/api.md#merkle-tree-head
+
+Discussion raised by ln5
+	* Why +- 12 hours, and in particular why so much forward drift
+	* Initial thoughts were:
+		* Symmetry, easy to implement
+		* The point is not that it should be a precicely verified timestamp. Time moves forward roughly for liveliness.
+		* If we set this interval too short, say, 5m, then we would make it difficult to use a larger cosigning interval like an hour.  Witnesses would have to do all of their signing the first 5 minutes. So with 12 hours we basically tried to set it "sufficiently large".
+		* Another related "threat" is that witnesses would stop signing because of a clock that is a little off. So by having a very flexible interval -> "reduced threat"
+
+	* Highlights of discussion
+		* Allowing large clock drift might not be helpful. It might not even be helpful to specify it is a strict implementation criteria. E.g., there is probably a distinction between "warning: time to look at your clock" and "error: we cannot sign this because timestamp is unfresh or someone's clock is wrong".
+			* Comments on clock drift is probably better as a recommendation, best practise, implementation hint, or similar in an Appendix or witness README.
+		* How unfresh timestamps should a witness sign?
+			* Right now we tried the "sufficiently large" approach
+			* Maybe it should be a configuration parameter, declared as log metadata.
+			* Catch: are we really envisioning an ecosystem where someone is going to say "we really want to run the log with a large cosigned tree head freauency".
+				* Probably not. Point is we want independent logs that behave the same.
+			* From UX perspective: cosigned tree head frequency F should be "short"
+				* After a leaf is merged in the tree, it takes [F,2F] time units before an inclusion proof can lead up to a cosigned tree head.
+			* From other perspective: cosigned tree head frequency should not be too short
+				* Witnesses need to poke the log more often to discover all tree heads
+					* More work and overhead, both for the log and witnesses
+				* Reliability of cosigning will be poor if witnesses miss signed tree heads
+
+	* Conclusion (ln5, rgdd)
+		* Set a fixed cosigned tree head frequency in api.md that all logs should use.
+			* 5 minutes to start with
+			* We can reconsider if it should be lower. It should probably not be higher.
+			* We can reconsider if it should be a configuration parameter. But a different design is needed for "much lower latency", like Syte et al. approach.  The reason why we are not doing that is because of added complexities and costs.
+		* Don't consider clock drift considerations as an integral part of api.md. It is something that we should talk about in "implementation hints" or similar.
+		* A witness must not cosign a signed tree head that is older than the log's cosigned tree head frequency.  As stated above, it is always 5 minutes.

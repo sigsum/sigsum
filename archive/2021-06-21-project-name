@@ -1,0 +1,87 @@
+Background
+	* ST != ST Logging
+	* This distincion is not evident for a newcomer.
+	* The same log personality is applicable for other use-cases than ST.
+	* We need a better name in order to minimize confusion
+
+Parameters to keep in mind
+1. What is it that we are trying to abbreviate. Is it a good full name?
+2. Is the abbreviation easy and convenient to use in documentation?
+3. Is the abbreviation easy to prunounce, work into to sentences, etc.?
+4. Is the abbreviation easily confused with something else?
+
+What are we providing - full names and possible abbreviations?
+	* Something sensible that can replace the CT piggyback hack, where a checksum is inserted into a signed certificate.
+	* Checksum Logging, Checksum Transparency
+		* CL, CT
+		* checksumlog, checksumtrans
+		* sumlog, sumtrans
+		* checklog, checktrans
+	* Signature Logging, Signature Transparency
+		* SL, ST
+		* siglog, sigtrans
+		* sigl
+	* Signed Checksum Logging, Signed Checksum Transparency
+		* SCL, SCT
+		* sigsum
+			* sigsumlog, sigsum-log, sigsuml
+			* sigsumtrans, sigsum-trans, sigsumt
+		* sigcheck
+			* sigchecklog, sigcheck-log
+			* sigchecktrans, sigcheck-trans
+
+[rgdd]
+	* The start of three words feels too verbose for an abbreaviation to be useful.
+	* It might be good if the short version does not contain "log".  It makes the abbreaviation more difficult to use in speach and text.
+		* "A siglog log", "siglog logging", etc.
+		* Cf. "a sigtrans log", "sigtrans logging", etc.
+	* Checksum Logging, Checksum Transparency
+		* I am not that worried about someone starting to say "CT" (or mix it up).
+		* I am worried about confusion with Go's checksum database.
+			* "Why do we need another checksum database".  Well, things are signed too.
+		* I don't like any of the proposed abbreviations.  Not sure why, subjective.
+	* Signature Logging, Signature Transparency
+		* If we talk about System Transparency and abbreaviate it ST, I think it is probable that an unfamiliar reader will mix up the meaning of "S".
+		* Sigstore brands Rekor as "Signature Transparency".
+			* Using the same full name is not helpful for anyone. Big no-go for me.
+			* To be fair Rekor is more about signature transparency than we are. E.g., there are many signature schemes and formats that we will never support.
+	* Signed Checksum Logging, Signed Checksum Transparency
+		* I like this because it is descriptive and distinct
+			* It is consistent with how we talk about the log in text and speach
+			* No other tlog project uses the exact same wordings (as far as I know anyway)
+		* An obvious abbreaviation is SCT.  That could lead to confusion.
+			* I think most tlog people would know that "SCT" is not a good idea though.
+			* The short abbreaviation has to be introduced clearly, and be convenient. If that is the case, using SCT as an abbreaviation would not cross your mind?
+		* I tried playing with "sigsum" below.
+			* "Sigsum - a free and open source project that brings transparency to signed checksums".
+			* Repos
+				* sigsum-server-go / sigsum-log-go
+				* ...
+			* irc channel, or channels if we start thinking ahead
+				* #sigsum
+				* #sigsum-dev
+				* #sigsum-meet
+				* #sigsum-{log,server}
+				* #sigsum-witness
+				* ...
+			* Website
+				* sigsum.org
+
+=== Start of a README.md example ===
+# Sigsum Logging
+_Sigsum_ logging brings transparency to **sig**ned check**sum**s.  What a checksum represents is up to you.  For example, it could be the cryptographic hash of
+a provenance metadata file](https://security.googleblog.com/2021/06/introducing-slsa-end-to-end-framework.html), a [Firefox binary](https://wiki.mozilla.org/Security/Binary_Transparency), or a text document.
+
+Sigsum logging can be used to:
+1. Discover which checksum signatures were produced by what secret signing keys.
+2. Be sure that everyone observes the same signed checksums.
+==== end of example ===
+
+[rgdd, ln5, FredrikStrmberg]
+	* Decision: "Signed Checksum Logging" (full version)
+	* Decision: "sigsum" (short version, what we use to brand the project)
+		* "A sigsum log, "sigsum logging", etc.
+	* Decision: sigsum.org
+		* Con: we don't get domain locking as with .se
+			* Doesn't affect security of logs though.
+		* Pro: less risk of being perceived as a local project in Sweden
