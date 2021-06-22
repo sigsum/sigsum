@@ -1,0 +1,130 @@
+Date: 2021-06-22, 1300 CEST
+Meet: https://membarrier.verkligendata.se/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* kfreds
+
+Status round
+		* [rgdd] project name and abbreviation (decided)
+			* https://github.com/sigsum/sigsum/blob/4483a2f81e0bb2a4f1ac8cd02d2991c12ef8d556/archive/2021-06-21-project-name
+			* Full version: Signed Checksum Logging
+			* Short version: sigsum
+			* Website: www.sigsum.org
+		* [rgdd] sketch on how we work together (ongoing)
+			* https://github.com/sigsum/sigsum/blob/4483a2f81e0bb2a4f1ac8cd02d2991c12ef8d556/archive/2021-06-21-how-we-work-together
+		* [rgdd] planned tree head refactor (decided)
+				* format changes: https://github.com/sigsum/sigsum/blob/4483a2f81e0bb2a4f1ac8cd02d2991c12ef8d556/archive/2021-06-21-tree-head-format
+				* timestamp verification: https://github.com/sigsum/sigsum/blob/4483a2f81e0bb2a4f1ac8cd02d2991c12ef8d556/archive/2021-06-21-witness-timestamp-verification
+		* [ln5] siglog-witness-py v0.1.0 is tagged
+			* [rgdd] running tag v0.1.0 every minute (best effort)
+				* vk: 777528f5fd96f95713b8c2bb48bce2c83628e39ad3bfbd95bc0045b143fe5c34
+		* [ln5] acquired domain names
+			* sigsum.org (decided)
+		* [rgdd] acquired twitter account (no intent to use right now, see discuss)
+			* https://twitter.com/sigsumproject
+		* [rgdd] started sketching on an ascii chart: system overview (ongoing)
+			* source: https://textik.com/#a2cb6ade2b580fc7
+			* saved: https://github.com/sigsum/sigsum/blob/4483a2f81e0bb2a4f1ac8cd02d2991c12ef8d556/archive/2021-06-21-system-overview-ascii
+			* (trying to figure out terminology and clarify system flows)
+
+Discuss
+	* Moving out from github and longer term project vision
+		* Near term (decided)
+			* Stay on github until end of vaccay, then move to a self-hosted setup
+			* Create and rename repositories on github as we see fit for now
+				* Grab sigsum or sigsumproject nick on github
+				* We will mirror here later on
+			* Defer decision on issues, ticketing system, mailing list, for now
+		* Long term? (ongoing)
+			* [ln5] https://github.com/sigsum/sigsum/blob/4483a2f81e0bb2a4f1ac8cd02d2991c12ef8d556/archive/2021-06-21-self-hosted-services
+				* we need to agree on where we are going + which steps are needed
+				* discussion round
+					* "reference implementation"
+						* this is how you can do a sensible tlog system
+						* strong threat model
+						* few features, minimal approach, bottomline, generic
+						* small diff to get transparent logging going
+						* will facilitate more complex tlog applications in the future
+					* free, open, inclusive, welcome people to be part of conversation, help people understand.
+						* A goto place when you want to talk/learn/use tlog applications.
+						* Not only about signed checksums, it is also about community
+						* "hub"
+					* mature operations
+						* "not so ambitious features, but ambitious deployment"
+						* logs
+						* witnesses
+					* Free and open source project, both in licence and governance
+						* Mullvad funded to get started and will continue to fund
+							* But should not have control of the project
+						* This nuance needs to be depicted right, relates to trustworthiness
+						* Transparency is key
+							* Project origin story
+							* How it started with ST
+							* How it evolved into the current governence, long-term vision
+								* The above document by ln5 is a good start
+							* Structure needs to be described in greater detail
+								* legal entity
+								* how do you become part of the team
+								* etc.
+							* Trustworthiness can be facilitated by being consistent
+					* No hard connection to ST, but ST is a use-case. We can describe and pitch in both directions, but sigsum logging and ST are distinct.
+				* services?
+					* something that we can operate on our own, but not too much overhead
+					* costs: agony, money
+					* important to start small
+						* the minimal thing that we can work with
+						* cgit, persist important documents
+						* ticketing, code review, etc., we do semi-manually for now
+							* code review: pads, irc, mail
+							* ticketing: "todo.md"
+							* (some people may think it is not modern enough, could result in people drop off. But could also attract people.)
+					* [kfreds] long-term vision, in general: want to have everything self-hosted, and would like to facilitate self-hosting for self and others.
+		* ln5 mentions [MeetBot](http://meetbot.debian.net/Manual.html) for meeting minutes in meetings on IRC
+	* Licence and copyright holder
+		* Trillian is Apache. Probably good to use the same for the log server.
+		* Not clear if we should use a different licence for, e.g., tooling. Why (not)?
+			* Open question.
+		* Copyright: "the sigsum project"
+	* Website
+		* redirect sigsum.org to github README?
+			* No, potential risk that github is perceived as our home
+			* ln5 will setup a webserver that is co-located with the log for now
+		* continue content discussion async
+			* rgdd will post a pad link on irc
+	* if we've got twitter, we should have presence in the Fediverse too
+		* mastodon.social is the canonical, but centralised heh, place to go (like we use matrix.org at the moment)
+		* we could have our main outlet in the Fediverse and just mirror (one-way!) to birdsite
+		* (Deferred, not discussed.  Don't use twitter for now.)
+
+Next steps
+	* wrap up before vaccations
+		* make sure that rgdd can (re)start the PoC log
+		* minimal website
+		* migrate from system-transpareny project into sigsum-project on github
+			* move and rename: stfe -> sigsum-log-go
+			* move and rename: siglog-witness-py -> sigsum-witness-py
+			* add: sigsum
+				* archive
+				* website
+		* update documentation, "sigsum logging"
+		* migrade from irc/oftc #siglog -> irc/oftc #sigsum, bridge with Matrix
+	* rgdd is around part time during the summer to keep things going
+
+Other useful links
+	* [ln5] Google announced SLSA.  Important key-word: provenance.
+		* https://security.googleblog.com/2021/06/introducing-slsa-end-to-end-framework.html
+	* [bjoto] Ongoing discussion between Fedora and Sigstore
+		* https://lwn.net/SubscriberLink/859965/b14e4ebdc57b8285/
+	* [rgdd] Melera preprinted "Hardware-Enforced Integrity and Provenance for Distributed Code Deployments". Another provenance format.
+		* https://arxiv.org/pdf/2106.09843.pdf
+	* [rgdd] Debian on ditching OpenPGP. Points towards Ed25515 with, e.g., signify.
+		* https://wiki.debian.org/Teams/Apt/Spec/AptSign
