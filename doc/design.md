@@ -1,13 +1,14 @@
-# System Transparency Logging: Design v0
-We propose System Transparency logging.  It is similar to Certificate
-Transparency, except that cryptographically signed checksums are logged as
-opposed to X.509 certificates.  Publicly logging signed checksums allow anyone
-to discover which keys produced what signatures.  As such, malicious and
-unintended key-usage can be _detected_.  We present our design and conclude by
-providing two use-cases: binary transparency and reproducible builds.
+# Sigsum Logging Design v0
+We propose sigsum logging.  It is similar to Certificate Transparency, except
+that cryptographically **sig**ned check**sum**s are logged instead of X.509
+certificates.  Publicly logging _sigsums_ allow anyone to discover which
+keys produced what checksum signatures.  For example, malicious and unintended
+key-usage can be _detected_.  We present our design and discuss a few use-case
+scenarios like binary transparency and reproducible builds.
 
 **Target audience.**
-You are most likely interested in transparency logs or supply-chain security.
+You are likely interested in transparent logs, public-key infrastructures,
+or supply-chain security.
 
 **Preliminaries.**
 You have basic understanding of cryptographic primitives like digital
@@ -24,8 +25,7 @@ Transparency logs make it possible to detect unwanted events.  For example,
 	are there any (mis-)issued TLS certificates [\[CT\]](https://tools.ietf.org/html/rfc6962),
 	did you get a different Go module than everyone else [\[ChecksumDB\]](https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md),
 	or is someone running unexpected commands on your server [\[AuditLog\]](https://transparency.dev/application/reliably-log-all-actions-performed-on-your-servers/).
-A System Transparency log makes signed checksums transparent.  The overall goal
-is to facilitate detection of unwanted key-usage.
+A sigsum log brings transparency to **sig**ned check**sum**s. 
 
 ## Threat model and (non-)goals
 We consider a powerful attacker that gained control of a target's signing and
@@ -47,17 +47,22 @@ detection would result in a significant loss of capability that is by no means
 trivial to come by.  Second, detection means that some part of the attacker's
 malicious behavior will be disclosed publicly.
 
-Our goal is to facilitate _detection_ of compromised signing keys.  We consider
-a signing key compromised if an end-user accepts an unwanted signature as valid.
-The solution that we propose is that signed checksums are transparency logged.
+Our goal is to facilitate _disocvery_ of signed checksums.  Such discovery
+makes it possible to detect attacks on signing and release infrastructures.  For
+example, the signer can detect an unwanted sigsum by inspecting the log.
+
+It is a non-goal to disclose the data that a cryptographic checksum represents
+_in the log_.  A log cannot distinguish between a checksum that represents a tax
+declaration, an ISO image, or a Debian package.  The type of detection that we
+support is therefore more _coarse-grained_ when compared to Certificate
+Transparency.  A significant benefit is that the resulting design becomes
+simpler, generally useful, and less costly to bootstrap into a reliable
+operation.
+
 For security we need a collision resistant hash function and an unforgeable
 signature scheme.  We also assume that at most a threshold of seemingly
 independent parties are adversarial.
 
-It is a non-goal to disclose the data that a checksum represents.  For example,
-the log cannot distinguish between a checksum that represents a tax declaration,
-an ISO image, or a Debian package.  This means that the type of detection we
-support is more _coarse-grained_ when compared to Certificate Transparency.
 
 ## Design
 We consider a data publisher that wants to digitally sign their data.  The data
