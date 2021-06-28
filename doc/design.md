@@ -6,10 +6,6 @@ keys produced what checksum signatures.  For example, malicious and unintended
 key-usage can be _detected_.  We present our design and discuss a few use-case
 scenarios like binary transparency and reproducible builds.
 
-**Target audience.**
-You are likely interested in transparent logs, public-key infrastructures,
-or supply-chain security.
-
 **Preliminaries.**
 You have basic understanding of cryptographic primitives like digital
 signatures, hash functions, and Merkle trees.  You roughly know what problem
@@ -21,21 +17,98 @@ revision of this document will bump the version number to v1.  Please let us
 know if you have any feedback.
 
 ## Introduction
-Transparency logs make it possible to detect unwanted events.  For example,
+Transparent logs make it possible to detect unwanted events.  For example,
 	are there any (mis-)issued TLS certificates [\[CT\]](https://tools.ietf.org/html/rfc6962),
 	did you get a different Go module than everyone else [\[ChecksumDB\]](https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md),
 	or is someone running unexpected commands on your server [\[AuditLog\]](https://transparency.dev/application/reliably-log-all-actions-performed-on-your-servers/).
-A sigsum log brings transparency to **sig**ned check**sum**s. 
+A sigsum log brings transparency to **sig**ned check**sum**s.
+
+**Problem description.**
+Suppose that you are an entity that publishes some opaque data.  For example,
+the opaque data might be
+	a provenance file,
+	an executable binary,
+	an automatic software update,
+	a BGP announcement, or
+	a TPM quote.
+You claim to publish the same opaque data to everyone in a public repository.
+However, past incidents taught us that word is cheap and sometimes things go
+wrong.  Trusted parties get compromised and lie about it [\[DigiNotar\]](), or
+they might not even realize it until later on because the break-in was stealthy
+[\[SolarWinds\]]().
+
+The goal of sigsum logging is to make your claims verifiable by you and
+others.  To keep the design simple and general, we want to achieve this goal
+with few assumptions about the opaque data or the involved claims.  You can
+think of this as some sort of bottom-line for what it takes to apply a
+transparent logging pattern.  Use-cases that wanted to piggy-back on an
+existing reliable log ecosystem fit well into our scope [\[BinTrans\]]().
+
+We also want the design to be easy from the perspective of log operations and
+deployment in constrained environments.  This includes considerations such as
+idiot-proof parsing, protection against log spam and poisoning, and a
+well-defined gossip protocol without complex auditing logic.  See [feature
+overview]().
+
+**Setting overview.**
+You would like users of the published data to _believe_ your claims.  Therefore,
+we refer to you as a _claimant_ and your users as _believers_.  Belief is going
+to be reasonable because each claim is expressed as a _signed statement_ that is
+transparency logged.  A _verifier_ can discover your claims in a public sigsum
+log.  If a claim turns out to be false, an _arbiter_ is notified that can act on
+it.  An overview of these _roles_ and how they interact are shown in Figure 1.
+A party may play multiple roles.  Refer to the claimant model for additional
+details [\[CM\]]().
+
+```
+            claim   +----------+                           
+         +----------| Claimant |----------+
+         |          +----------+          |Data               
+         |                                |Proofs             
+         v                                v                   
+    +---------+                     +------------+         
+    |   Log   |                     | Repository |         
+    +---------+                     +------------+         
+        |                              |   |
+        |                              |   |Data            
+        |  claims   +----------+  Data |   |Proofs          
+        +---------->| Verifier |<------+   |      
+                    +----------+           v      
+    +---------+          |          +------------+
+    | Arbiter | <--------+          |  Believer  |
+    +---------+                     +------------+
+
+              Figure 1: system overview
+```
+
+The claimant's signed statement encodes the following claim: _the opaque data
+has cryptographic hash X_.  It is stored in a sigsum log for discoverability.
+The claimant may define additional _implicit_ meanings for each such statement.
+These implicit claims are not stored by the log and are communicated through
+policy.  For example:
+- The opaque data can be located in Repository using X as an identifier.
+- The opaque data is a `.buildinfo` file that facilitates a reproducible build
+[\[R-B\]]().
+
+Detailed examples of use-case specific claimant models are defined in a separate
+document [\[CM-Examples\]](https://github.com/sigsum/sigsum/blob/main/doc/claimant.md).
+
+**Roadmap.**
+So far we only introduced the overall problem and the setting.  Our main
+contribution is the way in which the log component is designed.  First we
+describe our threat model.  Then we give a bird's view of the design.  Finally,
+we go into greater detail using a question-answer format that is easy to extend
+and/or modify.
 
 ## Threat model and (non-)goals
-We consider a powerful attacker that gained control of a target's signing and
+We consider a powerful attacker that gained control of a claimant's signing and
 release infrastructure.  This covers a weaker form of attacker that is able to
 sign data and distribute it to a subset of isolated users.  For example, this is
 essentially what the FBI requested from Apple in the San Bernardino case [\[FBI-Apple\]](https://www.eff.org/cases/apple-challenges-fbi-all-writs-act-order).
 The fact that signing keys and related infrastructure components get
 compromised should not be controversial these days [\[SolarWinds\]](https://www.zdnet.com/article/third-malware-strain-discovered-in-solarwinds-supply-chain-attack/).
 
-The attacker can also gain control of the transparency log's signing key and
+The attacker can also gain control of the sigsum log's signing key and
 infrastructure.  This covers a weaker form of attacker that is able to sign log
 data and distribute it to a subset of isolated users.  For example, this could
 have been the case when a remote code execution was found for a Certificate
@@ -47,24 +120,28 @@ detection would result in a significant loss of capability that is by no means
 trivial to come by.  Second, detection means that some part of the attacker's
 malicious behavior will be disclosed publicly.
 
-Our goal is to facilitate _disocvery_ of signed checksums.  Such discovery
-makes it possible to detect attacks on signing and release infrastructures.  For
-example, the signer can detect an unwanted sigsum by inspecting the log.
+Following from our introductory goal we want to facilitate _disocvery_ of sigsum
+statements.  Such discovery makes it possible to detect attacks on a claimant's
+signing and release infrastructures.  For example, a claimant can detect an
+unwanted sigsum by inspecting the log.  It could be the result of a compromised
+signing key.  The opposite direction is also possible.  Anyone may detect that a
+repository is not serving data and/or proofs of public logging.
 
 It is a non-goal to disclose the data that a cryptographic checksum represents
-_in the log_.  A log cannot distinguish between a checksum that represents a tax
-declaration, an ISO image, or a Debian package.  The type of detection that we
-support is therefore more _coarse-grained_ when compared to Certificate
-Transparency.  A significant benefit is that the resulting design becomes
-simpler, generally useful, and less costly to bootstrap into a reliable
-operation.
+_in the log_.  It is also a non-goal to allow richer metadata that is
+use-case specific.  The type of detection that a sigsum log supports is
+therefore more _coarse-grained_ when compared to Certificate Transparency.  A
+significant benefit is that the resulting design becomes simpler, general, and
+less costly to bootstrap into a reliable log ecosystem.
 
 For security we need a collision resistant hash function and an unforgeable
 signature scheme.  We also assume that at most a threshold of seemingly
-independent parties are adversarial.
-
+independent parties are adversarial to protect against split-views
+[\[Gossip\]]().
 
 ## Design
+TODO: not updated from here on.
+
 We consider a data publisher that wants to digitally sign their data.  The data
 is of opaque type.  We assume that end-users have a mechanism to locate the
 relevant public verification keys.  Data and signatures can also be retrieved
