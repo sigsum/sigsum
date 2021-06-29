@@ -1,0 +1,57 @@
+Claimant model thoughts for claimant.md and beyond
+==================================================
+
+We have
+
+checksum claim: I, data publisher, claim that the data:
+	1. has cryptographic hash X
+	2. is produced by no-one but myself
+
+statement: signed checksum
+
+checksum-rb claim: I, software publisher, claim that the data:
+	1. has cryptographic hash X
+2. is the output of a reproducible build for which the source can be located using X as an identifier
+	
+Qs:
+	* Why is 2. from the checksum claim missing in the checksum-rb claim?
+	* Why do we have 2. in the data publisher case anyway. Think about me publishing a music video on my website (it's just data, too!): why should that be produced by me?
+		* The example we were trying to make is that even without any formal claim about where the data is located, it is possible to generate value out of logging. It would be less useful yes, but the claimant would see all signing ops if those that rely on the signatures enforced logging (i.e., rejected if no proofs).
+		* Reading this again weeks later, I don't like claim #2 tbh. We should drop it.
+		* And instead actually add a claim about publishing data in a repository, which is in the overview figure that we drafted.  If we think there is a special use-case where that may be omitted, it is probably best as "Appendix stuff".
+	* Claims need to be creatable from Statements without any additional context. How do we do that for 2. in each case above?
+		* It isn't
+		* I am not sure that is satisified for other claimant model examples either.  See, e.g., FT: "is functionally correct, and without known attack vectors".
+		* I think I mentioned that to one of the Trillian folks, but should poke again.
+			* Martin will refactor claimant requirement wording, see below.
+
+* **Verifier<sup>CHECKSUM</sup>**: data publisher<br>
+    Only the data publisher can verify the above claims.
+
+Qs:
+	* Why can only the data publisher check whether "has cryptographic hash X" actually holds?
+		* Answer: because it is the only party who is in an *authoritative* position to do so (see: https://docs.google.com/presentation/d/e/2PACX-1vTKbm7Atsgp4FzXVSpBpL8TFg1BT2MogTYGF2o8D0CFS2k9jVwff4m5p2zWxVBEozOHjfX26ZquQo67/pub#slide=id.ga23a1950f6_2_258) BUT: then the claim is a different one!? (in the presentation it is one about a hash value of a *genuine* release) No, just a stronger one which one makes as well implicitly.
+		* It might be good to separate both, though, conceptually because the verifiers of both are different and potential attackers, too:
+			* has cryptographic hash X: anybody can check whether an attacker modified the data (it's like GPG signature checking today)
+			* has *right* cryptographic hash X: only the publisher may know (think about an attacker replacing a newer data/sig combination (e.g. my-cat-video-2021-05-01.webm) with an older (e.g. my-cat-video-2021-04-01.webm) claiming it's the newer one
+		*  One of the cool things with RB is that this verifier requirement gets relaxed: we don't need someone in an authoritative position anymore for verification in an RB context, or better: anybody can be authoritative.
+
+=== End of discussion ===
+Martin Hutchinson
+12:27  Perhaps looking at this from the variables case is the better way of looking at it
+12:27 I can print a static string without any context, right. That's what "hello world" is
+12:28 These claims are sometimes what we've called implicit, but we try to make them explicit.
+12:28 You've convinced me that phrasing this through the lens of variables/placeholders in the claim is a better way of phrasing my semantics here
+12:31 Going back to the FT claim, what this means is that X device class version must all be extractable from the statement
+12:32 In your case, it's totally fine to say that whoever signs this will host the original binary on their CAS identified by hash . As long as the person making the claim and signing the statement knows that this is one of their obligations, they don't literally have to say it in every manifest/entry
+Rasmus Dahlberg
+12:33 Okay cool
+12:33 Same goes for (iii) then in FT model
+12:34 Because that's how I think about the signed statement
+12:34 We give meaning to it by making all the claims explicit
+12:34 So everytime you see a signature from the claimant
+12:34 You know what they are claiming, and those claims should be verifiable
+Martin Hutchinson
+12:34 Yeah exactly. This implicit claim is really something that exists in a world without transparency where you just have signed binaries. It seems to me that the point of verifying the signature on a binary is that I trust a certain author to not give me stuff which is going to pwn me
+Rasmus Dahlberg  12:35
+Okay cool I think we are on the same page

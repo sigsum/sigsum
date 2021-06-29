@@ -1,0 +1,23 @@
+Example snippet with signify to log a new checksum
+- The only thing that should change with e.g. minisign, yubihsm, or any other tool that signs what we ask for with ed25519 -> specify this tool with -f FORMAT flag.
+
+$ signify -G -p rgdd.pub -s rgdd.sec
+$ ls
+rgdd.pub rgdd.sec
+$
+$ echo 'print("hello, world!")' > hello.py
+$ sha256sum hello.py | awk '{print $1}' > hello.sum
+$ ls
+hello.py hello.sum rgdd.pub rgdd.sec
+$
+$ sigsum-format abcd --to-sign -c hello.sum > hello.tosign
+$ signify -S -s rgdd.sec -m hello.tosign
+$ ls
+hello.py hello.sum hello.tosign hello.tosign.sig rgdd.pub rgdd.sec
+$
+$ sigsum-format abcd --to-log -d example.com -c hello.sum -s hello.tosign.sig -k rgdd.pub
+...
+$ !! | curl --data-binary @- $(siglog-format abcd --endpoint add-leaf) 
+...
+
+And from here on, fetch cosigned tree head, inclusion proof, bundle them up into a format that is suitable for the use-case, etc. That's what I'm thinking the "bundle" option could do, so that we have concrete examples of what we mean by "you can distribute proofs of public logging in any format that suits you".

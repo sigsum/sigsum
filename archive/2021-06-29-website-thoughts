@@ -1,0 +1,76 @@
+What information is needed on sigsum.org?
+	* rgdd needs somewhere to point people as he attends conferences, etc.
+	* doesn't have to be perfect, but should also not be inconsistent
+
+Before vaccay (?)
+	* Identity
+		* sigsum
+		* anything about the ongoing project shaping?
+	* How to get involved and/or stay updated
+		* Day-to-day conversations happen on irc/oftc #sigsum, Matrix bridged
+		* Open video/voice meeting on Jitsi, Tuesdays 1300 CEST
+		* Meeting minutes and discuss documents are persisted every week
+	* Where are our repositories right now
+
+Later (not an exhaustive list)
+	* Backdrop, origin story
+		* How we started as ST logging
+		* What are we doing and how in more detail
+	* Project
+		* Free and open source
+		* Vision
+			* Short term
+			* Long term
+			* How
+		* Involved people
+			* Name, nick, affilitation
+		* Funding / sponsors
+	* ...
+
+=== Inspiration from ST website planning, copy-pasted ===
+Who is the target audience?
+	* Security experts
+	* Non-technical decision makers
+	* Technical decision makers
+	* New/existing users
+	* Cloud service operators
+	* Journalists
+
+Website content (in order)
+	* What is ST?
+	* Is it useful for me?
+	* How does it work?
+	* How do I try it out?
+	* Who is behind ST?
+
+Information places
+	* Entrance / Portal / Website @ system-transparency.org
+	* Code repositories @ GitHub
+		* Or self-hosted with mirror on GitHub
+		* GitHub is bad for non-technical people
+	* Documentation & tutorials
+		* High-level documentation on the website?
+		* Detailed documentation for sysadmins
+		* The more details the closer it should be to the code (in Git)
+	* Slack
+	* Blog
+	* Twitter
+	* Newsletter
+	* Conferences
+=== End of copy-paste ==
+
+Text proposal
+	* Intent: add on github.com/sigsum/sigsum, top-most README.md
+	* Intent: add on sigsum.org
+	* See below
+
+# The Sigsum Project
+Sigsum logging brings transparency to signed checksums.
+
+Join the conversation at irc/oftc \#sigsum.  Our channel is bridged with [Matrix](https://app.element.io/#/room/#sigsum:matrix.org) to support web browsers, phones, etc. We have voice meetings on Jitsi every Tuesday, 1300 CEST.  Our channel and voice meetings are open for everyone.  We encourage you to come say hello, talk transparent logs, and get involved!
+
+You can find more information here:
+	* [sigsum](https://github.com/sigsum/sigsum): Documentation, meeting minutes, persisted pads, etc.
+	* [sigsum-log-go](https://github.com/sigsum/sigsum-log-go): Trillian personality that implements sigsum logging
+	* [sigsum-lib-go](https://github.com/sigsum/sigsum-lib-go): Go library and (soon) command line utilities that are useful for tooling purposes
+	* [sigsum-witness-py](https://github.com/sigsum/sigsum-witness-py): Python witness that cosigns sigsum logs
