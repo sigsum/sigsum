@@ -1,0 +1,59 @@
+Date: 2021-06-29, 1300 CEST
+Meet: https://membarrier.verkligendata.se/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* kfreds
+
+Status round
+	* [rgdd] started organization "sigsum" on github
+		* migrated repos, etc.
+		* small documentation updates (like s/st/sigsum)
+		* started on better motivation and terminology updates
+			* https://github.com/sigsum/sigsum/tree/design-framing
+	* [rgdd] website, short-term and long-term (ongoing)
+		* https://github.com/sigsum/sigsum/blob/c7f1ed4172cfa642271ea1c08bbe642edec54448/archive/2021-06-29-website-thoughts
+	* [rgdd] a rough sketch on a tooling utility (ongoing)
+		* https://github.com/sigsum/sigsum/blob/c7f1ed4172cfa642271ea1c08bbe642edec54448/archive/2021-06-29-tooling-mockup
+	* [GeKo] claimant model discussion (ongoing)
+		* https://github.com/sigsum/sigsum/blob/c7f1ed4172cfa642271ea1c08bbe642edec54448/archive/2021-06-29-claimant-model-thoughts
+
+Discuss
+	* Minimal website, sigsum
+		* Content
+			* Take inspiration from when we designed ST website, see pad.
+			* Two iterations, one "short term" and one "long term"
+			* Rasmus takes a pass over this, Fredrik gives feedback (Decision)
+		* Design
+			* Minimalistic layout, monospace.
+			* E.g., similar to https://github.com/athul/archie
+			* Defer until after vacation (Decision)
+	* Cancel voice meetings during vaccay
+		* Start again 10 august, 1300 CEST (Decision)
+
+Next steps
+	* Mostly vaccation
+	* rgdd is around part time
+		* Keeps an eye on IRC if anyone wants to chat
+		* Documentation
+		* Tooling
+
+Other useful links
+	* [rgdd] A new conference on supply chain security
+		* https://events.linuxfoundation.org/supplychainsecuritycon-north-america/
+	* [rgdd] "The rule of 2" in Chromium, aligned with our thinking on parsers
+		* https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/security/rule-of-2.md
+	* [GeKo] How to design a verifiable system
+		* https://transparency.dev/how-to-design-a-verifiable-system/
+		* in particular the two exercises linked to from the above page are very useful
+			* Clarify your verifiable systems design
+				* https://docs.google.com/presentation/d/e/2PACX-1vRO8Avy8UbioWtO9vy812W97s1Q3m0VVK3z7MSptj12s-OlTLdHvIYwwuV_Sm3T5RNXn8hEXP8vYBLn/pub
+			* A guide to applying the Claimant Model
+				* https://docs.google.com/presentation/d/e/2PACX-1vTKbm7Atsgp4FzXVSpBpL8TFg1BT2MogTYGF2o8D0CFS2k9jVwff4m5p2zWxVBEozOHjfX26ZquQo67/pub
