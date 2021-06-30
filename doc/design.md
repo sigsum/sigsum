@@ -317,77 +317,45 @@ TODO: add complete system overview.  See drafty figure in archive.
 ```
 
 ### A peek into the details
-TODO: not refactored from here on.
-
 Our bird's view introduction skipped many details that matter in practise.  Some
 of these details are presented here using a question-answer format.  A
 question-answer format is helpful because it is easily modified and extended.
 
+#### What is the point of having a shard hint?
+Unlike X.509 certificates which already have validity ranges, a checksum does
+not carry any such information.  Therefore, we require that a claimant selects a
+_shard hint_.  The selected shard hint must be in the log's _shard interval_.  A
+shard interval is defined by a start time and an end time.  Both ends of the
+shard interval are inclusive and expressed as the number of seconds since the
+UNIX epoch (January 1, 1970 00:00 UTC).
+
+Without sharding, a good Samaritan can add all leaves from an old log into a
+newer one that just started its operations.  This makes log operations
+unsustainable in the long run because log sizes will grow indefinitely.
+
+Such re-logging also comes at the risk of activating someone else's rate limits.
+
+Note that _the claimant's shard hint is not a verified timestamp_.  The
+submitter should set the shard hint as large as possible.  If a roughly verified
+timestamp is needed, a cosigned tree head can be used instead.
+
+#### How is the threat of log spam and poisoning reduced?
+- Relates to: "why not log richer metadata and why not store the opaque data"
+- Relates to: "why we removed identifier field from the leaf"
+- Relates to: domain hint (maybe better as a separate heading)
+
+#### What are the details for witness cosigning?
+- Relates to: explain `tree-head-latest`, `tree-head-to-sign` and
+`tree-head-cosigned`
+
 #### What cryptographic primitives are supported?
-The only supported hash algorithm is SHA256.  The only supported signature
-scheme is Ed25519.  Not having any cryptographic agility makes the protocol less
-complex and more secure.
-
-We can be cryptographically opinionated because of a key insight.  Existing
-signature tools like `gpg`, `ssh-keygen -Y`, and `signify` cannot verify proofs
-of public logging.  Therefore, _additional tooling must already be installed by
-end-users_.  That tooling should verify hashes using the log's hash function.
-That tooling should also verify signatures using the log's signature scheme.
-Both tree heads and tree leaves are being signed.
-
-#### Why not let the data publisher pick their own signature scheme and format?
-Agility introduces complexity and difficult policy questions.  For example,
-which algorithms and formats should (not) be supported and why?  Picking Ed25519
-is a current best practise that should be encouraged if possible.
-
-There is not much we can do if a data publisher _refuses_ to rely on the log's
-hash function or signature scheme.
-
-#### What if the data publisher must use a specific signature scheme or format?
-They may _cross-sign_ the data as follows.
-1. Sign the data as they're used to.
-2. Hash the data and use the result as the leaf's checksum to be logged.
-3. Sign the leaf using the log's signature scheme.
-
-For verification, the end-user first verifies that the usual signature from step 1 is valid.  Then the
-end-user uses the additional tooling (which is already required) to verify the rest.
-Cross-signing should be a relatively comfortable upgrade path that is backwards
-compatible.  The downside is that the data publisher may need to manage an
-additional key-pair.
-
 #### What (de)serialization parsers are needed?
-#### What policy should be used?
-#### Why witness cosigning?
-#### Why sharding?
-Unlike X.509 certificates which already have validity ranges, a
-checksum does not carry any such information.  Therefore, we require
-that the submitter selects a _shard hint_.  The selected shard hint
-must be in the log's _shard interval_.  A shard interval is defined by
-a start time and an end time.  Both ends of the shard interval are
-inclusive and expressed as the number of seconds since the UNIX epoch
-(January 1, 1970 00:00 UTC).
+#### Are there any privacy concerns?
 
-Sharding simplifies log operations because it becomes explicit when a
-log can be shutdown.  A log must only accept logging requests that
-have valid shard hints.  A log should only accept logging requests
-during the predefined shard interval.  Note that _the submitter's
-shard hint is not a verified timestamp_.  The submitter should set the
-shard hint as large as possible.  If a roughly verified timestamp is
-needed, a cosigned tree head can be used.
-
-Without a shard hint, the good Samaritan could log all leaves from an
-earlier shard into a newer one.  Not only would that defeat the
-purpose of sharding, but it would also become a potential
-denial-of-service vector.
-
-#### TODO
-Add more key questions and answers.
-- Log spamming
-- Log poisoning
-- Why we removed identifier field from the leaf
-- Explain `latest`, `stable` and `cosigned` tree head.
-- Privacy aspects
-- How does this whole thing work with more than one log?
+#### Other
+- How does it work with more than one log?
+- What policy should a believer use?
+- Coarse-grained vs fine-grained detectability properties
+- \<insert more topics here\>
 
 ## Concluding remarks
-Example of binary transparency and reproducible builds.
