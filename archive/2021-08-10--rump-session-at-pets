@@ -1,0 +1,70 @@
+Hello
+	* Rasmus Dahlberg (rgdd)
+	* Affiliations
+		* Karlstad University (PhD student)
+		* Mullvad VPN (software engineer)
+
+Purpose of this mini talk - make people aware of sigsum logging
+	* Work-in-progress, still early days
+	* Plenty of opportunity to:
+		* get involved
+			* design
+			* code
+			* apply pattern of transparent logging (pick a use-case)
+			* operate experimental logs and/or witnesses
+			* etc.
+		* shape the project as we move forward
+			* aim: free and open source
+
+The basics
+	* Sigsum, short for "signed checksum"
+	* Sigsum logging is about adding signed checksums into a transparent log
+	* Think of this as Certificate Transparency, but:
+		* s/Certificate/checksum
+		* checksum is the output of a cryptographic hash function
+
+Backdrop and motivation
+	* You can already achieve transparency for cryptographic checksums by piggy-backing on Certificate Transparency
+		* Encode hash into a certificate
+		* Mozilla proposed a form of Binary Transparency this way a while back
+			* https://wiki.mozilla.org/Security/Binary_Transparency
+		* But could really be <anything> transparency because <anything> is hashed
+	* With sigsum logging you can do this without the runaround of:
+		* first encoding that hash with ASN.1 (as a certificate)
+		* then doing a ping-poing with a certificate authority
+		* and learning about ecosystem specific constructs like
+			* promises of public logging, "SCTs"
+		* eventually you will realize that you are kind of on your own in terms of gossip-audit models
+		* so what you are left with is a weirdly encoded hash and a log that you trust blindly
+	* We try to bring transparency to signed checksums in a more sensible way
+
+It is fair to say that we place a large emphasis on minimalism
+	* Keep it simple
+
+But at the same time, important features shouldn't be left out
+	* E.g., we want features that make log operations less costly and less scary
+		* anti-spam
+		* anti-poison
+		* sharding (helps with log life cycles)
+	* We also want features - or maybe I should say considerations - that facilitate adoption of transparent logging patterns
+		* if your users already download data from a repository or a website, and you want to bring transparency to that data
+			* great, that is the only communication pattern we assume for end-users
+			* "preserved data flows"
+		* few and simple (de)serialization parsers
+		* no cryptographic agility (simplifies protocol, tooling, etc.)
+		* built-in mechanism to ensure a globally consistent log
+			* simpified version of witness cosigning
+			* log is not a party that you trust blindly
+
+Current status
+	* We have a proof of concept up and running (log + witness)
+	* Tooling is basically non-existing
+		* format data with printf, pipe into curl :)
+	* If you have a use-case for transparent logging, or if you want to learn more, or if this sounds like fun and you would like to get involved:
+		* irc: #sigsum @ oftc (the conversation happens here)
+		* talk to me here on gather
+		* our repos are currently on github, contains code and some documentation
+			* github.com/sigsum
+		* www.sigsum.org
+
+(I will also post link to a non-persistent pad with this mini-talk in the chat.)

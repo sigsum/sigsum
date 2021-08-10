@@ -1,0 +1,267 @@
+# Roadmap
+Warning: has not been properly refactored.
+
+First we tried to outline some possible key questions that relate to witness cosigning.  Both conceptually, but also in terms of implementation details.
+
+The goal was to facilitate discussion between sigsum and trustfabric.  So, we also wrote down quickly what the current approach towards witnessing in sigsum is.
+
+# Key questions
+	* Roles
+		* Abstract entities.
+			* A real-world party may play multiple roles.
+			* A role may also be fulfilled by multiple actors. This could be duplication of work, or each of them taking on separate parts of the role.
+	* Format
+		* Minimal log statement
+		* Minimal witness statement
+		* Extensibility of log and/or witness statements
+		* Consistency proof, e.g., RFC 6962, tiles, etc.
+			* https://github.com/google/trillian-examples/tree/master/formats/log#log-proof-format - this is the format trustfabric are proposing to be the standard for proofs, especially as far as witnesses are concerned
+			* One job of the feeder (see role below) would be to synthesize such a format of proof from an 6962 proof, tiles, raw leaves, etc, and give it to the witness
+	* Communication patterns
+		* How will a witness, the actor, get checkpoints to cosign?
+		* After cosigning, how is that checkpoint distributed to believers?
+		* In the role-based model this is an implementation detail
+		* We should probably revisit this later on again, see old notes at the end of doc.
+	* APIs
+	* Cryptographic algorithms
+
+# Current approach towards witnessing in sigsum
+Log
+	* claim: globally consistent ("append-only") log + current time
+		* current time? Better phrashing of claim?
+		* (Is really about liveliness.)
+	* statement: tree size, root hash, timestamp (Trunnel-serialized)
+
+Witness
+	* claim: verified that the log provides consistency & time is in [now-5m,now] 
+		* (policy decision)
+		* (actually hardcoded policy, cosigning frequency is 5m in our API spec.)
+	* statement: the log's signed statement (Trunnel-serialized)
+
+Feeder
+	* Communication pattern
+		* Witnesses poll feeder for new log statements to sign
+		* HTTP(S) endpoint (read): "get-tree-head-to-sign"
+		* HTTP(S) endpoint (read): "get-consistency-proof"
+
+Distributor
+	* Communication pattern
+		* Witnesses push their signed statements to the collector
+		* HTTP(S) endpoint (write): "add-cosigned-tree-head"
+		* HTTP(S) endpoint (read): "get-cosigne-tree-head"
+
+The same real-world entity takes on the Log, Feeder, and Distributor role in sigsum.
+All HTTP APIs pass ASCII key-value pairs that are line-terminated (key=value\n).
+
+# Discuss
+## Possible roles related to witnessing (Martin)
+	* Feeder: acquires the checkpoints and consistency proofs, and gets them into a Consistency Verifier
+	* Consistency Verifier: maintains a golden checkpoint, and updates that once a new checkpoint is proved consistent. This golden checkpoint is then signed
+		* The term "Consistency Verifier" to avoid confusion with Witness (the role) and Witness (the actor, which may take on multiple roles)
+	* Distributor: takes the (co)signed checkpoints from the Consistency Verifier and makes them available to clients
+
+## Format of log and witness statements
+TrustFabric uses a human-readable format that is also nice for disk storage
+	* https://github.com/google/trillian-examples/tree/master/formats/log
+	* Signed envelope
+		* Body: simple line-terminated format (pro)
+		* Separator: simple, just a blank line (pro)
+		* Signatures: simple, one signature per line (pro)
+			* Also good that log signature must be first, makes implementation easier
+	* Required body in the signed envelope
+		* Line 1: Ecosystem and version string
+			* Suggestion: should maybe be two lines?
+				* L1: checkpoint version
+				* L2: ecosystem identifier in checkpoint version X
+			* Line 2: tree size
+				* Suggestion: specify regex? [0-9]+
+				* Suggestion: specify unsigned bit-size?
+			* Line 3: root hash in base64
+				* Which base64?
+				* Suggestion: hex is simpler (but trade-off with extra bytes on wire)
+			* Optional lines
+				* Defined by the ecosystem string
+				* Possible concern: variable size message without space bounds
+					* Makes implementations harder
+	* Signature line: U+2014 <identity> <key_hint+signature_bytes>
+		* Q: Why each line starts with a (unicode) character?
+		* Q: Why both an identifier and a key-hint?
+			* https://pkg.go.dev/golang.org/x/exp/sumdb@v0.0.2/internal/note is the format
+			* identifier is a human readable representation of the key while the hint is for machines to not have to search a potentially large set /linus
+		* Same comment about base64 as above 
+	* Signed message
+		* Logs and witnesses sign the exact same message
+		* This is dangerous if witnesses use the same key-pair for more than one log
+		* Attack outline
+			* Suppose we have logs A,B that are being cosigned by a group of witnesses
+			* Attacker controls log A
+			* Ecosystem X has believers that only recognize log A + all witnesses
+			* Believers in ecosystem X verify proofs of logging non-interactively:
+				* Log statement (is from A)
+				* Witness statement (enough signatures from witnesses)
+				* Inclusion proof
+				* Leaf data (valid for inclusion proof and above signed statements)
+				* (I.e., a believer's verification happens in "isolation")
+			* Observation
+				* Log B is not recognized by ecosystem X
+				* So, verifiers will not look for logging there
+			* Attack: make the believer believe that a verifier will find the accepted leaf data in log A, when in fact, it only appeared in unrecognized log B.
+				* 1. Submit leaf data to log B
+				* 2. Wait for the leaf data to be merged wrt. a cosigned tree head
+				* 3. Replace log B signature with log A signature
+				* From the believer's perspective it looks like all witnesses verified that log A has a given root hash that is consistent with prior history
+				* In reality this is not the case. Log A just created a split-view.
+				* The probability of detection is also zero in this scenario
+					* (Believers are "isolated")
+				* Possible fix
+					* Witnesses statement includes something that binds it to a given log
+		* What is verified by a witness to cosign? (Minimum verification criteria)
+			* Suggestion: tree size did not shrink
+			* Suggestion: new root hash is consistent with old root hash
+		* A (maybe non-)concern with witnesses signing the optional opaque blob
+			* The witness statement then includes more things than what they claim
+			* Initial thought: may lead to confusion on what is being claimed
+			* Possible fix: witnessess declare if they verify an eco string differently
+
+### Notable diffs when compared to sigsum (approach, not details)
+	* Binary format with a well-defined description language (Trunnel)
+		* pro: difficult to parse wrong
+			* correct parsers can be generated
+			* can reconstruct the signed message from a different format
+		* con: probably don't want to spit-out binary with many relevant APIs
+			* (Log clients do some additional key-value ASCII parsing in sigsum.)
+	* No extensibility
+		* pro: simpler, and no ambiguity what a witness verifies
+		* con: what if a log wants a different claim? Would have to roll up version.
+			* con: some witnesses might not recognize it, but they do recognize some basic fields like root hash and tree size.
+			* pro: witnesses only sign statements that they fully recognize
+	* Not much of a "format" at all.  E.g., versioning follows from API endpoint.
+		* It is assumed that each ecosystem will push log/witness statements with additional metadata using their own formats.
+		* In contrast, the trustfabric format is probably supposed to be shipped as is
+
+## Format of consistency proof
+TrustFabric: defined by ecosystem-specific string
+	* Line-terminated hashes in b64
+
+Sigsum: defined by log API
+	* hash=<hex value>
+	* hash=<hex value>
+	* ...
+	* (line-terminated key-value pairs that repeat in order, "RFC 6962 proof".)
+		* Also have old_size and new_size
+		* Redundant though, log client already knows that.  Should be removed
+
+## Direction of communication for feeder and distributor
+Warning: there might be some confusion between roles and actors here.
+
+Sigsum approach: witness polls from feeder, pushes to distributor
+	* Con: cosigned tree head frequency < big-O(minutes) is unsuitable.
+		* I.e., it takes a little bit of time to reach a consensus because witnesses need to discover next log statement, then cosign it.  A sensible implementation would likely poke the log every minute on average.
+		* Sigsum uses a cosigned tree head frequency of 5 minutes
+	* Pro: witnesses are really light-weight for a singe log.
+		* Poke something once a minute
+		* If you already run a witness, not a big burden to witness another log too
+	* Pro: witness does not need to listen for incoming traffic
+		* Less requirements on interactability with security-critical components
+		* Reduces the barrier towards being a witness (cf. "cronjob vs web server")
+	* Pro: feeder may not be able to distinguish between different witnesses
+		* This makes it more difficult to partition witnesses.
+		* Witnesses can self-assert that they get the same log statements as everyone else, e.g., by double-checking the next statement to be cosigned via Tor.
+		* (I think this is the least relevant "pro" btw, but it is an interesting property.  This kind of partitioning would likely be detected eventually.)
+
+TrustFabric approach: feeder pushes to witness, distributor retrieves from witness
+	* Pro: architecture permits lower cosigned tree head frequency.
+		* Trade-off: lower cosigned tree head frequency -> more work for witnesses
+	* Con: log needs to track the state of each witness to deliver consistency proofs.
+		* Corner case: log and witness becomes out-of-sync.
+	* Con: witness needs to listen for incoming traffic (=exposure, less flexible)
+	* (Con: feeder is more capable - can partition witnesses if log is controlled)
+
+## APIs used by Feeder and Distributor
+	* Log statements and witness statements should already have a format (see above)
+	* Sigsum v0 HTTPS APIs are already defined, not set in stone though
+	* Is there any documentation on the TrustFabric feeder/collector/witness API?
+
+Warning: role-based model is not centered around APIs...
+
+## Cryptographic algorithms
+	* I don't think we _have to_ make any strict assumptions here
+	* A feeder/distributor anyway needs to track which witnesses they are aware of
+		* (sigsum: to avoid spam)
+		* (trustfabric: to know where witnesses are located)
+	* So: the same way you learn about a witness, you e.g. learn its signing algorithm
+		* If a feeder/collector is opinionated -> simply don't recognize some witnesses
+
+History of resolved comments
+============================
+	* Hub
+		* Can we make the name more connected to witnesses? WitnessAggregator, WitnessHub?
+			* I think it's fine either way /rgdd
+		* This seems exactly the same role as the Feeder in the TrustFabric description - mhutchinson
+			* Fixed
+	* Communication patterns
+		* 00: witness polls from hub, anyone polls witness for (co)signed statements
+		* 01: witness polls from hub, anyone polls hub for (co)signed statements
+		* 10: hub pushes to witness, anyone polls witness for (co)signed statements
+		* 11: hub pushes to witness, anyone polls hub for (co)signed statements
+		* (I think this clearly shows two separate roles: acquisition, and distribution)
+			* Fixed
+	* Separation of log/witness messages
+		* We could use Ed25519ctx, but then it would be nice to also include a field for signature-type (Ed25519ph, Ed25519ctx), to allow e.g. Yubikeys to sign. I don't think they support -ctx. /Fredrik
+			* If we want separation of messages we should probably achieve that without using a specific signature scheme feature /rgdd
+	* What is our current log identifier? /F
+		* (In relation to what a log and witness signs)
+		* Log signs tree head, witness signs signed tree head
+		* So, log signature is what can be used to link a statement back to the log
+	* Which might differ per witness. E.g. witness A hasn't seen the log for a day, and B saw it 10 minutes ago. /F
+		* (In relation to pushing consistency proofs from feeder)
+		* Possible corner case yes, but for the most part a feeder can probably track which tree head a witness is currently on. But would need to be accounted for!
+	* To me Feeder implies that it lives as part of the log, and feeds something elsewhere. How about s/Feeder/LogCollector/ and WitnessCollector? /F
+		* [rgdd] no strong opinions here, trustfabric uses feeder, collector I made up!
+	* An FYI is that we are thinking of doing SHA-512 (same as Ed25519) in sigsum. Truncated to save space.  And possibly Ed25519ph for better smart card support.
+
+What we had before under section "roles" before Martin suggested improvements
+=============================================================================
+Log
+	* Claim: I operate a globally consistent Merkle tree
+	* Statement:
+		* Tree size (fixes the log's structure)
+		* Root hash (fixes the log's content)
+			* (fixes the the log's structure too, assuming leaf+interior constants)
+
+Witness
+	* Claim: I verified that the log is consistent from my vantage point
+	* Statement
+		* Tree size
+		* Root hash
+		* Something that links this statement to the log
+			* E.g., a separate signing key per log
+			* E.g., a log identifier or a log signature
+			* W/o this there is a possible attack, see discussion below.
+
+Feeder
+	* Decides the next log statement that a witness should cosign
+	* Makes available the next log statement that a witness should cosign
+	* Makes available relevant consistency proofs for a witness
+
+Collector (is now Distributor)
+	* Collects log statements
+	* Collects witness statements
+	* Makes available log+witness statements
+
+Note that a single party may play multiple roles.  E.g., a log may also be a feeder.
+(though a log also being a witness would be of minimal value :-)
+
+Older notes related to commication patterns
+===========================================
+Note: communication pattern is an implementation detail, maybe not great to discuss this with regards to roles as Martin's comment point out below.
+
+	* Feeder fetches signed statements and relevant consistency proofs from the log
+		* (Log is not necessarily aware of witnessing)
+		* Option a: witness polls feeder
+			* (is this witness the role, or actor? - in the role model, the witness wouldn't poll the feeder. If the Witness (actor) is reaching out to somewhere then they are taking on some part of the Feeder role. The reason I'm quite persistent about this is because otherwise we need to define an API for the feeder, which is an anti-goal)
+		* Option b: feeder pushes to witness
+	* Distributor
+		* Gets log statements from feeder and/or witness
+		* Option a: distributor retrieves statements from witness
+		* Option b: witness pushes statements to distributor

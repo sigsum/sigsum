@@ -1,0 +1,75 @@
+# API updates
+	* get-inclusion proof (was previously: get-proof-by-hash)
+		* remove tree_size in responses
+		* (keep index, required to verify proof.)
+	* get-consistency-proof
+		* remove old_size in responses
+		* remove new_size in responses
+	* use TrustFabric checkpoint format, ideally after some refactoring
+		* get-tree-head-to-sign (new output)
+		* get-tree-head-cosigned (new output)
+		* get-tree-head-latest (new output)
+
+# Our dream refactor of the current checkpoint format
+"tlog statement v0"\n
+H(public log key).Encode(hex)\n
+TreeSize.Encode(ascii)\n
+RootHash.Encode(hex)\n
+<other data identifier>\n
+[other data\n]
+\n
+H(public log key).Encode(hex) signature.Encode(hex)\n
+[H(public witness key).Encode(hex) signature.Encode(hex)\n
+...]
+
+Note: the final list part currently uses:
+- <human readable log key identifier> <keyhint><signature>.Encode(base64)
+[- <human readable witness key identifier> <keyhint><signature>.Encode(base64)]
+
+## Summary of possible changes and why
+	* First line should only identify which checkpoint data format is being used
+		* Motivation: less parsing before we know what we are dealing with
+		* "The first bytes were pattern XYZ - good, it is a version 0 checkpoint".
+	* Rebrand "ecosystem string" as something that defines any "other data" lines
+		* Motivation: different ecosystems may want to use the same "other data".  If witnesses do any verification of that (say, a timestamp for liveliness), it is helpful if they can be aware of a single "ecosystem string" and not multiple ones.
+	* Make H(public log key) a mandatory line
+		* Motivation: avoids a possible attack, see other pad.
+	* Use hex instead of base64
+		* Motivation: easier to describe and implement
+		* Trade-off: requires more space
+	* Remove redundant dash sign for signature lines
+		* Motivation: not obvious why it is needed
+	* Define identifier on signature line as H(public key)
+		* Motivation: the human readable identifier is not authenticated in any way.  This is probably not the right place to discover someone's key (hint). 
+		* In other words, we are unsure what potential harm this could lead to depending on how the ecosystem evolves and what meanings people put into these IDs.
+		* (Note: please justify the current signature line format if you disagree.)
+
+# Misc
+A note about the current first line and "other data"
+	* It is possible to misuse the current checkpoint format
+	* You could, e.g., do "<ecostr> Checkpoint v0; key=value, key=value, ...\n"
+	* Can be viewed as two possible places to put other data, i.e., on the first line (hacky) and in the other data section (intended usage).
+
+Should we use the TrustFabric format, with or without above changes?
+	* "yes", ideally with some changes but "yes" regardless
+		* Motivation: good for tlog system overall.  Possible losses in C-envs does not seem to outweight that witnessing becomes simpler with a single format.  Format is not that complicated and should not be too bad even in constrained environments.
+		* Motivation: the most significant "issues" can be worked-around by being stricter in sigsum, e.g., "signer ID must be a hash", "log ID must be an extension", etc.
+
+Are we willing to trade the simplicity to parse (our binary format) for the opportunity to share a common format with the TrustFabric group at Google?
+	* Note: more than just Google tho.  Several other parts seem to be interested in the current checkpoint format already.  Part of our sigsum mission is to make tlogs flourish.  Ensuring that we are using a single format is then consistent, because anything we do with witnessing others can benefit from more easily.
+	* See, e.g., https://github.com/f-secure-foundry/armory-drive-log
+
+- How much of a difference is there in the complexity of parsing of the two?
+	* The complexity is low in both formats. The big difference is for implementations in a language without memory management and bounds checking, where parsing text that is controlled by an attacker easily leads to memory corruption.
+	* A typical implementation in C will have to deal with 
+		* memory allocation for a read buffer (mitigation: declare a maximum line length)
+		* guaranteed proper string termination
+		* ascii to integer conversion
+		* base16 (or base64) conversion, possibly including dynamic memory allocation
+		* splitting text on whitespace
+	* A typical implementation might look like https://adb-centralen.se/~linus/volatile/2021-07-27-gXFxj6QUqQo/parse_checkpoint.c plus code for base16/base64 conversion
+	* Note: The binary format of the tree head defined in sigsum/doc/api.md covers only a tree head (timestamp, tree_size and root_hash) and not the signature(s) and key id(s), which is what is being signed in sigsum and what cannot be "re-packaged" later. Re-packaging can be useful for above mentioned end-users which have trouble parsing even moderately complex data formats.
+
+- What are the probable positive outcomes of a shared format?
+	* See above.
+	* Possibility to make checkpoint format better, which other tlog ecosystems than sigsum would benefit from long-term.
