@@ -1,0 +1,73 @@
+Date: 2021-08-10, 1300 CEST
+Meet: https://membarrier.verkligendata.se/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* kfreds
+
+Status round
+	* [rgdd] witness cosigning (ongoing discussions with trustfabric)
+		* broader thoughts: https://github.com/sigsum/sigsum/blob/bbe8545b4b8f60676f019927616d2647dab58575/archive/2021-08-10--witnessing-broader-discuss
+		* api and format: https://github.com/sigsum/sigsum/blob/bbe8545b4b8f60676f019927616d2647dab58575/archive/2021-08-10--witnessing-api-updates
+		* current status
+			* investigating changes that would fix the attack we outlined
+			* after that we should start using the same format (Decision)
+	* [rgdd] 3m rump session talk at PETS on sigsum logging
+		* https://github.com/sigsum/sigsum/blob/bbe8545b4b8f60676f019927616d2647dab58575/archive/2021-08-10--rump-session-at-pets
+	* [rgdd] started looking into Ed25519ph with yubikey
+
+Discuss
+	* Milestone: test run of feature-complete sigsum v0 log Oct-Dec
+	* Milestone: not sure how to formulate yet, but "mature witnessing"
+	* Milestone: project part, see decisions below
+	* Open TODOs
+		* sigsum (documentation, design)
+			* (Co)signed tree head format (doc + implement)
+			* Ed25519ph, SHA512/256?
+			* Decision: Landing page in doc repo & website (rgdd)
+			* Decision: Complete and merge design-framing doc branch (rgdd)
+			* Update API spec
+				* Decision: witness spec should be separate (rgdd)
+		* sigsum-log-go
+			* shard_hint (not enforced)
+			* domain_hint (not enforced)
+			* rate limits (not implemented)
+			* enhancement: server config
+			* enhancement: read-only mode
+			* enhancement: run with hsm
+			* refactor: move relevant parts into sigsum-lib-go
+			* refactor: get rid of old references of "stfe"
+		* sigsum-witness-py
+			* refactor: use new witnessing APIs when done
+			* refactor: get rid of old references of "stfe"
+			* enhancement: run with hsm
+		* tooling
+			* currently non-existing
+			* good exercise: add sigsum support in ST
+		* operations
+			* database
+			* alerts
+		* project
+			* recall notes from ln5: https://github.com/sigsum/sigsum/blob/bbe8545b4b8f60676f019927616d2647dab58575/archive/2021-06-21-self-hosted-services
+			* Decision: move to cgit (ln5)
+			* Decision: defer mailing list
+			* Decision: setup pastebin and pads (ln5)
+			* Decision: setup meet.sigsum.org (ln5)
+			* Decision: fix minimal landing page (rgdd)
+
+Next steps
+	* Work towards the above milestones
+	* Near-term: fix the TODOs that were marked as decided
+
+Other useful links
+	* [z4lem] academic papers that relate to sigsum threat model
+		* https://eprint.iacr.org/2007/060.pdf
+		* https://www.sciencedirect.com/science/article/abs/pii/S0161893807000592
