@@ -1,13 +1,13 @@
 # Sigsum Logging Design v0
 We propose sigsum logging.  It is similar to Certificate Transparency, except
 that cryptographically **sig**ned check**sum**s are logged instead of X.509
-certificates.  Publicly logging sigsums allow anyone to discover which keys
-produced what checksum signatures.  For example, malicious and unintended
-key-usage can be _detected_.  We present our design and discuss a few use-case
-scenarios like binary transparency and reproducible builds.
+certificates.  Publicly logging sigsum statements allow anyone to discover which
+keys produced what checksum signatures.  For example, malicious and unintended
+key-usage can be _detected_.  We present our design and discuss a few use-cases
+like binary transparency and reproducible builds.
 
 **Preliminaries.**
-You have basic understanding of cryptographic primitives like digital
+You have basic understanding of cryptographic primitives, e.g., digital
 signatures, hash functions, and Merkle trees.  You roughly know what problem
 Certificate Transparency solves and how.
 
@@ -24,7 +24,7 @@ Transparent logs make it possible to detect unwanted events.  For example,
 A sigsum log brings transparency to **sig**ned check**sum**s.
 
 **Problem description.**
-Suppose that you are an entity that publishes some opaque data.  For example,
+Suppose you are an entity that publishes some opaque data.  For example,
 the opaque data might be
 	a provenance file,
 	an executable binary,
@@ -47,21 +47,21 @@ existing reliable log ecosystem fit well into our scope [\[BinTrans\]](https://w
 We also want the design to be easy from the perspective of log operations and
 deployment in constrained environments.  This includes considerations such as
 idiot-proof parsing, protection against log spam and poisoning, and a
-well-defined gossip protocol without complex auditing logic.  See [feature
-overview](#Feature-overview).
+well-defined gossip protocol without complex auditing logic.
 
 **Setting overview.**
 You would like users of the published data to _believe_ your claims.  Therefore,
 we refer to you as a _claimant_ and your users as _believers_.  Belief is going
 to be reasonable because each claim is expressed as a _signed statement_ that is
-transparency logged.  A _verifier_ can discover your claims in a public sigsum
-log.  If a claim turns out to be false, an _arbiter_ is notified that can act on
-it.  An overview of these _roles_ and how they interact are shown in Figure 1.
-A party may play multiple roles.  Refer to the claimant model for additional
-details [\[CM\]](https://github.com/google/trillian/blob/master/docs/claimantmodel/CoreModel.md).
+transparency logged.  A _verifier_ can discover your statements in a public
+sigsum log.  If a statement turns out to contain a false claim, an _arbiter_ is
+notified that can act on it.  An overview of these _roles_ and how they interact
+are shown in Figure 1.  A party may play multiple roles.  A role may also be
+fulfilled by multiple parties. Refer to the claimant model for
+additional details [\[CM\]](https://github.com/google/trillian/blob/master/docs/claimantmodel/CoreModel.md).
 
 ```
-            claim   +----------+                           
+          statement +----------+                           
          +----------| Claimant |----------+
          |          +----------+          |Data               
          |                                |Proofs             
@@ -71,21 +71,22 @@ details [\[CM\]](https://github.com/google/trillian/blob/master/docs/claimantmod
     +---------+                     +------------+         
         |                              |   |
         |                              |   |Data            
-        |  claims   +----------+  Data |   |Proofs          
+        |statements +----------+  Data |   |Proofs          
         +---------->| Verifier |<------+   |      
                     +----------+           v      
     +---------+          |          +------------+
     | Arbiter | <--------+          |  Believer  |
-    +---------+                     +------------+
+    +---------+  bad claim          +------------+
 
                  Figure 1: setting
 ```
 
-The claimant's signed statement encodes the following claim: _the right opaque
-data has cryptographic hash X_.  It is stored in a sigsum log for
-discoverability.  The claimant may define additional _implicit_ meanings for
-each such statement.  These implicit claims are not stored by the log and are
-communicated through policy.  For example:
+A claimant's statement encodes the following claim: _the opaque data has
+cryptographic hash X_.  It is stored in a sigsum log for discoverability.  A
+claimant may add additional claims for each statement that are _implicit_.  An
+implicit claim is not stored by the log and therefore communicated through
+policy.  Examples of implicit claims include:
+- The _right_ opaque data has cryptographic hash X.
 - The opaque data can be located in Repository using X as an identifier.
 - The opaque data is a `.buildinfo` file that facilitates a reproducible build
 [\[R-B\]](https://wiki.debian.org/ReproducibleBuilds/BuildinfoFiles).
@@ -94,7 +95,7 @@ Detailed examples of use-case specific claimant models are defined in a separate
 document [\[CM-Examples\]](https://github.com/sigsum/sigsum/blob/main/doc/claimant.md).
 
 **Roadmap.**
-So far we only introduced the overall problem and the setting.  Our main
+So far we only introduced the overall problem and setting.  Our main
 contribution is the way in which the log component is designed.  First we
 describe our threat model.  Then we give a bird's view of the design.  Finally,
 we go into greater detail using a question-answer format that is easy to extend
