@@ -1,0 +1,35 @@
+Date: 2021-08-17, 1300 CEST
+Meet: membarrier.verkligendata.se/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd] merged minimal landing page after feedback from ln5
+		* https://github.com/sigsum/sigsum/blob/1300d3cdd953d61e01f2476bbdbffb4ae6012f14/README.md
+	* [rgdd] continued refactor of design document in design-framing branch (ongoing)
+		* https://github.com/sigsum/sigsum/blob/35f066b9e23c2638cc66e67e4528d45f71267d64/doc/design.md
+	* [rgdd] continued discussions about checkpoint format with trustfabric (ongoing)
+
+Discuss
+	* Cancel extra meet on Friday 10 am, meet as usual next week instead
+		* (Context: want to discuss checkpoint format and need to keep it short today)
+			* Timestamp, why is freshness important
+			* [otherdata]
+	* Anything project related?
+
+Next steps
+	* [rgdd] continue with TODOs identified last week + checkpoint format
+	* [ln5] continue with project related sysadmin TODOs
+
+Other useful links
+	* [rgdd] new conference with topic package management
+		* https://packaging-con.org/
