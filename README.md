@@ -5,7 +5,7 @@ _certificates_ keep the overall design simple and generally useful.
 
 &#10004; Minimalistic design that simplifies log operations and usage\
 &#10004; Centralised log operations but distributed trust assumptions\
-&#10004; Discoverability of statements for the data of your choice
+&#10004; Discoverability of statements for data of your choice
 
 A minimal statement encodes the following claim: the data has cryptographic hash
 X.  You can add additional meaning to each statement.  For example, you may use
