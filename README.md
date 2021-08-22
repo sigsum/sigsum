@@ -29,3 +29,7 @@ discoverability to verify them.
 - Website
 	- https://www.sigsum.org
 	- https://er3n3jnvoyj2t37yngvzr35b6f4ch5mgzl3i6qlkvyhzmaxo62nlqmqd.onion
+
+## Sponsors
+- [Mullvad VPN](https://mullvad.net), financial sponsor
+- [DFRI](https://www.dfri.se), mailing list sponsor
