@@ -1,0 +1,59 @@
+Background
+	* The current checkpoint format leaves the [otherdata] section undefined
+	* (The format of [otherdata] is inferred from a log's unique identifier)
+
+Impact on believers
+	* None, makes sense that each ecosystem knows their own format
+
+Impact on witnesses
+	* If witnesses disregard [otherdata] while cosigning: none
+	* Otherwise: may complicate witness configuration and support for [otherdata]
+
+The problem in more detail
+	* (Let's not focus on if these extensions are good ideas or not.  It's an example.)
+	* Suppose ecosystem A uses a checkpoint extension that adds a timestamp
+		* First line of otherdata: <timestamp> <diff>
+		* "A witness must only sign a checkpoint if its timestamp is in [now-diff, now]"
+	* Now ecosystem B comes along
+		* "We want timestamp verification too as in ecosystem A"
+		* "Some witnesses support that, just pass 'ecosystem A' as log metadata"
+		* (A little hacky but works)
+	* Now ecosystem C comes along
+		* "We want a timestamp as in ecosystem A and B"
+		* "We also want a secondary root hash because we operate a log-backed map"
+		* Unless witnesses change they will not understand 'ecosystem C' as log metadata
+		* This is unfortunate if witnesses actually do understand the timestamp part :<
+
+Prediction
+	* If [otherdata] catches on, each log ecosystem will do their own thing
+	* This may lead to compatibility issues like the one described above
+
+Mitigation
+	* A well-defined [otherdata] format that is generally useful would go a long way
+
+Example: an unordered key-value format
+	* Identifier: 'checkpoint key-value format'
+		* Might be communicated on the first line in [otherdata]
+			* Would affect the current checkpoint format
+		* Might be communicated as external checkpoint metadata
+			* Would not affect the current checkpoint format
+			* Would probably be good with a 'recommended usage' section though
+				* "If you want witnesses to look into [otherdata], think about X else Y"
+	* Grammar
+		* Each line is composed of <key>=<value>
+			* A line is an extension that is named <key>
+			* A key must not contain '='
+			* A line must adhere to the usual checkpoint v0 restrictions, e.g., no '\n'
+
+What we gained from this example:
+	* Witnesses that peek into [otherdata] would probably have used a common format
+	* Ecosystem A would probably have used that format to define a timestamp extension
+		* verified-timestamp=<timestamp> <diff>
+	* Ecosystem C could come along and set their [otherdata] to:
+		* map-hash=<root hash>
+		* verified-timestamp=<timestamp> <diff>
+	* Now a witness that speaks 'checkpoint key-value format' and which enforces the 'verified-timestamp' extension can do that regardless of if they know 'map-hash'
+
+Conclusion
+	* Allowing witnesses to peek into [otherdata] can get messy.
+	* We can probably avoid this mess by having a recommended or forced [otherdata] usage

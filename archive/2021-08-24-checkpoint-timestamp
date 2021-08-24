@@ -1,0 +1,60 @@
+Background
+	* The current checkpoint format does not contain a roughly verified timestamp
+	* Therefore, there is a possible attack against log monitors
+
+Assumptions about log monitors
+	* Download log leaves to find suspicous ones
+	* Rely on witness cosigning for security, defined loosely as:
+		* "Any leaf a believer accepts I will discover in a timely manner"
+		* "Timely manner" is vague, but sort of "today" rather than "next month"
+	* Receive checkpoints and log entries from untrusted parties only
+		* "Bob in Växjö, Sweden, who downloads log entries and checkpoints from the log"
+		* I.e., with these assumptions we are probably looking at a smaller self-monitor
+
+Attacker capabilities
+	* Controls the untrusted parties that a targeted monitor talks to
+	* Can submit a malicious leaf that the targeted monitor would like to discover
+	* Cannot fork the log due to witness cosigning (does not control enough witnesses)
+
+Attacker goal
+	* Slow down a monitor so that a malicous leaf is not detected for a long time
+
+Attack outline
+	* Suppose witnesses cosign an append-only checkpoint history [a,b,c,...]
+	* A believer accepts a log leaf if it has an inclusion proof to a cosigned checkpoint
+	* Each time a targeted monitor asks for a cosigned checkpoint:
+		* Option 1: return the same checkpoint_X that the monitor already has
+		* Option 2: every now and then return checkpoint_X+1
+	* This means that:
+		* The append-only witness history may be [a,b,c,d,e,f]
+		* The append-only history that a monitor observes may only be a sublist [a,b,c]
+	* Problem: monitor's view does not contain all log leaves that a believer accepts
+		* Now the attacker inserts its malicous log leaf
+		* A believer accepts it because it has an inclusion proof for cosigned checkpoint_g
+		* The monitor does not notice this entry at all (stuck) or much later (slowed-down)
+
+Attack remarks
+	* There is no log or witness misbehavior to speak of / prove after the fact
+	* Attack is possible because the monitor doesn't see the complete checkpoint history
+
+Attack mitigations
+	* Option 1: ensure that checkpoints can convince a monitor that they are current
+		* Add a checkpoint timestamp that witnesses verify roughly
+		* Monitor checks that new checkpoints have recent timestamps
+		* This would strenghten the overall witnessing threat model so that the attacker could only pull of a slow-down attack if they can tamper with relevant clocks.
+	* Option 2: monitors must convince themselves that they see recent checkpoints
+		* Gossip / download checkpoints from different parties and/or diverse vantage points
+
+Conclusion
+	* Important: communicate the threat of slow-down attacks
+	* Important: pick a mitigation option, communicate it, and be aware of limitations
+	* A roughly verified timestamp does not fit into the claimant model.  Example:
+		* Policy: "we only sign documents that have today's date"
+		* Scene: there is a document that needs to be signed in a meeting room.
+			* 2021-08-20, <Alice signature>
+			* 2021-08-20, _________________
+		* Two weeks later Bob walks by and realizes that he forgot to sign.  It would be embarrassing to draw up new papers and ask Alice to sign again, so Bob signs.
+				* 2021-08-20, <Alice signature>
+				* 2021-08-20, <Bob signature>
+		* Once a signature has been slapped on there is no way to prove if the above policy was followed or not.  This is what makes a claim like "I will only sign if the timestamp is in [now-X, now], X>0" unfalsifiable and hence a 'bad claim'.
+	* While a roughly verified timestamp does not fit into the claimant model, it does fit into the policy aspect of witness cosigning.  Witnesses are trust anchors.
