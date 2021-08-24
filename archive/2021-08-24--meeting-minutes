@@ -1,0 +1,55 @@
+Date: 2021-08-24, 1300 CEST
+Meet: membarrier.verkligendata.se/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd] slow-down attack on the current checkpoint format
+		* https://git.sigsum.org/sigsum/tree/archive/2021-08-24-checkpoint-timestamp?id=d8a070ad281b8fb8fed788d2d2c293f8bb343210
+	* [rgdd] should a checkpoint's [otherdata] be less undefined?
+		* https://git.sigsum.org/sigsum/tree/archive/2021-08-24-checkpoint-otherdata?id=d8a070ad281b8fb8fed788d2d2c293f8bb343210
+	* [rgdd] added sponsors to landing page
+		* (No people to defer question on who is listed, with what description, etc.)
+		* https://git.sigsum.org/sigsum/commit/?id=8f2b510b7974bd95de7c08372931da4b0317b97c
+	* [ln5] services
+		* git.sigsum.org up and running with mirroring to GitHub
+		* pad.sigsum.org under way -- poc is running but won't persist pads at the moment
+		* DFRI will sponsor with mailing lists
+			* sigsum-general@lists.sigsum.org to be set up real soon now
+
+Discuss
+	* Services
+		* GitHub
+			* Configure our accounts so that we can't push there by mistake
+			* Add "readonly mirror" in description
+			* OK to report issues on GitHub, no PRs though
+		* Budget for the components that lead up to a patched OS?
+			* Context: what is a reasonable budget for self-hosting?
+			* Reference: what is the cost for a single VM with a VPS?
+				* Ballpark 100SEK per VM (monthly)
+				* We need 6 VMs, one of which is hosted in a separate domain for backups
+	* Subresource Integrity (SRI) transparency as a poc use-case?
+		* https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
+		* https://blog.ryotak.me/post/cdnjs-remote-code-execution-en/
+		* Decision: good idea, defer until later
+
+Next steps
+	* [ln5] render web page (hugo) and publish
+	* [ln5] set up sigsum-general@lists
+	* [ln5] finish pad.sigsum.org
+	* [ln5] get meet.sigsum.org up and running (jitsi)
+	* [rgdd] keep conversation going about checkpoint format
+	* [rgdd] complete design.md updates, update api.md and break out witnessing
+	* [rgdd] look into GitHub TODOs, see above discuss item
+
+Other useful links
+	* None
