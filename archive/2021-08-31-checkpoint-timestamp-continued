@@ -1,0 +1,118 @@
+Background
+	* The current checkpoint format does not contain a roughly verified timestamp
+	* Therefore, there is a possible attack against log monitors
+
+Critique
+mhutchinson: The current attack that witnesses are trying to provide protection against was specifically defined to be split-view. I have a concern that we are adding complexity to a solution for that problem in order to solve an orthogonal problem.
+	* rgdd: my view of witnessing is that it should ensure that System^Verifier finds all statements that System^Believer accepts via a log.  System^Verifier should not have to gossip, because that is a complexity that is not great to leave open / undefined.
+		* Split-view: one part of the problem is "do we see the same append-only log"
+		* Slow-down: another part of the same problem.  I.e., don't agree it is orthogonal!
+		* (It is probably fair to say that this is a matter of where we require more complexity.  Either witnesses have to do more, or monitors have to do more.)
+
+Assumptions about log monitors
+	* Download log leaves to find suspicous ones
+	* Rely on witness cosigning for security, defined loosely as:
+		* "Any leaf a believer accepts I will discover in a timely manner"
+		* "Timely manner" is vague, but sort of "today" rather than "next month"
+		* (mhutchinson: covered below, but I don't think monitors need to rely on witnesses for their security. they should ensure they are seeing witnessed views periodically, but a checkpoint doesn't need to be cosigned as a precondition to monitor verification)
+	* Receive checkpoints and log entries from untrusted parties only
+		* "Bob in Växjö, Sweden, who downloads log entries and checkpoints from the log"
+		* I.e., with these assumptions we are probably looking at a smaller self-monitor
+
+Attacker capabilities
+	* Controls the untrusted parties that a targeted monitor talks to
+	* Can submit a malicious leaf that the targeted monitor would like to discover
+	* Cannot fork the log due to witness cosigning (does not control enough witnesses)
+
+Attacker goal
+	* Slow down a monitor so that a malicous leaf is not detected for a long time
+
+Attack outline
+	* Suppose witnesses cosign an append-only checkpoint history [a,b,c,...]
+	* A believer accepts a log leaf if it has an inclusion proof to a cosigned checkpoint
+	* Each time a targeted monitor asks for a cosigned checkpoint:
+		* Option 1: return the same checkpoint_X that the monitor already has
+		* Option 2: every now and then return checkpoint_X+1
+	* This means that:
+		* The append-only witness history may be [a,b,c,d,e,f]
+		* The append-only history that a monitor observes may only be a sublist [a,b,c]
+	* Problem: monitor's view does not contain all log leaves that a believer accepts
+		* Now the attacker inserts its malicous log leaf
+		* A believer accepts it because it has an inclusion proof for cosigned checkpoint_g
+		* The monitor does not notice this entry at all (stuck) or much later (slowed-down)
+
+Attack remarks
+	* There is no log or witness misbehavior to speak of / prove after the fact
+	* Attack is possible because the monitor doesn't see the complete checkpoint history
+
+Attack mitigations
+	* Option 1: ensure that checkpoints can convince a monitor that they are current
+		* Add a checkpoint timestamp that witnesses verify roughly
+		* Monitor checks that new checkpoints have recent timestamps
+			* mhutchinson: This makes sense to me. Monitors must already know something significant about the specifics of the log (i.e. they are not "generic" components). They must know what the Statement types are for the log, rules for parsing, and other basic validation. On top of this, they should know what the log's policy is for freshness of checkpoints. Some logs may create new checkpoints every 6h even if the log hasn't evolved, where others are extremely slow-growing and a checkpoint may be legit even if it's a year old. My view is that this info (statement type, checkpoint policy) is passed out-of-band of the checkpoint, and not in-band.
+		* This would strenghten the overall witnessing threat model so that the attacker could only pull of a slow-down attack if they can tamper with relevant clocks.
+			* mhutchinson: TL;DR: I agree with you, but I don't think witnesses need to be involved. Hence the timestamp can be in [otherdata] and parsing left to actors that already know more specific details of the log in question.
+			* rgdd: I think it is difficult to draw any conclusion from a timestamp that no-one looked at though.  It is the log's word then, and we don't trust the log.
+	* Option 2: monitors must convince themselves that they see recent checkpoints
+		* Gossip / download checkpoints from different parties and/or diverse vantage points
+		* mhutchinson: +1 - the log being the sole distributor for checkpoints provides the leverage needed for this attack. Further, I don't think that monitors should be passive and wait for consensus on "one true witnessed view" of the log; they should adversarially try to find all checkpoints and check they are consistent. Witnesses are really to protect believers, not verifiers. That said, monitors absolutely must see witnessed checkpoints periodically to make sure they aren't verifying a completely different view of the log than the witnesses are anchoring for believers.
+		* rgdd: the leverage to pull of this attack comes from the fact that a monitor is not connected to a trusted party with a current view of the logs.  If an ecosystem uses witnessing that sounds like a surprising assumption to require in my opinion!
+		* rgdd: disagree that witnessing is only for believers. The issue with System^Domain without tlogs is a lack of discoverability.  Any statement a believer accepts we want a Verifier to find.  For a verifier to find any such statement -> neither believer nor verifier must be on a split-view. So, I'd say witnessing is for both.
+		* rgdd: I think 'should adversarially try to find all checkpoints' is a large burden to put on monitors.  It is potentially error-prone / can easily be mis-configured.
+	* mhutchinson: Option 2.5(?): Multiple distribution points (e.g. all logs are distribution points for CPs from all logs), feeders pull CP+proof from a log, and push witnessed CP to other logs in addition to source log. (Can extend to implement local consensus protocol from MOG gossip paper too, I think.)
+	* mhutchinson: Option 2 ⅔: One or more other logs exist which *contain* checkpoints as leaves. This is a distributor for checkpoints, but in a somewhat "turtles all the way down" way :-)
+		* rgdd: this is recursive.  How do you know you see the same checkpoint logs? :<
+	* rgdd: option 2.X sounds more complex to me than witnesses that verify timestamps. It is a bit unintuitive to require some form of 'gossip' for something witnessing can solve once and for all.  I'm worried that option 2.X will not happen / be robust. 
+
+Conclusion
+	* Important: communicate the threat of slow-down attacks
+	* Important: pick a mitigation option, communicate it, and be aware of limitations
+	* A roughly verified timestamp does not fit into the claimant model.  Example:
+		* Policy: "we only sign documents that have today's date"
+		* Scene: there is a document that needs to be signed in a meeting room.
+			* 2021-08-20, <Alice signature>
+			* 2021-08-20, _________________
+		* Two weeks later Bob walks by and realizes that he forgot to sign.  It would be embarrassing to draw up new papers and ask Alice to sign again, so Bob signs.
+				* 2021-08-20, <Alice signature>
+				* 2021-08-20, <Bob signature>
+		* Once a signature has been slapped on there is no way to prove if the above policy was followed or not.  This is what makes a claim like "I will only sign if the timestamp is in [now-X, now], X>0" unfalsifiable and hence a 'bad claim'.
+		* mhutchinson: +1 thanks for writing this up. I haven't looked into how dates are usually used in legal documents like this, but I suspect something like a trusted party (solicitor, lawyer) must receive the documents within a small delta of the signed date in order to minimize the attack.
+		* (rgdd: In our context I would say that logs are sort of Bob and Alice, and then witnesses play the role of trusted parties that help minimize the attack window.)
+	* While a roughly verified timestamp does not fit into the claimant model, it does fit into the policy aspect of witness cosigning.  Witnesses are trust anchors.
+
+Deconstructing "Witness": Verifier^Claim (mhutchinson)
+The term "witness" and labeling them as trust anchors starts to put them in a somewhat oracle role. If we instead realize that the original witness proposal was simply Verifier(AppendOnly), and we are now looking to also make this actor Verifier(Fresh) then options become apparent. These verifier roles can be played by the same actor, but they don't have to be. Individual witness actors may choose to play one or both of these roles. I would recommend that each key used to sign checkpoints is advertized with the specific claims that it verifies. Specifically, each witness actor could have a verification key which is labeled one of:
+	* Freshness
+	* Consistency
+	* Freshess & Consistency
+		* I'm even open to getting rid of this idea, and saying such a witness should sign the checkpoint twice. But this is a different tradeoff.
+A believer of this verification can take the easy life and only use witness actor keys that do both jobs. But there exists the option to require at least F freshness sigs and C consistency sigs. Advantages of this approach:
+	* Greater flexibility in the system
+		* New precondition checks can be added in the future without needing existing parties to adopt it or migrate
+		* Ecosystems that have checkpoints widely available via some other distribution point than the log can omit freshness verification
+	* Clearer:
+		* terminology :-)
+			* rgdd: agree, as we said before 'witness' is really overloaded at this point and Verifier(AppendOnly) and Verifier(Freshness) is much more helpful.
+		* inference of what a witness signature means
+			* e.g1. a witness starts being a Verifier(AppendOnly) for a log that initially only has the base checkpoint format. After some months, the log embraces the timestamp in [otherdata] extension. Hurrah! But wait, if the witness signs this new format, did it perform just Verifier(AppendOnly), or did it *immediately* detect the timestamp and switch to Verifier(Fresh) too?
+			* e.g2. a witness has been operating as a Verifier(AppendOnly) for many logs for some time. One day the witness also adds the functionality to be a Verifier(Fresh) and starts doing this for all checkpoints with the timestamp. How do clients know when this changeover happened?
+			* rgdd: agree with these policy concerns as well, and that the type of verification a witness does should be attached to the key. We should probably recommend that you don't change the policy that is associated with a key.
+	* Faster
+		* We can launch the "generic witness" and checkpoint format now
+		* We can work on the format of this extra timestamp line separately
+			* (rgdd: we need timestamp and Verifier(Freshness) 'now' for sigsum though.)
+			* e.g. it could be that the expectation for freshness is baked into the checkpoint, but what if that changes?
+			* another approach would simply to have verifiers that say they will sign things that are fresher than 6h using a specific key, thus only a timestamp needs to be in the checkpoints
+				* rgdd: are you suggesting that a mandatory timestamp is added on the 4th line in every checkpoint, and that [otherdata] comes after that?  FWIW this would be my number one preference.
+					* No, my comments in these bullet points are simply that the interface for Verifier(AppendOnly) is already defined, where the timestamp requirements aren't. Even if checkpoints have a timestamp, the path to verification isn't clear to me, e.g. the following options all seem credible:
+						* timestamp in checkpoint is the "use before" time
+						* timestamp in checkpoint is the time it was minted, plus:
+							* the checkpoint also encodes a TTL
+							* expiry time per log is part of the verifier config
+							* each verifier just has a certain freshness they will check, and clients pick verifiers with the freshness they need
+						* This is a solvable problem and one of these approaches just needs to be picked. This can be done orthogonally with the Verifier(Append-Only) work. I explicitly propose that the bare-bones checkpoint format does not include a timestamp.
+						* rgdd: alright, that is the assumption that I've been working from. Thanks for clarifying!  In that case I think we should move on to the [otherdata] pad, because we are aware of the possibility that witnesses will be peeking into [otherdata] to provide Verifier(Freshness) - maybe even something more in the future unless we say "please don't do that".
+							* It might be the case that we don't need to mandate a particular usage, but rather give a recommendation for how the [otherdata] section should be used _if you plan for witnesses to look into it_.
+							* with this path forward, it would probably be a good idea to document (as part of a checkpoint's description, e.g., limitations) that the base checkpoint / witnessing format does not guarantee freshness.
+								* +1 I think that's a good compromise. If the docs for your freshness verification are made public, we can potentially link across to that for anyone concerned about that threat.
+				* (rgdd: I think if a witness then decides to be just Verifier(Append-Only), Verifier(Freshness), or both, can be left to the witness.  I would hope that witnesses decide to be both, but in some cases that might not be so.)
