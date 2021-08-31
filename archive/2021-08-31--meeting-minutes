@@ -1,0 +1,73 @@
+Date: 2021-08-31, 1300 CEST
+Meet: membarrier.verkligendata.se/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd] updated discuss pads with TrustFabric (ongoing)
+		* Checkpoint timestamp: https://git.sigsum.org/sigsum/tree/archive/2021-08-31-checkpoint-timestamp-continued?id=1299f6118dfb87dc9793aff927cc9bb5ff2aadb1
+	* [rgdd] updated GitHub organization as a read-only mirror
+		* "Mirror of git.sigsum.org - report issues via mailing list or irc/matrix"
+		* sigsum-bot is the only allowed writer & organization owner
+		* sigsum-bot account is controlled by rgdd
+	* [rgdd] updated design.md to include more context and be more current
+		* https://git.sigsum.org/sigsum/tree/doc/design.md?h=design-framing&id=1d912fee51de4367817f1cef93fe97bc828efbfb
+	* [rgdd] started sketching on possible api.md changes
+		* https://git.sigsum.org/sigsum/tree/doc/api.md?h=api-refactor&id=d8e0354941a23e2fafa4ac4257904431eb656554
+
+Discuss
+	* api.md
+		* Still just a single document
+			* It did not feel natural to break out witnessing as discussed before
+			* Too much of the log's APIs are relevant for witnessing, and all APIs expect add-leaf and get-leaves could be reused by someone that wants a different log
+			* Should probably spell this out in the document as 2-3 sentences instead
+		* Removed redundant output as identified a while back
+		* Incorporated checkpoint, details left as TODOs until that is settled
+		* s/hex/base64 to be consistent with checkpoint
+		* only line-terminated ASCII format to be consistent with checkpoint?
+		* To think about (i.e., not a decision)
+			* Just add a checkpoint endpoint (whatever Go is using)? If someone announces a witness we can then say 'great here is our endpoint - it is already there'.
+			* Continue with our current formats for v0 / remainder of the year.   See how things develop in the witnessing ecosystem.  Gives us more flexibility to run with our ideas?
+	* reach out to Andrew Ayer on the topic of monitor/witness ecosystem future?
+		* Decision: Defer until design.md is merged, then rgdd reaches out for feedback
+	* reach out to kpcyrd?
+		* Maybe, let's see if our paths cross in some shared channel
+	* Future PoCs?
+		* WebExt - verify tlog proofs, e.g., you pressed the download button for 'tlog proof' and extension verifies.  Similar to terminal tooling but in a browser.
+		* WebExt - SRI transparency
+		* Similar poc as kpcyrd but for a different ecosystem? Tails? Gentoo?
+		* Sigsum support in ST
+		* WitnessDistro?
+			* Who should witness?
+			* Diversity
+			* Know what they are doing, technical knowledge / competence / high integrity
+			* Incentive to be a witness - value of being a witness when you use the log?
+			* Describe how you could be a witness without actually being part of the big witness ecosystem that 'everyone' uses
+	* A look into the future
+		* Other tlogs will pick up some of the sigsum features
+			* Sharding to keep the log ecosystem healthy
+			* Spam and posining will become a concern
+			* Witness cosigning to fix concerns about centralized trust
+			* Emphasis on 'you don't need to talk to the log' as a good feature to have
+	* Milestones to communicate project
+		* 1. Project (Prelim: September)
+		* 2. Feature-complete log (Prelim: October)
+		* 3. PoC that runs against feature-complete log (Prelim: November)
+
+Next steps
+	* [ln5] paper and pen sale's pitch
+	* [ln5] more sigsum services
+	* [rgdd] reflect over the future of checkpoint
+
+Other useful links
+	* [ln5] Binary transparency poc for the pacman package manager
+		* https://github.com/kpcyrd/pacman-bintrans
