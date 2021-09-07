@@ -65,19 +65,19 @@ multiple parties. Refer to the [claimant model](https://github.com/google/trilli
 for additional detail.
 
 ```
-          statement +----------+                           
+          statement +----------+
          +----------| Claimant |----------+
-         |          +----------+          |Data               
-         |                                |Proof             
-         v                                v                   
-    +---------+                     +------------+         
-    |   Log   |                     | Repository |         
-    +---------+                     +------------+         
+         |          +----------+          |Data
+         |                                |Proof
+         v                                v
+    +---------+                     +------------+
+    |   Log   |                     | Repository |
+    +---------+                     +------------+
         |                              |   |
-        |                              |   |Data            
-        |statements +----------+  Data |   |Proof          
-        +---------->| Verifier |<------+   |      
-                    +----------+           v      
+        |                              |   |Data
+        |statements +----------+  Data |   |Proof
+        +---------->| Verifier |<------+   |
+                    +----------+           v
     +---------+          |          +------------+
     | Arbiter | <--------+          |  Believer  |
     +---------+     false claim     +------------+
