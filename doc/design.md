@@ -43,9 +43,9 @@ think of this as some sort of bottom-line for what it takes to apply a
 transparent logging pattern.  Past use-cases that wanted to piggy-back on an
 existing reliable log ecosystem fit well into our scope [\[BinTrans\]](https://wiki.mozilla.org/Security/Binary_Transparency).
 
-We also want the design to be easy from the perspective of log operations and
-deployment in constrained environments.  This includes considerations such as
-idiot-proof parsing, protection against log spam and poisoning, and a
+We also want the design to be easy from many different perspectives, for example log operations and
+verification in constrained environments.  This includes considerations such as
+simple parsing, protection against log spam and poisoning, and a
 well-defined gossip protocol without any complex auditing logic.
 
 ### 1.2 - Abstract setting
