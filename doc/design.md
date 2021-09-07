@@ -95,7 +95,7 @@ policy.  Examples of implicit claims:
 [\[R-B\]](https://wiki.debian.org/ReproducibleBuilds/BuildinfoFiles).
 
 Detailed examples of use-case specific claimant models are defined in a separate
-document [\[CM-Examples\]](https://github.com/sigsum/sigsum/blob/main/doc/claimant.md).
+document [\[CM-Examples\]](https://git.sigsum.org/sigsum/blob/main/doc/claimant.md).
 
 ### 1.3 - Design considerations
 Our main contribution is in the details that surround the log role in practise.
