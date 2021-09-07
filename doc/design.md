@@ -102,7 +102,7 @@ Our main contribution is in the details that surround the log role in practise.
 Below is a brief summary.
 - **Preserved data flows:** a believer can enforce sigsum logging without making
 additional outbound network connections.  Proofs of public logging are provided
-using the same distribution mechanism as before.
+using the same distribution mechanism as is used for distributing the opaque data.
 - **Sharding to simplify log life cycles:** starting to operate a log is easier
 than closing it down in a reliable way.  We have a predefined sharding interval
 that determines the time during which the log will be active.
