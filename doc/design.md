@@ -30,7 +30,7 @@ the opaque data might be
 	an executable binary,
 	an automatic software update, or
 	a TPM quote.
-You claim to distribute the right opaque data to everyone in a repository.
+You claim to distribute the right opaque data to everyone.
 However, past incidents taught us that word is cheap and sometimes things go
 wrong.  Trusted parties get compromised and lie about it [\[DigiNotar\]](), or
 they might not even realize it until later on because the break-in was stealthy
