@@ -86,7 +86,7 @@ for additional detail.
 ```
 
 A claimant's statement encodes the following claim: _the right opaque data has
-cryptographic hash X_.  It is stored in a sigsum log for discoverability.  A
+a certain cryptographic hash_.  It is stored in a sigsum log for discoverability.  A
 claimant may add additional claims that are _implicit_ for each statement.  An
 implicit claim is not stored by the log and therefore communicated through
 policy.  Examples of implicit claims:
