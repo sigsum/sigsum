@@ -1,0 +1,52 @@
+Date: 2021-09-07, 1300 CEST
+Meet: membarrier.verkligendata.se/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd] added second take on api refactor in branch 'api-refactor-take-two'
+
+Discuss
+	* What needs to be done for our September milestone - project launch?
+		* Sketch and write announcement post
+			* try to timebox (~1-3 days, including review cycles)
+		* Merge design.md and api.md
+			* review and merge (~4h)
+		* Implement and deploy following current specs
+			* sigsum-{lib,log}-go (~1-2 days)
+			* sigsum-witness-py (~1 day)
+			* don't add features, just update what we have right now
+		* Services / project part
+			* cgit (done)
+			* pads (ongoing, 1~day)
+			* jitsi (ongoing, ~4h)
+			* mailing list (ongoing, ~4h)
+			* golang.sigsum.org @ cgit (~1 day)
+	* What needs to be done for our October milestone - feature complete log?
+		* Add the missing features
+			* shard_hint (enforce)
+			* domain_hint (enforce)
+			* skip: rate limit, will not change external api
+		* Deploy instance on dedicated hardware, with stboot
+		* Sketch and write announcement post
+	* What needs to be done for our November milestone - PoC?
+		* Defer for now
+	* (bonus: thoughts about alternative rate limiting methods.)
+		* s/domain_hint/resource, resource=dns:example.com or similar
+		* Log consumes a token that is issued separately based on criteria X
+		* Defer for now, something to think about
+
+Next steps
+	* [ln5] first: review api.md (branch api-refactor-take-two) and design.md (branch design-framing), then merge
+	* [ln5] second: deploy hugo website
+	* [ln5] third: services
+	* [rgdd] sigsum-{lib,log}-go
