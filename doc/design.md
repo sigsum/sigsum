@@ -119,12 +119,13 @@ The only supported hash function is SHA256.  Not having any cryptographic
 agility makes protocols and data formats simpler and more secure.
 - **Simple (de)serialization parsers:** complex (de)serialization parsers
 increase attack surfaces and make the system more difficult to use in
-constrained environments.  A claimant's sigsum statements are serialized using
-[Trunnel](https://gitlab.torproject.org/tpo/core/trunnel/-/blob/main/doc/trunnel.md).
-A sigsum log's statements are serialized using line-terminated ASCII
+constrained environments.  A claimant's sigsum statements can be (de)serialized using
+[Trunnel](https://gitlab.torproject.org/tpo/core/trunnel/-/blob/main/doc/trunnel.md),
+or "by hand" in many modern programming languages.
+A sigsum log's statements are serialized as line-terminated ASCII
 [\[Checkpoint\]]().
 A sigsum log's HTTP(S) API uses line-terminated ASCII [\[SigsumAPI\]]().
-The required parsing is easy to implement yourself.
+The required parsing is easy to implement without too much trouble or dependencies.
 
 ### 1.4 - Roadmap
 First we describe our threat model.  Then we give a bird's view of the design.
