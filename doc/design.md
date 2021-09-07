@@ -28,8 +28,7 @@ Suppose you are an entity that distributes some opaque data.  For example,
 the opaque data might be
 	a provenance file,
 	an executable binary,
-	an automatic software update,
-	a BGP announcement, or
+	an automatic software update, or
 	a TPM quote.
 You claim to distribute the right opaque data to everyone in a repository.
 However, past incidents taught us that word is cheap and sometimes things go
