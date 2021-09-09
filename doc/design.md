@@ -119,13 +119,11 @@ The only supported hash function is SHA256.  Not having any cryptographic
 agility makes protocols and data formats simpler and more secure.
 - **Simple (de)serialization parsers:** complex (de)serialization parsers
 increase attack surfaces and make the system more difficult to use in
-constrained environments.  A claimant's sigsum statements can be (de)serialized using
+constrained environments.  A sigsum statement can be (de)serialized using
 [Trunnel](https://gitlab.torproject.org/tpo/core/trunnel/-/blob/main/doc/trunnel.md),
-or "by hand" in many modern programming languages.
-A sigsum log's statements are serialized as line-terminated ASCII
-[\[Checkpoint\]]().
-A sigsum log's HTTP(S) API uses line-terminated ASCII [\[SigsumAPI\]]().
-The required parsing is easy to implement without too much trouble or dependencies.
+or "by hand" in many modern programming languages.  This is the only parsing
+that a believer is required to support.  Claimants and verifiers additionally
+need to interact with a sigsum log's HTTP(S) API with line-terminated ASCII.
 
 ### 1.4 - Roadmap
 First we describe our threat model.  Then we give a bird's view of the design.
@@ -279,16 +277,16 @@ using the same mechanism as the opaque data.   A believer receives:
 1. **Opaque data**: a claimant's opaque data.
 2. **Shard hint**: a claimant's selected shard hint.
 3. **Signature**: a claimant's signed statement.
-4. **Checkpoint**: a log's signed tree head and a list of cosignatures
+4. **(Co)signed tree head**: a log's signed tree head and a list of cosignatures
 from so-called _witnesses_.
 5. **Inclusion proof**: a proof of inclusion that is based on the logged leaf
-and the above checkpoint.
+and the above tree head.
 
 Ideally, a believer should only accept the opaque data if these criteria hold:
 - The claimant's signed statement verifies.
 - The log's tree head can be reconstructed from the logged leaf and the provided
 inclusion proof.
-- The log's checkpoint has enough valid (co)signatures.
+- The log's tree head has enough valid (co)signatures.
 
 Notice that there are no new outbound network connections for a believer.
 Therefore, a proof of public logging is only as convincing as the tree head that
@@ -316,7 +314,7 @@ Sigsum logs are sharded and shut down at predefined times.  A sigsum log can
 shut down _safely_ because verification on the believer-side is not interactive.
 The difficulty of bypassing public logging is based on the difficulty of
 controlling enough independent witnesses.  A witness verifies that a log's
-checkpoint is correct before cosigning.
+tree head is correct before cosigning.
 
 Claimants, verifiers, and witnesses interact with the log using an HTTP(S) API.
 A claimant must prove that they own a domain name as an anti-spam mechanism.
