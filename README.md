@@ -18,7 +18,7 @@ Sigsum logging makes it reasonable to believe your claims by adding enough
 discoverability to verify them.
 
 ## Join the conversation
-- IRC: \#sigsum @ oftc.net
+- IRC: \#sigsum @ [OFTC.net](https://oftc.net/)
 - Matrix: [#sigsum:matrix.org](https://app.element.io/#/room/#sigsum:matrix.org)
 
 ## Useful links
