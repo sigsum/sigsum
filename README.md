@@ -10,9 +10,10 @@ _certificates_ keeps the overall design simple and generally useful.
 A minimal statement encodes the following claim: the data has cryptographic hash
 X.  You can add additional meaning to each statement.  For example, you may use
 a sigsum log to claim that
-	_everyone gets the same news articles_,
-	_software package X builds reproducibly_, or
-	_a list of key-value pairs is maintained with policy Y_.
+
+- everyone gets the same news articles,
+- software package X builds reproducibly, or
+- a list of key-value pairs is maintained with policy Y.
 
 Sigsum logging makes it reasonable to believe your claims by adding enough
 discoverability to verify them.
