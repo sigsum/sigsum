@@ -22,10 +22,10 @@ discoverability to verify them.
 - Matrix: [#sigsum:matrix.org](https://app.element.io/#/room/#sigsum:matrix.org)
 
 ## Useful links
-- Go implementation of a sigsum log: [sigsum-log-go](https://github.com/sigsum/sigsum-log-go)
-- Python implementation of a sigsum witness: [sigsum-witness-py](https://github.com/sigsum/sigsum-witness-py)
-- Design and API specifications: [documentation](https://github.com/sigsum/sigsum/tree/main/doc)
-- Meeting minutes and persisted notes: [archive](https://github.com/sigsum/sigsum/tree/main/archive)
+- Go implementation of a sigsum log: [sigsum-log-go](https://git.sigsum.org/sigsum-log-go)
+- Python implementation of a sigsum witness: [sigsum-witness-py](https://git.sigsum.org/sigsum-witness-py)
+- Design and API specifications: [documentation](https://git.sigsum.org/sigsum/tree/doc)
+- Meeting minutes and persisted notes: [archive](https://git.sigsum.org/sigsum/tree/archive)
 - Website
 	- https://www.sigsum.org/
 	- https://er3n3jnvoyj2t37yngvzr35b6f4ch5mgzl3i6qlkvyhzmaxo62nlqmqd.onion/
