@@ -1,7 +1,7 @@
 # The Sigsum Project
 Sigsum is a free and open source project that brings transparency logging to
 **sig**ned check**sum**s.  Logging _sigsums_ and not a more concrete type like
-_certificates_ keep the overall design simple and generally useful.
+_certificates_ keeps the overall design simple and generally useful.
 
 &#10004; Minimalistic design that simplifies log operations and usage\
 &#10004; Centralised log operations but distributed trust assumptions\
