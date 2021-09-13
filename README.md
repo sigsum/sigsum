@@ -7,9 +7,9 @@ _certificates_ keeps the overall design simple and generally useful.
 &#10004; Centralised log operations but distributed trust assumptions\
 &#10004; Discoverability of statements for data of your choice
 
-A minimal statement encodes the following claim: the right data has cryptographic hash
-X.  You can add additional meaning to each statement.  For example, you may use
-a sigsum log to claim that
+A minimal statement encodes the following claim: the right data has a
+certain cryptographic hash.  You can add additional meaning to each
+statement.  For example, you may use a sigsum log to claim that
 
 - everyone gets the same news articles,
 - software package X builds reproducibly, or
