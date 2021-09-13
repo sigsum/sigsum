@@ -27,8 +27,8 @@ discoverability to verify them.
 - Design and API specifications: [documentation](https://github.com/sigsum/sigsum/tree/main/doc)
 - Meeting minutes and persisted notes: [archive](https://github.com/sigsum/sigsum/tree/main/archive)
 - Website
-	- https://www.sigsum.org
-	- https://er3n3jnvoyj2t37yngvzr35b6f4ch5mgzl3i6qlkvyhzmaxo62nlqmqd.onion
+	- https://www.sigsum.org/
+	- https://er3n3jnvoyj2t37yngvzr35b6f4ch5mgzl3i6qlkvyhzmaxo62nlqmqd.onion/
 
 ## Sponsors
 - [Mullvad VPN](https://mullvad.net/), financial sponsor
