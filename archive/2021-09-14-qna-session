@@ -1,0 +1,50 @@
+Q/A session rgdd-rohon
+
+Q: how sigsum project different than ct from security / architecture point of view
+
+CT
+	* SCTS, promises of public logging
+	* Centrally trust the logs because it is difficult to audit in practise
+		* Privacy
+		* Complexity
+
+Sigsum
+	* No SCTs, you need to fetch an inclusion proof that references a cosigned tree head
+	* Decentralized/distributed trust, assumption is an honest majority for witnesses
+	* A pretty opinionated gossip-audit model, much emphasis on simple and minimalistic
+
+Q: why no cryptographic agility / what is the motivation?
+	* Don't let people use old bad choices like rsa, legacy tools, etc.
+	* Makes exchanged protocol messages simpler (e.g., no negotiation)
+	* Makes supporting sigsum protocol easier (you need one primitive, not many)
+	* If a primitive breaks -> roll up protocol version
+
+Q: Elaborate about "the right data"?
+	* Suppose you downloaded Tor Browser
+	* Signature is valid
+	* Now what?
+	* You kind of have to trust that the signer signed the right data
+	* What if the signer was coereced to sign a back-doored version?
+	* What if the signing key was stolen? How would a signer even detect that?
+	* Sigsum logs add discoverability into signing operations
+	* Anyone can detect what has been signed by monitoring sigsum logs
+	* "Oh, there is this signature that doesn't correspond to any Tor Browser Bundle"
+	* "Tor Project, what is that? Please look into this issue and explain"
+	* This type of transparency is difficult without a log that adds discoverability
+
+Q: What crypto primitives are supported
+	* Ed25519 (signify, minisign, etc.)
+	* SHA256
+	* (Remark: we are thinking about Ed25519ph and SHA512/256)
+
+Q: At what part Rohon comes in?
+	* Model system formally, requires notation
+	* Think about how security proof goes (properties, assumptions, argument)
+
+Some links
+	* Claimant model
+		* https://github.com/google/trillian/blob/master/docs/claimantmodel/CoreModel.md
+	* Sigstore (good to be aware of, does similar things with different trade-offs)
+		* https://www.linuxfoundation.org/en/press-release/linux-foundation-announces-free-sigstore-signing-service-to-confirm-origin-and-authenticity-of-software/
+		* https://www.sigstore.dev/
+		* https://github.com/sigstore/rekor/

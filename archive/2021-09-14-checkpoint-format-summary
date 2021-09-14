@@ -1,0 +1,18 @@
+Decision about checkpoint format?
+	* First line is a free form unique log ID
+	* Leave everything else as is
+	* If anyone wants Verifier("Property X") from witnessing -> use [otherdata]
+	* Leave [otherdata] undefined for now, focus on Verifier("Append-Only")
+	* Possible documentation TODOs
+		* Warning: monitors need to ensure that they have fresh append-only views.  The base witnessing format helps with append-only, not freshness.
+		* Warning: if you plan for witnesses to peek into [otherdata], it would probably be a good idea to propose a common format that will facilitate such witnessing.
+
+Way forward in sigsum?
+	* Easiest thing right now is to just add checkpoint as an endpoint and keep everything else as is.  This should work well with TrustFabric's Feeder/Distributor thoughts.
+	* Motivation
+		* Don't have to figure out [otherdata] exactly right now "in a rush"
+		* Others can add their opinion and discuss what [otherdata] should (not) be
+		* We can do a proper trial-run of the design that we have and learn from it
+
+What do we do now with sigsum x trustfabric?
+	* Homework until next time to think about this?
