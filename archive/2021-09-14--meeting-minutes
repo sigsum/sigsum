@@ -1,0 +1,35 @@
+Date: 2021-09-14, 1300 CEST
+Meet: membarrier.verkligendata.se/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* rohon
+
+Status round
+	* [rgdd] outcome of recent discussions with trustfabric
+		* https://git.sigsum.org/sigsum/tree/archive/2021-09-14-checkpoint-format-summary?id=92696741914a1be3c4401bf848f2635feee41341
+	* [rgdd] q/a session with rohon
+		* https://git.sigsum.org/sigsum/tree/archive/2021-09-14-qna-session?id=92696741914a1be3c4401bf848f2635feee41341
+	* [rgdd] added sigsum-log-go tag v0.2.0
+		* Module name is golang.sigsum.org/sigsum-log-go
+		* Removed old references of {st,system-transparency,stfe}
+		* Removed redundant API output, e.g., in get-consistency-proof
+		* Updated (co)signed tree head structures and relevant APIs
+	* [ln5] running sigsum-log v0.2.0
+
+Discuss
+	* The new API - is removed redundancy actually easier to implement right?
+
+Next steps
+	* [rgdd] merge api.md
+	* [rgdd] sketch on project post
+	* [ln5] continued work on services and review design.md
+	* [rohon] think about a formalized security model
