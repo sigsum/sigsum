@@ -1,0 +1,54 @@
+Date: 2021-09-21, 1300 CEST
+Meet: membarrier.verkligendata.se/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* rohonk
+	* ln5
+
+Status round
+	* [rgdd] started to think about project announcement
+	* [ln5] www.sigsum.org serves our hugo website
+	* [rohonk] reading up on CM, can it be used to paramerize a security proof?
+
+Discuss
+	* Project announcement ideas
+		* How do other projects announce themselves?
+		* WireGuard announcement was good
+			* Done on the mailing list
+			* Short and down to the point
+		* Max 500 words looks like a good goal.
+		* Decision: rgdd is drafting an email, to go on the mailiing list.
+	* Merits of using GET, as oposed to POST, for the three get-* endpoints
+		* Initial thought was to not have, e.g., a percent-encoding parser too
+		* Only having GET endpoints would make URLs self-describing
+		* Useful if you are storing and/or sharing URLs to refer to data while debugging
+		* Decision: think about this until next week
+	* How about requiring gpg signing of git commits?
+		* How about requring *some* signing of git commits
+		* And of course released tar balls and such?
+		* Because maybe not gpg?
+		* Decision: defer for now, also think about alternatives to gpg
+		* (rgdd mentions that mabye we need to fix contribution guidelines)
+	* Picking a descriptive URL for meeting minutes pads
+		* Decision: <pad-link>/sigsum-YYYYMMDD
+	* RPKI transparency? RIPE discussion, but isn't CF already doing this?
+		* Decision: reach out after project announcement
+
+Next steps
+	* [rgdd] document thoughts that go into project anouncement, propose drafty mail
+	* [ln5] Get mailing list archive up and running, along with jitsi and pads services
+	* [rohonk] review design.md in design-framing branch, continued work on sec proof.
+
+Other useful links
+	* [ln5, rgdd] An RPKI transparency log project?
+		* https://www.ripe.net/ripe/mail/archives/routing-wg/2021-September/004397.html
+		* https://blog.cloudflare.com/rpki-details/
+		* https://ct.cloudflare.com/logs/cirrus
