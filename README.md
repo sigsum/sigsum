@@ -27,6 +27,19 @@ are bridged.
 - IRC: \#sigsum @ [OFTC.net](https://oftc.net/)
 - Matrix: [#sigsum:matrix.org](https://app.element.io/#/room/#sigsum:matrix.org)
 
+### Email
+
+Subscribe to the `sigsum-general` mailing list by sending an empty
+email to `sigsum-general+subscribe@lists.sigsum.org` and follow the
+instructions received in response.
+
+To unsubscribe, send an empty email to
+`sigsum-general+unsubscrbie@lists.sigsum.org`.
+
+To retrieve help on how to manage your subscription further, send an
+empty email to `sigsum-general+help@lists.sigsum.org`.
+
+
 ## Useful links
 - Go implementation of a sigsum log: [sigsum-log-go](https://git.sigsum.org/sigsum-log-go)
 - Python implementation of a sigsum witness: [sigsum-witness-py](https://git.sigsum.org/sigsum-witness-py)
