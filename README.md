@@ -22,7 +22,7 @@ discoverability to verify them.
 ### Chat
 
 Chat with users and developers using either IRC or Matrix. The rooms
-are bridged.
+are bridged so it doesn't matter which one you choose.
 
 - IRC: \#sigsum @ [OFTC.net](https://oftc.net/)
 - Matrix: [#sigsum:matrix.org](https://app.element.io/#/room/#sigsum:matrix.org)
