@@ -38,7 +38,7 @@ and follow the instructions received in response. To unsubscribe, send
 an empty email to
 
 
-    sigsum-general+unsubscrbie@lists.sigsum.org
+    sigsum-general+unsubscribe@lists.sigsum.org
 
 To retrieve help on how to manage your subscription further, send an
 empty email to
