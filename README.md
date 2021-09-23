@@ -29,15 +29,21 @@ are bridged.
 
 ### Email
 
-Subscribe to the `sigsum-general` mailing list by sending an empty
-email to `sigsum-general+subscribe@lists.sigsum.org` and follow the
-instructions received in response.
+Subscribe to the sigsum-general mailing list by sending an empty email
+to
 
-To unsubscribe, send an empty email to
-`sigsum-general+unsubscrbie@lists.sigsum.org`.
+    sigsum-general+subscribe@lists.sigsum.org
+
+and follow the instructions received in response. To unsubscribe, send
+an empty email to
+
+
+    sigsum-general+unsubscrbie@lists.sigsum.org
 
 To retrieve help on how to manage your subscription further, send an
-empty email to `sigsum-general+help@lists.sigsum.org`.
+empty email to
+
+    sigsum-general+help@lists.sigsum.org
 
 
 ## Useful links
