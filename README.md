@@ -18,6 +18,12 @@ Sigsum logging makes it reasonable to believe your claims by adding enough
 discoverability to verify them.
 
 ## Join the conversation
+
+### Chat
+
+Chat with users and developers using either IRC or Matrix. The rooms
+are bridged.
+
 - IRC: \#sigsum @ [OFTC.net](https://oftc.net/)
 - Matrix: [#sigsum:matrix.org](https://app.element.io/#/room/#sigsum:matrix.org)
 
