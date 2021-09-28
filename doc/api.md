@@ -107,7 +107,7 @@ as playing two roles: Verifier(append-only) and Verifier(freshness)
 [\[ts\]](https://git.sigsum.org/sigsum/tree/archive/2021-08-31-checkpoint-timestamp-continued#n84).
 
 #### 2.3.3 - Tree leaf
-Logs support a single leaf type.  It contains a claimant's statement,
+Logs support a single leaf type.  It contains a claimant's minimal statement,
 signature, and key hash.
 
 ```
