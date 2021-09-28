@@ -78,7 +78,9 @@ struct tree_head {
 ```
 `timestamp` is the time since the UNIX epoch (January 1, 1970 00:00 UTC) in
 seconds.  It is included so that monitors can be convinced of _freshness_ if
-enough witnesses added their cosignatures, see below.
+enough witnesses added their cosignatures.  A claimant may also use timestamps
+to prove to a believer that some logged data is current.  See timestamp
+verification in Section 2.3.2.
 
 `tree_size` is the number of leaves in a log.
 
@@ -207,7 +209,7 @@ Output on success:
 ### 3.3 - get-tree-head-cosigned
 Returns the latest cosigned tree head. Used together with `get-inclusion-proof`
 and `get-consistency-proof`.  Ensures that verifiers see the same statements as
-believers.
+believers.  May also be used to convince a believer about when logging happened.
 
 ```
 GET <base url>/sigsum/v0/get-tree-head-cosigned
