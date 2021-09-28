@@ -93,21 +93,13 @@ an [attack](https://git.sigsum.org/sigsum/tree/archive/2021-08-10-witnessing-bro
 in multi-log ecosystems.
 
 #### 2.3.2 - (Co)signed tree head
-A signed tree head contains a tree head and a signature.
-```
-struct signed_tree_head {
-	struct tree_head tree_head;
-	u8 signature[64];
-};
-```
+A signed tree head is composed of a tree head and a signature.  This structure
+does not have a Trunnel definition because it is neither signed nor logged.
 
-`tree_head` describes a log's state, see Section 2.3.1.
+Logs and witnesses sign the same `tree_head` structure, see Section 2.3.1.
 
-`signature` is a log's signature over `tree_head`.
-
-A witness cosigns the same serialized _tree head_.  Note that tree heads are
-scoped to a specific log to ensure that a witness signature for log X cannot be
-confused with a witness signature for log Y.
+Note that tree heads are scoped to a specific log to ensure that a witness
+signature for log X cannot be confused with a witness signature for log Y.
 
 A witness must not cosign a tree head if it is inconsistent with prior history
 or if the timestamp is backdated more than 5 minutes.  A witness can be viewed
