@@ -123,9 +123,9 @@ struct tree_leaf {
 }
 ```
 
-`shard_hint` must match a log's shard interval and is determined by a claimant.
+`shard_hint` must match a log's shard interval and is determined by the claimant.
 
-`checksum` represents some opaque data and is computed by a claimant.
+`checksum` represents some opaque data and is computed by the claimant.
 
 `signature` is a signature over a serialized `statement`.  It must be possible
 to verify this signature using the claimant's public verification key.
@@ -136,9 +136,11 @@ rather than the full public key, is used to motivate verifiers to locate the
 appropriate key and make an explicit trust decision.
 
 ## 3 - Public endpoints
-Every log has a fixed and unique base URL.  It must be a valid HTTP(S) URL that
-can have the `/sigsum/v0/<endpoint>` suffix appended.  Example of a base URL:
-`https://log.example.com/2021`.
+A log must have a fixed unique base URL that can have the following suffix
+appended: `/sigsum/v0/<endpoint>`.  Example of a valid base URL:
+```
+https://log.example.com:4711/opossum/2021`.
+```
 
 Input data (in requests) is POST:ed in the HTTP message body as line-terminated
 ASCII key/value pairs.  In more detail, the key-value format is `Key=Value\n`.
@@ -232,7 +234,7 @@ POST <base url>/sigsum/v0/get-inclusion-proof
 ```
 
 Input:
-- `leaf_hash`: leaf identifying which `tree_leaf` the log should prove
+- `leaf_hash`: leaf hash identifying which `tree_leaf` the log should prove
   inclusion of, hex-encoded.
 - `tree_size`: tree size of the tree head that the proof should be
   based on, ASCII-encoded decimal number.
@@ -288,8 +290,7 @@ Output on success:
 
 All fields may be repeated to return more than one leaf.  The first
 value in each list refers to the first leaf, the second value in each
-list refers to the second leaf, etc.  The size of each list must
-match.
+list refers to the second leaf, etc.  The size of each list must match.
 
 A log may return fewer leaves than requested.  At least one leaf
 must be returned on success.
