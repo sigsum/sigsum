@@ -1,0 +1,75 @@
+Date: 2021-09-28, 1300 CEST
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* rohonk
+
+Status round
+	* [rgdd] drafted an announcement post, still work in progress
+		* Inspiration: https://git.sigsum.org/sigsum/tree/archive/2021-09-28-announcement-inspiration?id=ff38f693454c9fe67c0cd5a6196f7ec62a3dd52b
+		* Plan is that rgdd, ln5, and kfreds sign-off the final text
+	* [rgdd] added shard_hint enforcement in sigsum-log-go
+	* [ln5] added and improved sigsum services: pad, meet, lists
+	* [rohonk] reviewed design.md document, continued security proof planning
+		* https://git.sigsum.org/sigsum/tree/archive/2021-09-28-design-comments?id=ff38f693454c9fe67c0cd5a6196f7ec62a3dd52b
+
+Discuss
+	* Revisit 'what needs to be done' before project announcement
+		* Services: done, but could be good:
+			* figure out pad errors (Decision: fix continuously, refresh if error)
+			* fix golang for cgit (Decision: fix now)
+		* Announce mail: mostly done, needs additional review
+		* Code: good to have
+			* enforce domain_hint (Decision: fix now)
+		* Take a pass over design.md, api.md, and README in sigsum-log-go (Decision: yes)
+		* Should we dog-food announcement with someone?
+			* GeKo?
+			* Tobias?
+			* Decision: yes, ask for feedback until the earlier parts of next week
+	* Update practise for when a pad is persisted in our archive?
+		* Background: sometimes pads are active and rgdd persits them several times
+		* Proposal:
+			* if pad is considered active: leave actual pad link in persisted minutes
+			* else: consider persisting pad next week instead
+			* (Motivation: less work.)
+			* (Motivation: easier for someone that snoops in minutes to join discussion.)
+			* (Remark: if it makes sense to snapshot active pad -> say so explicitly.)
+		* Decision: yes
+	* Would it be a good idea to add some kind of 'services' part on www.sigsum.org?
+		* Decision: yes
+	* Discuss if there are any API considerations that we are still thinking of
+		* Background: we discussed GET vs POST last week, home work until today
+		* Background: we probably have other discuss items that are not archived
+		* Goal: it would be good to summarize what those discuss items are
+			* Start: https://pad.sigsum.org/p/cb19-fa17-ac51-ce72
+			* Decisions:
+				* No changes before project announcement
+				* Add FAQ in design.md about this, let's see what others think
+
+Next steps
+	* [rgdd]
+		* setup research git repo for rohonk
+		* add code for testing cgit golang setup for ln5
+		* give ln5 a text for fresh pads
+		* take pass over documentation
+			* design.md w/ rohonk feedback, then merge
+			* api.md
+			* sigsum-log-go README.md
+			* website
+		* poke Geko and Tobias for holistic feedback
+		* add domain_hint support in sigsum-log-go
+	* [ln5]
+		* feedback on announcement text
+		* golang.sigsum.org set-up
+	* [rohonk]
+		* get started with separate git repo for security proof
+		* discuss security proof requirements with rgdd
