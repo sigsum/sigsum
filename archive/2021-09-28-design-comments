@@ -1,0 +1,23 @@
+-design.md file: [rohonk]
+    
+    Line 39-49: This part is very important as it clearly states the goal of the project. Also it draws a comparison between our goal and what we want to achieve different/better than the previously available certificate transperancy. I would like to suggest if we can make a different subsection 1.2, which deals with the comparative study. 
+    
+   Line 60-62: Using Claimant Model.
+   
+   Line 88-89: Does it mean that the fingerprint i.e. (hash of the opaque data is already stored in the sigsum log)? And now the Claimant checks with the log.
+   
+   Figure 1: What happens if one of the participating party (Believer/Claimant) act maliciously by deviating from the protocol?
+   
+   Line 109-113: Introduction to DNS in order to avoid log poisoning is a very interesting concept.
+   
+   Line 141-158: Each of the different attack circumstances needs to be dealt with in the security proof. Here we are considering an external attacker as a threat. Is it a good question to ask that what happens when the trusted party act maliciously within the system?
+   
+   Line 183-185: This part partially address my concern stated in the previous point.
+   
+   Steps for Security Proof:
+       https://git.sigsum.org/sigsum/tree/archive/2021-06-21-system-overview-ascii
+       1. Writing pseudocodes for each interaction i.e. Claimant <> Believer , 
+       Claimant <> Witness. 
+       2. Have a threat model considering all possible misbehaviours.
+       3. Cryptographic Schemes already determined (CRH, ECDSA)
+       4. Decide on what kind of security proof is necessary like pen and paper proof or using software like Proverif/Tamarind? 

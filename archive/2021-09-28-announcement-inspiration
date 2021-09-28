@@ -1,0 +1,117 @@
+Summary
+	* Announce via mailing list
+		* It happens in our community
+		* It makes it easy to respond
+		* It makes it easy to forward
+		* We can keep our website minimal for now (landing page)
+	* Announcements seem to be relatively short
+		* Max 500 words is probably a good rule of thumb
+		* Shorter if you have a few polished links to reference
+	* Possible points to make, also based on what we discussed before
+		* What type of project are we
+		* What is the project about
+		* What is the purpose of project announcement
+		* What is the timeline leading up to announcement
+		* What is the current project status
+		* What are the next steps
+		* Who is involved, people and funders
+		* Relevant links to help the reader navigate sigsum
+		* (Get feedback from a communicator)
+
+Other things to keep in mind
+	* Double check that what we are linking is in good enough shape
+		* E.g., small TODOs in sigsum-log-go README.md (fix links)
+	* We should think about what questions people might have in response to announcement
+		* Perhaps it would be a good idea to give design.md FAQ some love
+	* Try to avoid too much detail, we can make sigsum blog posts at a later stage
+	* The fact that we are aware of sigstore should probably be clear
+		* Let people ask, that's fine
+
+---
+Warning: I have not spent much time verifying if there were other announcements
+than the ones specified below.  It is the result of a v. quick search / analysis.
+
+(Some of the below links are not even project announcements, but rather
+announcement of 'we are developing or developed cool thing XXX'.  I kept
+everything I found useful as inspiration in case it helps anyone else.)
+
+Debian
+	* https://www.debian.org/doc/manuals/project-history/project-history.en.pdf
+	* See §1.1
+	* How: mail
+	* Points
+		* This is a work in progress
+		* It is cool because XXX
+		* Purpose of anouncement is XXX
+		* It is better than XXX because A,B,...
+
+Tails (back then amnesia)
+	* https://lists.torproject.org/pipermail/tor-talk/2009-August/002667.html
+	* How: mail
+	* Points
+		* This work is about XXX
+		* Licence is XXX
+		* Purpose of announcement is XXX
+		* We prefer if you get in touch via XXX
+
+Qubes
+	* https://blog.invisiblethings.org/2010/04/07/introducing-qubes-os.html
+	* How: post on website
+	* Points
+		* Timeline before announcing project
+		* Project is about doing XXX
+		* Current project status is XXX
+		* Learn more via resources XXX
+
+Signal
+	* https://signal.org/blog/signal/
+	* How: post on website
+	* Points
+		* Timeline leading up to announcement
+		* Mision and work is about XXX
+		* Next steps
+		* Who is involved
+		* "Give it a try!"
+
+Wireguard
+	* https://lists.zx2c4.com/pipermail/wireguard/2016-June/000002.html
+	* How: Mail
+	* Points
+		* Been at this for a while, confident enough to launch now
+		* Purpose of launch is XXX
+		* Link relevant resources (paper, website, git, mailing list)
+		* One paragraph primer (118 words)
+
+Firecracker
+	* https://aws.amazon.com/about-aws/whats-new/2018/11/firecracker-lightweight-virtualization-for-serverless-computing/
+	* How: post on website
+	* Points
+		* We are launching product XXX
+		* Key concepts are XXX
+		* How it is used / can be used
+		* Visit XXX to learn more
+
+System Transparency
+	* https://mullvad.net/en/blog/2019/6/3/system-transparency-future/
+	* How: post on website
+	* Points
+		* Key questions and background that motivated this work
+		* We believe that ST gives you the ability to XXX
+		* Call to action
+		* Little detail, link to ST white paper
+
+Sigstore
+	* How: press releases on partner websites
+		* https://security.googleblog.com/2021/03/introducing-sigstore-easy-code-signing.html
+		* Points
+			* What is the problem
+			* Announcement project with goal/mission XXX
+			* Problem space is related to XXX, involved tehniques are...
+			* Collaboration is between XXX
+			* Request for feedback
+			* Next steps
+		* https://www.linuxfoundation.org/en/press-release/linux-foundation-announces-free-sigstore-signing-service-to-confirm-origin-and-authenticity-of-software/
+		* Points
+			* Collaborators XXX want to achive XXX
+			* Quotes from involved people that explain idea and purpose
+			* Refer to website for more information
