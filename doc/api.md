@@ -250,8 +250,11 @@ other words, `H(0x00 | tree_leaf)`.
 `inclusion_path` must contain one or more hashes.  The order of node hashes
 follow from the hash strategy, see RFC 6962.
 
-Example: `echo "leaf_hash=241fd4538d0a35c2d0394e4710ea9e6916854d08f62602fb03b55221dcdac90f
-tree_size=4711" | curl --data-binary @- localhost/sigsum/v0/get-inclusion-proof`
+Example:
+```
+$ echo "leaf_hash=241fd4538d0a35c2d0394e4710ea9e6916854d08f62602fb03b55221dcdac90f
+tree_size=4711" | curl --data-binary @- <base url>/sigsum/v0/get-inclusion-proof
+```
 
 ### 3.5 - get-consistency-proof
 ```
@@ -269,8 +272,11 @@ Output on success:
 `consistency_path` must contain one or more hashes.  The order of node
 hashes follow from the hash strategy, see RFC 6962.
 
-Example: `echo "new_size=4711
-old_size=42" | curl --data-binary @- localhost/sigsum/v0/get-consistency-proof`
+Example:
+```
+$ echo "new_size=4711
+old_size=42" | curl --data-binary @- <base url>/sigsum/v0/get-consistency-proof
+```
 
 ### 3.6 - get-leaves
 ```
@@ -295,8 +301,11 @@ list refers to the second leaf, etc.  The size of each list must match.
 A log may return fewer leaves than requested.  At least one leaf
 must be returned on success.
 
-Example: `echo "start_size=42
-end_size=4711" | curl --data-binary @- localhost/sigsum/v0/get-leaves`
+Example:
+```
+$ echo "start_size=42
+end_size=4711" | curl --data-binary @- <base url>/sigsum/v0/get-leaves
+```
 
 ### 3.7 - add-leaf
 ```
@@ -324,11 +333,14 @@ Public logging must not be assumed to have happened until an inclusion proof is
 available.  An inclusion proof should not be relied upon unless it leads up to a
 trustworthy tree head.  Witness cosigning makes a tree head trustworthy.
 
-Example: `echo "shard_hint=1640995200
-checksum=cfa2d8e78bf273ab85d3cef7bde62716261d1e42626d776f9b4e6aae7b6ff953
-signature=c026687411dea494539516ee0c4e790c24450f1a4440c2eb74df311ca9a7adf2847b99273af78b0bda65dfe9c4f7d23a5d319b596a8881d3bc2964749ae9ece3
-verification_key=c9a674888e905db1761ba3f10f3ad09586dddfe8581964b55787b44f318cbcdf
-domain_hint=example.com" | curl --data-binary @- localhost/sigsum/v0/add-leaf`
+Example:
+```
+$ echo "shard_hint=1633039200
+checksum=315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
+signature=0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
+verification_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c
+domain_hint=example.com" | curl --data-binary @- <base url>/sigsum/v0/add-leaf
+```
 
 ### 3.8 - add-cosignature
 ```
@@ -350,8 +362,11 @@ to locate the appropriate key and make an explicit trust decision.
 
 Note that logs must be configured with relevant witness public keys.
 
-Example: `echo "cosignature=d1b15061d0f287847d066630339beaa0915a6bbb77332c3e839a32f66f1831b69c678e8ca63afd24e436525554dbc6daa3b1201cc0c93721de24b778027d41af
-key_hash=662ce093682280f8fbea9939abe02fdba1f0dc39594c832b411ddafcffb75b1d" | curl --data-binary @- localhost/sigsum/v0/add-cosignature`
+Example:
+```
+$ echo "cosignature=d1b15061d0f287847d066630339beaa0915a6bbb77332c3e839a32f66f1831b69c678e8ca63afd24e436525554dbc6daa3b1201cc0c93721de24b778027d41af
+key_hash=662ce093682280f8fbea9939abe02fdba1f0dc39594c832b411ddafcffb75b1d" | curl --data-binary @- <base url>/sigsum/v0/add-cosignature
+```
 
 ## 4 - Parameter summary
 Ed25519 as signature scheme. SHA256 as hash function.
