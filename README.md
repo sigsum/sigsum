@@ -59,10 +59,9 @@ You can provide feedback, report issues, and submit patches by sending an email
 to sigsum-general@lists.sigsum.org.
 
 ### Other
-- Source: [git.sigsum.org](https://git.sigsum.org)
-- Pads: [pad.sigsum.org](https://pad.sigsum.org)
-- Website: [www.sigsum.org](https://www.sigsum.org)
-- Onions: can be discovered for all services via Onion-Location.
+- Source: [git.sigsum.org](https://git.sigsum.org/)
+- Pads: [pad.sigsum.org](https://pad.sigsum.org/)
+- Website: [www.sigsum.org](https://www.sigsum.org/)
 - Onions: can be discovered for all services via [Onion-Location](https://community.torproject.org/onion-services/advanced/onion-location/).
 
 ## Sponsors
