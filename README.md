@@ -63,6 +63,7 @@ to sigsum-general@lists.sigsum.org.
 - Pads: [pad.sigsum.org](https://pad.sigsum.org)
 - Website: [www.sigsum.org](https://www.sigsum.org)
 - Onions: can be discovered for all services via Onion-Location.
+- Onions: can be discovered for all services via [Onion-Location](https://community.torproject.org/onion-services/advanced/onion-location/).
 
 ## Sponsors
 - [Mullvad VPN](https://mullvad.net/), financial sponsor
