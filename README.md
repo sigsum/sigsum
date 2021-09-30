@@ -12,31 +12,31 @@ certain cryptographic hash.  You can add additional meaning to each
 statement.  For example, you may use a sigsum log to claim things like
 (i) everyone get the same news articles,
 (ii) software package X builds reproducibly, or
-(iii) a list of key-value pairs are maintained with policy Y.
+(iii) a list of key-value pairs is maintained with policy Y.
 
 Sigsum logging makes it reasonable to believe a claim by adding enough
 discoverability to facilitate verification.
 
-Please refer to our
-[design document](https://git.sigsum.org/sigsum/tree/doc/design.md),
-[API specification](https://git.sigsum.org/sigsum/tree/doc/api.md), and
+Please refer to the
+[design document](https://git.sigsum.org/sigsum/tree/doc/design.md), the
+[API specification](https://git.sigsum.org/sigsum/tree/doc/api.md), and the
 [log prototype](https://git.sigsum.org/sigsum-log-go/tree/README.md)
 to learn more.
 
 ## Services
-We self-host all services that are required to function as a project.  Each
-service is operated on a best-effort level that is good enough for sigsum to
+Sigsum is self-hosting all services required to function as a software project.
+Each service is operated on a best-effort level that is good enough for sigsum to
 rely upon.  Please report any issues to the sigsum team via chat or email.
 
 ### Chat
-Chat with users and developers using IRC or Matrix. The rooms
+Chat with users and developers on IRC or Matrix. The rooms
 are bridged so it does not matter which one you choose.
 
 - IRC: \#sigsum @ [OFTC.net](https://oftc.net/)
 - Matrix: [#sigsum:matrix.org](https://app.element.io/#/room/#sigsum:matrix.org)
 
-We also have open video/voice meets on Tuesdays at 1100 UTC, channel sigsum.
-- Jitsi: [meet.sigsum.org](https://meet.sigsum.org)
+There are open video/voice meeting on Tuesdays at 1100 UTC, in the 'sigsum' room.
+- Jitsi: [meet.sigsum.org/sigsum](https://meet.sigsum.org/sigsum)
 
 ### Email
 Subscribe to the sigsum-general [mailing list](https://lists.sigsum.org) by
