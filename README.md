@@ -39,7 +39,7 @@ There are open video/voice meeting on Tuesdays at 1100 UTC, in the 'sigsum' room
 - Jitsi: [meet.sigsum.org/sigsum](https://meet.sigsum.org/sigsum)
 
 ### Email
-Subscribe to the sigsum-general [mailing list](https://lists.sigsum.org) by
+Subscribe to the sigsum-general [mailing list](https://lists.sigsum.org/) by
 sending an empty email to
 
     sigsum-general+subscribe@lists.sigsum.org
