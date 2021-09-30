@@ -3,9 +3,9 @@ Sigsum is a free and open source project that brings transparency logging to
 **sig**ned check**sum**s.  Logging sigsums and not a more concrete type like
 TLS certificates keeps the overall design simple and generally useful.
 
-- Minimalistic design that simplifies log operations and usage &#10004; 
-- Centralised log operations but distributed trust assumptions &#10004; 
-- Discoverability of statements for the data of your choice &#10004; 
+- [x] Minimalistic design that simplifies log operations and usage
+- [x] Centralised log operations but distributed trust assumptions
+- [x] Discoverability of statements for the data of your choice
 
 A minimal statement encodes the following claim: the right data has a
 certain cryptographic hash.  You can add additional meaning to each
