@@ -185,7 +185,8 @@ less costly to bootstrap into a reliable log ecosystem.
 ## 3 - Design
 We consider a _claimant_ that claims to distribute the _right_ opaque data with
 cryptographic hash X.  A claimant may add additional falsifiable claims.
-However, all claims must be digitally signed to ensure non-repudiation [\[CM\]](https://github.com/google/trillian/blob/master/docs/claimantmodel/CoreModel.md).
+However, all claims must be digitally signed to ensure non-repudiation
+	[\[CM\]](https://github.com/google/trillian/blob/master/docs/claimantmodel/CoreModel.md).
 
 A user should only use the opaque data if there is reason to _believe_ the
 claimant's claims.  Therefore, users are called _believers_.  A good first step
@@ -307,7 +308,7 @@ an inclusion proof leads up to.  Sigsum logs have trustworthy tree heads due
 to using a variant of witness cosigning.  A believer can not be tricked into
 accepting some opaque data that have yet to be publicly logged unless the
 attacker controls more than a threshold of witnesses.  In other words, witnesses
-are trust anchors that ensure verifiers see the same sigsum statements as
+are trust anchors that ensure verifiers see the same signed statements as
 believers.
 
 Sigsum logging can facilitate detection of attacks even if a believer fails open
@@ -316,10 +317,10 @@ repository mirror does not serve proofs of public logging could indicate that
 there is an ongoing attack against a claimant's distributed infrastructure.
 Interested parties can look for that.
 
-_Monitoring_ -- as in inspecting the log for sigsums that interest you -- can be
-viewed as a separate 4th step.  A monitor implements the verifier role and is
-necessarily ecosystem specific.  For example, it requires knowledge of public
-verification keys, what the opaque data is, and where the opaque data is
+_Monitoring_ -- as in inspecting the log for signed statements that interest you
+-- can be viewed as a separate 4th step.  A monitor implements the verifier role
+and is necessarily ecosystem specific.  For example, it requires knowledge of
+public verification keys, what the opaque data is, and where the opaque data is
 located.
 
 ### 3.2 - Summary
@@ -332,18 +333,9 @@ tree head is correct before cosigning.
 Claimants, verifiers, and witnesses interact with the log using an HTTP(S) API.
 A claimant must prove that they own a domain name as an anti-spam mechanism.
 Believers interact with the log _indirectly_ through their claimant's existing
-distribution mechanism.  It is the claimant's job to log sigsums and distribute
-necessary proofs of public logging.  It is the verifier's job to look for new
-statements in the log and alert an arbiter if any claim is false.
-
-An overview of the entire system is provided in Figure 2.
-```
-TODO: add complete system overview.  See drafty figure in archive.
-- Make terminology consistent with Figure 1
-- E.g., s/Monitor/Verifier
-- E.g., s/leaves/statements
-- Add arbiter
-```
+distribution mechanism.  It is the claimant's job to log signed statements and
+distribute necessary proofs of public logging.  It is the verifier's job to look
+for new statements in the log and alert an arbiter if any claim is false.
 
 ### 4 - A peek into the details
 Our bird's view introduction skipped many details that matter in practise.  Some
