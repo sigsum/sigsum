@@ -1,10 +1,9 @@
 # Sigsum Logging Design v0
 We propose sigsum logging.  It is similar to Certificate Transparency, except
-that cryptographically **sig**ned check**sum**s are logged instead of X.509
-certificates.  Publicly logging sigsum statements allow anyone to discover which
+that cryptographically **sig**ned check**sum**s are logged instead of TLS
+certificates.  Publicly logging signed checksums allow anyone to discover which
 keys produced what checksum signatures.  For example, malicious and unintended
-key-usage can be _detected_.  We present our design and discuss a few use-cases
-like binary transparency and reproducible builds.
+key-usage can be _detected_.  This document motivates and presents our design.
 
 **Preliminaries.**
 You have basic understanding of cryptographic primitives, e.g., digital
@@ -13,8 +12,9 @@ Certificate Transparency solves and how.
 
 **Warning.**
 This is a work-in-progress document that may be moved or modified.  A future
-revision of this document will bump the version number to v1.  Please let us
-know if you have any feedback.
+revision of this document will bump the version number to v1.
+
+Please let us know if you have any feedback.
 
 ## 1 - Introduction
 Transparent logs make it possible to detect unwanted events.  For example,
