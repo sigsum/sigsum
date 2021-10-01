@@ -18,38 +18,51 @@ Please let us know if you have any feedback.
 
 ## 1 - Introduction
 Transparent logs make it possible to detect unwanted events.  For example,
-	are there any (mis-)issued TLS certificates [\[CT\]](https://tools.ietf.org/html/rfc6962),
-	did you get a different Go module than everyone else [\[ChecksumDB\]](https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md),
-	or is someone running unexpected commands on your server [\[AuditLog\]](https://transparency.dev/application/reliably-log-all-actions-performed-on-your-servers/).
+are there any (mis-)issued TLS certificates
+	[\[CT\]](https://tools.ietf.org/html/rfc6962),
+did you get a different Go module than everyone else
+	[\[ChecksumDB\]](https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md),
+or is someone running unexpected commands on your server
+	[\[AuditLog\]](https://transparency.dev/application/reliably-log-all-actions-performed-on-your-servers/).
+
 A sigsum log brings transparency to **sig**ned check**sum**s.
 
 ### 1.1 - Problem description
 Suppose you are an entity that distributes some opaque data.  For example,
 the opaque data might be
 	a provenance file,
-	an executable binary,
-	an automatic software update, or
-	a TPM quote.
-You claim to distribute the right opaque data to everyone.
-However, past incidents taught us that word is cheap and sometimes things go
-wrong.  Trusted parties get compromised and lie about it [\[DigiNotar\]](), or
-they might not even realize it until later on because the break-in was stealthy
-[\[SolarWinds\]](https://www.zdnet.com/article/third-malware-strain-discovered-in-solarwinds-supply-chain-attack/).
+	an executable binary, or
+	a javascript.
+You claim to distribute the right opaque data to everyone.  However, past
+incidents taught us that word is cheap and sometimes things go wrong.
+Trusted parties get compromised and lie about it
+	[\[DigiNotar\]](https://roselabs.nl/files/audit_reports/Fox-IT_-_DigiNotar.pdf),
+or they might not even realize it until later on because the break-in was
+stealthy
+	[\[SolarWinds\]](https://www.zdnet.com/article/third-malware-strain-discovered-in-solarwinds-supply-chain-attack/).
 
-The goal of sigsum logging is to make your claims verifiable by you and
-others.  To keep the design simple and general, we want to achieve this goal
-with few assumptions about the opaque data or the involved claims.  You can
-think of this as some sort of bottom-line for what it takes to apply a
+The goal of sigsum logging is to facilitate verification of your claims.  To
+keep the design simple and general, we want to achieve this goal with few
+assumptions about the opaque data or the involved claims.
+
+You can think of this as some sort of bottom-line for what it takes to apply a
 transparent logging pattern.  Past use-cases that wanted to piggy-back on an
-existing reliable log ecosystem fit well into our scope [\[BinTrans\]](https://wiki.mozilla.org/Security/Binary_Transparency).
+existing reliable log ecosystem fit well into our scope
+	[\[BinTrans\]](https://wiki.mozilla.org/Security/Binary_Transparency).
 
-We also want the design to be easy from many different perspectives, for example log operations and
-verification in constrained environments.  This includes considerations such as
-simple parsing, protection against log spam and poisoning, and a
-well-defined gossip protocol without any complex auditing logic.
+We also want our design to be easy from many different perspectives, for example
+log operations and verification in constrained environments.  This includes
+considerations such as simple parsing, protection against log spam and
+poisoning, and a well-defined gossip protocol without complex auditing logic.
+
+This is in contrast to Certificate Transparency, which requires ASN.1
+parsing, storage of arbitrary certificate fields, reactive auditing of
+complicated log promises, and deployment of a gossip protocol that suits the web
+	[\[G1,](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7346853&casa_token=5bqmfaLp0Y8AAAAA:pzOJyu_BgWFxwEcM0r_ikDLhofU61PM8PWQnjcalxA3oXo7BxgKcOn0aIKorP02imZOG5i5Ew5sF&tag=1)
+	[G2\]](https://datatracker.ietf.org/doc/html/draft-ietf-trans-gossip-05).
 
 ### 1.2 - Abstract setting
-You would like users of the opaque data to _believe_ your claims.  Therefore,
+You would like users of some opaque data to _believe_ your claims.  Therefore,
 we refer to you as a _claimant_ and your users as _believers_.  Belief is going
 to be reasonable because each claim is expressed as a _signed statement_ that is
 transparency logged.  The opaque data and relevant proofs of public logging are
@@ -61,8 +74,8 @@ a _verifier_ can discover any statement that you as a claimant produced.  If it
 turns out that a statement contains a false claim, an _arbiter_ is notified that
 can act on it.  An overview of these _roles_ and how they interact are shown in
 Figure 1.  A party may play multiple roles.  A role may also be fulfilled by
-multiple parties. Refer to the [claimant model](https://github.com/google/trillian/blob/master/docs/claimantmodel/CoreModel.md)
-for additional detail.
+multiple parties. This is heavily inspired by the
+	[claimant model](https://github.com/google/trillian/blob/master/docs/claimantmodel/CoreModel.md).
 
 ```
           statement +----------+
@@ -90,16 +103,15 @@ a certain cryptographic hash_.  It is stored in a sigsum log for discoverability
 claimant may add additional claims that are _implicit_ for each statement.  An
 implicit claim is not stored by the log and therefore communicated through
 policy.  Examples of implicit claims:
-- The opaque data can be located in repository Y using X as an identifier.
+- The opaque data can be located in repository X using Y as an identifier.
 - The opaque data is a `.buildinfo` file that facilitates a reproducible build
 [\[R-B\]](https://wiki.debian.org/ReproducibleBuilds/BuildinfoFiles).
 
 Detailed examples of use-case specific claimant models are defined in a separate
-document [\[CM-Examples\]](https://git.sigsum.org/sigsum/blob/main/doc/claimant.md).
+document [\[CM-Examples\]](https://git.sigsum.org/sigsum/tree/doc/claimant.md).
 
 ### 1.3 - Design considerations
-Our main contribution is in the details that surround the log role in practise.
-Below is a brief summary.
+Below is a summary of design considerations that were considered.
 - **Preserved data flows:** a believer can enforce sigsum logging without making
 additional outbound network connections.  Proofs of public logging are provided
 using the same distribution mechanism as is used for distributing the opaque data.
@@ -113,13 +125,14 @@ little metadata as possible to combat log poisoning.  We piggyback on DNS to
 combat log spam.
 - **Built-in mechanisms that ensure a globally consistent log:** transparent
 logs rely on gossip protocols to detect forks.  We built a proactive gossip
-protocol directly into the log.  It is a variant of [witness cosigning]().
+protocol directly into the log.  It is a variant of
+	[witness cosigning](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521&casa_token=W2hlJFylY3sAAAAA:lzSJGF_OlAjHGQf3dCefW2RbYad18U__hGo48BQvOdHuS4zWM2jW7j9ksgXVWlPjxh0nAT28GD4B).
 - **No cryptographic agility**: the only supported signature scheme is Ed25519.
 The only supported hash function is SHA256.  Not having any cryptographic
 agility makes protocols and data formats simpler and more secure.
 - **Simple (de)serialization parsers:** complex (de)serialization parsers
 increase attack surfaces and make the system more difficult to use in
-constrained environments.  A sigsum statement can be (de)serialized using
+constrained environments.  Signed and logged data can be (de)serialized using
 [Trunnel](https://gitlab.torproject.org/tpo/core/trunnel/-/blob/main/doc/trunnel.md),
 or "by hand" in many modern programming languages.  This is the only parsing
 that a believer is required to support.  Claimants and verifiers additionally
