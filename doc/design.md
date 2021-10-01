@@ -147,40 +147,40 @@ to extend and/or modify.  The last part contains documentation TODOs.
 We consider a powerful attacker that gained control of a claimant's signing and
 release infrastructure.  This covers a weaker form of attacker that is able to
 sign data and distribute it to a subset of isolated users.  For example, this is
-essentially what the FBI requested from Apple in the San Bernardino case [\[FBI-Apple\]](https://www.eff.org/cases/apple-challenges-fbi-all-writs-act-order).
+essentially what the FBI requested from Apple in the San Bernardino case
+	[\[FBI-Apple\]](https://www.eff.org/cases/apple-challenges-fbi-all-writs-act-order).
 The fact that signing keys and related infrastructure components get
-compromised should not be controversial these days [\[SolarWinds\]](https://www.zdnet.com/article/third-malware-strain-discovered-in-solarwinds-supply-chain-attack/).
+compromised should not be controversial these days
+	[\[SolarWinds\]](https://www.zdnet.com/article/third-malware-strain-discovered-in-solarwinds-supply-chain-attack/).
 
 The attacker can also gain control of the transparent log's signing key and
 infrastructure.  This covers a weaker form of attacker that is able to sign log
 data and distribute it to a subset of isolated users.  For example, this could
 have been the case when a remote code execution was found for a Certificate
-Transparency Log [\[DigiCert\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/aKNbZuJzwfM).
+Transparency Log
+	[\[DigiCert\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/aKNbZuJzwfM).
 
-Any attacker that is able to position itself to control these components will
-likely be _risk-averse_.  This is at minimum due to two factors.  First,
-detection would result in a significant loss of capability that is by no means
-trivial to come by.  Second, detection means that some part of the attacker's
-malicious behavior will be disclosed publicly.
-
-Following from our introductory goal we want to facilitate _disocvery_ of sigsum
-statements.  Such discovery makes it possible to detect attacks on a claimant's
-signing and release infrastructure.  For example, a claimant can detect an
-unwanted sigsum by inspecting the log.  It could be the result of a compromised
+Following from our introductory goal we want to facilitate _discovery_ of signed
+checksums.  This makes it possible to detect attacks on a claimant's signing and
+release infrastructure.  For example, a claimant can detect an unwanted checksum
+signature by inspecting the log.  It could be the result of a compromised
 signing key.  The opposite direction is also possible.  Anyone may detect that a
 repository is not serving data and/or proofs of public logging.
 
+For security we need a collision resistant hash function and an unforgeable
+signature scheme.  We also assume that at most a threshold of independent
+parties stop following protocol to protect against a malicious log that attempts
+[split-view](https://datatracker.ietf.org/doc/html/draft-ietf-trans-gossip-05)
+or
+[slow-down](https://git.sigsum.org/sigsum/tree/archive/2021-08-24-checkpoint-timestamp)
+attacks.   This gives us a _trust-but-verify_ relationship towards the log.
+
 It is a non-goal to disclose the data that a cryptographic checksum represents
-_in the log_.  It is also a non-goal to allow richer metadata that is
-use-case specific.  The type of detection that a sigsum log supports is
-therefore more _coarse-grained_ when compared to Certificate Transparency.  A
+_in the log_.  It is also a non-goal to allow richer metadata that is use-case
+specific.  The type of detection that a sigsum log supports _in isolation_ is
+therefore more coarse-grained when compared to Certificate Transparency.  A
 significant benefit is that the resulting design becomes simpler, general, and
 less costly to bootstrap into a reliable log ecosystem.
-
-For security we need a collision resistant hash function and an unforgeable
-signature scheme.  We also assume that at most a threshold of seemingly
-independent parties are adversarial to protect against split-views
-[\[Gossip\]]().
 
 ## 3 - Design
 We consider a _claimant_ that claims to distribute the _right_ opaque data with
