@@ -337,13 +337,15 @@ distribution mechanism.  It is the claimant's job to log signed statements and
 distribute necessary proofs of public logging.  It is the verifier's job to look
 for new statements in the log and alert an arbiter if any claim is false.
 
-### 4 - A peek into the details
-Our bird's view introduction skipped many details that matter in practise.  Some
-of these details are presented here using a question-answer format.  A
-question-answer format is helpful because it is easily modified and extended.
+### 4 - Frequently Asked Questions
+#### 4.1 - What parts of the design are we still thinking about?
+A brief summary appeared in our archive on 2021-10-05
+[link](https://pad.sigsum.org/p/cb19-fa17-ac51-ce72).
 
-#### 4.1 - What is the point of having a shard hint?
-Unlike X.509 certificates which already have validity ranges, a checksum does
+XXX: add persisted link when it is available.
+
+#### 4.2 - What is the point of having a shard hint?
+Unlike TLS certificates which already have validity ranges, a checksum does
 not carry any such information.  Therefore, we require that a claimant selects a
 _shard hint_.  The selected shard hint must be in the log's _shard interval_.  A
 shard interval is defined by a start time and an end time.  Both ends of the
@@ -360,23 +362,13 @@ Note that _the claimant's shard hint is not a verified timestamp_.  The
 submitter should set the shard hint as large as possible.  If a roughly verified
 timestamp is needed, a cosigned tree head can be used instead.
 
-#### How is the threat of log spam and poisoning reduced?
-- Relates to: "why not log richer metadata and why not store the opaque data"
-- Relates to: "why we removed identifier field from the leaf"
-- Relates to: domain hint (maybe better as a separate heading)
-
-#### What are the details for witness cosigning?
-- Relates to: explain `tree-head-latest`, `tree-head-to-sign` and
-`tree-head-cosigned`
-
-#### What cryptographic primitives are supported?
-#### What (de)serialization parsers are needed?
-#### Are there any privacy concerns?
-
-#### Other
+#### 4.3 - XXX
+- Why not store opaque data in the log?
+- Why not store rich metadata in the log?
+- What (de)serialization parsers are needed?
+- What cryptographic primitives are supported and why?
+- Could you give a primer of witness cosigning?  Needs to include
+`get-tree-head-latest`, `get-tree-head-to-sign`, and `get-tree-head-cosigned`.
+- Are there any privacy concerns?
 - How does it work with more than one log?
 - What policy should a believer use?
-- Coarse-grained vs fine-grained detectability properties
-- \<insert more topics here\>
-
-## Concluding remarks
