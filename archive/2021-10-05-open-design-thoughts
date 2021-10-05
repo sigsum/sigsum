@@ -1,0 +1,59 @@
+Summary of design TODOs that could be considered
+------------------------------------------------
+Use HTTP GET for the three get* endpoints with input parameters?
+	* (Background: post with same key-value format as output.  One parser, not two.)
+	* Motivation: makes URLs self-describing, i.e., a URL refers to some data object
+		* Use-case 1: can store URL to easily find data at a later point
+		* Use-case 2: can paste URL to easily show others what you did ("debugging")
+		* Use-case 3: can query log data using a regular browser
+	* Trade-off:
+		* Believer: n/a, does not use a sigsum log's api
+		* Claimant: needs to serialize with an additiional parser
+			* E.g., percent-encoding
+			* E.g., get-inclusion-proof/10/abcd... to say "tree_size 10, hash abcd..."
+		* Log: needs to deserialize the above with an additional parser
+			* This is the scary part.  Get unauthenticated data from the internet
+			* Less scary because most, if not all, logs will use a memory safe language?
+	* Other
+		* If we want to go in this direction, any reason not to always HTTP GET?
+
+Make room for other rate limiting ideas than DNS?
+	* s/domain_hint/ownership_hint
+		* ownership_hint=dns:example.com
+
+Make room for other algorithms?
+	* Motivation: increases the log's utility
+	* Motivation: does not have to increase complexity that much
+		* Scope: raw algorithms like Ed25519, NIST p-256; no formats that add metadata
+		* Change in complexity would be:
+			* Trunnel:
+				* Before: u8 signature[32]
+				* After: struct Signature {
+					* u8 alg_id;
+					* union [alg_id] {
+						* Ed25519: u8 signature[32];
+						* ...
+					* }
+				* }
+			* ASCII: Signature=<hex encoding of Trunnel-serialized Signature struct>
+
+If not make room for other algorithms:
+	* Ed25519ph instead of Ed25519?
+		* Motivation: better for smart cards
+	* SHA512 truncated to 256 bits instead of SHA256?
+		* Motivation: Ed25519 uses SHA512 internally
+		* Motivation: faster
+		* (Background: SHA256 was picked somewhat arbitrarily, one of several OK choices.)
+
+Use TrustFabric's checkpoint format that sigsum helped with?
+	* Motivation: one (co)signed tree head format instead of two
+	* Trade-off: sigsum format already does what we want
+		* Checkpoints need timestamp extension
+		* Witnesses need to verify timestamp extension
+	* Trade-off: checkpoint format adds another (simple) parser into sigsum logging
+
+Al Cutter's idea to not have inclusion proof endpoint.
+	* Return proof on add-leaf request instead.
+		* First time: "not included yet"
+		* At a future time: "here is your proof"
+	* Motivation: automatic recovery from a lost request that had not been logged yet
