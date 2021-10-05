@@ -25,129 +25,99 @@ did you get a different Go module than everyone else
 or is someone running unexpected commands on your server
 	[\[AuditLog\]](https://transparency.dev/application/reliably-log-all-actions-performed-on-your-servers/).
 
-A sigsum log brings transparency to **sig**ned check**sum**s.
+A sigsum log brings transparency to **sig**ned check**sum**s.  You can think of
+sigsum logging as pre-hashed digital signing with transparency.
+The signing party is called a _signer_.
+The user of the signed data is called a _verifier_.
 
-### 1.1 - Problem description
-Suppose you are an entity that distributes some opaque data.  For example,
-the opaque data might be
-	a provenance file,
-	an executable binary, or
-	a javascript.
-You claim to distribute the right opaque data to everyone.  However, past
-incidents taught us that word is cheap and sometimes things go wrong.
-Trusted parties get compromised and lie about it
-	[\[DigiNotar\]](https://roselabs.nl/files/audit_reports/Fox-IT_-_DigiNotar.pdf),
-or they might not even realize it until later on because the break-in was
-stealthy
-	[\[SolarWinds\]](https://www.zdnet.com/article/third-malware-strain-discovered-in-solarwinds-supply-chain-attack/).
+The problem with _just digital signing_ is that it is difficult to determine
+whether the signed data is actually _the right data_.
+How would we detect if a secret signing key got compromised?
+How would we detect if something was signed by mistake, or even worse,
+if the signing party was forced to sign the wrong data against their will?
 
-The goal of sigsum logging is to facilitate verification of your claims.  To
-keep the design simple and general, we want to achieve this goal with few
-assumptions about the opaque data or the involved claims.
+Sigsum logs make it possible to answers these types of questions.  The basic
+idea is to make a signer's _key-usage_ transparent.  This is a powerful building
+block that can be used to facilitate verification of falsifiable claims.
 
-You can think of this as some sort of bottom-line for what it takes to apply a
-transparent logging pattern.  Past use-cases that wanted to piggy-back on an
-existing reliable log ecosystem fit well into our scope
-	[\[BinTrans\]](https://wiki.mozilla.org/Security/Binary_Transparency).
+Examples include:
+- Everyone gets the same executable binaries
+	[\[BT\]](https://wiki.mozilla.org/Security/Binary_Transparency)
+- A domain does not serve malicious javascript
+	[\[SRI\]](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)
+- A trust anchor behaves according to some policy
+	[\[nusenu-draft\]](https://gitlab.torproject.org/nusenu/torspec/-/blob/simple-wot-for-relay-operator-ids/proposals/ideas/xxx-simple-relay-operator-wot.md#a-simple-web-of-trust-for-tor-relay-operator-ids).
 
-We also want our design to be easy from many different perspectives, for example
-log operations and verification in constrained environments.  This includes
-considerations such as simple parsing, protection against log spam and
+There are many other use-cases that sigsum logging can help with.  We intend to
+document them based on what people are working on in a
+        [separate document](https://git.sigsum.org/sigsum/tree/doc/claimant.md)
+using the
+        [claimant model](https://github.com/google/trillian/blob/master/docs/claimantmodel/CoreModel.md).
+This document is about our log design.
+
+### 1.1 - Goals and non-scope
+The goal of sigsum logging is to be a building block that facilitates
+verification of falsifiable claims.  There should be emphasis on _facilitating_,
+because all a sigsum log does is ensure that signed checksums are discoverable.
+
+We want to achieve our goal without making assumptions that are use-case
+specific.  Therefore, sigsum logs allow logging of signed checksum and some
+minimally required metadata.  Storing data and rich metadata is a non-goal.
+
+We want the resulting design to be easy from many different perspectives, for
+example log operations and verification in constrained environments.  This
+includes considerations such as simple parsing, protection against log spam and
 poisoning, and a well-defined gossip protocol without complex auditing logic.
 
-This is in contrast to Certificate Transparency, which requires ASN.1
-parsing, storage of arbitrary certificate fields, reactive auditing of
-complicated log promises, and deployment of a gossip protocol that suits the web
-	[\[G1,](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7346853&casa_token=5bqmfaLp0Y8AAAAA:pzOJyu_BgWFxwEcM0r_ikDLhofU61PM8PWQnjcalxA3oXo7BxgKcOn0aIKorP02imZOG5i5Ew5sF&tag=1)
+This is in contrast to Certificate Transparency, which requires ASN.1 parsing,
+storage of arbitrary certificate fields, reactive auditing of complicated log
+promises, and deployment of a gossip protocol that suits the web
+	[\[G1,](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7346853)
 	[G2\]](https://datatracker.ietf.org/doc/html/draft-ietf-trans-gossip-05).
 
-### 1.2 - Abstract setting
-You would like users of some opaque data to _believe_ your claims.  Therefore,
-we refer to you as a _claimant_ and your users as _believers_.  Belief is going
-to be reasonable because each claim is expressed as a _signed statement_ that is
-transparency logged.  The opaque data and relevant proofs of public logging are
-then distributed through a _repository_.  Note that repository is an abstract
-construct.  For example, it may be a website or something else.
-
-A believer can now be convinced that public logging actually happened, so that
-a _verifier_ can discover any statement that you as a claimant produced.  If it
-turns out that a statement contains a false claim, an _arbiter_ is notified that
-can act on it.  An overview of these _roles_ and how they interact are shown in
-Figure 1.  A party may play multiple roles.  A role may also be fulfilled by
-multiple parties. This is heavily inspired by the
-	[claimant model](https://github.com/google/trillian/blob/master/docs/claimantmodel/CoreModel.md).
-
-```
-          statement +----------+
-         +----------| Claimant |----------+
-         |          +----------+          |Data
-         |                                |Proof
-         v                                v
-    +---------+                     +------------+
-    |   Log   |                     | Repository |
-    +---------+                     +------------+
-        |                              |   |
-        |                              |   |Data
-        |statements +----------+  Data |   |Proof
-        +---------->| Verifier |<------+   |
-                    +----------+           v
-    +---------+          |          +------------+
-    | Arbiter | <--------+          |  Believer  |
-    +---------+     false claim     +------------+
-
-            Figure 1: abstract setting
-```
-
-A claimant's statement encodes the following claim: _the right opaque data has
-a certain cryptographic hash_.  It is stored in a sigsum log for discoverability.  A
-claimant may add additional claims that are _implicit_ for each statement.  An
-implicit claim is not stored by the log and therefore communicated through
-policy.  Examples of implicit claims:
-- The opaque data can be located in repository X using Y as an identifier.
-- The opaque data is a `.buildinfo` file that facilitates a reproducible build
-[\[R-B\]](https://wiki.debian.org/ReproducibleBuilds/BuildinfoFiles).
-
-Detailed examples of use-case specific claimant models are defined in a separate
-document [\[CM-Examples\]](https://git.sigsum.org/sigsum/tree/doc/claimant.md).
-
-### 1.3 - Design considerations
-Below is a summary of design considerations that were considered.
-- **Preserved data flows:** a believer can enforce sigsum logging without making
+### 1.2 - Log properties
+It is fair to say that much though went into _removing_ unwanted usage-patterns
+of sigsum logs, ultimately leaving us with a design that has the below
+properties.  It does not mean that the sigsum log design is set in stone yet,
+but it is mature enough to capture what type of ecosystem we want to bootstrap.
+- **Preserved data flows:** a verifier can enforce sigsum logging without making
 additional outbound network connections.  Proofs of public logging are provided
-using the same distribution mechanism as is used for distributing the opaque data.
+using the same distribution mechanism as is used for distributing the actual data.
+In other words, the signer talks to the log on behalf of the verifying party.
 - **Sharding to simplify log life cycles:** starting to operate a log is easier
 than closing it down in a reliable way.  We have a predefined sharding interval
-that determines the time during which the log will be active.
-- **Defenses against log spam and poisoning:** to maximize a log's utility it
-should be open for anyone to use.  However, accepting logging requests from
-anyone at arbitrary rates can lead to abusive usage patterns.  We store as
+that determines the time during which the log will be active.  Submissions to
+an older log shard cannot be replayed in another non-overlapping log shard.
+- **Defenses against log spam and poisoning:** to keep logs as useful as
+possible they should be open for everyone.  However, accepting logging requests
+from anyone at arbitrary rates can lead to abusive usage patterns.  We store as
 little metadata as possible to combat log poisoning.  We piggyback on DNS to
-combat log spam.
+combat log spam.  Sharding is also helpful to combat log spam in the long run.
 - **Built-in mechanisms that ensure a globally consistent log:** transparent
 logs rely on gossip protocols to detect forks.  We built a proactive gossip
 protocol directly into the log.  It is a variant of
-	[witness cosigning](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521&casa_token=W2hlJFylY3sAAAAA:lzSJGF_OlAjHGQf3dCefW2RbYad18U__hGo48BQvOdHuS4zWM2jW7j9ksgXVWlPjxh0nAT28GD4B).
-- **No cryptographic agility**: the only supported signature scheme is Ed25519.
-The only supported hash function is SHA256.  Not having any cryptographic
-agility makes protocols and data formats simpler and more secure.
+	[witness cosigning](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521).
+- **No cryptographic agility**: the only supported signature schemes and hash
+functions are Ed25519 and SHA256.  Not having any cryptographic agility makes
+protocols and data formats simpler and more secure.
 - **Simple (de)serialization parsers:** complex (de)serialization parsers
 increase attack surfaces and make the system more difficult to use in
 constrained environments.  Signed and logged data can be (de)serialized using
-[Trunnel](https://gitlab.torproject.org/tpo/core/trunnel/-/blob/main/doc/trunnel.md),
+	[Trunnel](https://gitlab.torproject.org/tpo/core/trunnel/-/blob/main/doc/trunnel.md),
 or "by hand" in many modern programming languages.  This is the only parsing
-that a believer is required to support.  Claimants and verifiers additionally
-need to interact with a sigsum log's HTTP(S) API with line-terminated ASCII.
+that a verifier is required to support.  Signers, monitors, and witnesses
+additionally need to interact with a sigsum log's line-terminated ASCII HTTP(S)
+        [API](https://git.sigsum.org/sigsum/tree/doc/api.md).
 
-### 1.4 - Roadmap
+### 1.3 - Roadmap
 First we describe our threat model.  Then we give a bird's view of the design.
-Finally, we go into greater detail using a question-answer format that is easy
-to extend and/or modify.  The last part contains documentation TODOs.
+Finally, we wrap up with an incomplete frequently asked questions section.
 
-## 2 - Threat model and (non-)goals
-We consider a powerful attacker that gained control of a claimant's signing and
+## 2 - Threat model
+We consider a powerful attacker that gained control of a signer's signing and
 release infrastructure.  This covers a weaker form of attacker that is able to
-sign data and distribute it to a subset of isolated users.  For example, this is
-essentially what the FBI requested from Apple in the San Bernardino case
+sign data and distribute it to a subset of isolated verifiers.  For example,
+this is essentially what the FBI requested from Apple in the San Bernardino case
 	[\[FBI-Apple\]](https://www.eff.org/cases/apple-challenges-fbi-all-writs-act-order).
 The fact that signing keys and related infrastructure components get
 compromised should not be controversial these days
@@ -155,220 +125,252 @@ compromised should not be controversial these days
 
 The attacker can also gain control of the transparent log's signing key and
 infrastructure.  This covers a weaker form of attacker that is able to sign log
-data and distribute it to a subset of isolated users.  For example, this could
-have been the case when a remote code execution was found for a Certificate
-Transparency Log
+data and distribute it to a subset of isolated verifiers.  For example, this
+could have been the case when a remote code execution was found for a
+Certificate Transparency Log
 	[\[DigiCert\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/aKNbZuJzwfM).
 
-Following from our introductory goal we want to facilitate _discovery_ of signed
-checksums.  This makes it possible to detect attacks on a claimant's signing and
-release infrastructure.  For example, a claimant can detect an unwanted checksum
-signature by inspecting the log.  It could be the result of a compromised
-signing key.  The opposite direction is also possible.  Anyone may detect that a
-repository is not serving data and/or proofs of public logging.
+The overall system is said to be secure if a monitor can discover every signed
+checksum that a verifier would accept, or alternatively, if log misbehavior can
+be detected.  A log can misbehave by not presenting the same append-only Merkle
+tree to everyone.  A log operator would only do that if it is likely to go
+unnoticed.
 
 For security we need a collision resistant hash function and an unforgeable
 signature scheme.  We also assume that at most a threshold of independent
-parties stop following protocol to protect against a malicious log that attempts
-[split-view](https://datatracker.ietf.org/doc/html/draft-ietf-trans-gossip-05)
-or
-[slow-down](https://git.sigsum.org/sigsum/tree/archive/2021-08-24-checkpoint-timestamp)
-attacks.   This gives us a _trust-but-verify_ relationship towards the log.
-
-It is a non-goal to disclose the data that a cryptographic checksum represents
-_in the log_.  It is also a non-goal to allow richer metadata that is use-case
-specific.  The type of detection that a sigsum log supports _in isolation_ is
-therefore more coarse-grained when compared to Certificate Transparency.  A
-significant benefit is that the resulting design becomes simpler, general, and
-less costly to bootstrap into a reliable log ecosystem.
+witnesses stop following protocol to protect against a malicious log that
+attempts
+	[split-view](https://datatracker.ietf.org/doc/html/draft-ietf-trans-gossip-05)
+and
+	[slow-down](https://git.sigsum.org/sigsum/tree/archive/2021-08-24-checkpoint-timestamp)
+attacks.   A log operator can at best deny service with these assumptions.
 
 ## 3 - Design
-We consider a _claimant_ that claims to distribute the _right_ opaque data with
-cryptographic hash X.  A claimant may add additional falsifiable claims.
-However, all claims must be digitally signed to ensure non-repudiation
-	[\[CM\]](https://github.com/google/trillian/blob/master/docs/claimantmodel/CoreModel.md).
+An overview of sigsum logging is shown in Figure 1.  Before going into detail
+we give a brief primer below.
+```
+                    +----------+
+checksum +----------|  Signer  |-----------+ data
+metadata |          +----------+           | metadata
+         |               ^                 | proof
+         v               |                 v
+    +---------+   proof  |          +--------------+
+    |   Log   |----------+          | Distribution |
+    +---------+                     +--------------+
+      ^  | checksum                     |  |
+      |  | metadata                     |  |data
+      |  | proof     +---------+   data |  |metadata
+      |  +---------->| Monitor |<-------+  |proof
+      v              +---------+           v
+    +---------+           |             +----------+
+    | witness |           | false       | Verifier |
+    +---------+           | claim       +----------+
+                          v
+                     investigate
 
-A user should only use the opaque data if there is reason to _believe_ the
-claimant's claims.  Therefore, users are called _believers_.  A good first step
-is to verify that the opaque data is accompanied by a valid digital signature.
-This corresponds to current practises where, say, a software developer signs new
-releases with `gpg` or `minisign -H`.
+            Figure 1: system overview
+```
 
-The problem is that it is difficult to verify whether the opaque data is
-actually _the right opaque data_.  For example, what if the claimant was coerced
-or compromised?  Something malicious could be signed as a result.
+A signer wants to make their key-usage transparent.  Therefore, they sign a
+statement that sigsum logs accept.  That statement encodes a checksum of some
+data.  Minimal metadata must also be logged, such as the checksum's signature
+and a hash of the public verification key.  This ensures that every signed
+checksum can be attributed to the signing party if you know their key.
 
-A sigsum log adds _discoverability_ into a claimant's signed statements, see
-Figure 1.  Such discoverability facilitates _verification of claims_.
-Verifiability is a significant improvement when compared to the blind trust that
-we had before.
+The signing party waits for their submission to be included in the log.  When
+there is an inclusion proof available that leads up to a cosigned Merkle tree
+head, the checksum's data is ready for distribution with proofs of logging.
 
-### 3.1 - How it works
+These proofs are convincing for a verifier without any outbound network
+connections if a threshold of witnesses followed a basic cosigning protocol.
+Additional detail is provided in Section 3.2.3.
+
+Asynchronously, use-case specific monitors look for signed checksums that
+correspond to public keys that they are aware of.  Monitors and verifiers
+rely on witness cosigning to be sure that they see the same append-only logs.
+
+Use-case specific monitors may verify the underlying data further by looking it
+up in the same way that a verifier does.  If the data cannot be found or if a
+claimed property is false, that can be detected and investigated.  Excellent!
+
+### 3.1 - Merkle tree
 A sigsum log maintains a public append-only Merkle tree.  Independent witnesses
 verify that this tree is fresh and append-only before cosigning it to achieve a
 distributed form of trust.  A tree leaf contains four fields:
 - **shard_hint**: a number that binds the leaf to a particular _shard interval_.
 Sharding means that the log has a predefined time during which logging requests
 are accepted.  Once elapsed, the log can be shut down.
-- **checksum**: a cryptographic hash of some opaque data.  The log never
-sees the opaque data; just the hash.
-- **signature**: a digital signature that is computed by a claimant over the
+- **checksum**: most likely a hash of some data.  The log is not aware of data;
+just checksums.
+- **signature**: a digital signature that is computed by a signer over the
 leaf's shard hint and checksum.
-- **key_hash**: a cryptographic hash of the claimant's verification key that can
+- **key_hash**: a cryptographic hash of the signer's verification key that can
 be used to verify the signature.
 
-The signed statement encodes the following claim: "the right opaque data has
-cryptographic hash X".  The claimant may also communicate additional implicit
-claims through policy.  For example, "the opaque data can be located in
-repository Y" and "the opaque data facilitates a reproducible build".
+A shard hint is included in the signed statement to prevent replays in a
+non-overlapping shard.  See details in Section 4.2.
 
-A verifier that monitors the log ecosystem can discover new statements and
-contact an arbiter if any claim turns out to be false.  Examples of verifies in
-a reproducible builds system include third-party rebuilders.  Ideally, a
-believer should only use a (supposedly) reproducible build artifact if it is
-accompanied by proofs of public logging.
+Any additional metadata that is use-case specific can be stored as part of the
+data that a checksum represents.  Where data is located is use-case specific.
 
-Verifiers use the key hash field to determine which claimant produced a new
-statement.  A hash, rather than the full verification key, is used to motivate
-verifiers to locate the key and make an explicit trust decision.  Not disclosing
-verification keys in the log makes it less likely that someone would use an
-untrusted key _by mistake_.
+Note that a key hash is logged rather than the public key itself.  This reduces
+the likelihood that an untrusted key is discovered and used by mistake.  In
+other words, verifiers and monitors must locate keys and trust them explicitly.
 
-#### 3.1.1 - Preparing a logging request (step 1)
-A claimant selects a shard hint and a checksum that should be logged.  The
+### 3.2 - Usage pattern
+#### 3.2.1 - Prepare a request
+A signer selects a shard hint and a checksum that should be logged.  The
 selected shard hint represents an abstract statement like "sigsum logs that are
-active during 2021".  The selected checksum is the output of a cryptographic
-hash function.  It could be the hash of an executable binary, a reproducible
-build recipe, etc.
+active during 2021".  The selected checksum is most likely the output of a
+hash function.  For example, it could be the hash of an executable binary.
 
-The selected shard hint and checksum are signed by the claimant.  A shard hint
-is incorporated into the signed statement to ensure that old log leaves cannot
-be replayed in a newer shard by a good Samaritan.
+The selected shard hint and checksum are signed by the signer.  A shard hint is
+incorporated into the signed statement to ensure that a log's leaves cannot be
+replayed in a non-overlapping shard by a good Samaritan.
 
-The claimant will also have to do a one-time DNS setup.  As outlined below, the
-log will check that _some domain_ is aware of the claimant's verification key.
-This is part of a defense mechanism that combats log spam.
+The signer also has to do a one-time DNS setup.  As outlined below, logs will
+check that _some domain_ is aware of the signer's verification key.  This is
+part of a defense mechanism that helps us combat log spam.  It was not shown in
+Figure 1 to avoid it from being overly cluttered.   XXX: should be added?
 
-#### 3.1.2 - Submitting a logging request (step 2)
+#### 3.2.2 - Submit request
 Sigsum logs implement an HTTP(S) API.  Input and output is human-readable and
 uses a simple ASCII format.  A more complex parser like JSON is not needed
 because the exchanged data structures are primitive enough.
 
-A claimant submits their shard hint, checksum, signature, and public
-verification key as key-value pairs.  The log uses the public verification key
-to check that the signature is valid, then hashes it to construct the leaf's key
-hash.
+A signer submits their shard hint, checksum, signature, and public verification
+key as key-value pairs.  The log uses the public verification key to check that
+the signature is valid, then hashes it to construct the leaf's key hash.
 
-The claimant also submits a _domain hint_.  The log will download a DNS TXT
+The signer also submits a _domain hint_.  The log will download a DNS TXT
 resource record based on the provided domain name.  The downloaded result must
-match the public verification key hash.  By verifying that all claimants
-control a domain that is aware of their verification key, rate limits can be
-applied per second-level domain.  As a result, you would need a large number of
-domain names to spam the log in any significant way.
+match the public verification key hash.  By verifying that all signers control a
+domain that is aware of their verification key, rate limits can be applied per
+second-level domain.  You would need a large number of domain names to spam the
+log in any significant way if rate limits are not too loose.
 
-Using DNS to combat spam is convenient because many claimants already have a
+Using DNS to combat spam is convenient because many signers already have a
 domain name.  A single domain name is also relatively cheap.  Another benefit is
 that the same anti-spam mechanism can be used across several independent logs
 without coordination.  This is important because a healthy log ecosystem needs
-more than one log to be reliable.  DNS also has built-in caching which
-claimants can influence by setting their TTLs accordingly.
+more than one log to be reliable in case of downtime or unexpected events like
+        [cosmic rays](https://groups.google.com/a/chromium.org/g/ct-policy/c/PCkKU357M2Q/).
 
-A claimant's domain hint is not part of the leaf because key management is
+A signer's domain hint is not part of the logged leaf because key management is
 more complex than that.  A separate project should focus on transparent key
-management.  Our work is related to transparent _key-usage_.
+management.  Our work is about transparent _key-usage_.
 
-A sigsum log will _try_ to incorporate a leaf into its Merkle tree if a logging
-request is accepted.  There are no _promises of public logging_ as in
-Certificate Transparency.  Therefore, a claimant needs to wait for an inclusion
-proof before concluding that the logging request succeeded.  Not having
-inclusion promises makes the entire log ecosystem less complex.  The downside is
-that the resulting log ecosystem cannot guarantee low latency.
+A sigsum log _tries_ to incorporate a leaf into its Merkle tree if a logging
+request is accepted.  There are however no _promises of public logging_ as in
+Certificate Transparency.  Therefore, sigsum logs do not provide low-latency.  A
+signer has to wait for an inclusion proof and a cosigned tree head.
 
-#### 3.1.3 - Proofs of public logging (step 3)
-Claimants are responsible for collecting all cryptographic proofs that their
-believers will need to enforce public logging.  These proofs are distributed
-using the same mechanism as the opaque data.   A believer receives:
-1. **Opaque data**: a claimant's opaque data.
-2. **Shard hint**: a claimant's selected shard hint.
-3. **Signature**: a claimant's signed statement.
-4. **(Co)signed tree head**: a log's signed tree head and a list of cosignatures
-from so-called _witnesses_.
-5. **Inclusion proof**: a proof of inclusion that is based on the logged leaf
-and the above tree head.
+#### 3.2.3 - Wait for witness cosigning
+Sigsum logs freeze a tree head every five minutes.  Cosigning witnesses poll the
+logs for so-called _to-sign_ tree heads, verifying that they are fresh and
+append-only before doing a cosignature operation.  Cosignatures are posted back
+to the logs so that signers can easily fetch the finalized cosigned tree heads.
 
-Ideally, a believer should only accept the opaque data if these criteria hold:
-- The claimant's signed statement verifies.
-- The log's tree head can be reconstructed from the logged leaf and the provided
-inclusion proof.
-- The log's tree head has enough valid (co)signatures.
+It takes five to ten minutes before a signer's distribution phase can start.
+The added latency is a trade-off that simplifies the entire log ecosystem by
+removing the need for reactive gossip-audit protocols
+	[\[G1,](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7346853)
+	[G2,](https://datatracker.ietf.org/doc/html/draft-ietf-trans-gossip-05)
+	[G3,](https://petsymposium.org/2021/files/papers/issue2/popets-2021-0024.pdf)
+	[G4\]](https://docs.google.com/document/d/16G-Q7iN3kB46GSW5b-sfH5MO3nKSYyEb77YsM7TMZGE/edit).
 
-Notice that there are no new outbound network connections for a believer.
+#### 3.2.4 - Distribution
+After a signer collected proofs of public logging the distribution phase can
+start.  Distribution happens using the same mechanism that is normally used for
+the data.  For example, on a website, in a git repository, etc.
+
+**Data:**
+the signer's data.  It can be used to reproduce a logged checksum.
+
+**Metadata:**
+a signer's shard hint, signature, and verification key hash.  Note that the
+combination of data and metadata can be used to reconstruct the logged leaf.
+
+**Proof:**
+an inclusion proof that leads up to a cosigned tree head.
+
+#### 3.2.5 - Verification
+A verifier should only accept the distributed data if these criteria hold:
+1. The signer's checksum is correct for the distributed data.
+2. The signer's signed statement verifies.
+3. The provided tree head can be reconstructed from the logged leaf and 
+its inclusion proof.
+4. The provided tree head is from a known log with enough cosignatures.
+
+Notice that there are no new outbound network connections for a verifier.
 Therefore, a proof of public logging is only as convincing as the tree head that
-an inclusion proof leads up to.  Sigsum logs have trustworthy tree heads due
-to using a variant of witness cosigning.  A believer can not be tricked into
-accepting some opaque data that have yet to be publicly logged unless the
-attacker controls more than a threshold of witnesses.  In other words, witnesses
-are trust anchors that ensure verifiers see the same signed statements as
-believers.
+an inclusion proof leads up to.  Sigsum logs have trustworthy tree heads due to
+using a variant of witness cosigning.  In other words, a verifier cannot be
+tricked into accepting some data whose checksum have yet to be publicly logged
+unless the attacker controls more than a threshold of witnesses.
 
-Sigsum logging can facilitate detection of attacks even if a believer fails open
-or enforces the above criteria partially.  For example, the fact that a
-repository mirror does not serve proofs of public logging could indicate that
-there is an ongoing attack against a claimant's distributed infrastructure.
-Interested parties can look for that.
+#### 3.2.6 - Monitoring
+An often overlooked step is that transparent logging falls short if no-one keeps
+track of what appears in the public logs.  Monitoring is necessarily use-case
+specific in sigsum.  At minimum, you need to locate relevant public keys.  You
+may also need to be aware of how to locate the data that a checksum represents.
 
-_Monitoring_ -- as in inspecting the log for signed statements that interest you
--- can be viewed as a separate 4th step.  A monitor implements the verifier role
-and is necessarily ecosystem specific.  For example, it requires knowledge of
-public verification keys, what the opaque data is, and where the opaque data is
-located.
+It should also be noted that sigsum logging can facilitate detection of attacks
+even if a verifier fails open by enforcing the third and fourth criteria partially
+in Section 3.2.5.  For example, the fact that a distribution mechanism does not
+serve proofs of public logging could indicate that there is an ongoing attack
+against a signer's distributed infrastructure.  A monitor may detect that.
 
-### 3.2 - Summary
+### 3.3 - Summary
 Sigsum logs are sharded and shut down at predefined times.  A sigsum log can
-shut down _safely_ because verification on the believer-side is not interactive.
+shut down _safely_ because verification on the verifier-side is not interactive.
 The difficulty of bypassing public logging is based on the difficulty of
-controlling enough independent witnesses.  A witness verifies that a log's
-tree head is correct before cosigning.
+controlling enough independent witnesses.  A witness checks that a log's tree
+head is correct before cosigning.  Correct refers to fresh and append-only.
 
-Claimants, verifiers, and witnesses interact with the log using an HTTP(S) API.
-A claimant must prove that they own a domain name as an anti-spam mechanism.
-Believers interact with the log _indirectly_ through their claimant's existing
-distribution mechanism.  It is the claimant's job to log signed statements and
-distribute necessary proofs of public logging.  It is the verifier's job to look
-for new statements in the log and alert an arbiter if any claim is false.
+Signers, monitors, and witnesses interact with the logs using an ASCII HTTP(S)
+API.  A signer must prove that they own a domain name as an anti-spam mechanism.
+No data and rich metadata is logged to protect the log operator from poisoning.
+It also keeps log operations simpler because there are fewer bytes to manage.
+
+Verifiers interact with the logs indirectly through their signer's existing
+distribution mechanism.  Signers are responsible for logging signed checksums
+and distributing necessary proofs of public logging.  Monitor discover signed
+checksums in the logs, generating alerts if use-case specific claims are false.
 
 ### 4 - Frequently Asked Questions
 #### 4.1 - What parts of the design are we still thinking about?
-A brief summary appeared in our archive on 2021-10-05
-[link](https://pad.sigsum.org/p/cb19-fa17-ac51-ce72).
-
-XXX: add persisted link when it is available.
+A brief summary appeared in our archive on
+	[2021-10-05](https://git.sigsum.org/sigsum/tree/archive/2021-10-05-open-design-thoughts?id=5c02770b5bd7d43b9327623d3de9adeda2468e84).
+It may be incomplete, but covers some details that are worth thinking more
+about.  We are still open to remove, add, or change things if it is motivated.
 
 #### 4.2 - What is the point of having a shard hint?
-Unlike TLS certificates which already have validity ranges, a checksum does
-not carry any such information.  Therefore, we require that a claimant selects a
-_shard hint_.  The selected shard hint must be in the log's _shard interval_.  A
-shard interval is defined by a start time and an end time.  Both ends of the
-shard interval are inclusive and expressed as the number of seconds since the
-UNIX epoch (January 1, 1970 00:00 UTC).
+Unlike TLS certificates which already have validity ranges, a checksum does not
+carry any such information.  Therefore, we require that the signer selects a
+shard hint.  The selected shard hint must be in a log's shard interval.  A shard
+interval is defined by a start time and an end time.  Both ends of the shard
+interval are inclusive and expressed as the number of seconds since the UNIX
+epoch (January 1, 1970 00:00 UTC).
 
 Without sharding, a good Samaritan can add all leaves from an old log into a
 newer one that just started its operations.  This makes log operations
-unsustainable in the long run because log sizes will grow indefinitely.
+unsustainable in the long run because log sizes grow indefinitely.
 
 Such re-logging also comes at the risk of activating someone else's rate limits.
 
-Note that _the claimant's shard hint is not a verified timestamp_.  The
-submitter should set the shard hint as large as possible.  If a roughly verified
-timestamp is needed, a cosigned tree head can be used instead.
+Note that a signer's shard hint is not a verified timestamp.  We recommend to
+set it as large as possible.  If a verified timestamp is needed to reason about
+the time of logging, you may use a cosigned tree head instead
+	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
 
 #### 4.3 - XXX
-- Why not store opaque data in the log?
-- Why not store rich metadata in the log?
-- What (de)serialization parsers are needed?
+- Why not store data in the log?  XXX: answered enough already?
+- Why not store rich metadata in the log? XXX: answered enough already?
+- What (de)serialization parsers are needed and why?
 - What cryptographic primitives are supported and why?
-- Could you give a primer of witness cosigning?  Needs to include
-`get-tree-head-latest`, `get-tree-head-to-sign`, and `get-tree-head-cosigned`.
+- What thought went into witness cosigning?  Compare with other approaches, and
+should include `get-tree-head-*` endpoints in more detail.
 - Are there any privacy concerns?
 - How does it work with more than one log?
 - What policy should a believer use?
