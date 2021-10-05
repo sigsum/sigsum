@@ -1,0 +1,65 @@
+Date: 2021-10-05, 1300 CEST
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* rohonk
+
+Status round
+	* [rgdd] pads that were still active last week
+		* https://git.sigsum.org/sigsum/tree/archive/2021-10-05-open-design-thoughts?id=5c02770b5bd7d43b9327623d3de9adeda2468e84
+	* [rgdd, ln5] how should sigsum be captialized in text?
+		* https://git.sigsum.org/sigsum/tree/archive/2021-10-05-sigsum-capitalization?id=5c02770b5bd7d43b9327623d3de9adeda2468e84
+		* Decision: refer to the above description
+	* [rgdd] added domain_hint enforcement (tag v0.3.0)
+	* [ln5] git.sigsum.org is now go getable
+		* Decision: s/golang/git, because we already have git
+	* [rohonk] interactive session with rgdd to get started with sigsum work
+		* Timeline for security proof? what type of proof? etc. (ongoing)
+
+Discuss
+	* Should we redirect HTTP -> HTTPS for onion access
+		* Background: http -> https redirects for everything on the regular web
+		* Background: but we also have onion services that can too be http or https
+		* Should we redirect http to https when accessing an onion service?
+		* Decision: no, not by default
+			* We would need to aquire and maintain more onion certificates for this
+			* Probably not worth the work, onion certificates does not add much value
+			* This does not mean we must not have any onion certificate (www.sigsum.org)
+	* We received some external feedback
+		* A few minor comments
+		* A major comment about design.md
+			* Too much emphasis on what you can use transparent logs for in general
+			* There is a risk that the reader will get stuck on that and claimant model
+			* It would be better to keep it simple and go straight to our log design
+		* Decision: avoid using the claimant model in design.md, emphasize concrete design
+		* Decision: have a separate document about the claimant model for use-cases
+	* Bump up log prototype to latest tag
+		* Background: we need to decide on a shard interval
+		* We discussed 1 year +- a month as a reasonable shard interval before
+		* It would be good to do test runs with that in mind, but on scale 1/12
+		* Decision: experimental log shards that have a life time of 4 weeks +- 1 week
+	* What needs to be done before announcement?
+		* Start running a sharded log
+		* Refactor + review round of design.md
+		* Address minor review comments
+	* nusenu-draft about web-of-trust for Tor relays
+
+Next steps
+	* [rgdd] address review comments, push refactored design.md and ask for review
+	* [ln5] deploy sigsum-log-go v0.3.0 with shard hint (~sep 23-nov 7)
+	* [ln5] review revised design.md, after ok from rgdd 
+
+Other useful links
+	* [rgdd] funding for strengthen the security of critical open source projects
+		* https://security.googleblog.com/2021/10/introducing-secure-open-source-pilot.html
+	* [rgdd] nusenu about web of trust for Tor relays, transaprent logs very helpful here
+		* https://gitlab.torproject.org/nusenu/torspec/-/blob/simple-wot-for-relay-operator-ids/proposals/ideas/xxx-simple-relay-operator-wot.md#a-simple-web-of-trust-for-tor-relay-operator-ids
