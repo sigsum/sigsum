@@ -31,10 +31,10 @@ The signing party is called a _signer_.
 The user of the signed data is called a _verifier_.
 
 The problem with _just digital signing_ is that it is difficult to determine
-whether the signed data is actually _the right data_.
+whether the signed data is _actually the data that should have been signed_.
 How would we detect if a secret signing key got compromised?
 How would we detect if something was signed by mistake, or even worse,
-if the signing party was forced to sign the wrong data against their will?
+if the signing party was forced to sign malicious data against their will?
 
 Sigsum logs make it possible to answers these types of questions.  The basic
 idea is to make a signer's _key-usage_ transparent.  This is a powerful building

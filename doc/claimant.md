@@ -11,7 +11,7 @@ XXX: add more examples.
 System<sup>RB</sup> is about the claims made by a _software publisher_ that
 makes reproducible builds available.
 * **Claim<sup>RB</sup>**:
-	_I, software publisher, claim that the right opaque data_:
+	_I, software publisher, claim that the data_:
 	1. has cryptographic hash X
 	2. is the output of a reproducible build for which the source and relevant
 	build-info information can be located in repository Y using X as an identifier
