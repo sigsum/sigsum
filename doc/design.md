@@ -48,8 +48,7 @@ Examples include:
 	[\[BT\]](https://wiki.mozilla.org/Security/Binary_Transparency)
 - A domain does not serve malicious javascript
 	[\[SRI\]](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)
-- A trust anchor behaves according to some policy
-	[\[nusenu-draft\]](https://gitlab.torproject.org/nusenu/torspec/-/blob/simple-wot-for-relay-operator-ids/proposals/ideas/xxx-simple-relay-operator-wot.md#a-simple-web-of-trust-for-tor-relay-operator-ids).
+- A list of key-value pairs is maintained with a certain policy.
 
 There are many other use-cases that sigsum logging can help with.  We intend to
 document them based on what people are working on in a

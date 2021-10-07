@@ -10,8 +10,8 @@ TLS certificates keeps the overall design simple and generally useful.
 A minimal statement encodes the following claim: the right data has a
 certain cryptographic hash.  You can add additional meaning to each
 statement.  For example, you may use a sigsum log to claim things like
-(i) everyone get the same news articles,
-(ii) software package X builds reproducibly, or
+(i) everyone gets the same executable binaries,
+(ii) a domain does not serve malicious javascript, or
 (iii) a list of key-value pairs is maintained with policy Y.
 
 Sigsum logging makes it reasonable to believe a claim by adding enough
