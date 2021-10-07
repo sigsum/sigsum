@@ -1,32 +1,31 @@
 # The Sigsum Project
-Sigsum is a free and open source project that brings transparency logging to
-**sig**ned check**sum**s.  Logging sigsums and not a more concrete type like
-TLS certificates keeps the overall design simple and generally useful.
+Sigsum is a free and open-source project that brings transparency logging to
+**sig**ned check**sum**s.  The overall design is kept general by not logging
+a more concrete data structure like TLS certificates or Go modules.
 
-- [x] Minimalistic design that simplifies log operations and usage
+- [x] Discoverability of signed checksums for the data of your choice
 - [x] Centralised log operations but distributed trust assumptions
-- [x] Discoverability of statements for the data of your choice
+- [x] Minimalistic design that simplifies log operations and usage
 
-A minimal statement encodes the following claim: the right data has a
-certain cryptographic hash.  You can add additional meaning to each
-statement.  For example, you may use a sigsum log to claim things like
-(i) everyone gets the same executable binaries,
-(ii) a domain does not serve malicious javascript, or
-(iii) a list of key-value pairs is maintained with policy Y.
+Sigsum logging can be used to make a signer's key-usage transparent.  For
+example, malicious and unintended key-usage can be detected.  Transparent
+key-usage also facilitates verification of falsifiable claims.
 
-Sigsum logging makes it reasonable to believe a claim by adding enough
-discoverability to facilitate verification.
+Examples include:
+- Everyone gets the same executable binaries
+- A domain does not serve malicious javascript
+- A list of key-value pairs is maintained with a certain policy
 
-Please refer to the
-[design document](https://git.sigsum.org/sigsum/tree/doc/design.md), the
-[API specification](https://git.sigsum.org/sigsum/tree/doc/api.md), and the
-[log prototype](https://git.sigsum.org/sigsum-log-go/tree/README.md)
+Please refer to the sigsum logging
+[design document](https://git.sigsum.org/sigsum/tree/doc/design.md),
+[API specification](https://git.sigsum.org/sigsum/tree/doc/api.md), and
+[public prototype](https://git.sigsum.org/sigsum-log-go/tree/README.md)
 to learn more.
 
 ## Services
 Sigsum is self-hosting all services required to function as a software project.
-Each service is operated on a best-effort level that is good enough for sigsum to
-rely upon.  Please report any issues to the sigsum team via chat or email.
+Each service is operated on a best-effort level that is good enough for Sigsum
+to rely upon.  Please report any issues to the Sigsum team via chat or email.
 
 ### Chat
 Chat with users and developers on IRC or Matrix. The rooms
