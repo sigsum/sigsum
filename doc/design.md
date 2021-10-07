@@ -148,49 +148,47 @@ attacks.   A log operator can at best deny service with these assumptions.
 An overview of sigsum logging is shown in Figure 1.  Before going into detail
 we give a brief primer below.
 ```
-                    +----------+
-checksum +----------|  Signer  |-----------+ data
-metadata |          +----------+           | metadata
-         |               ^                 | proof
-         v               |                 v
-    +---------+   proof  |          +--------------+
-    |   Log   |----------+          | Distribution |
-    +---------+                     +--------------+
-      ^  | checksum                     |  |
-      |  | metadata                     |  |data
-      |  | proof     +---------+   data |  |metadata
-      |  +---------->| Monitor |<-------+  |proof
-      v              +---------+           v
-    +---------+           |             +----------+
-    | witness |           | false       | Verifier |
-    +---------+           | claim       +----------+
-                          v
-                     investigate
-
-            Figure 1: system overview
+                               +----------+
+           checksum +----------|  Signer  |-----------+ data
+           metadata |          +----------+           | metadata
+                    |                ^                | proof
+                    v                |                v
+  +-----+ H(vk) +---------+   proof  |          +--------------+
+  | DNS |------>|   Log   |----------+          | Distribution |
+  +-----+       +---------+                     +--------------+
+                 ^  | checksum                     |  |
+                 |  | metadata                     |  |data
+                 |  | proof     +---------+   data |  |metadata
+                 |  +---------->| Monitor |<-------+  |proof
+                 v              +---------+           v
+               +---------+           |             +----------+
+               | witness |           | false       | Verifier |
+               +---------+           | claim       +----------+
+                                     v
+                                investigate
+           
+                       Figure 1: system overview
 ```
 
 A signer wants to make their key-usage transparent.  Therefore, they sign a
 statement that sigsum logs accept.  That statement encodes a checksum of some
 data.  Minimal metadata must also be logged, such as the checksum's signature
-and a hash of the public verification key.  This ensures that every signed
-checksum can be attributed to the signing party if you know their key.
+and a hash of the public verification key.  A hash of the public verification
+key is configured in DNS as a TXT record to help log operators combat spam.
 
-The signing party waits for their submission to be included in the log.  When
-there is an inclusion proof available that leads up to a cosigned Merkle tree
-head, the checksum's data is ready for distribution with proofs of logging.
+The signing party waits for their submission to be included in the log.  When an
+inclusion proof is available that leads up to a trustworthy Merkle tree head,
+the signed checksum's data is ready for distribution with proofs of public
+logging.  A sigsum log does not help the signer with any data distribution.
 
-These proofs are convincing for a verifier without any outbound network
-connections if a threshold of witnesses followed a basic cosigning protocol.
-Additional detail is provided in Section 3.2.3.
+Verifiers use the signer's data if it is accompanied by proofs of public
+logging.  Monitors look for signed checksums and data that correspond to public
+keys that they are aware of.  Any falsifiable claim that a signer makes about
+their key-usage can now be verified because no signing operation goes unnoticed.
 
-Asynchronously, use-case specific monitors look for signed checksums that
-correspond to public keys that they are aware of.  Monitors and verifiers
-rely on witness cosigning to be sure that they see the same append-only logs.
-
-Use-case specific monitors may verify the underlying data further by looking it
-up in the same way that a verifier does.  If the data cannot be found or if a
-claimed property is false, that can be detected and investigated.  Excellent!
+Verifiers and monitors can be convinced that public logging happened without
+additional outbound network connections if a threshold of witnesses followed a
+cosigning protocol.  More detail is provided in Section 3.2.3.
 
 ### 3.1 - Merkle tree
 A sigsum log maintains a public append-only Merkle tree.  Independent witnesses
@@ -229,8 +227,7 @@ replayed in a non-overlapping shard by a good Samaritan.
 
 The signer also has to do a one-time DNS setup.  As outlined below, logs will
 check that _some domain_ is aware of the signer's verification key.  This is
-part of a defense mechanism that helps us combat log spam.  It was not shown in
-Figure 1 to avoid it from being overly cluttered.   XXX: should be added?
+part of a defense mechanism that helps us combat log spam.
 
 #### 3.2.2 - Submit request
 Sigsum logs implement an HTTP(S) API.  Input and output is human-readable and
