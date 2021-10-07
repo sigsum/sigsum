@@ -12,6 +12,7 @@ example, malicious and unintended key-usage can be detected.  Transparent
 key-usage also facilitates verification of falsifiable claims.
 
 Examples include:
+
 - Everyone gets the same executable binaries
 - A domain does not serve malicious javascript
 - A list of key-value pairs is maintained with a certain policy
