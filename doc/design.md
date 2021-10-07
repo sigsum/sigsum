@@ -268,12 +268,14 @@ append-only before doing a cosignature operation.  Cosignatures are posted back
 to the logs so that signers can easily fetch the finalized cosigned tree heads.
 
 It takes five to ten minutes before a signer's distribution phase can start.
-The added latency is a trade-off that simplifies the entire log ecosystem by
-removing the need for reactive gossip-audit protocols
+The added latency is a trade-off that simplifies sigsum logging by removing the
+need for reactive gossip-audit protocols
 	[\[G1,](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7346853)
 	[G2,](https://datatracker.ietf.org/doc/html/draft-ietf-trans-gossip-05)
 	[G3,](https://petsymposium.org/2021/files/papers/issue2/popets-2021-0024.pdf)
 	[G4\]](https://docs.google.com/document/d/16G-Q7iN3kB46GSW5b-sfH5MO3nKSYyEb77YsM7TMZGE/edit).
+
+Use-cases like instant certificate issuance are not supported by design.
 
 #### 3.2.4 - Distribution
 After a signer collected proofs of public logging the distribution phase can
