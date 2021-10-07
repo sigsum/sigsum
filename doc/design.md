@@ -1,9 +1,12 @@
 # Sigsum Logging Design v0
-We propose sigsum logging.  It is similar to Certificate Transparency, except
-that cryptographically **sig**ned check**sum**s are logged instead of TLS
-certificates.  Publicly logging signed checksums allow anyone to discover which
-keys produced what checksum signatures.  For example, malicious and unintended
-key-usage can be _detected_.  This document motivates and presents our design.
+We propose sigsum logging.  It is similar to Certificate Transparency and Go's
+checksum database, except that cryptographically **sig**ned check**sum**s are
+logged in order to make signature operations transparent.  For example,
+malicious and unintended key-usage can be detected using a sigsum log.  This is
+a building block that can be used for a variety of use-cases.  Transparent
+management of executable binaries and provenance are two examples.  Our
+architecture evolves around centralized log operations, distributed trust, and
+minimalism that simplifies usage.
 
 **Preliminaries.**
 You have basic understanding of cryptographic primitives, e.g., digital
