@@ -59,12 +59,8 @@ using the
 This document is about our log design.
 
 ### 1.1 - Goals and non-scope
-The goal of sigsum logging is to be a building block that facilitates
-verification of falsifiable claims.  There should be emphasis on _facilitating_,
-because all a sigsum log does is ensure that signed checksums are discoverable.
-
-We want to achieve our goal without making assumptions that are use-case
-specific.  Therefore, sigsum logs allow logging of signed checksum and some
+The goal of sigsum logging is to make a signer's key-usage transparent in
+general.  Therefore, sigsum logs allow logging of signed checksum and some
 minimally required metadata.  Storing data and rich metadata is a non-goal.
 
 We want the resulting design to be easy from many different perspectives, for
