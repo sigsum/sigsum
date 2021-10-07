@@ -333,7 +333,7 @@ It also keeps log operations simpler because there are fewer bytes to manage.
 Verifiers interact with the logs indirectly through their signer's existing
 distribution mechanism.  Signers are responsible for logging signed checksums
 and distributing necessary proofs of public logging.  Monitor discover signed
-checksums in the logs, generating alerts if use-case specific claims are false.
+checksums in the logs, generating alerts if any key-usage is inappropriate.
 
 ### 4 - Frequently Asked Questions
 #### 4.1 - What parts of the design are we still thinking about?
