@@ -130,10 +130,9 @@ Transparency Log
 	[\[DigiCert\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/aKNbZuJzwfM).
 
 The overall system is said to be secure if a monitor can discover every signed
-checksum that a verifier would accept, or alternatively, if log misbehavior can
-be detected.  A log can misbehave by not presenting the same append-only Merkle
-tree to everyone.  A log operator would only do that if it is likely to go
-unnoticed.
+checksum that a verifier would accept.  A log can misbehave by not presenting
+the same append-only Merkle tree to everyone because it is attacker-controlled.
+However, a log operator would only do that if it is likely to go unnoticed.
 
 For security we need a collision resistant hash function and an unforgeable
 signature scheme.  We also assume that at most a threshold of independent
