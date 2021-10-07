@@ -295,10 +295,10 @@ an inclusion proof that leads up to a cosigned tree head.
 #### 3.2.5 - Verification
 A verifier should only accept the distributed data if these criteria hold:
 1. The signer's checksum is correct for the distributed data.
-2. The signer's signed statement verifies.
+2. The signer's signed statement is valid for the specified public key.
 3. The provided tree head can be reconstructed from the logged leaf and 
 its inclusion proof.
-4. The provided tree head is from a known log with enough cosignatures.
+4. The provided tree head is from a known log with enough valid cosignatures.
 
 Notice that there are no new outbound network connections for a verifier.
 Therefore, a proof of public logging is only as convincing as the tree head that
