@@ -20,7 +20,7 @@ revision of this document will bump the version number to v1.
 Please let us know if you have any feedback.
 
 ## 1 - Introduction
-Transparent logs make it possible to detect unwanted events.  For example,
+Transparency logs make it possible to detect unwanted events.  For example,
 are there any (mis-)issued TLS certificates
 	[\[CT\]](https://tools.ietf.org/html/rfc6962),
 did you get a different Go module than everyone else
@@ -92,7 +92,7 @@ possible they should be open for everyone.  However, accepting logging requests
 from anyone at arbitrary rates can lead to abusive usage patterns.  We store as
 little metadata as possible to combat log poisoning.  We piggyback on DNS to
 combat log spam.  Sharding is also helpful to combat log spam in the long run.
-- **Built-in mechanisms that ensure a globally consistent log:** transparent
+- **Built-in mechanisms that ensure a globally consistent log:** transparency
 logs rely on gossip protocols to detect forks.  We built a proactive gossip
 protocol directly into the log.  It is a variant of
 	[witness cosigning](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521).
@@ -122,11 +122,11 @@ The fact that signing keys and related infrastructure components get
 compromised should not be controversial these days
 	[\[SolarWinds\]](https://www.zdnet.com/article/third-malware-strain-discovered-in-solarwinds-supply-chain-attack/).
 
-The attacker can also gain control of the transparent log's signing key and
-infrastructure.  This covers a weaker form of attacker that is able to sign log
-data and distribute it to a subset of isolated verifiers.  For example, this
-could have been the case when a remote code execution was found for a
-Certificate Transparency Log
+The attacker can also gain control of the log's signing key and infrastructure.
+This covers a weaker form of attacker that is able to sign log data and
+distribute it to a subset of isolated verifiers.  For example, this could have
+been the case when a remote code execution was found for a Certificate
+Transparency Log
 	[\[DigiCert\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/aKNbZuJzwfM).
 
 The overall system is said to be secure if a monitor can discover every signed
@@ -309,7 +309,7 @@ tricked into accepting some data whose checksum have yet to be publicly logged
 unless the attacker controls more than a threshold of witnesses.
 
 #### 3.2.6 - Monitoring
-An often overlooked step is that transparent logging falls short if no-one keeps
+An often overlooked step is that transparency logging falls short if no-one keeps
 track of what appears in the public logs.  Monitoring is necessarily use-case
 specific in sigsum.  At minimum, you need to locate relevant public keys.  You
 may also need to be aware of how to locate the data that a checksum represents.

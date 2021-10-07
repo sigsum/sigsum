@@ -2,7 +2,7 @@
 reported by: rgdd
 
 We used to have a paragraph in our threat model that emphasized that the
-attacker we, and transparent logs in general, consider is risk-averse.
+attacker we, and transparency logs in general, consider is risk-averse.
 
 This paragraph was pulled because it simply stated properties about our attacker
 without explaining why that is interesting.  The threat model text is fine
