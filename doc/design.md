@@ -382,13 +382,31 @@ management.  Our work is about transparent _key-usage_.
 
 We are considering if additional anti-spam mechanisms should be supported.
 
-#### 4.4 - More questions
+#### 4.4 - Is witness cosigning done?
+There are interesting policy aspects that relate to witness cosigning.  For
+example, what witnessing policy should a verifier use and how are trustworthy
+witnesses discovered.  This is somewhat analogous to a related policy question
+that all log ecosystems must address.  Which logs should be considered known?
+
+We do however think that witness cosigning could be done _from the perspective
+of a log and its operator_.  The
+	[sigsum/v0 API](https://git.sigsum.org/sigsum/tree/doc/api.md)
+supports witness cosigning.  Policy aspects for a log operator are easy because
+it is relatively cheap to allow a witness to be a cosigner.  It is not a log
+operator's job to determine if any real-world entity is trustworthy.  It is not
+even a log operator's job to help signers and verifiers discover witness keys.
+
+Given a permissive policy for which witnesses are allowed to cosign, a signer
+may not care for all retrieved cosignatures.  Unwanted ones can simply be
+removed before distribution to a verifier takes place.  This is in contrast to
+the original proposal by
+	[Syta et al.](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521),
+which puts an authority right in the middle of a slowly evolving witnessing policy.
+
+#### 4.5 - More questions
 - Why not store data in the log?  XXX: answered enough already?
 - Why not store rich metadata in the log? XXX: answered enough already?
 - What (de)serialization parsers are needed and why?
 - What cryptographic primitives are supported and why?
-- What thought went into witness cosigning?  Compare with other approaches, and
-should include `get-tree-head-*` endpoints in more detail.
 - What are the privacy concerns?
 - How does it work with more than one log?
-- What policy should a verifier follow?
