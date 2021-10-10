@@ -108,7 +108,7 @@ additionally need to interact with a sigsum log's line-terminated ASCII HTTP(S)
         [API](https://git.sigsum.org/sigsum/tree/doc/api.md).
 
 ## 2 - Threat model
-We consider a powerful attacker that has gained control of a signer's software signing and
+We consider a powerful attacker that gained control of a signer's signing and
 release infrastructure.  This covers a weaker form of attacker that is able to
 sign data and distribute it to a subset of isolated verifiers.  For example,
 this is essentially what the FBI requested from Apple in the San Bernardino case
@@ -117,7 +117,7 @@ The fact that signing keys and related infrastructure components get
 compromised should not be controversial these days
 	[\[SolarWinds\]](https://www.zdnet.com/article/third-malware-strain-discovered-in-solarwinds-supply-chain-attack/).
 
-The same attacker has also gained control of the signing key and infrastructure of a sigsum log used for transparency.
+The same attacker also gained control of the signing key and infrastructure of a sigsum log that is used for transparency.
 This covers a weaker form of attacker that is able to sign log data and
 distribute it to a subset of isolated verifiers.  For example, this could have
 been the case when a remote code execution was found for a Certificate
@@ -194,7 +194,7 @@ are accepted.  Once elapsed, the log can be shut down or be made read-only.
 - **checksum**: most likely a hash of some data.  The log is not aware of data;
 just checksums.
 - **signature**: a digital signature that is computed by a signer over the
-shard hint and checksum.
+selected shard hint and checksum.
 - **key_hash**: a cryptographic hash of the signer's verification key that can
 be used to verify the signature.
 
@@ -207,30 +207,28 @@ other words, verifiers and monitors must locate signer verification keys indepen
 
 ### 3.2 - Usage pattern
 #### 3.2.1 - Prepare a request
-A signer selects a shard hint representing an abstract statement like "sigsum logs that are
-active during 2021".
-A shard hint is
-incorporated into the signed statement to ensure that a log's leaves cannot be
-replayed in a non-overlapping shard, for example by a good Samaritan.
-
-The signer selects a checksum that should be logged, most likely the output of a
-hash function.  For example, it could be the hash of an executable binary.
+A signer selects a checksum that should be logged.  For example, it could be the
+hash of an executable binary or something else.  The signer also selects a shard
+hint representing an abstract statement like "sigsum logs that are active during
+2021".  Shard hints ensure that a log's leaves cannot be replayed in a
+non-overlapping shard.
 
 The signer signs the selected shard hint and checksum.
 
 The signer also has to do a one-time DNS setup.  As outlined below, logs will
 check that _some domain_ is aware of the signer's verification key.  This is
 part of a defense mechanism that helps log operators to deal with log spam.
-Once present in DNS, a verification key can be used in log requests.
+Once present in DNS, a verification key can be used in subsequent log requests.
 
 #### 3.2.2 - Submit request
 Sigsum logs implement an HTTP(S) API.  Input and output is human-readable and
 use a simple ASCII format.  A more complex parser like JSON is not needed
 since the data structures being exchanged are primitive enough.
 
-A signer submits shard hint, checksum, signature, public verification
+The signer submits their shard hint, checksum, signature, public verification
 key and domain hint as ASCII key-value pairs.  The log verifies that the public verification key is present in DNS and uses it to check that
-the signature is valid, then constructs the Merkle tree leaf as described in 3.1 and hashes it to construct the leaf's key hash.
+the signature is valid, then hashes it to constructs the Merkle tree leaf as described in Section 3.1.
+
 
 When a submitted logging
 request is accepted, the log _tries_ to incorporate the submitted leaf into its Merkle tree.  There are however no _promises of public logging_ as in
@@ -297,8 +295,8 @@ release infrastructure would be detected if the log is not compromised.
 #### 3.2.6 - Monitoring
 An often overlooked step is that transparency logging falls short if no-one keeps
 track of what appears in the public logs.  Monitoring is necessarily use-case
-specific in sigsum.  At a minimum, a monitor needs to locate relevant public keys.  It
-may also need to be aware of how to locate the data that a given checksum represents.
+specific in sigsum.  At a minimum, monitors need to locate relevant public keys.  They
+may also need to be aware of how to locate the data that found checksums represent.
 
 ### 3.3 - Summary
 Sigsum logs are sharded and shut down at predefined times.  A sigsum log can
