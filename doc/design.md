@@ -33,11 +33,11 @@ sigsum logging as pre-hashed digital signing with transparency.
 The signing party is called a _signer_.
 The user of the signed data is called a _verifier_.
 
-The problem with _digital signing on its own_ is that it is difficult to determine
-whether the signed data is _actually the data that should have been signed_.
-How would we detect if a secret signing key got compromised?
-How would we detect if something was signed by mistake, or even worse,
-if the signing party was forced to sign malicious data against their will?
+The problem with _digital signing on its own_ is that it is difficult to
+determine whether the signed data is _actually the data that should have been
+signed_.  How would we detect if a secret signing key got compromised?  How
+would we detect if something was signed by mistake, or even worse, if the
+signing party was forced to sign malicious data against their will?
 
 Sigsum logs make it possible to answers these types of questions.  The basic
 idea is to make a signer's _key-usage_ transparent.  This is a powerful building
@@ -117,16 +117,17 @@ The fact that signing keys and related infrastructure components get
 compromised should not be controversial these days
 	[\[SolarWinds\]](https://www.zdnet.com/article/third-malware-strain-discovered-in-solarwinds-supply-chain-attack/).
 
-The same attacker also gained control of the signing key and infrastructure of a sigsum log that is used for transparency.
-This covers a weaker form of attacker that is able to sign log data and
-distribute it to a subset of isolated verifiers.  For example, this could have
-been the case when a remote code execution was found for a Certificate
-Transparency Log
+The same attacker also gained control of the signing key and infrastructure of a
+sigsum log that is used for transparency.  This covers a weaker form of attacker
+that is able to sign log data and distribute it to a subset of isolated
+verifiers.  For example, this could have been the case when a remote code
+execution was found for a Certificate Transparency Log
 	[\[DigiCert\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/aKNbZuJzwfM).
 
-The overall system is said to be secure if a log monitor can discover every signed
-checksum that a verifier would accept.  A log can misbehave by not presenting
-the same append-only Merkle tree to everyone because it is attacker-controlled.
+The overall system is said to be secure if a log monitor can discover every
+signed checksum that a verifier would accept.
+A log can misbehave by not presenting the same append-only Merkle tree to
+everyone because it is attacker-controlled.
 However, a log operator would only do that if it is likely to go unnoticed.
 
 For security we need a collision resistant hash function and an unforgeable
@@ -203,15 +204,17 @@ data that a checksum represents.  Where data is located is use-case specific.
 
 Note that a key hash is logged rather than the public key itself.  This reduces
 the likelihood that an untrusted key is discovered and used by mistake.  In
-other words, verifiers and monitors must locate signer verification keys independently of logs, and trust them explicitly.
+other words, verifiers and monitors must locate signer verification keys
+independently of logs, and trust them explicitly.
 
 ### 3.2 - Usage pattern
 #### 3.2.1 - Prepare a request
 A signer selects a checksum that should be logged.  For example, it could be the
-hash of an executable binary or something else.  The signer also selects a shard
-hint representing an abstract statement like "sigsum logs that are active during
-2021".  Shard hints ensure that a log's leaves cannot be replayed in a
-non-overlapping shard.
+hash of an executable binary or something else.
+
+The signer also selects a shard hint representing an abstract statement like
+"sigsum logs that are active during 2021".  Shard hints ensure that a log's
+leaves cannot be replayed in a non-overlapping shard.
 
 The signer signs the selected shard hint and checksum.
 
@@ -226,20 +229,23 @@ use a simple ASCII format.  A more complex parser like JSON is not needed
 since the data structures being exchanged are primitive enough.
 
 The signer submits their shard hint, checksum, signature, public verification
-key and domain hint as ASCII key-value pairs.  The log verifies that the public verification key is present in DNS and uses it to check that
-the signature is valid, then hashes it to constructs the Merkle tree leaf as described in Section 3.1.
+key and domain hint as ASCII key-value pairs.  The log verifies that the public
+verification key is present in DNS and uses it to check that the signature is
+valid, then hashes it to constructs the Merkle tree leaf as described in
+Section 3.1.
 
-
-When a submitted logging
-request is accepted, the log _tries_ to incorporate the submitted leaf into its Merkle tree.  There are however no _promises of public logging_ as in
-Certificate Transparency.  Therefore, sigsum logs do not provide low latency -- the
-signer has to wait for an inclusion proof and a cosigned tree head.
+When a submitted logging request is accepted, the log _tries_ to incorporate the
+submitted leaf into its Merkle tree.  There are however no _promises of public
+logging_ as in Certificate Transparency.  Therefore, sigsum logs do not provide
+low latency---the signer has to wait for an inclusion proof and a cosigned tree
+head.
 
 #### 3.2.3 - Wait for witness cosigning
-Sigsum logs periodically freeze the most current tree head, typically every five minutes.  Cosigning witnesses poll
-logs for so-called _to-sign_ tree heads and verify that they are fresh and
-append-only before doing a cosignature operation.  Cosignatures are posted back
-to logs so that signers can easily fetch finalized cosigned tree heads.
+Sigsum logs periodically freeze the most current tree head, typically every five
+minutes.  Cosigning witnesses poll logs for so-called _to-sign_ tree heads and
+verify that they are fresh and append-only before doing a cosignature operation.
+Cosignatures are posted back to logs so that signers can easily fetch finalized
+cosigned tree heads.
 
 It thus takes five to ten minutes before a signer's distribution phase can start.
 The added latency is a trade-off that simplifies sigsum logging by removing the
@@ -258,11 +264,13 @@ the data.  For example, on a website, in a git repository, etc.
 Signers distribute at least the following pieces:
 
 **Data:**
-the signer's data, for example an executable binary.  It can be used to reproduce a logged checksum.
+the signer's data, for example an executable binary.  It can be used to
+reproduce a logged checksum.
 
 **Metadata:**
-the shard hint, the signature over shard hint and checksum, and the verification key hash used in the log request.  Note that the
-combination of data and metadata can be used to reconstruct the logged leaf.
+the shard hint, the signature over shard hint and checksum, and the verification
+key hash used in the log request.  Note that the combination of data and
+metadata can be used to reconstruct the logged leaf.
 
 **Proof:**
 an inclusion proof that leads up to a cosigned tree head.  Note that _proof_
@@ -293,10 +301,11 @@ in a known log without witnessing.  Attacks against the signer's signing and
 release infrastructure would be detected if the log is not compromised.
 
 #### 3.2.6 - Monitoring
-An often overlooked step is that transparency logging falls short if no-one keeps
-track of what appears in the public logs.  Monitoring is necessarily use-case
-specific in sigsum.  At a minimum, monitors need to locate relevant public keys.  They
-may also need to be aware of how to locate the data that found checksums represent.
+An often overlooked step is that transparency logging falls short if no-one
+keeps track of what appears in the public logs.  Monitoring is necessarily
+use-case specific in sigsum.  At a minimum, monitors need to locate relevant
+public keys.  They may also need to be aware of how to locate the data that
+found checksums represent.
 
 ### 3.3 - Summary
 Sigsum logs are sharded and shut down at predefined times.  A sigsum log can
@@ -304,12 +313,14 @@ shut down _safely_ because verification on the verifier-side is not interactive.
 
 The difficulty of bypassing public logging is based on the difficulty of
 controlling enough independent witnesses.  A witness checks that a log's tree
-head is correct before cosigning.  Correctness includes freshness and the append-only property.
+head is correct before cosigning.  Correctness includes freshness and the
+append-only property.
 
 Signers, monitors, and witnesses interact with the logs using an ASCII HTTP(S)
-API.  A signer must prove that they control a DNS domain name as an anti-spam mechanism.
-No data or rich metadata is being logged, to protect the log operator from poisoning.
-This also keeps log operations simpler because there are less data to manage.
+API.  A signer must prove that they control a DNS domain name as an anti-spam
+mechanism.  No data or rich metadata is being logged, to protect the log
+operator from poisoning.  This also keeps log operations simpler because there
+are less data to manage.
 
 Verifiers interact with logs indirectly through their signer's existing
 distribution mechanism.  Signers are responsible for logging signed checksums
@@ -326,10 +337,10 @@ about.  We are still open to remove, add, or change things.
 #### 4.2 - What is the point of having a shard hint?
 Unlike TLS certificates which already have validity ranges, a checksum does not
 carry any such information.  Therefore, we require that the signer selects a
-shard hint.  The selected shard hint must be within a log's shard interval.  A shard
-interval is defined by a start time and an end time.  Both ends of the shard
-interval are inclusive and expressed as the number of seconds since the UNIX
-epoch (January 1, 1970 00:00 UTC).
+shard hint.  The selected shard hint must be within a log's shard interval.  A
+shard interval is defined by a start time and an end time.  Both ends of the
+shard interval are inclusive and expressed as the number of seconds since the
+UNIX epoch (January 1, 1970 00:00 UTC).
 
 Without sharding, a good Samaritan can add all leaves from an old log into a
 newer one that just started its operations.  This makes log operations
