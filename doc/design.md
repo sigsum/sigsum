@@ -128,7 +128,7 @@ The overall system is said to be secure if a log monitor can discover every
 signed checksum that a verifier would accept.
 A log can misbehave by not presenting the same append-only Merkle tree to
 everyone because it is attacker-controlled.
-However, a log operator would only do that if it is likely to go unnoticed.
+The attacker would only do that if it is likely to go unnoticed, however.
 
 For security we need a collision resistant hash function and an unforgeable
 signature scheme.  We also assume that at most a threshold of independent
@@ -137,7 +137,7 @@ attempts
 	[split-view](https://datatracker.ietf.org/doc/html/draft-ietf-trans-gossip-05)
 and
 	[slow-down](https://git.sigsum.org/sigsum/tree/archive/2021-08-24-checkpoint-timestamp)
-attacks.   A log operator can at best deny service with these assumptions.
+attacks.   An attacker can at best deny service with these assumptions.
 
 ## 3 - Design
 An overview of sigsum logging is shown in Figure 1.  Before going into detail
