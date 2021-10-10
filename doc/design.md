@@ -301,7 +301,6 @@ specific in sigsum.  At a minimum, a monitor needs to locate relevant public key
 may also need to be aware of how to locate the data that a given checksum represents.
 
 ### 3.3 - Summary
-[[move the summary to the top of section 3? /ln]]
 Sigsum logs are sharded and shut down at predefined times.  A sigsum log can
 shut down _safely_ because verification on the verifier-side is not interactive.
 
