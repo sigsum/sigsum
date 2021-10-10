@@ -369,4 +369,4 @@ the time of logging, you may use a cosigned tree head instead
 should include `get-tree-head-*` endpoints in more detail.
 - Are there any privacy concerns?
 - How does it work with more than one log?
-- What policy should a believer use?
+- What policy should a verifier use?

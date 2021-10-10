@@ -20,9 +20,11 @@ response data is that it is simple to parse.  Note that this format is
 not being used for the serialization of signed or logged data, where a
 more well defined and storage efficient format is desirable.
 
-A claimant should distribute log responses to their believers in any format that
-suits them.  The (de)serialization required for _believers_ is a small subset of
+A _signer_ should distribute log responses to their verifiers in any format that
+suits them.  The (de)serialization required for _verifiers_ is a small subset of
 Trunnel.  Trunnel is an "idiot-proof" wire-format in use by the Tor project.
+
+Figure 1 of our design document gives an intuition of all involved parties.
 
 ## 2 - Primitives
 ### 2.1 - Cryptography
@@ -78,9 +80,9 @@ struct tree_head {
 ```
 `timestamp` is the time since the UNIX epoch (January 1, 1970 00:00 UTC) in
 seconds.  It is included so that monitors can be convinced of _freshness_ if
-enough witnesses added their cosignatures.  A claimant may also use timestamps
-to prove to a believer that some logged data is current.  See timestamp
-verification in Section 2.3.2.
+enough witnesses added their cosignatures.  A signer can also use timestamps
+to prove to a verifier that public logging happened within some interval
+	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
 
 `tree_size` is the number of leaves in a log.
 
@@ -102,12 +104,12 @@ Note that tree heads are scoped to a specific log to ensure that a witness
 signature for log X cannot be confused with a witness signature for log Y.
 
 A witness must not cosign a tree head if it is inconsistent with prior history
-or if the timestamp is backdated more than 5 minutes.  A witness can be viewed
-as playing two roles: Verifier(append-only) and Verifier(freshness)
-[\[ts\]](https://git.sigsum.org/sigsum/tree/archive/2021-08-31-checkpoint-timestamp-continued#n84).
+or if the timestamp is older than 5 minutes.  A witness can be viewed as two
+abstract roles: Verifier("append-only") and Verifier("freshness")
+	[\[WR\]](https://git.sigsum.org/sigsum/tree/archive/2021-08-31-checkpoint-timestamp-continued#n84).
 
 #### 2.3.3 - Tree leaf
-Logs support a single leaf type.  It contains a claimant's minimal statement,
+Logs support a single leaf type.  It contains a signer's statement,
 signature, and key hash.
 
 ```
@@ -123,17 +125,17 @@ struct tree_leaf {
 }
 ```
 
-`shard_hint` must match a log's shard interval and is determined by the claimant.
+`shard_hint` must match a log's shard interval and is determined by the signer.
 
-`checksum` represents some opaque data and is computed by the claimant.
+`checksum` represents some data and is computed by the signer.
 
 `signature` is a signature over a serialized `statement`.  It must be possible
-to verify this signature using the claimant's public verification key.
+to verify this signature using the signer's public verification key.
 
-`key_hash` is a hash of the claimant's public verification key.  It is included
-in `tree_leaf` so that each leaf can be attributed to a claimant.  A hash,
-rather than the full public key, is used to motivate verifiers to locate the
-appropriate key and make an explicit trust decision.
+`key_hash` is a hash of the signer's public verification key.  It is included
+in `tree_leaf` so that each leaf can be attributed to a signer.  A hash,
+rather than the full public key, is used to motivate monitors and verifiers to
+locate the appropriate key and make an explicit trust decision.
 
 ## 3 - Public endpoints
 A log must have a fixed unique base URL that can have the following suffix
@@ -202,8 +204,8 @@ Output on success:
 
 ### 3.3 - get-tree-head-cosigned
 Returns the latest cosigned tree head. Used together with `get-inclusion-proof`
-and `get-consistency-proof`.  Ensures that verifiers see the same statements as
-believers.  May also be used to convince a believer about when logging happened.
+and `get-consistency-proof`.  Ensures that monitors see the same statements as
+verifiers.  Can be used to convince a verifier when public logging happened.
 
 ```
 GET <base url>/sigsum/v0/get-tree-head-cosigned
@@ -357,10 +359,10 @@ Output on success:
 - None
 
 `key_hash` can be used to identify which witness cosigned a tree head.  A
-key-hash, rather than the full verification key, is used to motivate verifiers
-to locate the appropriate key and make an explicit trust decision.
+key-hash, rather than the full verification key, is used to motivate monitors
+and verifiers to locate the appropriate key and make an explicit trust decision.
 
-Note that logs must be configured with relevant witness public keys.
+Note that logs must be configured with relevant public keys for witnesses.
 
 Example:
 ```
