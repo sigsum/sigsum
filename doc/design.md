@@ -228,26 +228,6 @@ Sigsum logs implement an HTTP(S) API.  Input and output is human-readable and
 use a simple ASCII format.  A more complex parser like JSON is not needed
 since the data structures being exchanged are primitive enough.
 
-[[move domain hint discussion to its own section vvv /ln]]
-The signer also submits a _domain hint_.  The log will download a DNS TXT
-resource record based on the provided domain name.  The downloaded result must
-match the public verification key hash.  By verifying that all signers control a
-domain that is aware of their verification key, rate limits can be applied per
-second-level domain.  You would need a large number of domain names to spam the
-log in any significant way if rate limits are not too loose.
-
-Using DNS to combat spam is convenient because many signers already have a
-domain name.  A single domain name is also relatively cheap.  Another benefit is
-that the same anti-spam mechanism can be used across several independent logs
-without coordination.  This is important because a healthy log ecosystem needs
-more than one log to be reliable in case of downtime or unexpected events like
-        [cosmic rays](https://groups.google.com/a/chromium.org/g/ct-policy/c/PCkKU357M2Q/).
-
-A signer's domain hint is not part of the logged leaf because key management is
-more complex than that.  A separate project should focus on transparent key
-management.  Our work is about transparent _key-usage_.
-[[^^^ move domain hint discussion to its own section /ln]]
-
 A signer submits shard hint, checksum, signature, public verification
 key and domain hint as ASCII key-value pairs.  The log verifies that the public verification key is present in DNS and uses it to check that
 the signature is valid, then constructs the Merkle tree leaf as described in 3.1 and hashes it to construct the leaf's key hash.
@@ -364,7 +344,28 @@ set it as large as possible.  If a verified timestamp is needed to reason about
 the time of logging, you may use a cosigned tree head instead
 	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
 
-#### 4.3 - More questions
+#### 4.3 - What is the point of having a domain hint?
+Domain hints help log operators combat spam.  By verifying that every signer
+controls a domain name that is aware of their public key, rate limits can be
+applied per second-level domain.  You would need a large number of domain names
+to spam a log in any significant way if rate limits are not set too loose.
+
+Notice that the effect of spam is not only about storage.  It is also about
+merge latencies.  Too many submissions from a single party may render a log
+unusable for others.  This kind of incident happened in the real-world already
+	[\[Aviator\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/ZZf3iryLgCo/m/rdTAHWcdBgAJ).
+
+Using DNS as an anti-spam mechanism is not a perfect solution.  It is however
+better than not having any anti-spam mechanism at all.  We picked DNS because
+many signers have a domain.  A single domain name is also relatively cheap.
+
+A signer's domain hint is not part of the logged leaf because key management is
+more complex than that.  A separate project should focus on transparent key
+management.  Our work is about transparent _key-usage_.
+
+We are considering if additional anti-spam mechanisms should be supported.
+
+#### 4.4 - More questions
 - Why not store data in the log?  XXX: answered enough already?
 - Why not store rich metadata in the log? XXX: answered enough already?
 - What (de)serialization parsers are needed and why?
