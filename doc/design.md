@@ -284,11 +284,15 @@ its inclusion proof.
 3. The provided tree head is from a known log with enough valid cosignatures.
 
 Notice that there are no new outbound network connections for a verifier.
-Therefore, a proof of public logging is only as convincing as the tree head that
-an inclusion proof leads up to.  Sigsum logs have trustworthy tree heads thanks to
-using a variant of witness cosigning.  A verifier cannot be
-tricked into accepting data whose checksum have not been publicly logged
-unless the attacker controls more than a threshold of witnesses.
+Therefore, a verifier will not be affected by future log downtime since the
+signer already collected relevant proofs of public logging.  Log downtime may be
+caused by temporary operational issues or simply because a shard is done.
+
+The lack of external communication means that a proof of public logging cannot
+be more convincing than the tree head an inclusion proof leads up to.  Sigsum
+logs have trustworthy tree heads thanks to using a variant of witness cosigning.
+A verifier cannot be tricked into accepting data whose checksum have not been
+publicly logged unless the attacker controls more than a threshold of witnesses.
 
 In a less ideal world sigsum logging can facilitate detection of attacks if a
 verifier _fails open_ by enforcing the second and third criteria partially.  For
@@ -352,6 +356,10 @@ Note that a signer's shard hint is not a verified timestamp.  We recommend to
 set it as large as possible.  If a verified timestamp is needed to reason about
 the time of logging, you may use a cosigned tree head instead
 	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
+
+A log operator that shuts down a completed shard will not effect verifiers.  In
+other words, a signer can continue to distribute proofs that were once
+collected.  This is important because a checksum does not necessarily expire.
 
 #### 4.3 - What is the point of having a domain hint?
 Domain hints help log operators combat spam.  By verifying that every signer
