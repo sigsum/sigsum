@@ -18,16 +18,17 @@ Examples include:
 - A list of key-value pairs is maintained with a certain policy
 
 Please refer to the sigsum logging
-[design document](https://git.sigsum.org/sigsum/tree/doc/design.md),
-[API specification](https://git.sigsum.org/sigsum/tree/doc/api.md), and
-[public prototype](https://git.sigsum.org/sigsum-log-go/tree/README.md)
-to learn more.
+	[design document](https://git.sigsum.org/sigsum/tree/doc/design.md),
+	[API specification](https://git.sigsum.org/sigsum/tree/doc/api.md), and
+	[public prototype](https://git.sigsum.org/sigsum-log-go/tree/README.md)
+to learn more.  There is also an
+	[archive](https://git.sigsum.org/sigsum/tree/archive)
+of meeting minutes and discuss
+	[pads](https://pad.sigsum.org).
+All project repositories are located at
+	[git.sigsum.org](https://git.sigsum.org).
 
-## Services
-Sigsum is self-hosting all services required to function as a software project.
-Each service is operated on a best-effort level that is good enough for Sigsum
-to rely upon.  Please report any issues to the Sigsum team via chat or email.
-
+## Contact
 ### Chat
 Chat with users and developers on IRC or Matrix. The rooms
 are bridged so it does not matter which one you choose.
@@ -58,12 +59,6 @@ empty email to
 
 You can provide feedback, report issues, and submit patches by sending an email
 to sigsum-general@lists.sigsum.org.
-
-### Other
-- Source: [git.sigsum.org](https://git.sigsum.org/)
-- Pads: [pad.sigsum.org](https://pad.sigsum.org/)
-- Website: [www.sigsum.org](https://www.sigsum.org/)
-- Onions: can be discovered for all services via [Onion-Location](https://community.torproject.org/onion-services/advanced/onion-location/).
 
 ## Sponsors
 - [Mullvad VPN](https://mullvad.net/), financial sponsor
