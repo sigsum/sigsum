@@ -231,7 +231,7 @@ since the data structures being exchanged are primitive enough.
 The signer submits their shard hint, checksum, signature, public verification
 key and domain hint as ASCII key-value pairs.  The log verifies that the public
 verification key is present in DNS and uses it to check that the signature is
-valid, then hashes it to constructs the Merkle tree leaf as described in
+valid, then hashes it to construct the Merkle tree leaf as described in
 Section 3.1.
 
 When a submitted logging request is accepted, the log _tries_ to incorporate the
@@ -279,7 +279,7 @@ refers to the collection of an inclusion proof and a cosigned tree head.
 #### 3.2.5 - Verification
 A verifier should only accept the distributed data if the following criteria hold:
 1. The data's checksum and shard hint are signed using the specified public key.
-2. The provided tree head can be reconstructed from the logged leaf and 
+2. The provided tree head can be reconstructed from the logged leaf and
 its inclusion proof.
 3. The provided tree head is from a known log with enough valid cosignatures.
 
@@ -309,7 +309,7 @@ An often overlooked step is that transparency logging falls short if no-one
 keeps track of what appears in the public logs.  Monitoring is necessarily
 use-case specific in sigsum.  At a minimum, monitors need to locate relevant
 public keys.  They may also need to be aware of how to locate the data that
-found checksums represent.
+logged checksums represent.
 
 ### 3.3 - Summary
 Sigsum logs are sharded and shut down at predefined times.  A sigsum log can
@@ -357,7 +357,7 @@ set it as large as possible.  If a verified timestamp is needed to reason about
 the time of logging, you may use a cosigned tree head instead
 	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
 
-A log operator that shuts down a completed shard will not effect verifiers.  In
+A log operator that shuts down a completed shard will not affect verifiers.  In
 other words, a signer can continue to distribute proofs that were once
 collected.  This is important because a checksum does not necessarily expire.
 
@@ -369,7 +369,7 @@ to spam a log in any significant way if rate limits are not set too loose.
 
 Notice that the effect of spam is not only about storage.  It is also about
 merge latencies.  Too many submissions from a single party may render a log
-unusable for others.  This kind of incident happened in the real-world already
+unusable for others.  This kind of incident happened in the real world already
 	[\[Aviator\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/ZZf3iryLgCo/m/rdTAHWcdBgAJ).
 
 Using DNS as an anti-spam mechanism is not a perfect solution.  It is however
@@ -382,7 +382,7 @@ management.  Our work is about transparent _key-usage_.
 
 We are considering if additional anti-spam mechanisms should be supported.
 
-#### 4.4 - Is witness cosigning done?
+#### 4.4 - Are you done with the witness cosigning design?
 There are interesting policy aspects that relate to witness cosigning.  For
 example, what witnessing policy should a verifier use and how are trustworthy
 witnesses discovered.  This is somewhat analogous to a related policy question
