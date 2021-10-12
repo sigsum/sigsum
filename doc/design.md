@@ -294,16 +294,6 @@ logs have trustworthy tree heads thanks to using a variant of witness cosigning.
 A verifier cannot be tricked into accepting data whose checksum have not been
 publicly logged unless the attacker controls more than a threshold of witnesses.
 
-In a less ideal world sigsum logging can facilitate detection of attacks if a
-verifier _fails open_ by enforcing the second and third criteria partially.  For
-example, some verifier may not enforce these criteria at all, and so would
-accept data from a malicious data mirror without proofs of public logging.
-Someone in a similar area may be able to detect this and report the attack.
-
-Another example of partial enforcement would be if a verifier required logging
-in a known log without witnessing.  Attacks against the signer's signing and
-release infrastructure would be detected if the log is not compromised.
-
 #### 3.2.6 - Monitoring
 An often overlooked step is that transparency logging falls short if no-one
 keeps track of what appears in the public logs.  Monitoring is necessarily
