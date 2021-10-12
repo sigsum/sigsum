@@ -1,7 +1,7 @@
 # The Sigsum Project
-Sigsum is a free and open-source project that brings transparency logging to
-**sig**ned check**sum**s.  The overall design is kept general by not logging
-a more concrete data structure like TLS certificates.
+Sigsum is a free and open source software project that brings transparency
+logging to **sig**ned check**sum**s.  The overall design is kept general
+by not logging a more concrete data structure like TLS certificates.
 
 - [x] Discoverability of signed checksums for the data of your choice
 - [x] Centralised log operations but distributed trust assumptions
