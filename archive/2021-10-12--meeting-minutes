@@ -1,0 +1,42 @@
+Date: 2021-10-12, 1300 CEST
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* rohonk
+
+Status round
+	* [rgdd et al.] itterated on documentation (design.md, website, etc.)
+	* [ln5] running tag v0.3.1, sharded from 24th September - 7th November
+		* The coming poc shards are named after transparent fishes
+		* https://pulptastic.com/transparent-fish/
+	* [rohonk] continued discussions about security proof and a paper with rgdd
+
+Discuss
+	* Landing page on a log's base-URL in sigsum-log-go?
+		* "This is the log foobar, we are doing this and that..."
+		* If an instance does not have a custom page, usage a general one
+		* Decision: good idea, defer until after announcement
+	* Add doc/history.md?
+		* Motivation: document origin and journey, living document
+		* Inspiration: curl, see docs repo
+		* Decision: yes
+	* What blocks us from announcing the project
+		* Merge design.md, again
+		* doc/history.md
+
+Next steps
+	* Announce project after fixing the final blockers
+	* Defer other next step discussions until next week
+
+Other useful links
+	* [rohonk] interesting mis-usage of CT logs from a while back
+		* https://defcon.org/html/defcon-25/dc-25-speakers.html#B%C3%B6ck
