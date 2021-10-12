@@ -394,9 +394,5 @@ the original proposal by
 which puts an authority right in the middle of a slowly evolving witnessing policy.
 
 #### 4.5 - More questions
-- Why not store data in the log?  XXX: answered enough already?
-- Why not store rich metadata in the log? XXX: answered enough already?
-- What (de)serialization parsers are needed and why?
-- What cryptographic primitives are supported and why?
 - What are the privacy concerns?
-- How does it work with more than one log?
+- Add more questions here!
