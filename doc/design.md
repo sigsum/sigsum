@@ -382,7 +382,7 @@ management.  Our work is about transparent _key-usage_.
 
 We are considering if additional anti-spam mechanisms should be supported.
 
-#### 4.4 - Are you done with the witness cosigning design?
+#### 4.4 - What parts of witness cosigning are not done?
 There are interesting policy aspects that relate to witness cosigning.  For
 example, what witnessing policy should a verifier use and how are trustworthy
 witnesses discovered.  This is somewhat analogous to a related policy question
