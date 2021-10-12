@@ -43,10 +43,10 @@ resistant instead of one.
 ### 2.2 - Serialization
 Log requests and responses are transmitted as ASCII-encoded key/value
 pairs, for a smaller dependency than an alternative parser like JSON.
-Some input and output data is binary: cryptographic hashes and
-signatures.  Binary data must be base16-encoded, also known as hex
-encoding.  Using hex as opposed to base64 is motivated by it being
-simpler, favoring ease of decoding and encoding over efficiency on the wire.
+Some input and output data is binary: cryptographic hashes and signatures.
+Binary data must be lower-case base16-encoded, also known as lower-case hex
+encoding.  Using hex as opposed to base64 is motivated by it being simpler,
+favoring ease of decoding and encoding over efficiency on the wire.
 
 We use the [Trunnel](https://gitweb.torproject.org/trunnel.git)
 [description language](https://www.seul.org/~nickm/trunnel-manual.html)
