@@ -59,7 +59,7 @@ This document is about our log design.
 
 ### 1.1 - Goals and non-scope
 The goal of sigsum logging is to make a signer's key-usage transparent in
-general.  Therefore, sigsum logs allow logging of signed checksum and some
+general.  Therefore, sigsum logs allow logging of signed checksums and some
 minimally required metadata.  Storing data and rich metadata is a non-goal.
 
 We want the resulting design to be easy from many different perspectives, for
