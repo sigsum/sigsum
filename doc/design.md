@@ -328,7 +328,28 @@ A brief summary appeared in our archive on
 It may be incomplete, but covers some details that are worth thinking more
 about.  We are still open to remove, add, or change things.
 
-#### 4.2 - What is the point of having a shard hint?
+#### 4.2 - What is the point of having a domain hint?
+Domain hints help log operators combat spam.  By verifying that every signer
+controls a domain name that is aware of their public key, rate limits can be
+applied per second-level domain.  You would need a large number of domain names
+to spam a log in any significant way if rate limits are not set too loose.
+
+Notice that the effect of spam is not only about storage.  It is also about
+merge latencies.  Too many submissions from a single party may render a log
+unusable for others.  This kind of incident happened in the real world already
+	[\[Aviator\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/ZZf3iryLgCo/m/rdTAHWcdBgAJ).
+
+Using DNS as an anti-spam mechanism is not a perfect solution.  It is however
+better than not having any anti-spam mechanism at all.  We picked DNS because
+many signers have a domain.  A single domain name is also relatively cheap.
+
+A signer's domain hint is not part of the logged leaf because key management is
+more complex than that.  A separate project should focus on transparent key
+management.  Our work is about transparent _key-usage_.
+
+We are considering if additional anti-spam mechanisms should be supported.
+
+#### 4.3 - What is the point of having a shard hint?
 Unlike TLS certificates which already have validity ranges, a checksum does not
 carry any such information.  Therefore, we require that the signer selects a
 shard hint.  The selected shard hint must be within a log's shard interval.  A
@@ -350,27 +371,6 @@ the time of logging, you may use a cosigned tree head instead
 A log operator that shuts down a completed shard will not affect verifiers.  In
 other words, a signer can continue to distribute proofs that were once
 collected.  This is important because a checksum does not necessarily expire.
-
-#### 4.3 - What is the point of having a domain hint?
-Domain hints help log operators combat spam.  By verifying that every signer
-controls a domain name that is aware of their public key, rate limits can be
-applied per second-level domain.  You would need a large number of domain names
-to spam a log in any significant way if rate limits are not set too loose.
-
-Notice that the effect of spam is not only about storage.  It is also about
-merge latencies.  Too many submissions from a single party may render a log
-unusable for others.  This kind of incident happened in the real world already
-	[\[Aviator\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/ZZf3iryLgCo/m/rdTAHWcdBgAJ).
-
-Using DNS as an anti-spam mechanism is not a perfect solution.  It is however
-better than not having any anti-spam mechanism at all.  We picked DNS because
-many signers have a domain.  A single domain name is also relatively cheap.
-
-A signer's domain hint is not part of the logged leaf because key management is
-more complex than that.  A separate project should focus on transparent key
-management.  Our work is about transparent _key-usage_.
-
-We are considering if additional anti-spam mechanisms should be supported.
 
 #### 4.4 - What parts of witness cosigning are not done?
 There are interesting policy aspects that relate to witness cosigning.  For
