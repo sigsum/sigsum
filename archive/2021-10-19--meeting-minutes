@@ -1,0 +1,74 @@
+Date: 2021-10-19, 1300 CEST
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd, ln5, kfreds] added history.md
+		* https://git.sigsum.org/sigsum/tree/doc/history.md
+	* [rgdd, rohonk] outlined a rough plan for a sigsum paper next year
+		* https://git.sigsum.org/sigsum/tree/archive/2021-10-19-paper-planning?id=28425af42f7e2a4bb6934d61d82f393b337f01da
+	* [rgdd] a claimant model example (warning: sketch)
+		* bring sigsum's witnessing to a different log ecosystem
+		* https://git.sigsum.org/sigsum/tree/archive/2021-10-19-cm-example-ct-wit?id=28425af42f7e2a4bb6934d61d82f393b337f01da
+	* [rgdd] project launched
+		* https://lists.sigsum.org/sigsum-general/msg00001.html
+
+Discuss
+	* Revisit milestones
+		* September, October: checked at the same time
+		* November: was "poc use-case"
+			* Decision: keep, also fix a user-friendly example with tooling
+		* Decision: dog food sharding the coming months
+	* Enumerate and prioritize our backlog
+		* sigsum (documentation, design)
+			* Few open design details to be considered, see archive 2021-10-05
+			* Especially signature would be good to revisit
+			* Decision: defer, see if we get some other feedback to consider as well
+		* sigsum-lib-go (tooling)
+			* Library (rgdd)
+			* Commands (rgdd)
+		* sigsum-log-go
+			* rate limits (Decision: defer)
+			* read-only mode (rgdd)
+			* server config (Decision: defer)
+			* metrics (Decision: defer)
+			* experimental checkpoint endpoint (rgdd)
+			* hsm support (Decision: defer)
+			* "run locally documentation" (Decision: defer, same time as server config)
+		* sigsum-witness-py (ln5)
+			* shard rotation?
+			* error handling
+			* metrics
+			* hsm (Decision: defer)
+		* research
+			* formal security proof (rohonk)
+		* Operations (Decision: defer)
+			* Log database
+			* Alerts, also in irc/matrix? (maybe ln5)
+			* Multi-instance tree head manager, required if >1 log FEs
+		* Project
+			* License legality: Copyright by whom? What CLA? (ln5)
+			* other docs?
+				* weekly-meet.md?
+			* mailing list - dmarc etc. (ln5)
+		* Dog fooding (use-cases)
+			* ST (Decision: yes, after sigsum-lib-go)
+			* SRI
+			* Witness CT logs
+			* Map mode for sigsum
+			* A toy that is non-cs? (Decision: yes, after sigsum-lib-go)
+			* Mailing list transparency?
+
+Next steps
+	* [rgdd] sigsum-lib-go, read-only mode, and experimental checkpoint endpoint
+	* [ln5] sigsum-witness-py, enhanced mailing list configuration, and CLA
