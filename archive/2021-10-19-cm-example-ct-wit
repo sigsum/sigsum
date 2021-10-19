@@ -1,0 +1,74 @@
+Use sigsum logging to bring witnessing into a different log ecosystem? (Example: CT)
+---
+Claim: I, claimant, claim that the data:
+	* Has cryptographic hash X
+	* Can be located on <url>/X
+		* This seems like it will be a common pattern for Sigsum Claimants. Do you have any recommended way for actors without experience/desire to run high-uptime servers to do this? Something like github hosting could work, but I wonder if you have other ideas
+			* Exactly, I'd say this is a copy-paste claim for every sigsum use-case.
+			* How worried (or not worried) I am about uptime for the data depends on the use-case.  I guess it can be elaborated upon as follows:
+				* Small player: it is probably fine to host the data on best-effort level.  Every now and then the data might dissapear for a few hours or days, in which case a monitor would detect that, poke the claimant, and then it can be recovered from.  The interesting case is if data "dissapears" and the claimant can't explain it!
+				* Large player: probably already have the data hosted somewhere with pretty good uptime, or could have.  Think sort of releases.example.com, common.
+				* In general: I've mostly been thinking about this as something you put on a website or in a git-based repo (as you also noted).  But should sigsum logging become popular, one or more separate data hosting services doesn't sound unlikely to me.
+				* In this example: uptime would obviously be very important!
+		* Similarly (i.e. offtopic for this proposal!), what is the discovery mechanism for this URL claim? I assume Sigsum has no role in this, and you will leave it to claimants joining the ecosystem to do The Right Thing and publish this stuff somewhere?
+			* Yeah, we assume that the claimant "wants to do the right thing" here.  I don't think a claimant would join the ecosystem in the first place otherwise.  There are probably some use-cases where you would not expose the data though.  For example, the data might only be accessible to folks within an organization.  That would mean that the Verifier role could only be taken on by a select number of people.
+			* But to answer your question, no, sigsum logs don't help with the discovery of this URL in the same way that sigsum logs don't help with discovery of relevant public keys.
+			* Surely we will see some examples of this as we get started with pipe cleaning.  I liked your take from a while back that the claimant should sign their claims, so that they cannot just say "no we never meant it like that".  Perhaps signing the filled-out claimant model instantiation would be a good idea!  So if someone wants to say "hey you did not live up to this claim", then they can also present "and here is proof that you claimed it".  The real world is messy, and that is what I like about the claimant model.  It makes it less messy!
+	* Is a serialized STH (RFC 6962) for an append-only log
+		* What part of this does this Claimant check?
+			* Signature (I assume yes)
+			* Append-only (I assume no... but, maybe?)
+				* My intention was that the claimant _verifies_ that every signed tree head they sign is in fact append-only with their view of the log.  So that a believer has reason to believe this property because a verifier can verify/falsify it.
+
+(Note that the claimant can do distribution on a different endpoint to believers when proofs of public logging are ready for serving as well.  E.g., <url other>/latest.)
+
+Statement: Statement^Sigsum
+	* Encodes a cryptographic hash of the data^WSTH (right?) as well as a shard hint.
+		* Yes, data = STH in this example!
+
+Claimant: a party that is into CT
+	* CT log operator
+	* Non-profit
+	* Etc.
+
+Believer: Verifier^CT, Believer^CT
+	* Self and third-party monitors in the CT ecosystem that are looking for mis-issuance
+	* Could be a user-agent that should only talk to HTTPS servers within its own organization if the presented certificates have inclusion proofs - not scts.
+	* (Not a default browser, requires low-latency with today's ecosystem requirements)
+
+(Mentality is: it is ok to have a little bit of latency the first time we get a certificate.  Renewals will be automatic before expiration. So no added latency then.)
+
+Verifier: any interested party
+	* Stakeholders in the CT log ecosystems
+	* Curious researchers
+	* etc.
+
+("Oh nice, new statement from claimant just entered a sigsum log's cosigned Merkle tree.  Let's check if we can find the data.  Great, it's there!  And it is really a serialized STH.  And WOW, it is actually append-only now that I'm looking back at the history of all statements.  This claimant is really doing a good job.  Keep it up!")
+
+Arbiter:
+	* Parties that manage CT policies, e.g., Google and Apple.
+
+One of several ways this could happen in practise
+---
+Web server
+1. Certbot requests certificate
+2. Certbot waits for inclusion in CT log
+3. Certbot waits for an STH that a claimant claims to be append-only
+	* Retrieves it on e.g. the claimant's "latest" endpoint as noted above
+	* As a result, we now have an STH with proofs of logging in a cosigned sigsum log
+4. Certbot fetches an inclusion proof for certificate against retrieved STH
+5. Certbot configures web server to serve:
+	* Certificate with incl. proof that leads up to CT log's STH
+	* Incl. proof for CT STH that leads up to a sigsum log's cosigned tree head
+
+User agent
+1. Valid certificate?
+2. Included in CT log?
+2. STH trustworthy? Yes, it is public if a majority of sigsum witnesses are honest.  And it sounds reasonable that at least one party correctly does the above Verifier role.
+
+Monitor
+	* Forever:
+		* statement <- new statement from known claimant in cosigned sigsum log
+		* verify claims by locating the data and checking it further
+			* if data is missing -> page someone to investigate
+			* if data does not have claimed properties -> page someone to investigate

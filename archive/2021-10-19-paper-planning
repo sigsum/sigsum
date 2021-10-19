@@ -1,0 +1,55 @@
+What should be the scope of the paper?
+	* Introduction of sigsum logging and its architecture (informal)
+		* what rgdd et al. have now
+	* Security proof of the sigsum logging architecture (formal)
+		* rohonk takes the lead here
+	* Discussion about how to use the basic building block that we modelled
+		* rgdd takes the lead here
+
+What is the required timeline for this paper?
+	* rgdd
+		* not rushed at all, quite busy the coming months
+		* can provide feedback and be involved in security proof when needed
+		* can do concrete paper work from March until end of June
+	* rohonk:
+		* available from November and onwards, can then work full time on paper
+
+Should anyone else be involved?
+	* rgdd and rohonk both have academic supervisors that can provide feedback
+	* we are still open for additional contributors
+
+Publication strategy
+	* It looks like ESORICS, with fallback on ACSAC, could work given our timeline
+		* ESORICS 2022
+			* https://esorics2021.athene-center.de/index.php
+			* Deadline: May 15 , 2022.
+			* Notification: 21 June 2021. 
+		* ACSAC
+			* https://www.acsac.org/
+			* Deadline usually in ~June, see http://www.wikicfp.com/cfp/program?id=45
+
+Other conferences that rohonk mentioned
+	* https://www.usenix.org/conference/usenixsecurity22/call-for-papers
+	* https://asiaccs2022.conferenceservice.jp/ 
+	* https://www.ndss-symposium.org/ndss2022/call-for-papers/
+	* https://www.ieee-security.org/TC/SP2022/cfpapers.html
+	* [rgdd] much harder to get in here, and deadlines are a bit too tight
+
+How do we work together?
+	* Voice meets on https://meet.sigsum.org/research
+	* Pads on https://pad.sigsum.org
+		* https://pad.sigsum.org/p/security-proof
+		* (Not persisted in any archive, sort of a scratch pad for now.)
+	* Source on https://git.sigsum.org/research
+		* .tex files in sigsum/research repo 
+		* Decision: pick esorics template and start with security proof section
+			* rgdd will set this up in the near future
+
+What needs to be done for a formal security analysis?
+	* Define security goals, assumptions, interactions
+	* Select a proof technique and apply it
+	* Some related CT papers that can be helpful to take inspiration from
+		* https://link.springer.com/book/10.1007%2F978-3-319-45741-3
+		* https://dl.acm.org/doi/pdf/10.1145/2976749.2978404
+		* https://people.cispa.io/cas.cremers/downloads/papers/ccsfp200s-cremersA.pdf
+		* noise protocol?
