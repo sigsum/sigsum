@@ -1,0 +1,41 @@
+Date: 2021-10-26, 1300 CEST
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* rohonk
+	* ln5
+
+Status round
+	* Slow week, nothing in particular to report right now
+
+Discuss
+	* Sharding
+		* Time to start next shard, ln5 will set it up tomorrow
+			* new public key
+			* copy witness keys from the previous shard
+			* kill shard that is currently running after it is done
+				* use read-only mode in second shard
+		* We should start working on a "best operators practise" document
+			* "this is what you should think about when sharding"
+			* "this amount of disk and ram is recommended"
+			* "this is how you should manage keys"
+			* etc.
+	* Recommended hardware requirements for sigsum-log-go?
+		* (Context: we were asked by an interested log operator.)
+		* RAM?
+		* Disk? When are things written to disk, and how often?
+		* Cores? Does it scale automatically with many cores?
+		* Cost per query, and does it change during a stress test?
+		* "How much performance can you get out of a single instance?"
+		* Decision: rgdd will look into this in November.
+
+Next steps
+	* See next steps from last week
