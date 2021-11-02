@@ -1,0 +1,35 @@
+Date: 2021-11-02, 1300 CET
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* rohonk
+
+Status round
+	* [rgdd] making progress on sigsum-lib-go (ascii, hex, types)
+	* [ln5] started running barreleye-fish shard
+	* [rohon] initial work on security proof and parties that interact
+
+Discuss
+	* Use-case: mailing list transparency (ln5)
+	* A reflection about our ASCII parser
+		* Deserialization would be less error-prone with one list-item per line?
+		* List-item with multiple things could have same parser, different delim characters
+		* Decision: see what the syntax for this nested key-value format would look like
+
+Next steps
+	* See last week's TODOs which are still in progress
+
+Other useful links
+	* [rgdd] security bugs based on unicode
+		* https://krebsonsecurity.com/2021/11/trojan-source-bug-threatens-the-security-of-all-code/
+	* [rgdd] changes to how chrome delivers known logs to clients
+		* https://groups.google.com/a/chromium.org/g/ct-policy/c/IdbrdAcDQto
