@@ -1,0 +1,55 @@
+Warning: rough sketch, not considered in full detail yet.
+
+Background
+---
+The process around shard rotation can probably be simplified for all involved parts.
+
+Right now, a log's metadata is fixed and consists of:
+	* A unique base URL
+	* A unique public key
+	* A shard start
+	* A shard end
+
+This means that new log metadata needs to be delivered to all parts somehow.
+	* Potentially painful for hard-to-update verifiers, like in a firmware context
+	* Potentially annoying and error-prone for all involved parties to track
+
+Ideas
+---
+1.  Introducing new shards is like introducing new log operators.  You could announce
+many log shards at the same time, or use a dynamic list of log operators and shards.
+	* Con: announcing many shards at once involves tracking and securing more keys
+	* Con: a dynamic list is a moving part that can break and/or is hard in some contexts
+
+2.  Let transition from one shard to the next be easily automated in the normal case:
+	* Remove requirement of unique public key, rework "log id" so it is unique per shard
+	* Log adds "if_next_shard_url", e.g., in its metadata that is served on an endpoint
+	* Witnesses periodically check if a new shard was started.  If yes:
+		* Locate the new metadata on <url>/log-metadata
+		* Log a signed checksum of the new metadata in the current shard
+			* Witness: "look, next shard is available.  I will start cosigning that too."
+			* Monitor:
+				* "okay, checking if_next_shard_url and if your metadata claim is valid"
+				* "great shard is there, will start monitoring that as well"
+
+(Notice that next log metadata would need to be signed by the current shard key.)
+
+(Notice that it is not sufficient to say that monitors and witnesses should both just
+check for new shards periodically.  This could lead to cases where all witnesses find
+a new log to start cosigning, while an isolated monitor did not.  Hence the above.)
+
+Pro: log operator can reuse their public key if there is no indication of compromise.
+A verifier would simply not need to care about logging happening in a different shard.
+Pro: witnesses and monitors have reliable automatic upgrade paths in the normal case.
+
+There are obviously more details to be discussed, the above captures an idea.
+
+How witnesses and monitors recover after a log's key was compromised?  This is related
+to how witnesses and monitors add new log operators.  Transparent mailing list?
+
+Would it be a good idea to do some kind of cross-signing, so that a verifier with the
+old key can still pick-up the log operator while getting security from witnessing?
+
+(Another related TODO to think about: would it be better to define shard_start as the
+latest point in time that the log will be in a read+write mode?  It might be sooner.
+And another one.  Is it possible/good to leave out shard_end with this approach?)

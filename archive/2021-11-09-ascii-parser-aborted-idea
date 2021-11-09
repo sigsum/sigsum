@@ -1,0 +1,60 @@
+Background
+---
+Is it possible to make our ascii parser simpler and less error-prone for lists?
+
+Suppose we have a list of items named "apples".  Each item contains a single value.
+The list apples=[v1,v2] would be expressed as follows:
+```
+apples=v1
+...possibly other key-value pairs...
+apples=v2
+```
+
+Suppose we have a list of items named "fruits".  Each fruit item contains two values
+for the fields "apple" and "banana".  The list fruits=[(apple=v1,banana=v2), (apple=v3,banana=v4)] could be expressed as follows:
+```
+banana=v2
+apple=v1
+apple=v3
+banana=v4
+```
+
+To parse this successfully, we require that the number of apple lines are the same as
+the number of banana lines.  Then we join apple-banana pairs in the observed ordered,
+i.e., the first apple line is associated with the first banana line, etc.
+
+Observation
+---
+Would it be simpler to parse the following:
+
+```
+fruits=apple-->v1; banana-->v2;
+fruits=banana-->v4; apple-->v3;
+```
+
+In other words, the list is identified by a key.  An item's key-value pairs are listed
+on the same line, and uses _the same ASCII parser but with different delimitors_.
+
+To improve readability for humans, the delimiting pattern could be based on k, k-1,
+k-2,...,1 new lines.  The same technique could be used for the end-of-key pattern.
+```
+key==key1=v1
+key2=v3
+
+key==key1=v2
+key2=v4
+
+```
+
+Discussion
+---
+Not convinced that nested parsers are simpler than joining lists after checking that
+all sizes match.  It might be easier to look at for humans, because we get each item
+grouped in the same place.  Our parser description would become more complex, however.
+
+Assuming that the parser's syntax is understood, it might be the case that it is easier
+to implement generally in a high-level language.  That is a non-goal though.
+
+Conclusion
+---
+This idea does not seem to be simpler and less error-prone in general.  Abort!
