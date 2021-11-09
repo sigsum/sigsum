@@ -1,0 +1,34 @@
+Date: 2021-11-09, 1300 CET
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd] sketch on a possible sharding idea
+		* https://git.sigsum.org/sigsum/tree/archive/2021-11-09-sharding-ideas?id=e506a1301d2d2b4417a92c400c2b94fa6d83b162
+	* [rgdd] follow-up on ascii parser idea from last week
+		* https://git.sigsum.org/sigsum/tree/archive/2021-11-09-ascii-parser-aborted-idea?id=e506a1301d2d2b4417a92c400c2b94fa6d83b162
+		* Decision: abort
+	* [rgdd] preliminary agenda for this week's in-person meet
+		* https://pad.sigsum.org/p/ce04-af49-ff58-ea17
+
+Discuss
+	* This week's in-person meet topics
+		* Add vision and milestones as agenda item 0
+	* Pads
+		* Random pad button at pad.sigsum.org? (Feature request)
+		* Should ln5  replace nodejs from Debian with $something-else?
+			* Motivation: hopefully fixes some encountered pad crashes
+			* Decision: yes
+
+Next steps
+	* Meet in-person in Stockholm, see agenda above.
