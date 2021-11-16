@@ -1,0 +1,69 @@
+Date: 2021-11-16, 1300 CET
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* rohonk
+
+Status round
+	* [rgdd et al.] brief summary of in-person meet last week
+		* https://git.sigsum.org/sigsum/tree/archive/2021-11-16-in-person-meet-pad
+	* [rgdd] proposal: open-ended shard interval
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-open-ended-shard-interval.md
+	* [rgdd] proposal: remove arbitrary bytes in leaf structure
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-remove-arbitrary-bytes.md
+	* [ln5] proposal: use SSH signing format for leaves and tree heads
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-ssh-signature-format.md
+	* [rohonk] looking into possible proof methods, like formal verification with Tamarin
+
+Discuss
+	* Update meeting structure?
+		* Hello, status round, decisions, next steps?
+		* "More focused meeting, discuss more after and/or async"
+		* "Max 50 minutes, probably less"
+		* Decision: rgdd will propose an updated meeting structure
+	* Life cycle for documents in doc/proposal
+		* Keep? Merge into main docs? Annotate aborted, implemented, etc?
+		* Decision:
+			* Keep proposal files
+			* Add a status line if helpful, e.g., "implemented, "aborted", etc.
+			* Move relevant parts of proposal to main documentation if status "implement"
+	* Use SSH signing format for leaves and tree heads
+		* Expand on changes to api endpoints in api.md
+		* Expand on output from openssh tooling
+		* Include that proposal includes switching from Ed25519 -> Ed25519ph w/ SHA256
+		* Open questions
+			* Move shard hint from struct statement to namespace field in SSH signed data?
+			* (In particular, would that make the signing procedure easier or not?)
+			* Some agility, but should be separate and not part of this proposal
+	* Security proof
+		* Q: Consider possible vulnerabilities in algorithms as part of security proof?
+			* No, security analysis of protocol so assume e.g. signature scheme with prop X
+		* Q: Would it be a good idea to use a formal tool like Tamarin/Proferif?
+			* Maybe, this paper might be helpful for rohonk to explore that possibility:
+				* https://people.cispa.io/cas.cremers/downloads/papers/ccsfp200s-cremersA.pdf
+			* Step 1: parameters, setup, properties to prove
+			* Step 2: select proof method, could be tamarin or something else like pen&paper
+	* Decisions about any open design TODOs?
+		* See above proposals
+		* See (3) in deferred item from in-person meet
+		* Also need to think about better terminology for "signer" and "verifier"
+		* Defer until next week, everyone reads in advance to be prepared
+
+Next steps
+	* [everyone] read and think about open design TODOs
+	* [ln5] ssh signing format proposal, and give rgdd access to sigsum systems
+	* [rgdd] propose updated meeting structure
+	* [rohonk] continued work on security proof and proof techniques
+
+Other useful links
+	* [kfreds] brief intro to singing with ssh tooling
+		* https://www.agwa.name/blog/post/ssh_signatures
