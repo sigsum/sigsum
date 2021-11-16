@@ -1,0 +1,52 @@
+Attendees
+---
+	* rgdd
+	* ln5
+	* kfreds
+
+Agenda
+---
+0.  Vision and milestones
+	* "More than one production log, several production witnesses"
+	* https://git.sigsum.org/sigsum/tree/archive/2021-10-19--meeting-minutes
+		* Near-term TODOs, other than what is additionally identified below.
+
+1.  Sharding, few ideas and related details to consider
+	* https://git.sigsum.org/sigsum/tree/archive/2021-11-09-sharding-ideas
+	* Touches policy aspects of sigsum, e.g., how roots of trust are configured.
+	* Touches ecosystem aspects of sigsum, e.g., how witnesses learn about new logs.
+	* TL;DR:
+		* We liked the idea of an open-ended shard interval
+		* A threat with longer-lived shards is more opportunity to poison logs
+			* Currently 32 bytes per leaf are arbitrary
+			* We revisited and refined an old idea on how to remove those arbitrary bytes
+		* Decision: rgdd summarizes our discussion by preparing two proposals
+
+2.  Revisit signature scheme and format
+	* Complexity vs utility trade-off, support any additional signature algorithms?
+	* Where allow agility, if at all? Log, witness, signer.
+	* Include a sigsum context in the statement that is signed?
+	* We would be remarkably close to SSH's blob format at this point.
+		* https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig
+	* TL;DR:
+		* We want context (good hygiene), maybe even a fixed magic string
+		* If what we want can be backwards compatible with ssh tooling -> great!
+		* We did not come to a conclusion about how much agility to allow and where
+			* Agility should be for "what is wanted now", rather than "maybe in the future"
+			* A NIST curve could be useful at a first glance, as an option to Ed25519
+		* Decision: ln5 summarizes our ssh-format discussion by preparing a proposal
+
+3.  If time permits, consider smaller design TODOs in our backlog
+	* https://git.sigsum.org/sigsum/tree/archive/2021-10-05-open-design-thoughts
+	* HTTP GET for the three get* endpoints with input parameters?
+	* Make room for other rate limiting ideas than DNS?
+	* Get inclusion proof from add-leaf endpoint?
+	* TL;DR:
+		* We did not have time to discuss this at all, deferred.
+
+4.  Other
+	* Self-hosting
+		* In-line with our values, continue with best-effort level "good enough for sigsum"
+		* Mailing list needs a little bit more work, some mail clients may not get delivery
+	* Sounds like it would be a good idea to start a proposals directory
+		* Decision: https://git.sigsum.org/sigsum/tree/doc/proposals
