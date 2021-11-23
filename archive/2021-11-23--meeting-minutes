@@ -1,0 +1,47 @@
+Date: 2021-11-23, 1300 CEST
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Discuss
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd] half-baked idea that is related to signing format
+		* https://git.sigsum.org/sigsum/tree/archive/2021-11-23-idea-related-to-ssh-format
+	* [rgdd] sketched on updated meet structure
+		* https://git.sigsum.org/sigsum/tree/archive/2021-11-23-meet-structure-notes
+	* [ln5] continued work on ssh signing format proposal
+		* as discussed in irc we are also considering to move:
+			* shard hint into namespace (leaf)
+			* key hash into namespace (tree head)
+		* pros, especially for leaves:
+			* simplifies tooling
+			* cleaner separation of data and context
+			* can get the "remove arbitrary bytes" proposal for free, see above idea
+
+Discuss
+	* Decision: update meeting structure to s/Discuss/Decision
+	* Decision: start using open-ended shard-interval
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-open-ended-shard-interval.md
+		* start next shard when the open-ended shard-interval is tagged in sigsum-log-go
+		* let our current ("completed") shard continue running until the above is fixed
+
+Next steps
+	* [ln5] continue on ssh singing format proposal and deploy next shard when possible
+	* [rgdd] implement open-ended shard interval, if time start defining work packages
+
+Other useful links
+	* [rgdd] additional links from kpcyrd about pacman-bintrans
+		* (Recall: https://github.com/kpcyrd/pacman-bintrans)
+		* Signature index
+			* List that allows mapping signature -> package name after discovery in log
+			* https://pacman-bintrans.vulns.xyz/sigs/
+		* Package index
+			* https://archive.archlinux.org/packages/
