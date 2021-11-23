@@ -1,0 +1,27 @@
+
+A half-baked idea related to ssh format proposal, needs thinking and verification
+
+              v-----the part that is hashed is §3 struct----v
+checksum := H("stuff" + "namespace with shard hint" + H(data))
+sig := Sign(sk, checksum)
+
+sig over checksum is what ssh-keygen -Y produces given sk, namespace, data?
+
+Submit with same formats as before:
+- vk
+- shard hint
+- H(data), "easily produced with sha256sum"
+- sig, "easily produced with ssh-keygen -Y and re-encoded to just be hex sig bytes"
+- domain hint
+
+Log computes checksum based on the above to verify signature
+Log does the normal "ok shard hint, ok domain hint checks"
+Log then accepts and creates leaf
+
+Leaf
+- checksum
+- sig
+- vk
+
+shard_hint is not needed in leaf now, could be where data is
+Monitor can verify signature if they know vk as before

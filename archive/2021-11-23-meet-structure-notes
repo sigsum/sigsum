@@ -1,0 +1,108 @@
+Some notes about sigsum's weekly jitsi meets (with proposed changes)
+
+TL;DR
+---
+	* Background
+		* The status round part is often enough for micro discussions
+		* Longer discussions tend to bloat the meeting for all participants
+		* Sometimes we don't get around to all decisions because we run out of time
+	* Idea
+		* s/Discuss/Decisions
+		* Timebox meet to 50 minutes, hopefully less with the above
+		* If anyone wants to discuss something in more detail:
+			* Do it immeaditely after the meet if time
+			* Else schedule a separate meet, take notes, and make it a status item next week
+			* (Sometimes discussion is more appropriate on irc, i.e., jitsi not required)
+			* Decision is automatically deferred until next week, if a decision is needed.
+				* "We should have done the work before the meet to take a decision today"
+		* See below for proposed meet pad template and notes
+	* When we decided on a new meet structure, let's clean this up as e.g. "doc/meet.md"
+
+Proposed meet pad template
+---
+Date: YYYY-MM-DD TTMM UTC
+Meet: https://meet.sigsum.org/sigsum
+Info: link to "how this meeting works"
+Chair: <chair>
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* <insert nickname here>
+
+Status round
+	* <insert status report here>
+
+Decisions
+	* <insert proposed decision here>
+
+Next steps
+	* <insert next steps here>
+
+Other useful links
+	* <insert useful link from irc or meet here>
+
+Meet lifecycle
+---
+0. House keeping
+	* Next meet pad is available at https://pad.sigsum.org/p/sigsum-YYYYMMDD
+		* Date refers to the date of the meeting, usually every Tuesday
+	* After the meet, the chair will:
+		* Clean-up meet pad if it is too cluttered
+		* Persist linked pads that are no longer believed to be active
+		* Persist the resulting meet pad and post link in irc
+		* Initialize next week's meet pad and post link in irc
+		* (Archive link: https://git.sigsum.org/sigsum/tree/archive)
+
+1. If you plan to attend, put your name into the "Hello" part of the agenda.  Most of
+us use irc/matrix nicknames.  You can also add your nickname when you are showing up.
+
+2. If you have anything to report, please create a report item in the "Status round"
+section in advance.  These reports should be kept short and will most likely contain
+either a link to learn more or a few talking points that make minutes more useful.
+	* Examples
+	* [alice] sketched on a new meeting structure as discussed last meet
+		* https://pad.sigsum.org/p/db06-fa52-dd67-fe98
+	* [bob] "started looking into X", "deployed Y", "fixed Z", etc.
+		* Few talking points / key words that make the resulting minutes more useful
+		* (May be omitted, keep it on the level "what is useful and simple")
+		* (May be added as notes while the report is taking place)
+
+You are not expected to read status reports in advance. We can have a micro discussion
+for each status report, but anything lengthy is deferred until after the meet is done.
+
+For example, you could say "I'm looking into X and would like to discuss Y after meet".
+
+3. If you would like to propose a decision, create a decision item in the "Decision"
+section in advance.  Add a question mark to emphasize that it is not decided yet.
+	* a) Ensure that there is enough information available to take a decision
+		* Usually in the form of having a status round item on the same topic
+		* Some decisions don't need much context though, so keep it as simple as possible
+	* b) Ping on irc before the meet starts that you are proposing a decision
+		* "I'm working on X."
+		* "Here's what you need to know"
+		* "I'm adding this into the meet pad as a proposed decision, please take a look"
+		* (Be reasonable about how much of a heads-up you give for people to look)
+		* (Worst case, decision is deferred until next week if not enough time to look)
+	* c) If you plan to attend the meet and be part of the decision:
+		* Read-up on proposed decisions in advance
+		* Think about what you want to decide and why
+		* (Async feedback is of course also welcomed...)
+	* d) Discuss and take decision together, e.g., "yes", "no", "needs more work", etc.
+		* Prefix what is decided with "Decision: ", so that it is easy to grep in archive
+
+4. Before the formal meet closes we self-assign next steps in the "Next steps" section.
+Our next steps usually follow from status round and decisions, but is still explicit so
+that it is easy to communicate to one another what we plan to (not) work on next.
+	* Examples
+	* [alice] sketch on a new meeting structure that would s/Discuss/Decision
+	* [bob] give alice access to all sigsum systems
+
+5. If useful links appeared on irc or during the meet, please put them in the "Other
+useful links" section.  Add a one-liner description if useful.  For example:
+	* Brief intro to singing with ssh tooling
+		* https://www.agwa.name/blog/post/ssh_signatures
