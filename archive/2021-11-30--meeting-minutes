@@ -1,0 +1,37 @@
+Date: 2021-11-30 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [ln5] draft on SSH signature format idea
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-ssh-signature-format.mdx
+
+Decisions
+	* Decision? start using SSH signature format
+		* [rgdd] "yes but not yet", needs a bit more work:
+			* ssh tooling actually signs a hash of "the struct", not the struct itself
+				* 1) document this
+				* 2) specify that sigsum stores _this hash_ in the leaf; not hash of checksum
+				* 3) s/checksum_hash/signed_hash/g
+				* 4) with signed_hash in leaf -> don't need shard hint to be stored by log?
+			* finish tooling for signing and key generation and key format conversion
+				* 1) to verify that everything is working as expected
+				* 2) that tooling is good to have anyway
+			* suggestion: v0:tree_leaf:<shard_hint>@sigsum.org looks better?
+				* no, abort this suggestion; tooling output looks better as is
+				* "this is a tree leaf; and the tree leaf version is 0"
+
+Next steps
+	* [ln5] finish tooling for signing, and updating of the signing change proposal
+	* [ln5] sysadmin stuff
+	* [rgdd] implement open-ended shard interval and fix work packages
