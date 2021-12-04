@@ -352,20 +352,24 @@ We are considering if additional anti-spam mechanisms should be supported.
 #### 4.3 - What is the point of having a shard hint?
 Unlike TLS certificates which already have validity ranges, a checksum does not
 carry any such information.  Therefore, we require that the signer selects a
-shard hint.  The selected shard hint must be within a log's shard interval.  A
-shard interval is defined by a start time and an end time.  Both ends of the
-shard interval are inclusive and expressed as the number of seconds since the
-UNIX epoch (January 1, 1970 00:00 UTC).
+shard hint.  The selected shard hint must be within a log's shard interval.
+That shard interval is open-ended, meaning there is a fixed start time and a
+_policy-defined_ end time that the operator may increase but not decrease
+	[\[OESI\]](https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-open-ended-shard-interval.md).
+A log's shard start is inclusive and expressed expressed as the number of
+seconds since the UNIX epoch (January 1, 1970 00:00 UTC).  A log that is still
+active should use the number of seconds since the UNIX epoch as its shard end.
 
 Without sharding, a good Samaritan can add all leaves from an old log into a
 newer one that just started its operations.  This makes log operations
-unsustainable in the long run because log sizes grow indefinitely.
-
-Such re-logging also comes at the risk of activating someone else's rate limits.
+unsustainable in the long run because log sizes grow indefinitely.  Such
+re-logging also comes at the risk of activating someone else's rate limits.
 
 Note that a signer's shard hint is not a verified timestamp.  We recommend to
-set it as large as possible.  If a verified timestamp is needed to reason about
-the time of logging, you may use a cosigned tree head instead
+set it to the maximum value that all active logs accept as valid
+	[\[OESI\]](https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-open-ended-shard-interval.md).
+If a verified timestamp is needed to reason about the time of logging, you may
+use a cosigned tree head instead
 	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
 
 A log operator that shuts down a completed shard will not affect verifiers.  In

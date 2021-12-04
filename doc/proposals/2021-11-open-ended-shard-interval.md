@@ -1,6 +1,6 @@
 **Title**: Open-ended shard interval </br>
 **Date**: 2021-12-04 </br>
-**State**: To be implemented </br>
+**State**: Implemented </br>
 
 # Summary
 We would like to remove `shard_end` from a log's static metadata, and instead

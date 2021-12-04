@@ -380,8 +380,8 @@ Ed25519 as signature scheme. SHA256 as hash function.
   prefix to be used to construct a version 0 specific endpoint.
 - **Shard interval start**: the earliest time at which logging
   requests are accepted as the number of seconds since the UNIX epoch.
-- **Shard interval end**: The latest time at which logging
-  requests are accepted as the number of seconds since the UNIX epoch.
+- **Shard interval end**: determined by policy.  A log that is active should
+  use the number of seconds since the UNIX epoch as a dynamic shard end.
 
 ### 4.2 - Witness
 - **Public key**: public verification key that is used to verify tree head
