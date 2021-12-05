@@ -356,9 +356,9 @@ shard hint.  The selected shard hint must be within a log's shard interval.
 That shard interval is open-ended, meaning there is a fixed start time and a
 _policy-defined_ end time that the operator may increase but not decrease
 	[\[OESI\]](https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-open-ended-shard-interval.md).
-A log's shard start is inclusive and expressed expressed as the number of
-seconds since the UNIX epoch (January 1, 1970 00:00 UTC).  A log that is still
-active should use the number of seconds since the UNIX epoch as its shard end.
+A log's shard start is inclusive and expressed as the number of seconds since
+the UNIX epoch (January 1, 1970 00:00 UTC).  A log that is still active should
+use the number of seconds since the UNIX epoch as its shard end.
 
 Without sharding, a good Samaritan can add all leaves from an old log into a
 newer one that just started its operations.  This makes log operations
