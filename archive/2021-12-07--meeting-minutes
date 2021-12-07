@@ -1,0 +1,38 @@
+Date: 2021-12-07 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd] implemented open-ended shard interval
+		* https://git.sigsum.org/sigsum/commit/?id=4ea13eb1ceee1610d9044965c1a90b6d5443518b
+		* sigsum-log-go @ tag v0.3.2
+	* [ln5] deployed v0.3.2 as new shard "glass-frog"
+	* [ln5] made some progress on SSH signing format
+		* it appears that ssh uses ed25519 without prehashing the ssh struct
+		* ssh-keygen -Y only implements SHA512 for H(message), spec says SHA256 is supported
+		* need: verify the above by signing with ssh-keygen, verify manually in python nacl
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] fix work packages
+	* [ln5] SSH signing format (continued)
+	* [ln5] sysadmin work, onboarding of new sysadmin
+
+Other useful links
+	* RFCs that are relevant for the ssh signing format proposal
+		* https://datatracker.ietf.org/doc/html/rfc8709
+		* https://datatracker.ietf.org/doc/html/rfc8032
+	* GitHub adds support for sigstore's cosign tool
+		* https://github.blog/2021-12-06-safeguard-container-signing-capability-actions/
