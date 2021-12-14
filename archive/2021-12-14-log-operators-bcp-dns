@@ -1,0 +1,22 @@
+# Log operators BCP
+## Outgoing DNS queries
+Note that a log will be making an outgoing DNS query for a TXT record for each
+call to add-leaf. The name that is being looked up is chosen by the client. The
+implementation in sigsum-log-go currently uses the system resolver (it is easy
+to add other options).
+
+Operators with a strict policy for what goes out of their systems will have to
+allow arbitrary TXT records.
+
+This should not be a problem wrt DoS since it's not a venue for amplification
+attacks (the add-leaf request is quite large compared with the DNS request
+generated) and generation of excess amounts of outgoing traffic is mitigated by
+DNS resolvers performing caching.
+
+Question: would there be any value in adding some restriction for what the name
+must be? E.g., what if the left-most part had to be "sigsum"? 
+	* Example: dig -t txt sigsum.rgdd.se
+	* This would allow stricter filtering than "all TXT records for all names"
+	which might be useful, but I'm not sure yet. If we did this, I think we
+	should use a label prefixed by an underscore, f.ex. "_sigsum" to avoid
+	collisions with natural names.
