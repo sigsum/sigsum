@@ -1,0 +1,48 @@
+Date: 2021-12-14 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* anwesha
+	* rohonk
+
+Status round
+	* [rgdd] added issues in sigsum-{log,lib}-go
+	* [rgdd] implemented experimental checkpoint endpoint
+		* rgdd/checkpoint branch, not merged yet
+	* [rgdd] making progress on sigsum-lib-go again
+		* have a local sigsum-log-go branch that picks-up sigsum-lib-go ("feature parity")
+		* this needs a little bit more work before being pushed though
+	* [ln5] start on log operators bcp
+		* https://git.sigsum.org/sigsum/tree/archive/2021-12-14-log-operators-bcp-dns
+	* [ln5] collected more bits on the SSHSIG situation
+		* it still seems to be a good idea for Sigsum
+		* updated documentation is in progress
+	* [ln5] started the onboarding of Anwesha, our new sysadmin
+	* [ln5] new Ansible repo for Sigsum
+
+Decisions
+	* Decision: cancel weekly sigsum meet on Dec 28 due to holidays
+	* Decision: adopt ssh signing format proposal
+		* let the 'remove arbitrary bytes' proposal be orthogonal
+		* let the question about supporting e.g. a NIST curve be orthogonal
+
+Next steps
+	* [rgdd] wrap up sigsum-lib-go changes
+	* [rgdd] merge experimental checkpoint endpoint
+	* [rgdd] update what is being signed according to ssh signing format proposal
+	* [rohonk] continued work on formal security proof
+	* [ln5] Document what we learned about SSHSIG wrt tooling
+	* [ln5] Continued onboarding
+	* [ln5] Signature verification tool expanded to reading SSH detached sigs as well
+	* [anwesha] Automatic deletion of the pads from etherpad
+	* [anwesha] Progress/study  Ansible
+	* [anwesha] start knowing/learning about the project
