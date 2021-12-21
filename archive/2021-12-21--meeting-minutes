@@ -1,0 +1,47 @@
+Date: 2021-12-21 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd] sigsum-lib-go
+		* tag v0.0.1
+			* pretty much what we had before but cleaner
+			* thinking about reverting to a "dumber ascii parser implementation"
+	* [rgdd] sigsum-log-go
+		* tag v0.3.3
+			* added experimental checkpoint endpoint
+			* deployed by ln5
+		* most recent commits (not yet tagged)
+			* picked-up sigsum-lib-go v0.0.1
+			* some refactoring as a result
+	* [rgdd] milestone 'production log' and associated work packages
+		* https://git.sigsum.org/sigsum/tree/archive/2021-12-21-milestone-prod-log
+	* [ln5] onboarding, email stack and investigating database failover
+
+Decisions
+	* Decision: milestone 'production log' with associated work packages (~5 months)
+		* see detailed description in the above status round link
+		* 1) rgdd + ln5
+		* 2) ln5
+		* 3) ln5
+		* 4) ln5 (implement minor fixes) + anwesha (sysadmin sides of alerts)
+		* 5) rgdd + undecided
+
+Next steps
+	* [rgdd] implement ssh signing format in sigsum-lib-go
+	* [rgdd, ln5] address open design TODOs that are marked as in-scope
+	* [ln5] list manager distributing our list properly
+	* [ln5] sigsum-witness-py using the SSH signing format
+	* [ln5] continued investigation of database failover and hardware procurement
+	* [ln5] git-bug, use it or not?
+	* [anwesha] test environment for pads with ansible
