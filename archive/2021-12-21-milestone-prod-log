@@ -1,0 +1,77 @@
+Milestone: setup a production log
+
+What needs to be done?
+---
+1.  A stable v0 API that we commit to being feature freezed.
+
+Any additional changes that we might want to make in the future would have to
+target the Sigsum V1 API.  It would be a mistake to rush towards a v1 API
+because (i) we will likely learn things from running a production log, and (ii)
+some details we are still not ready to decide on.  More about v0 scope below.
+
+https://git.sigsum.org/sigsum/tree/archive/2021-10-05-open-design-thoughts
+	* Non-scope: any algorithm agility.  Only support Ed25519 and SHA256.
+	* Non-scope: any other rate limiting mechanism.
+	* Non-scope: no decision about checkpoint format.
+	* Scope: decide on 'remove arbitrary bytes' proposal
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-remove-arbitrary-bytes.md
+		* (State should not be aborted anymore because SSH proposal did not pick this up.)
+	* Scope: decide on GET vs POST endpoints.
+	* Scope: decide on possible change to add-leaf endpoint output.
+
+Other
+	* Scope: decide if we should add any additional restrictions for DNS TXT RRs
+		* E.g., left-most part must be "_sigsum"
+			* https://git.sigsum.org/sigsum/tree/archive/2021-12-14-log-operators-bcp-dns
+		* E.g., value in the record must be "sigsum@v0=<hex string>
+			* This is common for other TXT RRs, e.g., "spf=..."
+		* E.g., disallow multiple keys for the same domain name
+			* Right now implementation is a loop.  Not very strict.
+			* https://git.sigsum.org/sigsum-log-go/tree/pkg/dns/dns.go#n34
+
+2.  A reliable database setup that can tolerate at least one failure.
+
+The initial scope is to have one active sigsum-log-go instance.  If there is a
+failure, we can switch over to a secondary sigsum-log-go instance without
+risking a split-view.
+
+The failover procedure does not need to be instantaneous, just correct once
+done.  Aim for SLA "it takes up to one working day to recover from a failure".
+
+Bonus: it would be good to have an initial log operator's BCP.
+
+3.  Reliable hardware to run the log on.
+
+The two machines (see above) should not be identicial, e.g., disk manufacturer
+diversity, etc.  There are no strict performance requirements.  Budget is ~50k
+SEK per machine.  Whoever takes responsibility for this TODO decides what "good
+enough" means.
+
+Bonus: it would be good to answer the questions outlined in the link below.
+	* https://git.sigsum.org/sigsum/tree/archive/2021-10-26--meeting-minutes#n31
+
+4.  A sigsum-log-go implementation that is good enough to start with.
+
+https://git.sigsum.org/sigsum-log-go/tree/issues
+	* Scope: add metrics that are relevant for log operations.  This includes an
+	alert system that picks up metrics, although that is not strictly "sigsum-log-go".
+	* Scope: the (relatively minor) issues that are not listed below
+	* Scope: integration test (may be very basic)
+	* Bonus: stress test
+	* Bonus: rate limit support
+	* Bonus: support storing key in a smart card / HSM
+	* Non-scope: read-only mode ("maintenance = the log is offline", fine with our design)
+	* Non-scope: more robust server configuration ("update configuration = hard restart")
+	* Non-scope: multi-instance support ("failure = manual recovery")
+	* Non-scope: investigate Ed25519 clamping ("clamping was not strict = oops")
+
+5.  A first take on log tooling that simplifies usage.
+
+https://git.sigsum.org/sigsum-lib-go/tree/issues
+	* Scope: add log tooling
+	* Bonus: add verify tooling
+
+Other non-scope
+---
+Defer work on monitor implementation.
+Defer additional work on witness implementation unless something is broken.
