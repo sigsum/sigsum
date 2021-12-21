@@ -36,7 +36,8 @@ are bridged so it does not matter which one you choose.
 - IRC: \#sigsum @ [OFTC.net](https://oftc.net/)
 - Matrix: [#sigsum:matrix.org](https://app.element.io/#/room/#sigsum:matrix.org)
 
-There are open video/voice meeting on Tuesdays at 1100 UTC, in the 'sigsum' room.
+There are open video/voice meeting on Tuesdays at 1200 UTC, in the
+'sigsum' Jitsi room.
 
 - Jitsi: [meet.sigsum.org/sigsum](https://meet.sigsum.org/sigsum)
 
