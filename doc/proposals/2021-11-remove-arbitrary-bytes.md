@@ -1,6 +1,6 @@
 **Title**: Remove arbitrary bytes </br>
 **Date**: 2021-12-04 </br>
-**State**: Aborted </br>
+**State**: Open </br>
 
 # Summary
 A leaf's checksum is currently an opaque array of 32 arbitrary bytes.  We would
