@@ -1,0 +1,50 @@
+Date: 2022-01-04 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd, ln5] remove arbitrary bytes proposal (re-opened)
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-remove-arbitrary-bytes.md
+	* [rgdd, ln5] change get-* endpoints that use HTTP post proposal (new)
+		* https://git.sigsum.org/sigsum/tree/archive/2022-01-04-proposal-get-endpoints
+	* [rgdd, ln5] stricter domain hint verification proposal (new)
+		* https://git.sigsum.org/sigsum/tree/archive/2022-01-04-proposal-domain-hint
+	* [rgdd, ln5] change add-leaf endpoint proposal (new)
+		* https://git.sigsum.org/sigsum/tree/archive/2022-01-04-proposal-add-leaf-endpoint
+	* [rgdd, ln5] change tree-head endpoints proposal (new)
+		* https://git.sigsum.org/sigsum/tree/archive/2022-01-04-proposal-tree-head-endpoints
+
+Decisions
+	* Decision: adopt remove arbitrary bytes proposal
+	* Decision: adopt change get-* endpoints that use HTTP post proposal
+	* Decision: adopt stricter domain hint verification proposal
+		* proposal text would benefit from a few minutes of clean-up
+			* rgdd will fix before persisting proposal
+	* Decision: adopt change add-leaf endpoint proposal
+		* proposal text needs a minor update due to the get-tree-head-endpoint proposal
+			* rgdd will fix before persisting proposal
+	* Decision: change tree-head endpoints proposal
+		* proposal endpoints need name, but does not need to be decided right now
+
+Next steps
+	* [rgdd] minor fixes to the above proposal pads before persisting
+	* [rgdd] start updating documentation based on the last round of proposals
+	* [ln5] start working towards sigsum-log-go v0.4.0
+		* ssh sig
+		* remove arbitrary bytes
+		* stricter domain name verification
+		* change get-* endpoints that use HTTP POST
+		* change add-leaf endpoint
+		* tree head endpoints (rgdd will take this ~next week)
+		* (Warning: not everything until next week.)
+	* [ln5] update openssh patch
