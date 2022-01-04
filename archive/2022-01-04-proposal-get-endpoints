@@ -1,0 +1,46 @@
+Proposal: change get-* endpoints that use HTTP post
+
+Background
+---
+Right now we HTTP POST ASCII key-value pairs on these endpoints:
+	* get-leaves
+	* get-inclusion-proof
+	* get-consistency-proof
+
+The original reason was to not have an additional parser, say, input-parameters
+with percent-encoding as part of the request URL.
+
+A major problem with this approach is that it will not be possible to benefit
+from HTTP caching.  Debugging, with "URLs that reference data" also becomes more
+messy.  You would have to say "I did printf <stuff> | curl ...".
+
+Proposal
+---
+Change these endpoints so that they use HTTP GET.  Encode input params in URL:
+
+	<url>/get-leaves/10/20 # get leaves 10,11,...20
+	<url>/get-consistency-proof/10/20 # proof from tree size 10 to 20
+	<url>/get-inclusion-proof/10/<leaf hash in hex> # proof for tree size 10
+
+This notably avoids percent-encoding which is more messy.
+
+Notes
+---
+We considered if it would be a good idea to re-use our ASCII parser for the
+portion of the URL that encodes input data.  The basic idea would be that
+different "end of key" and "end of value" patterns could be used that are better
+suited for a URL.
+
+For example, instead of (=,\n) one could use ([,]) as ("end of key", "end of value").
+	* get-leaves/start_size[10]end_size[12]
+	* get-consistency-proof/old_size[12]new_size[14]
+	* get-inclusion-proof/tree_size[10]leaf_hash[ab...ef]
+
+The reasons why we aborted this direction:
+	* We can not think of any concrete security risk with the shorter '/' proposal.
+	* There are very few parameters at play here, hard to confuse and quick
+	feedback loop if you do. For example, "Error=start size must be smaller or
+	equal to end size".
+	* We can be sure that the '/' proposal will not introduce any wonky
+	interoperability issues; picking a ("end of key", "end of value") would
+	require much more care.

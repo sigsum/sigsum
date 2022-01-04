@@ -1,0 +1,51 @@
+Proposal: stricter domain hint requirements
+
+Background
+---
+Right now a log is expected to look up a submitter's public key hash via DNS.  A
+domain hint, say, example.com, specifies the location of a TXT RR that contains
+the appropriate key hash in hex-encoding.  "Some domain knows about the key".
+
+Downsides with this:
+1. A log can be instructed to look up arbitrary TXT records
+2. No versioning
+
+As far as we know there are no amplification threats with (1), but ideally it
+would only be possible to query TXT RRs that are actually relevant for Sigsum.
+
+Not having any versioning could potentially become a headache.  All other log
+endpoints are versioned.  There is no good reason to not have versioning here,
+unless that would imply something like registering many different things with
+IANA as a result.
+
+Proposal
+---
+Require that a domain hint is formatted as:
+
+	_sigsum_v0.*
+
+Examples of valid domain hints:
+
+	_sigsum_v0.com
+	_sigsum_v0.example.com
+	_sigsum_v0.sub.example.com
+
+Examples of invalid domain hints:
+
+	_sigsum_v0hello.example.com
+
+This change addresses both (1) and (2), without making DNS configs harder.
+
+Notes
+---
+For v1 we need to consider if something should be registered with IANA.  Credit
+to Patrik Wallström who pointed us towards documentation about labels with
+underscores:
+	* https://www.rfc-editor.org/rfc/rfc8552.html
+	* https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#underscored-globally-scoped-dns-node-names
+
+Note also that the dependency on TXT look-ups means that a "hidden log" via Tor
+would need help from a resolver that is also available over Tor (preferably an
+onion but at minimum reachable over TCP).  This is because TXT records cannot be
+resolved over Tor.  This proposal allows the used resolver to be restricted to
+only resolve _sigsum_*.

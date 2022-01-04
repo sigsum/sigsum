@@ -1,0 +1,90 @@
+Proposal: change add-leaf endpoint
+
+Background
+---
+Right now a log returns HTTP status 200 OK if it will "try" to merge a submitted
+leaf into its Merkle tree.  A submitter should not assume that logging happened
+until they see an inclusion proof that leads up to a (co)signed tree head.
+
+If a submitted leaf does not show up in the log despite seeing HTTP status 200
+OK, the submitter must resubmit it.  When a resubmission is required/expected is
+undefined.
+
+The reason for this "try" behavior is that log operations become much easier,
+especially in self-hosted environments that do not rely on managed databases.
+In other words, it is OK to just be "pretty sure" that a submitted leaf will be
+persisted and sequenced, and "100%" sure after sequencing actually happened.
+
+Proposal
+---
+A log should not return HTTP status 200 OK unless:
+1.  The submitted leaf has been sequenced as part of a persisted database.
+2.  The next tree head that the log signs will contain the submitted leaf.
+
+HTTP status 3XX is returned with, e.g., "Error=leaf has not been sequenced yet"
+if it is not guaranteed that the submitted leaf has been sequenced.
+
+This means that logging should be assumed after seeing HTTP status 200 OK.  This
+assumption will be confirmed when the submitter obtains the next (co)signed tree
+head.  Further investigation is required if it turns out that this assumption is
+false.
+
+Notes
+---
+An earlier draft of this proposal considered if useful debug information should
+be returned, such as "leaf index", "leaf hash", and "estimated time until a
+cosigned tree head is available".  We decided to not go in this direction to
+avoid redundant and unsigned output that may be mis-used and tampered with ("not
+consistent with design").
+
+(Note that it is easy to determine when the next cosigned tree head will be
+available.  The to-sign tree head has a timestamp, and it is rotated every 300s.
+Then it takes an additional 300s before the to-sign tree head is served with
+collected cosignatures.)
+
+An earlier draft of this proposal also considered to have verifiable output:
+	* Option 1: An inclusion proof and a signed tree head
+	* Option 2: An inclusion proof and a cosigned tree head
+
+This could be a worthwhile direction if the submitter can only obtain the
+required data by using the add-leaf endpoint, thus "forcing resubmits until the
+desired output is obtained".  Credit to Al Cutter who proposed this (very nice)
+idea to us a while back.
+
+It is not appropriate to always return an inclusion proof for a signed tree
+head.  What we want is for submitters to get inclusion proofs that reference
+cosigned tree heads.
+
+There are drawbacks to replace the above signed tree head with a cosigned tree
+head:
+	* A submitter that submits multiple leaves will likely (have to?) retrieve
+	the same cosigned tree head multiple times via the add-leaf endpoint.  That
+	overhead adds up.
+	* A submitter will have to be in a "resubmit phase" for several minutes as
+	the default, because it takes time before a cosigned tree head becomes
+	available.
+		* (The most sensible implementation would likely resubmit periodically,
+		say, once per minute.  A clever implementation would look at the
+		timestamp of the to-sign endpoint to determine when is the earliest time
+		that a merged may have happened.)
+
+Moreover, removing the get-inclusion-proof and get-tree-head-cosigned endpoints
+to force usage of add-leaf excludes (or makes for wonky) usage patterns of the
+log:
+	* "I just want to download all cosigned tree heads to archive them" -> add
+	leaves.
+	* "I just want to debug/know that the log is committed to have the leaf
+	logged, and rely on other witnesses" -> still forced to observe the log's
+	cosignatures.
+	* "I want an inclusion proof to a particular tree head" -> build the Merkle
+	tree yourself to construct that proof.  The log's API chooses tree heads for
+	you.
+	* (Keeping these endpoints in addition to any new add-leaf output would to
+	some degree defeat the purpose of adding output, which is why it is not
+	considered an option.)
+
+In gist, we decided to go with a solution that is somewhere in between what we
+did before and what Al Cutter proposed.  We defined when a resubmission is (not)
+expected.  As a result, a self-hosted log may return at least one HTTP 3XX for
+each leaf request, and a few seconds later return HTTP status 200 OK for the
+same input data.

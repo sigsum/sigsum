@@ -1,0 +1,118 @@
+Proposal: change tree-head endpoints
+
+Background
+---
+Right now the get-tree-head-to-sign endpoint returns the signed tree head that
+witnesses should cosign.  It does not return any cosignatures.  One needs to
+wait until the to-sign tree head is finalized and served via
+get-tree-head-cosigned.  We also have a get-tree-head-latest endpoint that is
+sort of hanging around for "debug purposes".
+
+It would be nice if a submitter could find required cosignatures without always
+having to wait for five minutes.  The log will likely have received a majority
+of cosignatures after one minute, but a submitter currently needs to wait the
+full duration before getting access via the get-tree-head-cosigned endpoint.
+
+It would also be nice to consider if the get-tree-head-latest endpoint can be
+removed.
+
+Here is a rough break-down of how we think about the sigsum API's usage via
+roles:
+	* Submitter
+		* add-leaf, until HTTP status 200 OK which should mean "you have been sequenced".
+		* [fetching an inclusion proof for a signed tree head to "verify sequencing"
+		is not a recommended usage pattern, and does not prevent DoS.  The only
+		difference is that the submitter would notice that the log has not
+		included with regards to the latest tree head sooner than with regards
+		to the cosigned tree head.  In both cases, there is no proof that
+		submitter got 200 OK without getting sequenced.]
+	* Distributor
+		* get-tree-head-cosigned
+		* get-inclusion-proof
+		* [wants "enough" cosignatures, sooner rather than later is a soft requirement]
+	* Monitor
+		* get-leaves
+		* get-tree-head-cosigned
+		* might hit get-{consistency,inclusion}-proof depending on implementation
+		* [wants as many cosignatures as possible, does not care about ~minutes of waiting]
+	* Witness
+		* get-consistency-proof
+		* get-tree-head-to-sign
+		* add-cosignature
+		* [does not / should not care about other cosignatures; just that the
+		log signed and that the tree head is consistent with prior history as
+		observed by the witness]
+	* End-user
+		* [does not hit any of the log's endpoints]
+	* "The curious"
+		* the latest signed tree head, as fast as possible for quick debug
+		probably.  "is the thing I'm doing working".
+		* the latest cosigned tree head, with as many cosignatures as possible
+		for archiving
+
+Keep in mind that the below proposal should not introduce the log's key hash as
+output on any API endpoint.  We removed this and other redundant output because
+that reduces the risk of faulty implementations that operate on untrusted input.
+
+For example, in the same way that a faulty witness could verify "the wrong
+consistency proof" if it just verified the proof against the tree sizes that the
+log returned redundantly (as opposed to the tree sizes the witness asked for), a
+faulty witness could end-up cosigning a tree head with another log's context
+because "they just copied the key hash and used it because it was there".
+
+Note that we cannot add the key_hash and cosignature fields to the output of
+get-tree-head-to-sign.  Our ASCII parser is so simple that it does not permit
+empty lists.  So, we will either need a way to handle empty lists, or tweak our
+endpoints so that they still do what we want without having any empty list.
+
+[Both rgdd and ln5 would like to avoid complicating the ASCII parser.]
+
+Proposal
+---
+1. Remove the get-tree-head-latest endpoint.  We no longer have any recommended
+usage-pattern for this endpoint and so it should be removed.  Our strongest
+arguments for removal are "don't use a signed tree head, it is sort of like a
+promise", and "it does not even help you prove that the log's HTTP status 200 OK
+semantics were faulty".
+2. The get-tree-head-to-sign endpoint is kept as is, but renamed.
+	* Purpose: used by witnesses.
+3. Add an endpoint that returns the logs "to-cosign" tree head and all
+cosignatures that were collected thus far.  If no cosignatures were received
+yet, return an error  to avoid having an empty list as output.
+	* Purpose: used by distributors, but could also be used by a witness'
+	internal monitoring setup ("is my witness working, are the signatures really
+	showing up?").
+4. Keep an endpoint that serves the "finalized" cosigned tree head.
+	* Purpose: mainly used by monitors, but could also be used by distributor's
+	that don't mind the additional waiting or by parties that want to archive
+	cosigned tree heads.
+
+This proposal currently does not have a name for the above endpoints.  Help
+wanted.
+
+Notes
+---
+A witness polls the "get-tree-head-to-sign" endpoint as before.  Witnesses are
+recommended to poll the log at least once per minute at randomly selected times.
+
+After a successful add-cosignature request, a witness should not attempt to add
+the same cosignature again.  A log can refresh their "to-sign tree head" to
+instruct witnesses to send their cosignatures again for the same tree size.
+
+A witness operator may check that their cosignatures appear on the
+"get-tree-head-cosigned endpoints".  Such checking would likely be part of how
+the operator monitors that the witness operates correctly (i.e., it would not be
+something that the witness software does itself after a successful
+add-cosignature request).
+
+A submitter ("Signer" in Figure 1) that wants a cosigned tree head that
+satisifies a given policy as fast as possible can poll the "dynamic cosigned
+tree head endpoint".  Keep in mind that polling more than a few times per minute
+would not let you obtain cosignatures much faster, see the above recommendation
+for how often witnesses should provide their cosignatures.
+
+A helpful reflection with regards to naming:
+	* "The log's to-sign STH shows up, it gets filled-up with cosignatures; the
+	previous cosigned tree head is served on a separate endpoint.  Then
+	"prev=curr, curr=new".  I.e., there is a time aspect here that might be
+	helpful for naming, although previous and current would be bad choices."
