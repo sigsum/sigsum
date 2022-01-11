@@ -1,0 +1,31 @@
+Date: 2022-01-11 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* rohonk
+	* ln5
+
+Status round
+	* [rohonk] zero-knowledge proofs for sigsum logs?
+		* https://matrix.org/_matrix/media/r0/download/matrix.org/lngSxwZBTJhPQikUvvDUYZdI/Zero_Knowledge_CT_Logs.pdf
+		* rgdd: no, unclear purpose and protocol is mostly done
+			* v0 is freezed after latest round of decisions
+			* there are no major changes planned for v1 as of now
+	* [ln5] sysadmin onboarding is going forward
+	* [ln5] our patch to ssh-keygen was accepted
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] see last week
+	* [ln5] see last week
+	* [rohonk] academic discussion with rgdd
