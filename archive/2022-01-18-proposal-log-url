@@ -1,0 +1,26 @@
+Redefine "base URL" as "log URL" proposal
+
+Background
+---
+The current api.md specification requires that a log has a fixed unique "base
+URL".  It is any valid HTTP(S) URL that can end with "/sigsum/v0/<endpoint>".
+
+Proposal
+---
+Remove the term "base URL" and instead define "log URL".  A log URL is a valid
+HTTP(S) URL that ends with "/sigsum/v0/".  Example of a valid log URL:
+
+	https://example.com:4711/opposum/sigsum/v0/
+
+This means that a named sigsum endpoint can be appended to a log's URL.  For
+example, if the endpoint is "get-tree-head-quickly" the resulting "endpoint URL"
+would be:
+
+	https://example.com:4711/opposum/sigsum/v0/get-tree-head-quickly/
+
+And with input parameters for "get-leaves":
+
+	https://example.com:4711/opposum/sigsum/v0/get-leaves/42/4711/
+
+Note the final slash in all of the above URLs.  Should that be enforced (?).
+	* XXX: Need to check in URL specification(s).  Defer for now.

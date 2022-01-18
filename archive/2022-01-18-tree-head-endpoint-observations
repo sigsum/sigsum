@@ -1,0 +1,105 @@
+Warning: there are no concrete proposed decisions based on the below yet, but
+see the concluding remarks at the end for some hints of what we should be
+discussing together.
+
+Observation about tree head endpoints
+---
+There are two ways to get cosigned tree heads:
+	* get-tree-head-quickly (dynamic list of cosignatures)
+	* get-tree-head-slowly (fixed list of cosignatures)
+	* See: https://git.sigsum.org/sigsum/commit/?h=rgdd/proposals&id=6032a39003a4f49710b60fe3087b01d58cadc837
+
+The idea is that the slow endpoint is updated once all cosignatures are
+available, thus moving "slowly" every five minutes.  Cosignatures on the quick
+endpoint are in contrast added as soon as they become available, which means
+that it moves more "quickly".
+
+An interesting observation is that there is nothing in api.md that prevents a
+log from updating their get-tree-head-slowly endpoint every minute, for example.
+The only restriction that we impose is that witnesses will not cosign unfresh
+timestamps (5m), and we recommend (or plan to recommend) that witnesses poll the
+logs ~every minute.
+
+A smart log implementation (yes, scary, but hear the idea out) could notice that
+all witnesses that are likely to add their cosignatures already did so.  This
+means that it would not be completely unreasonable to just rotate the log's tree
+head "early".
+
+This begs the question if we should consider dropping the get-tree-head-quickly
+endpoint.  It would move logic "to be fast" into the log rather than into
+tooling.
+
+Or alternatively, if we should consider tighting up api.md to preclude the
+above.  See below for examples of how the slow endpoint could be more rapid with
+today's spec.
+
+Example
+---
+Suppose a log configured a set of witness public keys.  Also define a witness as
+active if any of the last 12 tree heads were cosigned.  (The magic number 12 is
+an example.)
+
+A rotation policy could be:
+	1. If there are no active witnesses, always wait the full five minutes.
+	2. Otherwise
+		2.1. Always wait at least one minute.
+		2.2. Always wait at most five minutes.
+		2.3. Rotate early if 90% of all active witnesses provided their
+		cosignatures.  (The magic number 90% is an example.)
+
+Criteria 2.1. ensures that any witness that polls the log every minute is likely
+to get there cosignature into the next cosigned tree head.
+
+Criteria 2.2. ensures that a few erratic witnesses that only sometimes cosign
+will not slow down the overall pace of moving forward roughly ~every minute.
+
+Criteria 2.3. ensures that tree heads with too few cosignatures are not rotated
+prematurely.
+
+Example
+---
+Suppose a log configured a set of witness public keys.
+
+A rotation policy could be:
+	1. If the last tree head did not get cosigned by anyone, always wait five
+	minutes.
+	2. If the last tree head got cosigned by a non-empty set of witnesses W:
+		2.1. Always wait at least one minute before rotating
+		2.2. Always wait at most five minutes
+		2.3. Rotate early if cosignatures were received from all witnesses in W.
+	3. XXX: a criteria to exclude erratic witnesses, e.g., "if you're part of W
+	and don't provide a cosignature we will not wait for you during the next
+	hour" or similar.
+
+Concluding remarks
+---
+It is a fair assumption to assume that witnesses poke the log ~every minute.  It
+is less clear if it is a good idea to also require proof fetching and signature
+operations that often.  Maybe we have already struck a good balance if we say
+that logs SHOULD NOT rotate faster than five minutes, but collected cosignatures
+MUST BE available directly.
+
+If we accept more overhead for witnesses, this is a better solution than the
+above:
+	1. Sigsum logs rotate tree heads every minute
+	2. Witnesses are expected to cosign every minute
+
+It is a weak argument to say that the current five minute interval is about
+increasing the likelihood that a witness has time to add their cosignature in
+case of failure.  One minute, or five minutes; both are sufficient to recover
+from easy "try again" errors, and none of them are sufficient to recover from
+errors involving the operator.
+
+The driving factor should be how cheap we want witness operations to be.  We
+should probably account for a witness that witnesses ~100s of logs, as we want
+sigsum and other transparency log ecosystems to collaborate when it comes to
+witnes cosigning.
+
+rgdd is leaning towards keeping what we have right now and adding a "should"
+somewhere to recommend that Sigsum logs are not speeding up their tree head
+rotations as above. ln5 mentioned that it could be reasonable to allow it, but
+document the trade-off.
+
+rgdd is contemplating if it was a mistake to add the fast endpoint, and maybe it
+should be one of these things that we can consider for v1 if the need for it is
+more obvious. ln5 is thinking similarly; both rgdd and ln5 wants to think more.

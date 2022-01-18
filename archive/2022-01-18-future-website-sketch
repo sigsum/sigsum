@@ -1,0 +1,97 @@
+Sketch on an updated www.sigsum.org site, feedback wanted.  The goal is to know
+roughly what content we want here eventually, and who that content should be
+for.
+
+We will use this as input for a web developer that will fix a Hugo template
+tailored for Sigsum. The resulting template should be free and open-source
+licensed.
+
+Target audience?
+---
+Somewhat prioritized list:
+	1. New users, early adopters, and contributors
+		* "The why and how of Sigsum logging"
+		* "How to get started and/or involved"
+	1. (Non-)technical decisions makers
+		* "We want there to be decisions to apply Sigsum in the real world"
+	1. Journalists and bloggers
+		* "We want to make it easier to bring Sigsum into the conversation"
+	1. Technical experts and academics
+		* "Point me to the stuff"
+	1. Existing users and contributors
+		* "Mostly for reference and navigation to the right place"
+		* "Probably don't need to access our website that much"
+
+Aim for the overall feeling of "not so dense", "inclusive", and "community".
+
+Website content?
+---
+	* What is Sigsum, the technology?
+	* What is Sigsum useful for?
+	* How does it work?
+	* How can I try it out?
+	* How can I get involved?
+	* Who is behind Sigsum, the project?
+	* FAQ
+
+Top-most navigation?
+---
+A first take based on the above could be:
+	* Landing page
+	* Applications (of the technology)
+	* Documentation
+	* Ecosystem
+	* About
+
+Landing page
+	* One liner
+	* Example
+		* "A free and open source software project that brings transparency to
+		cryptographic key-usage"
+
+Applications
+	* An enumeration that provides an overview of several "items" containing
+		* Title
+		* Optional figure
+		* 1-3 lines summary
+		* Read more button
+			* Keep it short and down to the point
+			* What is the problem that Sigsum addresses
+			* What assumptions are required for the above
+			* (Not: "this is how it works in detail", just aim to gauge interest)
+	* Two examples of topics to be enumerated
+		* "Digital Signatures" / "Signature Transparency"
+		* "Executable Binaries" / "Binary Transparency"
+
+Documentation
+	* Same type of enumeration as for "Applications"
+	* Examples:
+		* "How it works"
+		* "Getting started"
+		* "Frequently asked questions"
+		* "Technical documentation", redirect/pointers to git's doc folder
+
+Ecosystem
+	* A paragraph of introtext, followed by an enumeration?
+		* "The great folks/orgs running logs, witnesses, monitors, etc"
+		* Credit: https://certificate.transparency.dev/ does this very nicely.
+
+About
+	* Team Sigsum, who are the core people driving the project forward
+	* Vision / values
+	* Sponsors (maybe "enumeration" as described above is appropriate)
+
+Misc
+---
+Eventually we might want a blog.  Would that be blog.sigsum.org, linked from doc
+page?
+
+Have not worked in where the 'how to get in touch part' should be.  Would be
+nice if the following are easily accessible / discoverable:
+	* irc
+	* matrix
+	* mailing list
+	* weekly Jitsi meets
+
+Would be nice if every page could have a natural "get involved button".  Think
+"Add your use-case", "Add your sigsum log", etc.

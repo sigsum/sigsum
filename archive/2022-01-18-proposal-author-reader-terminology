@@ -1,0 +1,41 @@
+Start using the terminology "author" and "reader" proposal
+
+Background
+---
+Figure 1 in doc/design.md refers to
+
+	a) the party producing a signed checksum as "Signer", and
+	b) the party verifying a signed checksum as "Verifier".
+
+This is fine in isolation, but less appropriate when looking at it from a
+broader Sigsum perspective.  For example, a "Signer" may also be a "Submitter".
+It seems like we are mixing terminology for roles and concrete actors here.
+
+The above is also ambiguous.  For example, logs and witnesses sign things;
+witnesses and monitors verify things.
+
+Proposal
+---
+1) Replace "Signer" with "Author" when we are talking about a concrete party.
+
+According to Wikipedia's definition (https://en.wikipedia.org/wiki/Author), an
+'author is "the person who originated or gave existence to anything" and whose
+authorship determines responsibility for what was created'.  This seems
+appropriate for us.
+
+The term "author" has been used in academic litterature before us for similar
+purposes:
+	* "In the setting of transparency logging [18] as depicted in Fig. 1, the
+	author generates events intended for recipients that describe data
+	processing by the author as it takes place"
+	* Link to paper: https://link.springer.com/chapter/10.1007/978-3-319-45741-3_7
+
+2) Replace "Verifier" with "Reader" when we are talking about a concrete party.
+
+According to Wikipedia's definition (https://en.wikipedia.org/wiki/Reading),
+"[r]eading is the process of taking in the sense or meaning of letters, symbols,
+etc., especially by sight or touch".  Although the latter is not a perfect
+description for us, the first part is quite close and we could argue that we are
+in the "etc" category.
+
+The main idea here is that it should feel intuitive that an author has readers.
