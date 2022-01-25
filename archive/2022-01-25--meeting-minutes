@@ -1,0 +1,44 @@
+Date: 2022-01-25 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd, ln5] how to use doc/proposals folder proposal
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-how-to-use-proposal-folder
+	* [rgdd] no quick tree-head endpoint proposal
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-no-quick-tree-head-endpoint
+	* [rgdd, rohonk] deferred our plan to write a Sigsum paper
+	* [rgdd] started updating sigsum-log-go with the new tree-head endpoints
+		* branch rgdd/state, needs more testing before review
+	* [ln5] reviewed proposals, ready to be merged
+
+Decisions
+	* Decision: adopt how to use doc/proposals folder proposal
+	* Decision: adopt no quick tree-head endpoint proposal
+
+Next steps
+	* [rgdd] a bunch of smaller things
+		* add the current "integration test" that is used in sigsum-log-go
+		* remove the quick cosigned endpoint from sigsum:proposal branch
+		* merge sigsum_proposals branch
+		* move proposals from archive to doc/, see above description
+		* propose a replacement for the terminology "Verifier" in Figure 1
+		* complete rgdd/state and let ln5 review then merge
+	* [ln5] hack on sigsum-{lib,log}-go
+
+Other useful links
+	* Remote CT days 2022 announced, including a sign-up link
+		* https://groups.google.com/a/chromium.org/g/ct-policy/c/SQEu9UUikzs
+	* Transparency in WordPress and the PHP world
+		* https://gossamer.tools/
+		* https://git.sigsum.org/sigsum/tree/archive/2022-01-25-notes-on-gossamer
