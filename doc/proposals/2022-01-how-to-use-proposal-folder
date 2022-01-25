@@ -1,0 +1,31 @@
+Proposal: how to use the doc/proposals folder
+
+Background
+---
+It is a bit inconsistent to have some proposals in archive and others in
+doc/proposals.  This happened because:
+	1. Our process is to persist pads in the archive.  Some proposals were pads.
+	2. The proposals in doc/proposals were a bit more structured.  It added
+	overhead that we felt was not necessary to have yet.
+
+Proposal
+---
+	1. Move proposals that were persisted in the archive to doc/proposals as is.
+	To keep it simple, only move proposals that have "proposal" as part of their
+	persisted name.
+	2. Update affected links so that they are not broken, should not be many.
+	3. In the future we put all types of proposals in doc/proposal, regardless
+	of if they are related to the Sigsum protocol or something else (like this
+	document).  Notably this includes pads that are to be persisted by the chair
+	after our weekly meets.
+	4. The main criteria is that a document in doc/proposals proposes something.
+	There is no particular format for a proposal's content, other than being
+	plaintext viewable.
+	5. To keep the listing clean we continue to prefix proposals with
+	YYYY-MM-<name>.  The date refers to when the document was initially added.
+
+Notes
+---
+A notable pro with this is that it is easy to update a proposal if we realize
+that something is missing after persisting it.  Our archive is not meant to have
+updates.

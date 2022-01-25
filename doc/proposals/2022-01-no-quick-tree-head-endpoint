@@ -1,0 +1,32 @@
+Proposal: no quick tree-head endpoint
+
+Refer to
+
+	https://git.sigsum.org/sigsum/tree/archive/2022-01-18-tree-head-endpoint-observations
+
+for background.
+
+This proposal suggests that we only have two tree head endpoints.
+	1. get-tree-head-to-cosign -> signed tree head.  This is the tree head that
+	witnesses are currently cosigning.  This endpoint is only meant to be used
+	by witnesses.
+	2. get-tree-head-cosigned -> cosigned tree head.  This is the finalized tree
+	head that witnesses have finished cosigning.  The list of cosignatures is
+	thus fixed.
+
+The to-cosign and cosigned tree heads are rotated every $n minutes.  A typical
+value of $n is likely going to be five (5).  It might be lower if witnesses
+accept to work more.
+
+Pros:
+	* Less complex API.  It has fewer endpoints and no choice between a "quick"
+	or "slow" get-tree-head-cosigned endpoint.  No choices means easier tooling,
+	fewer mistakes.
+	* It might be reasonable to speed up the "slow" endpoint by other means, see
+	above.
+
+It is also worth pointing out another pro that we already got from removing the
+get-tree-head-latest endpoint.  A submitter is forced to wait a bit, even for a
+signed tree head.  This makes it less appealing to "go with a signed tree head
+because its fast".  The name of the only signed tree head endpoint also
+discourages usage by submitters.

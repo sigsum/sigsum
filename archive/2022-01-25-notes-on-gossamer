@@ -1,0 +1,25 @@
+We got a tip from Grgoire[m] to take a look at
+
+	https://gossamer.tools/
+
+because the FAQ and overall use-case sounded Sigsum related.
+
+Below is a brief summary after navigating their documentation for ~15m.
+	* Some of their standpoints are similar to Sigsum.  For example, they are
+	pointing out that CT is complex and that the use of Ed25519 is good. [1]
+	* Their security goals cannot be satisified by a transparency log.  See the
+	definition of "append-only" and "availability". [2] They use a backend
+	called Chronicle [3] to create a Blakechain [4].  It looks a bit like a
+	blockchain.  Events are chained linearly.  It is unclear how consensus or
+	gossip is solved, but not PoW/PoS/etc.
+	* The gist of their use-case is to sign messages with different
+	types of actions. [5]  If these actions become public, good things can
+	happen. There are applications to WordPress and the PHP world. [1]  A
+	claimant model + Sigsum can probably be used if the threat model is changed
+	to work with transparency logs.
+
+1: https://gossamer.tools/page/questions
+2: https://github.com/paragonie/libgossamer/blob/master/docs/specification/Overview.md#security-goals-and-desired-properties
+3: https://github.com/paragonie/chronicle
+4: https://github.com/paragonie/blakechain
+5: https://github.com/paragonie/libgossamer/blob/master/docs/specification/Protocol.md#serialization-formats
