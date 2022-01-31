@@ -31,16 +31,14 @@ Figure 1 of our design document gives an intuition of all involved parties.
 ## 2 - Primitives
 ### 2.1 - Cryptography
 Logs use the same Merkle tree hash strategy as
-[RFC 6962,§2](https://tools.ietf.org/html/rfc6962#section-2).
-The hash functions must be
-[SHA256](https://csrc.nist.gov/csrc/media/publications/fips/180/4/final/documents/fips180-4-draft-aug2014.pdf).
-Logs and witnesses must sign tree heads using
-[Ed25519](https://tools.ietf.org/html/rfc8032).
-
-All other parts that are not Merkle tree related should use SHA256 as
-the hash function.  Using more than one hash function would increases
-the overall attack surface: two hash functions must be collision
-resistant instead of one.
+	[RFC 6962,§2](https://tools.ietf.org/html/rfc6962#section-2).
+Any mention of hash functions or digital signature schemes refers to
+	[SHA256](https://csrc.nist.gov/csrc/media/publications/fips/180/4/final/documents/fips180-4-draft-aug2014.pdf)
+as well as
+	[Ed25519](https://tools.ietf.org/html/rfc8032).
+The exact
+	[signature format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig)
+is defined by OpenSSH.
 
 ### 2.2 - Serialization
 Log requests and responses are transmitted using simple ASCII encodings, for a
@@ -52,21 +50,10 @@ favoring ease of decoding and encoding over efficiency on the wire.
 
 We use the [Trunnel](https://gitweb.torproject.org/trunnel.git)
 [description language](https://www.seul.org/~nickm/trunnel-manual.html)
-to define (de)serialization of data structures that need to be signed or
-inserted into the Merkle tree.  It is about as expressive as the
-[TLS presentation language](https://tools.ietf.org/html/rfc8446#section-3).
-However, it is readable by humans _and_ machines.
-"Obviously correct code" can be generated in C, Go, etc.
-
-A fair summary of our Trunnel usage is as follows.
-
-All integers are 64-bit, unsigned, and in network byte order.
-Fixed-size byte arrays are put into the serialization buffer in-order,
-starting from the first byte.  These basic types are concatenated to form a
-collection.  You should not need a general-purpose Trunnel
-(de)serialization parser to work with this format.  If you have one,
-you may use it though.  The main point of using Trunnel is that it
-makes a simple format explicit and unambiguous.
+to define data structures that need to be (de)serialized in the log.  Data
+structures that need to be signed have additional SSH-specific metadata.  For
+example, metadata includes a magic preamble string and a signing context.  An
+implementer can easily express the SSH signing format using Trunnel.
 
 ### 2.3 - Merkle tree
 #### 2.3.1 - Tree head
@@ -77,7 +64,6 @@ struct tree_head {
 	u64 timestamp;
 	u64 tree_size;
 	u8 root_hash[32];
-	u8 key_hash[32];
 };
 ```
 `timestamp` is the time since the UNIX epoch (January 1, 1970 00:00 UTC) in
@@ -90,25 +76,24 @@ to prove to a verifier that public logging happened within some interval
 
 `root_hash` is a Merkle tree root hash that fixes a log's structure and content.
 
-`key_hash` is a log's hashed public key.  The key is encoded as defined in
-[RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)
-before hashing it.  The result is used as a unique log identifier that prevents
-an [attack](https://git.sigsum.org/sigsum/tree/archive/2021-08-10-witnessing-broader-discuss#n95)
+#### 2.3.2 - (Co)signed tree head
+Logs and witnesses perform (co)signing operations by treating the serialized
+tree head as the message `M` in SSH's 
+	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
+The hash algorithm string must be "SHA256".  The reserved string must be empty.
+The namespace field must be set to `tree_head:v0:<key-hash>@sigsum.org`, where
+`<key hash>` is substituted with the log's hashed public key.  The public key is
+encoded as defined in
+	[RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)
+before hashing it.  This ensures a _sigsum log specific tree head context_ that
+prevents a possible
+	[attack](https://git.sigsum.org/sigsum/tree/archive/2021-08-10-witnessing-broader-discuss#n95)
 in multi-log ecosystems.
 
-#### 2.3.2 - (Co)signed tree head
-A signed tree head is composed of a tree head and a signature.  This structure
-does not have a Trunnel definition because it is neither signed nor logged.
-
-Logs and witnesses sign the same `tree_head` structure, see Section 2.3.1.
-
-Note that tree heads are scoped to a specific log to ensure that a witness
-signature for log X cannot be confused with a witness signature for log Y.
-
 A witness must not cosign a tree head if it is inconsistent with prior history
-or if the timestamp is older than 5 minutes.  A witness can be viewed as two
-abstract roles: Verifier("append-only") and Verifier("freshness")
-	[\[WR\]](https://git.sigsum.org/sigsum/tree/archive/2021-08-31-checkpoint-timestamp-continued#n84).
+or if the timestamp is older than 5 minutes.  This means that a witness plays
+	[two abstract roles](https://git.sigsum.org/sigsum/tree/archive/2021-08-31-checkpoint-timestamp-continued#n84):
+Verifier("append-only") and Verifier("freshness").
 
 #### 2.3.3 - Tree leaf
 Logs support a single leaf type.  It contains a signer's statement,
@@ -116,7 +101,6 @@ signature, and key hash.
 
 ```
 struct statement {
-    u64 shard_hint;
     u8 checksum[32];
 }
 
@@ -127,16 +111,21 @@ struct tree_leaf {
 }
 ```
 
-`shard_hint` must match a log's shard interval and is determined by the signer.
-
 `checksum` is a hashed preimage.  The signer selects a 32-byte preimage which
 represents some data.  It is recommended to set this preimage to `H(data)`, in
 which case the checksum will be `H(H(data))`.
 
-`signature` is a signature over a serialized `statement`.  It must be possible
-to verify this signature using the signer's public verification key.
+`signature` is computed by treating the above preimage as the message `M`
+in SSH's 
+	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
+The hash algorithm string must be "SHA256".  The reserved string must be empty.
+The namespace field must be set to `tree_leaf:v0:<shard_hint>@sigsum.org`, where
+`<shard_hint>` is replaced with the shortest decimal ASCII representation of a
+shard hint that matches the log's shard interval.  This ensures a _sigsum
+shard-specific tree leaf context_.
 
-`key_hash` is a hash of the signer's public verification key.  It is included
+`key_hash` is a hash of the signer's public verification key using the same
+format as Section 2.3.2.  It is included
 in `tree_leaf` so that each leaf can be attributed to a signer.  A hash,
 rather than the full public key, is used to motivate monitors and verifiers to
 locate the appropriate key and make an explicit trust decision.
@@ -276,7 +265,8 @@ Input:
 - `end_size`: index of the last leaf to retrieve, ASCII-encoded decimal number.
 
 Output on success:
-- `shard_hint`: `tree_leaf.statement.shard_hint`, ASCII-encoded decimal number.
+- `shard_hint`: shard hint to use as tree leaf context, ASCII-encoded decimal
+  number.
 - `checksum`: `tree_leaf.statement.checksum`, hex-encoded.
 - `signature`: `tree_leaf.signature`, hex-encoded.
 - `key_hash`: `tree_leaf.key_hash`, hex-encoded.
@@ -299,7 +289,8 @@ POST <base url>/sigsum/v0/add-leaf
 ```
 
 Input:
-- `shard_hint`: `tree_leaf.statement.shard_hint`, ASCII-encoded decimal number.
+- `shard_hint`: shard hint to use as tree leaf context, ASCII-encoded decimal
+  number.
 - `preimage`: the preimage used to compute `tree_leaf.statement.checksum`, hex-encoded.
 - `signature`: `tree_leaf.signature`, hex-encoded.
 - `verification_key`: public verification key that can be used to verify the
@@ -335,6 +326,7 @@ TODO: update the above with valid input.  Link
 on how one could produce it "byte-for-byte" using Python and ssh-keygen -Y.
 
 ### 3.7 - add-cosignature
+=======
 ```
 POST <base url>/sigsum/v0/add-cosignature
 ```
@@ -359,6 +351,10 @@ Example:
 $ echo "cosignature=d1b15061d0f287847d066630339beaa0915a6bbb77332c3e839a32f66f1831b69c678e8ca63afd24e436525554dbc6daa3b1201cc0c93721de24b778027d41af
 key_hash=662ce093682280f8fbea9939abe02fdba1f0dc39594c832b411ddafcffb75b1d" | curl --data-binary @- <base url>/sigsum/v0/add-cosignature
 ```
+
+TODO: update the above with valid input.  Link
+	[proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-ssh-signature-format.md)
+on how one could produce it "byte-for-byte" using Python and ssh-keygen -Y.
 
 ## 4 - Parameter summary
 Ed25519 as signature scheme. SHA256 as hash function.

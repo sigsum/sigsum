@@ -97,7 +97,8 @@ protocol directly into the log.  It is a variant of
 	[witness cosigning](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521).
 - **No cryptographic agility**: the only supported signature schemes and hash
 functions are Ed25519 and SHA256.  Not having any cryptographic agility makes
-protocols and data formats simpler and more secure.
+protocols and data formats simpler and more secure.  The used signing format is
+compatible with OpenSSH and can easily be modelled with the below parsers.
 - **Simple (de)serialization parsers:** complex (de)serialization parsers
 increase attack surfaces and make the system more difficult to use in
 constrained environments.  Signed and logged data can be (de)serialized using
@@ -166,7 +167,7 @@ we give a brief primer below.
 ```
 
 A signer wants to make their key-usage transparent.  Therefore, they sign a
-statement that sigsum logs accept.  That statement encodes a checksum of some
+statement that sigsum logs accept.  That statement encodes a checksum for some
 data.  Minimal metadata must also be logged, such as the checksum's signature
 and a hash of the public verification key.  A hash of the public verification
 key is configured in DNS as a TXT record to help log operators combat spam.
@@ -193,7 +194,7 @@ distributed form of trust.  A tree leaf contains four fields:
 Sharding means that the log has a predefined time during which logging requests
 are accepted.  Once elapsed, the log can be shut down or be made read-only.
 - **checksum**: a cryptographic hash that commits to some data.
-- **signature**: a digital signature that is computed by a signer over the
+- **signature**: a digital signature that is computed by a signer for the
 selected shard hint and checksum.
 - **key_hash**: a cryptographic hash of the signer's verification key that can
 be used to verify the signature.
@@ -215,7 +216,9 @@ The signer also selects a shard hint representing an abstract statement like
 "sigsum logs that are active during 2021".  Shard hints ensure that a log's
 leaves cannot be replayed in a non-overlapping shard.
 
-The signer signs the selected shard hint and checksum.
+The signer signs the selected checksum using a sigsum-specific context that
+incorporates the above shard hint.  The exact signing format is compatible with
+`ssh-keygen -Y` when using Ed25519 and SHA256.
 
 The signer also has to do a one-time DNS setup.  As outlined below, logs will
 check that _some domain_ is aware of the signer's verification key.  This is
@@ -246,8 +249,9 @@ accepted their request, after which it can be verified using an inclusion proof.
 Cosigning witnesses poll the logs for tree heads to be cosigned once per minute,
 verifying that they are fresh (not back-dated more than five minutes) and
 append-only (no leaves were removed or modified) before doing any cosignature
-operations.  Cosignatures are posted back to the logs so that they become
-available in one place.
+operations.  Tree heads are signed using the same signing format as tree leaves,
+expect that a different sigsum and log-specific context is used.  Cosignatures
+are posted back to the logs, making them available in one place.
 
 The above means that it takes up to 5-10 minutes before a cosigned tree head is
 available.  Depending on implementation it may be as short as one minute.  The
@@ -271,9 +275,9 @@ the signer's data, for example an executable binary.  It can be used to
 reproduce a logged checksum.
 
 **Metadata:**
-the shard hint, the signature over shard hint and checksum, and the verification
-key hash used in the log request.  Note that the combination of data and
-metadata can be used to reconstruct the logged leaf.
+the shard hint to use as signing context, the resulting signature over checksum,
+and the verification key hash used in the log request.  Note that the
+combination of data and metadata can be used to reconstruct the logged leaf.
 
 **Proof:**
 an inclusion proof that leads up to a cosigned tree head.  Note that _proof_
@@ -281,7 +285,7 @@ refers to the collection of an inclusion proof and a cosigned tree head.
 
 #### 3.2.5 - Verification
 A verifier should only accept the distributed data if the following criteria hold:
-1. The data's checksum and shard hint are signed using the specified public key.
+1. The data's checksum is signed using the specified shard hint and public key.
 2. The provided tree head can be reconstructed from the logged leaf and
 its inclusion proof.
 3. The provided tree head is from a known log with enough valid cosignatures.
@@ -324,6 +328,9 @@ distribution mechanism.  Signers are responsible for logging signed checksums
 and distributing necessary proofs of public logging.  Monitors discover signed
 checksums in the logs and generate alerts if any key-usage is inappropriate.
 
+The signing format for logs, witnesses, and signers is based on a subset of
+what is supported by OpenSSH.  Ed25519 and SHA256 must be used as primitives.
+
 ### 4 - Frequently Asked Questions
 #### 4.1 - What parts of the design are up for debate?
 A brief summary appeared in our archive on
@@ -331,7 +338,14 @@ A brief summary appeared in our archive on
 It may be incomplete, but covers some details that are worth thinking more
 about.  We are still open to remove, add, or change things.
 
-#### 4.2 - What is the point of submitting a checksum's preimage?
+# 4.2 - Why use the OpenSSH signing format?
+Our main criteria for a signing format is that it can express signing contexts
+without any complex parsers.  A magic preamble would be good for overall hygiene
+as well.  We sketched on such a format using Trunnel.  We realized that by
+tweaking a few constants it would be compatible with SSH's signing format.  If
+it is possible to share a format with an existing reliable ecosystem, great!
+
+#### 4.3 - What is the point of submitting a checksum's preimage?
 Logging arbitrary bytes can poison a log with inappropriate content.  While a
 leaf is already light in Sigsum, a stream of leaves could be used.  By not
 allowing any checksum to be arbitrary because logs compute them, a malicious
@@ -344,7 +358,7 @@ is `H(D)`.  The resulting checksum would be `H(H(D))`.  The log will not be in a
 position to observe the data `D`, thereby removing power in the form of trivial
 data mining while at the same time making the overall protocol less heavy.
 
-#### 4.3 - What is the point of having a domain hint?
+#### 4.4 - What is the point of having a domain hint?
 Domain hints help log operators combat spam.  By verifying that every signer
 controls a domain name that is aware of their public key, rate limits can be
 applied per second-level domain.  You would need a large number of domain names
@@ -371,7 +385,7 @@ that added this criteria.
 
 We are considering if additional anti-spam mechanisms should be supported in v1.
 
-#### 4.4 - What is the point of having a shard hint?
+#### 4.5 - What is the point of having a shard hint?
 Unlike TLS certificates which already have validity ranges, a checksum does not
 carry any such information.  Therefore, we require that the signer selects a
 shard hint.  The selected shard hint must be within a log's shard interval.
@@ -398,7 +412,7 @@ A log operator that shuts down a completed shard will not affect verifiers.  In
 other words, a signer can continue to distribute proofs that were once
 collected.  This is important because a checksum does not necessarily expire.
 
-#### 4.5 - What parts of witness cosigning are not done?
+#### 4.6 - What parts of witness cosigning are not done?
 There are interesting policy aspects that relate to witness cosigning.  For
 example, what witnessing policy should a verifier use and how are trustworthy
 witnesses discovered.  This is somewhat analogous to a related policy question
@@ -419,6 +433,6 @@ the original proposal by
 	[Syta et al.](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521),
 which puts an authority right in the middle of a slowly evolving witnessing policy.
 
-#### 4.6 - More questions
+#### 4.7 - More questions
 - What are the privacy concerns?
 - Add more questions here!
