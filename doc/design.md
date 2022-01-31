@@ -82,10 +82,9 @@ but it is mature enough to capture what type of ecosystem we want to bootstrap.
 additional outbound network connections.  Proofs of public logging are provided
 using the same distribution mechanism as is used for distributing the actual data.
 In other words, the signer talks to the log on behalf of the verifying party.
-- **Sharding to simplify log life cycles:** starting to operate a log is easier
-than closing it down in a reliable way.  We have a predefined sharding interval
-that determines the time during which the log will be active.  Submissions to
-an older log shard cannot be replayed in another non-overlapping log shard.
+- **Sharding to simplify log life cycles:** sigsum logs have open-ended shard
+intervals that determine the point in time that incoming submissions must be
+scoped for.  Past submissions cannot be replayed in non-overlapping shards.
 - **Defenses against log spam and poisoning:** to keep logs as useful as
 possible they should be open for everyone.  However, accepting logging requests
 from anyone at arbitrary rates can lead to abusive usage patterns.  We store as
@@ -309,8 +308,8 @@ public keys.  They may also need to be aware of how to locate the data that
 logged checksums represent.
 
 ### 3.3 - Summary
-Sigsum logs are sharded and shut down at predefined times.  A sigsum log can
-shut down _safely_ because verification on the verifier-side is not interactive.
+Sigsum logs are sharded and can be shut down _safely_ in the future because
+verification on the verifier-side is not interactive.
 
 The difficulty of bypassing public logging is based on the difficulty of
 controlling enough independent witnesses.  A witness checks that a log's tree

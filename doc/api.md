@@ -303,10 +303,12 @@ Input:
 Output on success:
 - None
 
-A submission will not be accepted if `signature` is invalid or if the retrieved
-key hash does not match the specified verification key.  A submission may also
-not be accepted if the second-level domain name exceeded its rate limit.
-A rate limit should only be charged for the specified domain hint on success.
+A submission will not be accepted if `signature` or `shard_hint` is invalid.
+The retrieved key hash must also match the specified verification key.
+
+A submission may not be accepted if the second-level domain name exceeded its
+rate limit.  A rate limit should only be charged for the specified domain hint
+on success.
 
 HTTP status 200 OK must not be returned unless the log has sequenced its Merkle
 tree so that the next signed tree head merged the added leaf.  A submitter
