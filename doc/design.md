@@ -104,7 +104,7 @@ constrained environments.  Signed and logged data can be (de)serialized using
 	[Trunnel](https://gitlab.torproject.org/tpo/core/trunnel/-/blob/main/doc/trunnel.md),
 or "by hand" in many modern programming languages.  This is the only parsing
 that a verifier is required to support.  Signers, monitors, and witnesses
-additionally need to interact with a sigsum log's line-terminated ASCII HTTP(S)
+additionally need to interact with a sigsum log's ASCII HTTP(S)
         [API](https://git.sigsum.org/sigsum/tree/doc/api.md).
 
 ## 2 - Threat model

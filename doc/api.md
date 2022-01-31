@@ -9,16 +9,18 @@ This is a work-in-progress document that may be moved or modified.
 ## 1 - Overview
 A log implements an HTTP(S) API for accepting requests and sending responses.
 
-- Requests without any input data use the HTTP GET method.
-- Requests with input data use the HTTP POST method.
-- Input data in requests and output data in responses are expressed as
+- Requests that retrieve data from the log uses the HTTP GET method.
+- Requests that add data to the log uses the HTTP POST method.
+- Input data in get-requests are expressed as ASCII values that are
+slash-delimited at the end of the respective endpoint URLs.
+- Input data in add-requests and output data in responses are expressed as
 ASCII-encoded key/value pairs.
 - Binary data is hex-encoded before being transmitted.
 
-The motivation for using a text based key/value format for request and
-response data is that it is simple to parse.  Note that this format is
-not being used for the serialization of signed or logged data, where a
-more well defined and storage efficient format is desirable.
+The motivation for using text-based formats for request and response data is
+that it is simple to parse and understand for humans.  These formats are not
+used for the serialization of signed and/or logged data, where a more well
+defined and storage efficient format is desirable.
 
 A _signer_ should distribute log responses to their verifiers in any format that
 suits them.  The (de)serialization required for _verifiers_ is a small subset of
@@ -41,8 +43,8 @@ the overall attack surface: two hash functions must be collision
 resistant instead of one.
 
 ### 2.2 - Serialization
-Log requests and responses are transmitted as ASCII-encoded key/value
-pairs, for a smaller dependency than an alternative parser like JSON.
+Log requests and responses are transmitted using simple ASCII encodings, for a
+smaller dependency than alternative parsers like JSON or percent-encoded URLs.
 Some input and output data is binary: cryptographic hashes and signatures.
 Binary data must be lower-case base16-encoded, also known as lower-case hex
 encoding.  Using hex as opposed to base64 is motivated by it being simpler,
@@ -144,8 +146,12 @@ appended: `/sigsum/v0/<endpoint>`.  Example of a valid base URL:
 https://log.example.com:4711/opossum/2021`.
 ```
 
-Input data (in requests) is POST:ed in the HTTP message body as line-terminated
-ASCII key/value pairs.  In more detail, the key-value format is `Key=Value\n`.
+Input data in `get-*` requests are added at the end of an endpoint's
+URL.  Values are delimited by a `/`.  The order of values is defined by
+the respective endpoints.  For an example, see Section 3.4.
+
+Input data in `add-*` requests is POST:ed in the HTTP message body as
+line-terminated ASCII key/value pairs.  The key-value format is `Key=Value\n`.
 Everything before the first equal-sign is considered a key.
 Everything after the first equal sign and before the next new line character is
 considered a value.  Different keys may appear in any order.  A key may be
@@ -157,7 +163,7 @@ blue=second value for blue key
 ```
 
 Output data (in replies) is sent in the HTTP message body using the same
-key-value format as input data.
+key-value format as for `add-*` input data.
 
 The HTTP status code is 200 OK to indicate success.  A different HTTP
 status code is used to indicate failure.  A log must respond with a
@@ -232,14 +238,14 @@ success.  The number of witness signatures and key hashes must match.
 
 ### 3.4 - get-inclusion-proof
 ```
-POST <base url>/sigsum/v0/get-inclusion-proof
+GET <base url>/sigsum/v0/get-inclusion-proof/<tree_size>/<leaf_hash>
 ```
 
 Input:
-- `leaf_hash`: leaf hash identifying which `tree_leaf` the log should prove
-  inclusion of, hex-encoded.
 - `tree_size`: tree size of the tree head that the proof should be
   based on, ASCII-encoded decimal number.
+- `leaf_hash`: leaf hash identifying which `tree_leaf` the log should prove
+  inclusion of, hex-encoded.
 
 Output on success:
 - `leaf_index`: zero-based index of the leaf that the proof is based on,
@@ -254,19 +260,18 @@ follow from the hash strategy, see RFC 6962.
 
 Example:
 ```
-$ echo "leaf_hash=241fd4538d0a35c2d0394e4710ea9e6916854d08f62602fb03b55221dcdac90f
-tree_size=4711" | curl --data-binary @- <base url>/sigsum/v0/get-inclusion-proof
+$ curl <base url>/sigsum/v0/get-inclusion-proof/4711/241fd4538d0a35c2d0394e4710ea9e6916854d08f62602fb03b55221dcdac90f
 ```
 
 ### 3.5 - get-consistency-proof
 ```
-POST <base url>/sigsum/v0/get-consistency-proof
+GET <base url>/sigsum/v0/get-consistency-proof/<old_size>/<new_size>
 ```
 
 Input:
-- `new_size`: tree size of a newer tree head, ASCII-encoded decimal number.
 - `old_size`: tree size of an older tree head that the log should prove is
-  consistent with the newer tree head, ASCII-encoded decimal number.
+  consistent with a newer tree head, ASCII-encoded decimal number.
+- `new_size`: tree size of a newer tree head, ASCII-encoded decimal number.
 
 Output on success:
 - `consistency_path`: node hash, hex-encoded.
@@ -276,13 +281,12 @@ hashes follow from the hash strategy, see RFC 6962.
 
 Example:
 ```
-$ echo "new_size=4711
-old_size=42" | curl --data-binary @- <base url>/sigsum/v0/get-consistency-proof
+$ curl <base url>/sigsum/v0/get-consistency-proof/42/4711
 ```
 
 ### 3.6 - get-leaves
 ```
-POST <base url>/sigsum/v0/get-leaves
+GET <base url>/sigsum/v0/get-leaves/<start_size>/<end_size>
 ```
 
 Input:
@@ -305,8 +309,7 @@ must be returned on success.
 
 Example:
 ```
-$ echo "start_size=42
-end_size=4711" | curl --data-binary @- <base url>/sigsum/v0/get-leaves
+$ curl <base url>/sigsum/v0/get-leaves/42/4711
 ```
 
 ### 3.7 - add-leaf
