@@ -16,13 +16,13 @@ Status round
 	* [rgdd, ln5] remove arbitrary bytes proposal (re-opened)
 		* https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-remove-arbitrary-bytes.md
 	* [rgdd, ln5] change get-* endpoints that use HTTP post proposal (new)
-		* https://git.sigsum.org/sigsum/tree/archive/2022-01-04-proposal-get-endpoints
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-get-endpoints
 	* [rgdd, ln5] stricter domain hint verification proposal (new)
-		* https://git.sigsum.org/sigsum/tree/archive/2022-01-04-proposal-domain-hint
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-domain-hint
 	* [rgdd, ln5] change add-leaf endpoint proposal (new)
-		* https://git.sigsum.org/sigsum/tree/archive/2022-01-04-proposal-add-leaf-endpoint
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-add-leaf-endpoint
 	* [rgdd, ln5] change tree-head endpoints proposal (new)
-		* https://git.sigsum.org/sigsum/tree/archive/2022-01-04-proposal-tree-head-endpoints
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-tree-head-endpoints
 
 Decisions
 	* Decision: adopt remove arbitrary bytes proposal

@@ -31,9 +31,9 @@ Status round
 	* [rgdd, ln5] started sketching on what www.sigsum.org might be eventually
 		* https://git.sigsum.org/sigsum/tree/archive/2022-01-18-future-website-sketch
 	* [rgdd] start using the terminology "author" and "reader" proposal
-		* https://git.sigsum.org/sigsum/tree/archive/2022-01-18-proposal-author-reader-terminology
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-author-reader-terminology
 	* [rgdd] redefine "base URL" as "log URL" proposal
-		* https://git.sigsum.org/sigsum/tree/archive/2022-01-18-proposal-log-url
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-proposal-log-url
 	* [ln5, rgdd] continued work on logotype
 
 Decisions
@@ -42,7 +42,6 @@ Decisions
 		* Author seems like a good abstraction definition
 		* Reader seems less good
 	* Decision: redefine "base URL" as "log URL"
-	* <insert proposed decision here>
 
 Next steps
 	* [rgdd] tree-head endpoint implementation, think about replacement for "reader"
