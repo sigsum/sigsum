@@ -34,3 +34,6 @@ that.  Not letting the log see data is a feature:
 - The data cannot be analyzed by the log unless its location is known
 - The data cannot be expected to be stored in the future
 - Each logging request becomes cheaper
+
+Note: the above terminology a bit "meh" and messy.  Consider better naming when
+moving this into the main documentation.
