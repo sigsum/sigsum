@@ -347,7 +347,13 @@ A signer's domain hint is not part of the logged leaf because key management is
 more complex than that.  A separate project should focus on transparent key
 management.  Our work is about transparent _key-usage_.
 
-We are considering if additional anti-spam mechanisms should be supported.
+A signer's domain hint must have the left-most label set to `_sigsum_v0` to
+reduce the space of valid DNS TXT RRs that the log needs to permit queries for.
+See further details in the
+	[proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-domain-hint)
+that added this criteria.
+
+We are considering if additional anti-spam mechanisms should be supported in v1.
 
 #### 4.3 - What is the point of having a shard hint?
 Unlike TLS certificates which already have validity ranges, a checksum does not

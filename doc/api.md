@@ -325,7 +325,8 @@ Input:
   above signature.  The key is encoded as defined in [RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2),
   then hex-encoded.
 - `domain_hint`: domain name indicating where `tree_leaf.key_hash` can be found
-  as a DNS TXT resource record with hex-encoding.
+  as a DNS TXT resource record with hex-encoding.  The left-most label must be
+  set to `_sigsum_v0`.
 
 Output on success:
 - None
@@ -344,7 +345,7 @@ $ echo "shard_hint=1633039200
 checksum=315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
 signature=0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
 verification_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c
-domain_hint=example.com" | curl --data-binary @- <base url>/sigsum/v0/add-leaf
+domain_hint=_sigsum_v0.example.com" | curl --data-binary @- <base url>/sigsum/v0/add-leaf
 ```
 
 ### 3.8 - add-cosignature
