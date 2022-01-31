@@ -129,7 +129,9 @@ struct tree_leaf {
 
 `shard_hint` must match a log's shard interval and is determined by the signer.
 
-`checksum` represents some data and is computed by the signer.
+`checksum` is a hashed preimage.  The signer selects a 32-byte preimage which
+represents some data.  It is recommended to set this preimage to `H(data)`, in
+which case the checksum will be `H(H(data))`.
 
 `signature` is a signature over a serialized `statement`.  It must be possible
 to verify this signature using the signer's public verification key.
@@ -319,7 +321,7 @@ POST <base url>/sigsum/v0/add-leaf
 
 Input:
 - `shard_hint`: `tree_leaf.statement.shard_hint`, ASCII-encoded decimal number.
-- `checksum`: `tree_leaf.statement.checksum`, hex-encoded.
+- `preimage`: the preimage used to compute `tree_leaf.statement.checksum`, hex-encoded.
 - `signature`: `tree_leaf.signature`, hex-encoded.
 - `verification_key`: public verification key that can be used to verify the
   above signature.  The key is encoded as defined in [RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2),
@@ -343,7 +345,7 @@ should (re)send their add-leaf request until observing HTTP status 200 OK.
 Example:
 ```
 $ echo "shard_hint=1633039200
-checksum=315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
+preimage=315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
 signature=0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
 verification_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c
 domain_hint=_sigsum_v0.example.com" | curl --data-binary @- <base url>/sigsum/v0/add-leaf

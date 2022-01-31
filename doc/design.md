@@ -192,8 +192,7 @@ distributed form of trust.  A tree leaf contains four fields:
 - **shard_hint**: a number that binds the leaf to a particular _shard interval_.
 Sharding means that the log has a predefined time during which logging requests
 are accepted.  Once elapsed, the log can be shut down or be made read-only.
-- **checksum**: most likely a hash of some data.  The log is not aware of data;
-just checksums.
+- **checksum**: a cryptographic hash that commits to some data.
 - **signature**: a digital signature that is computed by a signer over the
 selected shard hint and checksum.
 - **key_hash**: a cryptographic hash of the signer's verification key that can
@@ -209,8 +208,8 @@ independently of logs, and trust them explicitly.
 
 ### 3.2 - Usage pattern
 #### 3.2.1 - Prepare a request
-A signer selects a checksum that should be logged.  For example, it could be the
-hash of an executable binary or something else.
+A signer computes the checksum to be logged.  For example, it could be a
+hash that commits to an executable binary or something else.
 
 The signer also selects a shard hint representing an abstract statement like
 "sigsum logs that are active during 2021".  Shard hints ensure that a log's
@@ -228,11 +227,13 @@ Sigsum logs implement an HTTP(S) API.  Input and output is human-readable and
 use a simple ASCII format.  A more complex parser like JSON is not needed
 since the data structures being exchanged are primitive enough.
 
-The signer submits their shard hint, checksum, signature, public verification
-key and domain hint as ASCII key-value pairs.  The log verifies that the public
-verification key is present in DNS and uses it to check that the signature is
-valid, then hashes it to construct the Merkle tree leaf as described in
-Section 3.1.
+The signer submits their shard hint, checksum preimage, signature, public
+verification key and domain hint as ASCII key-value pairs.  The log uses the
+specified preimage to compute the signer's checksum.  The log also verifies
+that the public verification key is present in DNS, and uses it to check that
+the signature is valid for the resulting checksum and shard hint.  The public
+verification key is then hashed to construct the Merkle tree leaf as described
+in Section 3.1. 
 
 A sigsum log will
 	[try](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-add-leaf-endpoint)
@@ -329,7 +330,20 @@ A brief summary appeared in our archive on
 It may be incomplete, but covers some details that are worth thinking more
 about.  We are still open to remove, add, or change things.
 
-#### 4.2 - What is the point of having a domain hint?
+#### 4.2 - What is the point of submitting a checksum's preimage?
+Logging arbitrary bytes can poison a log with inappropriate content.  While a
+leaf is already light in Sigsum, a stream of leaves could be used.  By not
+allowing any checksum to be arbitrary because logs compute them, a malicious
+party would have to craft leaves that are computationally costly to encode more
+than a few bytes.
+
+It is worth pointing out that the submitted preimage is limited to be a 32-byte
+buffer.  If the data to be transparently signed is `D`, the recommended preimage
+is `H(D)`.  The resulting checksum would be `H(H(D))`.  The log will not be in a
+position to observe the data `D`, thereby removing power in the form of trivial
+data mining while at the same time making the overall protocol less heavy.
+
+#### 4.3 - What is the point of having a domain hint?
 Domain hints help log operators combat spam.  By verifying that every signer
 controls a domain name that is aware of their public key, rate limits can be
 applied per second-level domain.  You would need a large number of domain names
@@ -356,7 +370,7 @@ that added this criteria.
 
 We are considering if additional anti-spam mechanisms should be supported in v1.
 
-#### 4.3 - What is the point of having a shard hint?
+#### 4.4 - What is the point of having a shard hint?
 Unlike TLS certificates which already have validity ranges, a checksum does not
 carry any such information.  Therefore, we require that the signer selects a
 shard hint.  The selected shard hint must be within a log's shard interval.
@@ -383,7 +397,7 @@ A log operator that shuts down a completed shard will not affect verifiers.  In
 other words, a signer can continue to distribute proofs that were once
 collected.  This is important because a checksum does not necessarily expire.
 
-#### 4.4 - What parts of witness cosigning are not done?
+#### 4.5 - What parts of witness cosigning are not done?
 There are interesting policy aspects that relate to witness cosigning.  For
 example, what witnessing policy should a verifier use and how are trustworthy
 witnesses discovered.  This is somewhat analogous to a related policy question
@@ -404,6 +418,6 @@ the original proposal by
 	[Syta et al.](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521),
 which puts an authority right in the middle of a slowly evolving witnessing policy.
 
-#### 4.5 - More questions
+#### 4.6 - More questions
 - What are the privacy concerns?
 - Add more questions here!
