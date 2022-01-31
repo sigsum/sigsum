@@ -32,9 +32,9 @@ Figure 1 of our design document gives an intuition of all involved parties.
 ### 2.1 - Cryptography
 Logs use the same Merkle tree hash strategy as
 	[RFC 6962,§2](https://tools.ietf.org/html/rfc6962#section-2).
-Any mention of hash functions or digital signature schemes refers to
+Any mentions of hash functions or digital signature schemes refer to
 	[SHA256](https://csrc.nist.gov/csrc/media/publications/fips/180/4/final/documents/fips180-4-draft-aug2014.pdf)
-as well as
+and
 	[Ed25519](https://tools.ietf.org/html/rfc8032).
 The exact
 	[signature format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig)
@@ -78,7 +78,7 @@ to prove to a verifier that public logging happened within some interval
 
 #### 2.3.2 - (Co)signed tree head
 Logs and witnesses perform (co)signing operations by treating the serialized
-tree head as the message `M` in SSH's 
+tree head as the message `M` in SSH's
 	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
 The hash algorithm string must be "SHA256".  The reserved string must be empty.
 The namespace field must be set to `tree_head:v0:<key-hash>@sigsum.org`, where
@@ -91,7 +91,7 @@ prevents a possible
 in multi-log ecosystems.
 
 A witness must not cosign a tree head if it is inconsistent with prior history
-or if the timestamp is older than 5 minutes.  This means that a witness plays
+or if the timestamp is older than five (5) minutes.  This means that a witness plays
 	[two abstract roles](https://git.sigsum.org/sigsum/tree/archive/2021-08-31-checkpoint-timestamp-continued#n84):
 Verifier("append-only") and Verifier("freshness").
 
@@ -111,12 +111,12 @@ struct tree_leaf {
 }
 ```
 
-`checksum` is a hashed preimage.  The signer selects a 32-byte preimage which
-represents some data.  It is recommended to set this preimage to `H(data)`, in
+`checksum` is a the hash of a preimage.  The signer submits a 32-byte preimage
+representing some data.  It is recommended to set this preimage to `H(data)`, in
 which case the checksum will be `H(H(data))`.
 
 `signature` is computed by treating the above preimage as the message `M`
-in SSH's 
+in SSH's
 	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
 The hash algorithm string must be "SHA256".  The reserved string must be empty.
 The namespace field must be set to `tree_leaf:v0:<shard_hint>@sigsum.org`, where
@@ -180,9 +180,10 @@ Output on success:
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 
-### 3.2 - get-tree-head-cosigned
-Returns a cosigned tree head that corresponds to the previous to-cosign tree
-head.  The list of cosignatures is thus fixed.  Used by Signers and Monitors.
+### 3.2 - get-tree-head-quickly
+Returns a tree head that has been cosigned by at least one witness.  The list of
+cosignatures is updated every time a new cosignature gets added.  This
+endpoint is used by Signers that want _enough cosignatures as fast as possible_.
 
 ```
 GET <base url>/sigsum/v0/get-tree-head-cosigned
@@ -306,7 +307,7 @@ Output on success:
 A submission will not be accepted if `signature` or `shard_hint` is invalid.
 The retrieved key hash must also match the specified verification key.
 
-A submission may not be accepted if the second-level domain name exceeded its
+A submission may not be accepted if the second-level domain name has exceeded its
 rate limit.  A rate limit should only be charged for the specified domain hint
 on success.
 

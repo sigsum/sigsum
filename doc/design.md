@@ -91,8 +91,8 @@ from anyone at arbitrary rates can lead to abusive usage patterns.  We store as
 little metadata as possible to combat log poisoning.  We piggyback on DNS to
 combat log spam.  Sharding is also helpful to combat log spam in the long run.
 - **Built-in mechanisms that ensure a globally consistent log:** transparency
-logs rely on gossip protocols to detect forks.  We built a proactive gossip
-protocol directly into the log.  It is a variant of
+logs rely on gossip protocols to detect split-views.  We built a proactive
+gossip protocol directly into the log.  It is a variant of
 	[witness cosigning](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521).
 - **No cryptographic agility**: the only supported signature schemes and hash
 functions are Ed25519 and SHA256.  Not having any cryptographic agility makes
@@ -209,15 +209,15 @@ independently of logs, and trust them explicitly.
 ### 3.2 - Usage pattern
 #### 3.2.1 - Prepare a request
 A signer computes the checksum to be logged.  For example, it could be a
-hash that commits to an executable binary or something else.
+hash that commits to an executable binary.
 
 The signer also selects a shard hint representing an abstract statement like
 "sigsum logs that are active during 2021".  Shard hints ensure that a log's
 leaves cannot be replayed in a non-overlapping shard.
 
-The signer signs the selected checksum using a sigsum-specific context that
-incorporates the above shard hint.  The exact signing format is compatible with
-`ssh-keygen -Y` when using Ed25519 and SHA256.
+The signer signs the checksum using a sigsum-specific context that
+incorporates the shard hint.  The exact signing format is compatible with
+`ssh-keygen -Y sign` when using Ed25519 and SHA256.
 
 The signer also has to do a one-time DNS setup.  As outlined below, logs will
 check that _some domain_ is aware of the signer's verification key.  This is
@@ -235,22 +235,25 @@ specified preimage to compute the signer's checksum.  The log also verifies
 that the public verification key is present in DNS, and uses it to check that
 the signature is valid for the resulting checksum and shard hint.  The public
 verification key is then hashed to construct the Merkle tree leaf as described
-in Section 3.1. 
+in Section 3.1.
 
 A sigsum log will
 	[try](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-add-leaf-endpoint)
-to merge the submitted request, but without making any _promise of public
-logging_ as in Certificate Transparency with so-called SCTs.  Therefore, sigsum
-logs cannot guarantee low latency.  The signer needs to wait until the log
+to add the submitted request to its tree, a process known as merging.
+It will not issue _promises of public logging_ though, as done in Certificate Transparency
+with so-called SCTs. Therefore, sigsum
+logs cannot guarantee low latency.  The signer needs to wait until the log has
 accepted their request, after which it can be verified using an inclusion proof.
+A log must use a merge interval of five (5) minutes or shorter in order to
+fulfill the freshness criteria that witnesses require, see also 3.2.3.
 
 #### 3.2.3 - Wait for witness cosigning
-Cosigning witnesses poll the logs for tree heads to be cosigned once per minute,
-verifying that they are fresh (not back-dated more than five minutes) and
+Cosigning witnesses poll logs for tree heads to be cosigned at least once per minute,
+verifying that they are fresh (not older than five minutes) and
 append-only (no leaves were removed or modified) before doing any cosignature
 operations.  Tree heads are signed using the same signing format as tree leaves,
-expect that a different sigsum and log-specific context is used.  Cosignatures
-are posted back to the logs, making them available in one place.
+except that a different sigsum and log-specific context is being used.  Cosignatures
+are posted back to their respective logs, making them available in one place per log.
 
 The above means that it takes up to 5-10 minutes before a cosigned tree head is
 available.  Depending on implementation it may be as short as one minute.  The
@@ -261,7 +264,7 @@ logging by removing the need for reactive gossip-audit protocols
 	[G3,](https://petsymposium.org/2021/files/papers/issue2/popets-2021-0024.pdf)
 	[G4\]](https://docs.google.com/document/d/16G-Q7iN3kB46GSW5b-sfH5MO3nKSYyEb77YsM7TMZGE/edit).
 
-Use-cases like instant certificate issuance are not supported by design.
+Use-cases like instant certificate issuance are by design not supported.
 
 #### 3.2.4 - Distribution
 Once a signer has collected proofs of public logging the distribution phase can
@@ -339,17 +342,17 @@ about.  We are still open to remove, add, or change things.
 
 # 4.2 - Why use the OpenSSH signing format?
 Our main criteria for a signing format is that it can express signing contexts
-without any complex parsers.  A magic preamble would be good for overall hygiene
+without any complex parsers.  A magic preamble is good for overall hygiene
 as well.  We sketched on such a format using Trunnel.  We realized that by
 tweaking a few constants it would be compatible with SSH's signing format.  If
-it is possible to share a format with an existing reliable ecosystem, great!
+it is possible to share format with an existing reliable and widely deployed
+ecosystem, great!
 
 #### 4.3 - What is the point of submitting a checksum's preimage?
 Logging arbitrary bytes can poison a log with inappropriate content.  While a
-leaf is already light in Sigsum, a stream of leaves could be used.  By not
-allowing any checksum to be arbitrary because logs compute them, a malicious
-party would have to craft leaves that are computationally costly to encode more
-than a few bytes.
+leaf is already light-weight in Sigsum, a stream of leaves could be made to carry more
+meaning. Disallowing checksums to contain arbitrary bytes, by having logs compute
+them, makes crafting of leaves with chosen content computationally costly.
 
 It is worth pointing out that the submitted preimage is limited to be a 32-byte
 buffer.  If the data to be transparently signed is `D`, the recommended preimage
@@ -377,7 +380,7 @@ more complex than that.  A separate project should focus on transparent key
 management.  Our work is about transparent _key-usage_.
 
 A signer's domain hint must have the left-most label set to `_sigsum_v0` to
-reduce the space of valid DNS TXT RRs that the log needs to permit queries for.
+reduce the space of valid DNS TXT RRs that a log needs to permit queries for.
 See further details in the
 	[proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-domain-hint)
 that added this criteria.
