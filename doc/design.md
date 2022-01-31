@@ -234,11 +234,12 @@ verification key is present in DNS and uses it to check that the signature is
 valid, then hashes it to construct the Merkle tree leaf as described in
 Section 3.1.
 
-When a submitted logging request is accepted, the log _tries_ to incorporate the
-submitted leaf into its Merkle tree.  There are however no _promises of public
-logging_ as in Certificate Transparency.  Therefore, sigsum logs do not provide
-low latency---the signer has to wait for an inclusion proof and a cosigned tree
-head.
+A sigsum log will
+	[try](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-add-leaf-endpoint)
+to merge the submitted request, but without making any _promise of public
+logging_ as in Certificate Transparency with so-called SCTs.  Therefore, sigsum
+logs cannot guarantee low latency.  The signer needs to wait until the log
+accepted their request, after which it can be verified using an inclusion proof.
 
 #### 3.2.3 - Wait for witness cosigning
 Sigsum logs periodically freeze the most current tree head, typically every five

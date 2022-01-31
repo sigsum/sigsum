@@ -334,10 +334,11 @@ Output on success:
 A submission will not be accepted if `signature` is invalid or if the retrieved
 key hash does not match the specified verification key.  A submission may also
 not be accepted if the second-level domain name exceeded its rate limit.
+A rate limit should only be charged for the specified domain hint on success.
 
-Public logging must not be assumed to have happened until an inclusion proof is
-available.  An inclusion proof should not be relied upon unless it leads up to a
-trustworthy tree head.  Witness cosigning makes a tree head trustworthy.
+HTTP status 200 OK must not be returned unless the log has sequenced its Merkle
+tree so that the next signed tree head merged the added leaf.  A submitter
+should (re)send their add-leaf request until observing HTTP status 200 OK.
 
 Example:
 ```
