@@ -175,30 +175,11 @@ Example:
 error=Invalid signature
 ```
 
-### 3.1 - get-tree-head-latest
-Returns the latest signed tree head.  Used for debugging purposes.
+### 3.1 - get-tree-head-to-cosign
+Returns a tree head that witnesses should cosign.
 
 ```
-GET <base url>/sigsum/v0/get-tree-head-latest
-```
-
-Input:
-- None
-
-Output:
-- `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
-- `tree_size`: `tree_head.tree_size`, ASCII-encoded decimal number.
-- `root_hash`: `tree_head.root_hash`, hex-encoded.
-- `signature`: log signature over a serialized `tree_head`, hex-encoded.
-
-Note that `tree_head.key_hash` is known by the querying party.  Therefore, it is
-not returned in Sections 3.1-3.3.
-
-### 3.2 - get-tree-head-to-sign
-Returns the latest signed tree head to be cosigned.  Used by witnesses.
-
-```
-GET <base url>/sigsum/v0/get-tree-head-to-sign
+GET <base url>/sigsum/v0/get-tree-head-to-cosign
 ```
 
 Input:
@@ -208,12 +189,11 @@ Output on success:
 - `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
 - `tree_size`: `tree_head.tree_size`, ASCII-encoded decimal number.
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
-- `signature`: log signature over a serialized `tree_head`, hex-encoded.
+- `signature`: log signature for the above tree head, hex-encoded.
 
-### 3.3 - get-tree-head-cosigned
-Returns the latest cosigned tree head. Used together with `get-inclusion-proof`
-and `get-consistency-proof`.  Ensures that monitors see the same statements as
-verifiers.  Can be used to convince a verifier when public logging happened.
+### 3.2 - get-tree-head-cosigned
+Returns a cosigned tree head that corresponds to the previous to-cosign tree
+head.  The list of cosignatures is thus fixed.  Used by Signers and Monitors.
 
 ```
 GET <base url>/sigsum/v0/get-tree-head-cosigned
@@ -226,9 +206,8 @@ Output on success:
 - `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
 - `tree_size`: `tree_head.tree_size`, ASCII-encoded decimal number.
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
-- `signature`: log signature over a serialized `tree_head`, hex-encoded.
-- `cosignature`: witness signature over the same serialized `tree_head`,
-  hex-encoded.
+- `signature`: log signature for the above tree head, hex-encoded.
+- `cosignature`: witness signature for the above tree head, hex-encoded.
 - `key_hash`: hashed witness verification key that can be used to verify the
   above cosignature.  The key is encoded as defined in [RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)
   before hashing.  The resulting hash value is hex-encoded.
@@ -238,7 +217,7 @@ corresponds to the first key hash, the second witness signature corresponds to
 the second key hash, etc.  At least one witness signature must be returned on
 success.  The number of witness signatures and key hashes must match.
 
-### 3.4 - get-inclusion-proof
+### 3.3 - get-inclusion-proof
 ```
 GET <base url>/sigsum/v0/get-inclusion-proof/<tree_size>/<leaf_hash>
 ```
@@ -265,7 +244,7 @@ Example:
 $ curl <base url>/sigsum/v0/get-inclusion-proof/4711/241fd4538d0a35c2d0394e4710ea9e6916854d08f62602fb03b55221dcdac90f
 ```
 
-### 3.5 - get-consistency-proof
+### 3.4 - get-consistency-proof
 ```
 GET <base url>/sigsum/v0/get-consistency-proof/<old_size>/<new_size>
 ```
@@ -286,7 +265,7 @@ Example:
 $ curl <base url>/sigsum/v0/get-consistency-proof/42/4711
 ```
 
-### 3.6 - get-leaves
+### 3.5 - get-leaves
 ```
 GET <base url>/sigsum/v0/get-leaves/<start_size>/<end_size>
 ```
@@ -314,7 +293,7 @@ Example:
 $ curl <base url>/sigsum/v0/get-leaves/42/4711
 ```
 
-### 3.7 - add-leaf
+### 3.6 - add-leaf
 ```
 POST <base url>/sigsum/v0/add-leaf
 ```
@@ -351,7 +330,11 @@ verification_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569
 domain_hint=_sigsum_v0.example.com" | curl --data-binary @- <base url>/sigsum/v0/add-leaf
 ```
 
-### 3.8 - add-cosignature
+TODO: update the above with valid input.  Link
+	[proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-ssh-signature-format.md)
+on how one could produce it "byte-for-byte" using Python and ssh-keygen -Y.
+
+### 3.7 - add-cosignature
 ```
 POST <base url>/sigsum/v0/add-cosignature
 ```

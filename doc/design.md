@@ -243,15 +243,16 @@ logs cannot guarantee low latency.  The signer needs to wait until the log
 accepted their request, after which it can be verified using an inclusion proof.
 
 #### 3.2.3 - Wait for witness cosigning
-Sigsum logs periodically freeze the most current tree head, typically every five
-minutes.  Cosigning witnesses poll logs for so-called _to-sign_ tree heads and
-verify that they are fresh and append-only before doing a cosignature operation.
-Cosignatures are posted back to logs so that signers can easily fetch finalized
-cosigned tree heads.
+Cosigning witnesses poll the logs for tree heads to be cosigned once per minute,
+verifying that they are fresh (not back-dated more than five minutes) and
+append-only (no leaves were removed or modified) before doing any cosignature
+operations.  Cosignatures are posted back to the logs so that they become
+available in one place.
 
-It thus takes five to ten minutes before a signer's distribution phase can start.
-The added latency is a trade-off that simplifies sigsum logging by removing the
-need for reactive gossip-audit protocols
+The above means that it takes up to 5-10 minutes before a cosigned tree head is
+available.  Depending on implementation it may be as short as one minute.  The
+added latency is an important trade-off that significantly simplifies sigsum
+logging by removing the need for reactive gossip-audit protocols
 	[\[G1,](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7346853)
 	[G2,](https://datatracker.ietf.org/doc/html/draft-ietf-trans-gossip-05)
 	[G3,](https://petsymposium.org/2021/files/papers/issue2/popets-2021-0024.pdf)
