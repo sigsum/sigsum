@@ -1,0 +1,23 @@
+Date: 2022-02-01 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+
+Status round
+	* [rgdd] cleaned-up proposals branch and merged in sigsum
+	* [rgdd] draft on rgdd/state branch in sigsum-log-go
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] propose a replacement for the terminology "Verifier" in Figure 1
+	* [rgdd] discuss and review sigsum-{lib,log}-go on request from ln5
