@@ -1,0 +1,37 @@
+Date: 2022-02-08 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* Anwesha
+
+Status round
+	* [rgdd] giving some attention to improve our FAQ
+	* [rgdd] documented timestamp reflections
+		* https://git.sigsum.org/sigsum/tree/archive/2022-02-08-timestamp-reflections.md
+	* [rgdd] end-user terminology proposal
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-02-end-user-terminology.md
+	* [ln5] read some sigsum-{lib,log}-go code
+	* [ln5] moved the question about the choice of font forward a bit
+
+Decisions
+	* Decision: adopt end-user terminology proposal
+
+Next steps
+	* [rgdd] continued work on FAQ
+	* [ln5] sigsum-{lib,log}-go and email stack, slow pace
+	* [anwesha] Font licensing work: go through the different practical and legal options to make decision
+	* [anwesha] Sys-admin: Finish tasks lying at the nextcloud task list
+	* [anwesha] Documentation: come up with a topic for documentation
+
+Other useful links
+	* Call for presentations (SupplyChainSecurityCon)
+		* https://www.linuxfoundation.org/press-release/the-linux-foundation-announces-supplychainsecuritycon-will-be-featured-under-the-open-source-summit-north-america-2022-conference-umbrella/
