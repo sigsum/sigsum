@@ -22,8 +22,8 @@ that it is simple to parse and understand for humans.  These formats are not
 used for the serialization of signed and/or logged data, where a more well
 defined and storage efficient format is desirable.
 
-A _signer_ should distribute log responses to their verifiers in any format that
-suits them.  The (de)serialization required for _verifiers_ is a small subset of
+A _signer_ should distribute log responses to their end-users in any format that
+suits them.  The (de)serialization required for _end-users_ is a small subset of
 Trunnel.  Trunnel is an "idiot-proof" wire-format in use by the Tor project.
 
 Figure 1 of our design document gives an intuition of all involved parties.
@@ -69,7 +69,7 @@ struct tree_head {
 `timestamp` is the time since the UNIX epoch (January 1, 1970 00:00 UTC) in
 seconds.  It is included so that monitors can be convinced of _freshness_ if
 enough witnesses added their cosignatures.  A signer can also use timestamps
-to prove to a verifier that public logging happened within some interval
+to prove to an end-user that public logging happened within some interval
 	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
 
 `tree_size` is the number of leaves in a log.
@@ -127,7 +127,7 @@ shard-specific tree leaf context_.
 `key_hash` is a hash of the signer's public verification key using the same
 format as Section 2.3.2.  It is included
 in `tree_leaf` so that each leaf can be attributed to a signer.  A hash,
-rather than the full public key, is used to motivate monitors and verifiers to
+rather than the full public key, is used to motivate monitors and end-users to
 locate the appropriate key and make an explicit trust decision.
 
 ## 3 - Public endpoints
@@ -345,7 +345,7 @@ Output on success:
 
 `key_hash` can be used to identify which witness cosigned a tree head.  A
 key-hash, rather than the full verification key, is used to motivate monitors
-and verifiers to locate the appropriate key and make an explicit trust decision.
+and end-users to locate the appropriate key and make an explicit trust decision.
 
 Note that logs must be configured with relevant public keys for witnesses.
 

@@ -24,7 +24,7 @@ Monitors locate data externally based on H(checksum), not checksum.  Note that
 monitors can verify observed signatures as before without locating the data.
 This is important so that we can be sure a signing operation actually happened.
 
-Verifiers need the same (meta)data distributed, but in the verification step
+End-users need the same (meta)data distributed, but in the verification step
 H(checksum) must be computed to verify signatures and inclusion proofs.
 
 Witnesses are not affected by this change.

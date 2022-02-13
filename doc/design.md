@@ -31,7 +31,7 @@ or is someone running unexpected commands on your server
 A sigsum log brings transparency to **sig**ned check**sum**s.  You can think of
 sigsum logging as pre-hashed digital signing with transparency.
 The signing party is called a _signer_.
-The user of the signed data is called a _verifier_.
+The party that uses the signed data in the end is called an _end-user_.
 
 The problem with _digital signing on its own_ is that it is difficult to
 determine whether the signed data is _actually the data that should have been
@@ -78,10 +78,10 @@ It is fair to say that much though went into _removing_ unwanted usage-patterns
 of sigsum logs, ultimately leaving us with a design that has the below
 properties.  It does not mean that the sigsum log design is set in stone yet,
 but it is mature enough to capture what type of ecosystem we want to bootstrap.
-- **Preserved data flows:** a verifier can enforce sigsum logging without making
+- **Preserved data flows:** an end-user can enforce sigsum logging without making
 additional outbound network connections.  Proofs of public logging are provided
 using the same distribution mechanism as is used for distributing the actual data.
-In other words, the signer talks to the log on behalf of the verifying party.
+In other words, the signer talks to the log on behalf of the end-user.
 - **Sharding to simplify log life cycles:** sigsum logs have open-ended shard
 intervals that determine the point in time that incoming submissions must be
 scoped for.  Past submissions cannot be replayed in non-overlapping shards.
@@ -103,14 +103,14 @@ increase attack surfaces and make the system more difficult to use in
 constrained environments.  Signed and logged data can be (de)serialized using
 	[Trunnel](https://gitlab.torproject.org/tpo/core/trunnel/-/blob/main/doc/trunnel.md),
 or "by hand" in many modern programming languages.  This is the only parsing
-that a verifier is required to support.  Signers, monitors, and witnesses
+that an end-user is required to support.  Signers, monitors, and witnesses
 additionally need to interact with a sigsum log's ASCII HTTP(S)
         [API](https://git.sigsum.org/sigsum/tree/doc/api.md).
 
 ## 2 - Threat model
 We consider a powerful attacker that gained control of a signer's signing and
 release infrastructure.  This covers a weaker form of attacker that is able to
-sign data and distribute it to a subset of isolated verifiers.  For example,
+sign data and distribute it to a subset of isolated end-users.  For example,
 this is essentially what the FBI requested from Apple in the San Bernardino case
 	[\[FBI-Apple\]](https://www.eff.org/cases/apple-challenges-fbi-all-writs-act-order).
 The fact that signing keys and related infrastructure components get
@@ -120,12 +120,12 @@ compromised should not be controversial these days
 The same attacker also gained control of the signing key and infrastructure of a
 sigsum log that is used for transparency.  This covers a weaker form of attacker
 that is able to sign log data and distribute it to a subset of isolated
-verifiers.  For example, this could have been the case when a remote code
+end-users.  For example, this could have been the case when a remote code
 execution was found for a Certificate Transparency Log
 	[\[DigiCert\]](https://groups.google.com/a/chromium.org/g/ct-policy/c/aKNbZuJzwfM).
 
 The overall system is said to be secure if a log monitor can discover every
-signed checksum that a verifier would accept.
+signed checksum that an end-user would accept.
 A log can misbehave by not presenting the same append-only Merkle tree to
 everyone because it is attacker-controlled.
 The attacker would only do that if it is likely to go unnoticed, however.
@@ -157,7 +157,7 @@ we give a brief primer below.
                  |  +---------->| Monitor |<-------+  |proof
                  v              +---------+           v
                +---------+           |             +----------+
-               | Witness |           | false       | Verifier |
+               | Witness |           | false       | End-user |
                +---------+           | claim       +----------+
                                      v
                                 investigate
@@ -176,12 +176,12 @@ inclusion proof is available that leads up to a trustworthy Merkle tree head,
 the signed checksum's data is ready for distribution with proofs of public
 logging.  A sigsum log does not help the signer with any data distribution.
 
-Verifiers use the signer's data if it is accompanied by proofs of public
+End-users use the signer's data if it is accompanied by proofs of public
 logging.  Monitors look for signed checksums and data that correspond to public
 keys that they are aware of.  Any falsifiable claim that a signer makes about
 their key-usage can now be verified because no signing operation goes unnoticed.
 
-Verifiers and monitors can be convinced that public logging happened without
+End-users and monitors can be convinced that public logging happened without
 additional outbound network connections if a threshold of witnesses followed a
 cosigning protocol.  More detail is provided in Section 3.2.3.
 
@@ -203,7 +203,7 @@ data that a checksum represents.  Where data is located is use-case specific.
 
 Note that a key hash is logged rather than the public key itself.  This reduces
 the likelihood that an untrusted key is discovered and used by mistake.  In
-other words, verifiers and monitors must locate signer verification keys
+other words, end-users and monitors must locate signer verification keys
 independently of logs, and trust them explicitly.
 
 ### 3.2 - Usage pattern
@@ -286,21 +286,21 @@ an inclusion proof that leads up to a cosigned tree head.  Note that _proof_
 refers to the collection of an inclusion proof and a cosigned tree head.
 
 #### 3.2.5 - Verification
-A verifier should only accept the distributed data if the following criteria hold:
+An end-user should only accept the distributed data if the following criteria hold:
 1. The data's checksum is signed using the specified shard hint and public key.
 2. The provided tree head can be reconstructed from the logged leaf and
 its inclusion proof.
 3. The provided tree head is from a known log with enough valid cosignatures.
 
-Notice that there are no new outbound network connections for a verifier.
-Therefore, a verifier will not be affected by future log downtime since the
+Notice that there are no new outbound network connections for an end-user.
+Therefore, an end-user will not be affected by future log downtime since the
 signer already collected relevant proofs of public logging.  Log downtime may be
 caused by temporary operational issues or simply because a shard is done.
 
 The lack of external communication means that a proof of public logging cannot
 be more convincing than the tree head an inclusion proof leads up to.  Sigsum
 logs have trustworthy tree heads thanks to using a variant of witness cosigning.
-A verifier cannot be tricked into accepting data whose checksum have not been
+An end-user cannot be tricked into accepting data whose checksum have not been
 publicly logged unless the attacker controls more than a threshold of witnesses.
 
 #### 3.2.6 - Monitoring
@@ -312,7 +312,7 @@ logged checksums represent.
 
 ### 3.3 - Summary
 Sigsum logs are sharded and can be shut down _safely_ in the future because
-verification on the verifier-side is not interactive.
+verification for end-users is not interactive.
 
 The difficulty of bypassing public logging is based on the difficulty of
 controlling enough independent witnesses.  A witness checks that a log's tree
@@ -325,7 +325,7 @@ mechanism.  No data or rich metadata is being logged, to protect the log
 operator from poisoning.  This also keeps log operations simpler because there
 are less data to manage.
 
-Verifiers interact with logs indirectly through their signer's existing
+End-users interact with logs indirectly through their signer's existing
 distribution mechanism.  Signers are responsible for logging signed checksums
 and distributing necessary proofs of public logging.  Monitors discover signed
 checksums in the logs and generate alerts if any key-usage is inappropriate.
@@ -410,13 +410,13 @@ If a verified timestamp is needed to reason about the time of logging, you may
 use a cosigned tree head instead
 	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
 
-A log operator that shuts down a completed shard will not affect verifiers.  In
+A log operator that shuts down a completed shard will not affect end-users.  In
 other words, a signer can continue to distribute proofs that were once
 collected.  This is important because a checksum does not necessarily expire.
 
 #### 4.6 - What parts of witness cosigning are not done?
 There are interesting policy aspects that relate to witness cosigning.  For
-example, what witnessing policy should a verifier use and how are trustworthy
+example, what witnessing policy should an end-user use and how are trustworthy
 witnesses discovered.  This is somewhat analogous to a related policy question
 that all log ecosystems must address.  Which logs should be considered known?
 
@@ -426,11 +426,11 @@ of a log and its operator_.  The
 supports witness cosigning.  Policy aspects for a log operator are easy because
 it is relatively cheap to allow a witness to be a cosigner.  It is not a log
 operator's job to determine if any real-world entity is trustworthy.  It is not
-even a log operator's job to help signers and verifiers discover witness keys.
+even a log operator's job to help signers and end-users discover witness keys.
 
 Given a permissive policy for which witnesses are allowed to cosign, a signer
 may not care for all retrieved cosignatures.  Unwanted ones can simply be
-removed before distribution to a verifier takes place.  This is in contrast to
+removed before distribution to an end-user takes place.  This is in contrast to
 the original proposal by
 	[Syta et al.](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521),
 which puts an authority right in the middle of a slowly evolving witnessing policy.

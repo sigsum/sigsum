@@ -41,7 +41,7 @@ https://git.sigsum.org/sigsum/tree/doc/api.md
 Tree leaves contain a signer's statement, a signature and a key hash.
 
 Statements are signed by Signers.
-Statements are verified by Verifiers and Monitors.
+Statements are verified by End-users and Monitors.
 
     u64 shard_hint;
     u8 checksum[32];
@@ -49,7 +49,7 @@ Statements are verified by Verifiers and Monitors.
 ### Tree heads
 
 Tree heads are signed by Logs and Witnesses.
-Tree heads are verified verified by Verifiers, Witnesses and Monitors.
+Tree heads are verified verified by End-users, Witnesses and Monitors.
 
 	u64 timestamp;
 	u64 tree_size;
