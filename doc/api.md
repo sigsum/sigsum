@@ -131,10 +131,10 @@ rather than the full public key, is used to motivate monitors and end-users to
 locate the appropriate key and make an explicit trust decision.
 
 ## 3 - Public endpoints
-A log must have a fixed unique base URL that can have the following suffix
-appended: `/sigsum/v0/<endpoint>`.  Example of a valid base URL:
+A log must have a fixed and unique log URL.  A valid log URL is any valid
+HTTP(S) URL that ends with "/sigsum/v0".  Example:
 ```
-https://log.example.com:4711/opossum/2021`.
+https://log.example.com:4711/opossum/2021/sigsum/v0`.
 ```
 
 Input data in `get-*` requests are added at the end of an endpoint's
@@ -168,7 +168,7 @@ error=Invalid signature
 Returns a tree head that witnesses should cosign.
 
 ```
-GET <base url>/sigsum/v0/get-tree-head-to-cosign
+GET <log URL>/get-tree-head-to-cosign
 ```
 
 Input:
@@ -186,7 +186,7 @@ cosignatures is updated every time a new cosignature gets added.  This
 endpoint is used by Signers that want _enough cosignatures as fast as possible_.
 
 ```
-GET <base url>/sigsum/v0/get-tree-head-cosigned
+GET <log URL>/get-tree-head-cosigned
 ```
 
 Input:
@@ -209,7 +209,7 @@ success.  The number of witness signatures and key hashes must match.
 
 ### 3.3 - get-inclusion-proof
 ```
-GET <base url>/sigsum/v0/get-inclusion-proof/<tree_size>/<leaf_hash>
+GET <log URL>/get-inclusion-proof/<tree_size>/<leaf_hash>
 ```
 
 Input:
@@ -231,12 +231,12 @@ follow from the hash strategy, see RFC 6962.
 
 Example:
 ```
-$ curl <base url>/sigsum/v0/get-inclusion-proof/4711/241fd4538d0a35c2d0394e4710ea9e6916854d08f62602fb03b55221dcdac90f
+$ curl <log URL>/get-inclusion-proof/4711/241fd4538d0a35c2d0394e4710ea9e6916854d08f62602fb03b55221dcdac90f
 ```
 
 ### 3.4 - get-consistency-proof
 ```
-GET <base url>/sigsum/v0/get-consistency-proof/<old_size>/<new_size>
+GET <log URL>/get-consistency-proof/<old_size>/<new_size>
 ```
 
 Input:
@@ -252,12 +252,12 @@ hashes follow from the hash strategy, see RFC 6962.
 
 Example:
 ```
-$ curl <base url>/sigsum/v0/get-consistency-proof/42/4711
+$ curl <log URL>/get-consistency-proof/42/4711
 ```
 
 ### 3.5 - get-leaves
 ```
-GET <base url>/sigsum/v0/get-leaves/<start_size>/<end_size>
+GET <log URL>/get-leaves/<start_size>/<end_size>
 ```
 
 Input:
@@ -281,12 +281,12 @@ must be returned on success.
 
 Example:
 ```
-$ curl <base url>/sigsum/v0/get-leaves/42/4711
+$ curl <log URL>/get-leaves/42/4711
 ```
 
 ### 3.6 - add-leaf
 ```
-POST <base url>/sigsum/v0/add-leaf
+POST <log URL>/add-leaf
 ```
 
 Input:
@@ -321,7 +321,7 @@ $ echo "shard_hint=1633039200
 preimage=315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
 signature=0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
 verification_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c
-domain_hint=_sigsum_v0.example.com" | curl --data-binary @- <base url>/sigsum/v0/add-leaf
+domain_hint=_sigsum_v0.example.com" | curl --data-binary @- <log URL>/add-leaf
 ```
 
 TODO: update the above with valid input.  Link
@@ -331,7 +331,7 @@ on how one could produce it "byte-for-byte" using Python and ssh-keygen -Y.
 ### 3.7 - add-cosignature
 =======
 ```
-POST <base url>/sigsum/v0/add-cosignature
+POST <log URL>/add-cosignature
 ```
 
 Input:
@@ -352,7 +352,7 @@ Note that logs must be configured with relevant public keys for witnesses.
 Example:
 ```
 $ echo "cosignature=d1b15061d0f287847d066630339beaa0915a6bbb77332c3e839a32f66f1831b69c678e8ca63afd24e436525554dbc6daa3b1201cc0c93721de24b778027d41af
-key_hash=662ce093682280f8fbea9939abe02fdba1f0dc39594c832b411ddafcffb75b1d" | curl --data-binary @- <base url>/sigsum/v0/add-cosignature
+key_hash=662ce093682280f8fbea9939abe02fdba1f0dc39594c832b411ddafcffb75b1d" | curl --data-binary @- <log URL>/add-cosignature
 ```
 
 TODO: update the above with valid input.  Link
