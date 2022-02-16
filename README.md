@@ -49,7 +49,7 @@ by sending an email with 'subscribe' in the subject to
     sigsum-general-join@lists.sigsum.org
 
 or use the form at
-[the list info page](https://lists.sigsum.org/mailman3/postorius/lists/sigsum-general.lists.sigsum.org/)
+[the list info page](https://lists.sigsum.org/mailman3/postorius/lists/sigsum-general.lists.sigsum.org/).
 
 After being subsribed, you can provide feedback, report issues, and
 submit patches by sending an email to the list, at
