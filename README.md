@@ -42,24 +42,19 @@ There are open video/voice meeting on Tuesdays at 1200 UTC, in the
 - Jitsi: [meet.sigsum.org/sigsum](https://meet.sigsum.org/sigsum)
 
 ### Email
-Subscribe to the sigsum-general [mailing list](https://lists.sigsum.org/) by
-sending an empty email to
+Subscribe to the
+[Sigsum-general mailing list](https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/)
+by sending an email with 'subscribe' in the subject to
 
-    sigsum-general+subscribe@lists.sigsum.org
+    sigsum-general-join@lists.sigsum.org
 
-and follow the instructions received in response. To unsubscribe, send
-an empty email to
+or use the form at
+[the list info page](https://lists.sigsum.org/mailman3/postorius/lists/sigsum-general.lists.sigsum.org/)
 
+After being subsribed, you can provide feedback, report issues, and
+submit patches by sending an email to the list, at
 
-    sigsum-general+unsubscribe@lists.sigsum.org
-
-To retrieve help on how to manage your subscription further, send an
-empty email to
-
-    sigsum-general+help@lists.sigsum.org
-
-You can provide feedback, report issues, and submit patches by sending an email
-to sigsum-general@lists.sigsum.org.
+    sigsum-general@lists.sigsum.org
 
 ## Sponsors
 - [Mullvad VPN](https://mullvad.net/), financial sponsor
