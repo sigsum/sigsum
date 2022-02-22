@@ -1,0 +1,27 @@
+Date: 2022-02-22 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: ln5
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* ln5
+	* Anwesha
+
+Status round
+	* [ln5] Mailing list is now running on our own list server,
+          list members and list archives have been migrated.
+	* [Anwesha] Font Licesning Legal advicing
+
+Decisions
+	* No decisions.
+
+Next steps
+	* [ln5] complete sigsum-{lib,log}-go v0
+	* [ln5] testing db replication
+	* [Anwesha] ip sanitation : up and running in all servers
+	* [Anwesha] apache new role : continue
