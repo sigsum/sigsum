@@ -1,0 +1,35 @@
+Date: 2022-03-01 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: ln5
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* anwesha
+
+Status round
+	* [rgdd] some further progress on sigsum tooling
+		* sigsum-tool-go, sigsum-tools-go?
+	* [anwesha] ip sanitisation - last leg
+	* [anwesha] Font licensing decision done
+
+Decisions
+	* Decision: No non-free fonts. Not in logo, not on website. Anwesha will document this in the archive.
+
+Next steps
+	* [rgdd] wrap up FAQ stuff
+	* [rgdd] prepare a talk until next week
+	* [rgdd] start working on a tooling repository (sigsum-tools-go)
+	* [ln5] v0 compliance, log and witness
+	* [anwesha] ip addr log sanitisation wrap-up
+	* [anwesha] new ansible role for apache2 running on at least one system
+	* [anwesha] documenting the font licensing decision
+
+Other useful links
+	* https://www.openssh.com/txt/release-8.9 includes the sha256 change we need for signing
