@@ -100,29 +100,27 @@ Logs support a single leaf type.  It contains a signer's statement,
 signature, and key hash.
 
 ```
-struct statement {
-    u8 checksum[32];
-}
-
 struct tree_leaf {
-    struct statement statement;
+    u64 shard_hint;
+    u8 checksum_hash[32];
     u8 signature[64];
     u8 key_hash[32];
 }
 ```
 
-`checksum` is a the hash of a preimage.  The signer submits a 32-byte preimage
+`shard_hint` is a shard hint that matches the log's shard interval.
+
+`checksum_hash` is a hash of a preimage.  The signer submits a 32-byte preimage
 representing some data.  It is recommended to set this preimage to `H(data)`, in
-which case the checksum will be `H(H(data))`.
+which case the checksum hash will be `H(H(data))`.
 
 `signature` is computed by treating the above preimage as the message `M`
 in SSH's
 	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
 The hash algorithm string must be "SHA256".  The reserved string must be empty.
 The namespace field must be set to `tree_leaf:v0:<shard_hint>@sigsum.org`, where
-`<shard_hint>` is replaced with the shortest decimal ASCII representation of a
-shard hint that matches the log's shard interval.  This ensures a _sigsum
-shard-specific tree leaf context_.
+`<shard_hint>` is replaced with the shortest decimal ASCII representation of `shard_hint`.
+This ensures a _sigsum shard-specific tree leaf context_.
 
 `key_hash` is a hash of the signer's public verification key using the same
 format as Section 2.3.2.  It is included
