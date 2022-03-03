@@ -178,7 +178,7 @@ Output on success:
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 
-### 3.2 - get-tree-head-quickly
+### 3.2 - get-tree-head-cosigned
 Returns a tree head that has been cosigned by at least one witness.  The list of
 cosignatures is updated every time a new cosignature gets added.  This
 endpoint is used by Signers that want _enough cosignatures as fast as possible_.
