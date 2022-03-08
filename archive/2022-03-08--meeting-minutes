@@ -1,0 +1,41 @@
+Date: 2022-03-08 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* anwesha
+	* ln5
+
+Status round
+	* [rgdd] delivered talk on CT days 2022
+	* [rgdd, db, kfreds, ln5] draft on sigsum compared to sigstore/rekor
+	* [anwesha] plan for implementing new apache role, started working on it
+	* [anwesha] documented font licensing decision
+		* https://git.sigsum.org/sigsum/tree/archive/2022-03-08-font-summary.md
+	* [ln5] ordering hardware for the log hosts
+	* [ln5] signing format changes to the log
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] merge font docs from anwesha
+	* [rgdd] merge sigsum compared to sigstore/rekor text
+	* [ln5] log v0 coding, including tooling (submit) and the python witness
+	* [ln5] mariadb replication tried out in lab environment
+	* [anwesha] Make tee.so a staging server, similar infra as pause.so
+	* [anwesha] have the new role running in pause
+	* [anwesha] plan other tasks with ln5
+
+Other useful links
+	* CT days 2022 agenda
+		* https://docs.google.com/document/d/1t2A_gCllkovHHWVin_TExhbOkM5xwr1NIZKv5PUwt8E/edit
+	* Upcoming PETS paper on SCT auditing in Certificate Transparency
+		* https://arxiv.org/pdf/2203.01661.pdf
