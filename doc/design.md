@@ -334,13 +334,7 @@ The signing format for logs, witnesses, and signers is based on a subset of
 what is supported by OpenSSH.  Ed25519 and SHA256 must be used as primitives.
 
 ### 4 - Frequently Asked Questions
-#### 4.1 - What parts of the design are up for debate?
-A brief summary appeared in our archive on
-	[2021-10-05](https://git.sigsum.org/sigsum/tree/archive/2021-10-05-open-design-thoughts?id=5c02770b5bd7d43b9327623d3de9adeda2468e84).
-It may be incomplete, but covers some details that are worth thinking more
-about.  We are still open to remove, add, or change things.
-
-# 4.2 - Why use the OpenSSH signing format?
+#### 4.1 - Why use the OpenSSH signing format?
 Our main criteria for a signing format is that it can express signing contexts
 without any complex parsers.  A magic preamble is good for overall hygiene
 as well.  We sketched on such a format using Trunnel.  We realized that by
@@ -348,7 +342,7 @@ tweaking a few constants it would be compatible with SSH's signing format.  If
 it is possible to share format with an existing reliable and widely deployed
 ecosystem, great!
 
-#### 4.3 - What is the point of submitting a checksum's preimage?
+#### 4.2 - What is the point of submitting a checksum's preimage?
 Logging arbitrary bytes can poison a log with inappropriate content.  While a
 leaf is already light-weight in Sigsum, a stream of leaves could be made to carry more
 meaning. Disallowing checksums to contain arbitrary bytes, by having logs compute
@@ -360,7 +354,7 @@ is `H(D)`.  The resulting checksum would be `H(H(D))`.  The log will not be in a
 position to observe the data `D`, thereby removing power in the form of trivial
 data mining while at the same time making the overall protocol less heavy.
 
-#### 4.4 - What is the point of having a domain hint?
+#### 4.3 - What is the point of having a domain hint?
 Domain hints help log operators combat spam.  By verifying that every signer
 controls a domain name that is aware of their public key, rate limits can be
 applied per second-level domain.  You would need a large number of domain names
@@ -387,7 +381,7 @@ that added this criteria.
 
 We are considering if additional anti-spam mechanisms should be supported in v1.
 
-#### 4.5 - What is the point of having a shard hint?
+#### 4.4 - What is the point of having a shard hint?
 Unlike TLS certificates which already have validity ranges, a checksum does not
 carry any such information.  Therefore, we require that the signer selects a
 shard hint.  The selected shard hint must be within a log's shard interval.
@@ -414,7 +408,7 @@ A log operator that shuts down a completed shard will not affect end-users.  In
 other words, a signer can continue to distribute proofs that were once
 collected.  This is important because a checksum does not necessarily expire.
 
-#### 4.6 - What parts of witness cosigning are not done?
+#### 4.5 - What parts of witness cosigning are not done?
 There are interesting policy aspects that relate to witness cosigning.  For
 example, what witnessing policy should an end-user use and how are trustworthy
 witnesses discovered.  This is somewhat analogous to a related policy question
@@ -434,6 +428,42 @@ removed before distribution to an end-user takes place.  This is in contrast to
 the original proposal by
 	[Syta et al.](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521),
 which puts an authority right in the middle of a slowly evolving witnessing policy.
+
+#### 4.6 - What parts of the design are up for debate?
+Several parts are under consideration for the v1 design.  Any feedback on what
+we have now or might (not) have in the future would be appreciated.  We are not
+in any particular rush to bump the version and want to experiment more with v0.
+
+A list of some debated topics:
+
+  - Support any additional cryptographic algorithms?  For example, is it a
+  worth-while complexity trade-off to add a NIST curve?  Note that this question
+  is about cryptographic primitives; not additional signature formats like PGP.
+  - Accept or reject the [checkpoint format][] that the TrustFabric team uses
+  for (co)signed tree heads?  It is also a relatively simple ASCII format, and
+  we support it as an experimental endpoint (`<log URL>/checkpoint`).  The main
+  differences from our current cosigned tree head format are:
+    - The signed blob is not based on SSH
+    - Base64 instead of hex
+    - Extensibility in an "other data" section
+    - No timestamp verification without defining an extension
+    - A signature-line format that is less minimal
+  - Keep or remove tree head timestamps?  A monitor can convince itself of
+  freshness by submitting a leaf request, observing that it gets merged by a
+  cosigned tree head.  There are pros and cons, see [timestamp reflections][].
+  - Is it a worthwhile complexity trade-off to have a "quick" cosigned tree head
+  endpoint that provides cosignatures as fast as possible?  Right now there is a
+  "slow" cosigned tree head endpoint that makes all cosignatures available at
+  once.  The motivation for this is that a ["quick" endpoint adds complexity][]
+  while only giving _lower latency_; not _low latency_.  The "slow" cosigned
+  tree head endpoint could also be implemented to just rotate a bit faster.
+  - Should there be support for any alternative rate-limiting mechanism?  A
+  domain hint could be viewed as a subset of several possible _ownership hints_.
+  - Should there be any IANA registration for the future `_sigsum_v1` DNS label?
+
+[checkpoint format]: https://github.com/google/trillian-examples/blob/master/formats/log/README.md
+["quick" endpoint adds complexity]: https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-no-quick-tree-head-endpoint
+[timestamp reflections]: https://git.sigsum.org/sigsum/tree/archive/2022-02-08-timestamp-reflections.md
 
 #### 4.7 - More questions
 - What are the privacy concerns?
