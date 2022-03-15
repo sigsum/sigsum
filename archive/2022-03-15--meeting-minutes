@@ -1,0 +1,35 @@
+Date: 2022-03-15 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* Anwesha
+	* ln5
+
+Status round
+	* [rgdd, db, kfreds, ln5] best-effort comparison of sigsum and sigstore's rekor
+		* https://git.sigsum.org/sigsum/tree/archive/2022-03-15-notes-on-sigsum-and-rekor.md
+	* [ln5] making progress on sigsum-{lib,log}-go
+		* draft: sshsig
+		* would like to pin down some dates for when features are landing
+	* [ln5] two log machines ordered, being built this week
+	* [Anwesha] working on new ansible roles
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] review sshsig in sigsum-{lib,log}-go
+	* [rgdd] update hugo template and bring in sigsum logo and colors when available
+	* [rgdd] some kind of overview board, related to milestones and dates
+	* [ln5] log v0 feature completion
+	* [ln5] mariadb replication testing
+	* [Anwesha] ip sanitation : up and running in all servers
+	* [Anwesha] apache new role : continue
