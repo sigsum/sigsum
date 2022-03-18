@@ -465,6 +465,11 @@ A list of some debated topics:
 ["quick" endpoint adds complexity]: https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-no-quick-tree-head-endpoint
 [timestamp reflections]: https://git.sigsum.org/sigsum/tree/archive/2022-02-08-timestamp-reflections.md
 
-#### 4.7 - More questions
+#### 4.7 - How does Sigsum compare to Sigstore?
+A comparison between Sigsum and Sigstore was [archived on March 15, 2022][].
+
+[archived on March 15, 2022]: https://git.sigsum.org/sigsum/tree/archive/2022-03-15-notes-on-sigsum-and-rekor.md
+
+#### 4.8 - More questions
 - What are the privacy concerns?
 - Add more questions here!
