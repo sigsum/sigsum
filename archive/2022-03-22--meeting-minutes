@@ -1,0 +1,28 @@
+Date: 2022-03-22 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: ln5
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* Anwesha
+
+Status round
+	* [rgdd] tried using new font and colors on website (runs locally)
+	* [ln5] has been hacking on the log and the tooling, learning stuff
+	* [ln5] smaller sysadmin things, like fixing some www issues
+	* [anwesha] worked on apache2 role, made listen ready for deployment of new apache2 role
+
+Decisions
+	* No decisisons.
+
+Next steps
+	* [anwesha] Will continue work on the new apache2 ansible role
+	* [rgdd] finnish up website so that it can be deployed
+	* [ln5] log v0 and tooling
