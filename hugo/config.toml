@@ -1,5 +1,5 @@
 title = ""
-baseURL = "https://www.sigsum.org"
+baseURL = "https://www.sigsum.org/"
 theme = "researcher"
 
 [params]
@@ -20,7 +20,7 @@ theme = "researcher"
   [[params.socialIcons]]
     icon = "fas fa-envelope"
     title = "E-mail"
-    url = "https://lists.sigsum.org"
+    url = "https://lists.sigsum.org/"
 
 [menu]
   [[menu.main]]
