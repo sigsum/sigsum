@@ -1,4 +1,37 @@
-baseURL = "https://www.sigsum.org/"
-languageCode = "en-us"
-title = "Sigsum"
-theme = "hugo-xmin"
+title = ""
+baseURL = "https://www.sigsum.org"
+theme = "researcher"
+
+[params]
+  author = "The Sigsum Project"
+  description = "The Sigsum Project website"
+  logo = "/media/logo.svg"
+  [params.footer]
+    text = ""
+    url = ""
+  [params.style]  # appearance options (can be omitted)
+    fontFamily = "Outfit"
+    pageWidth = "750px"
+    avatarSize = "90px"
+  [[params.socialIcons]]
+    icon = "fab fa-git"
+    title = "git"
+    url = "https://git.sigsum.org/"
+  [[params.socialIcons]]
+    icon = "fas fa-envelope"
+    title = "E-mail"
+    url = "https://lists.sigsum.org"
+
+[menu]
+  [[menu.main]]
+    name = "Docs"
+    url = "/docs"
+    weight = 1
+  [[menu.main]]
+    name = "Contact"
+    url = "/contact"
+    weight = 2
+  [[menu.main]]
+    name = "About"
+    url = "/about"
+    weight = 3

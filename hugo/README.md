@@ -1,15 +1,20 @@
-# Static website
-www.sigsum.org can be generated as a static website using [hugo](https://gohugo.io)
-and the [hugo-xmin](https://github.com/yihui/hugo-xmin) theme.
+# www.sigsum.org
+This website is built using [Hugo][] and the [researcher][] theme.
 
-## One-time setup
-1. Install `hugo`
-1. Initialize theme: `git submodule update --init --recursive`
+[Hugo]: https://gohugo.io/
+[researcher]: https://github.com/ojroques/hugo-researcher
 
-## Test locally
-1. Run `hugo serve`
-2. Browse http://localhost:1313
+## Quick start after cloning
 
-## Generate
-1. Run `hugo`
-2. Static website is now located in `public`
+1. Run `git submodule update --init --recursive`.
+2. Follow the instruction [here][] to install extended Hugo.
+3. Try serving the website locally
+   1. Run `hugo serve`
+   2. Browse http://localhost:1313
+
+[here]: https://gohugo.io/getting-started/installing/#fetch-from-github
+
+## Generate a new website that can be published
+
+1. Check that it runs as expected locally (see quick start, step 3).
+2. Run `hugo` to create the `public` repository that should be deployed.
