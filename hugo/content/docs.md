@@ -6,7 +6,7 @@
   - [Archive][] - notes and meeting minutes
   - [Visuals](/visuals) - logo, colors, and font
 
-[Design document]: https://git.sigsum.org/sigsum/tree/doc/design.md
-[API specification]: https://git.sigsum.org/sigsum/tree/doc/api.md
-[History]: https://git.sigsum.org/sigsum/tree/doc/history.md
+[Design document]: https://git.sigsum.org/sigsum/plain/doc/design.md
+[API specification]: https://git.sigsum.org/sigsum/plain/doc/api.md
+[History]: https://git.sigsum.org/sigsum/plain/doc/history.md
 [Archive]: https://git.sigsum.org/sigsum/tree/archive
