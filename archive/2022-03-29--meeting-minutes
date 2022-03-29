@@ -1,0 +1,53 @@
+Date: 2022-03-29 1200 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* Anwesha
+
+Status round
+	* [rgdd, ln5] few reflections about the remove arbitrary bytes proposal
+		* https://git.sigsum.org/sigsum/tree/archive/2022-03-29-no-arbitrary-bytes-notes
+	* [rgdd] started work on automated integration test
+		* sigum-log-go:rgdd/integration, starts-up, check for HTTP 200 OK, close down
+		* sigsum-tools-go:rgdd/sigsum-debug, should eventually replace sigsum-log-go/cmd/tmp
+	* [rgdd] fixed new hugo template with our font, colors, and logo
+		* some content changes too, thank you ln5 for feedback
+		* (updated landing-page text and added an about text, the rest is mostly the same)
+		* defer any focus on further text updates until ~later
+	* [rgdd] added draft on a basic leveled logger
+		* sigsum-lib-go:rgdd/log
+		* a wrapper around the standard Go library log package
+		* basically a more minimal alternative compared to otherwise popular choices
+			* https://github.com/golang/glog
+			* https://github.com/sirupsen/logrus
+	* [rgdd] start sketching on how to clean-up sigsum repo structure
+		* https://pad.sigsum.org/p/df53-ec47-ee23-be59 (active pad, don't persist)
+	* [ln5] merged and published the new web site
+	* [ln5] merged sigsum-lib-go stuff from rgdd
+	* [ln5] finished SSHSIG signing in log, tooling and witness
+	* [Anwesha] still working on a new apache2 role, role is more generic now
+		* tried deploy flow, had to revert due to errors
+		* good learning experience / exercise
+
+Decisions
+	* Decision: new meet time 1100 UTC to follow the recent CET -> CEST change
+
+Next steps
+	* [rgdd] merge integration stuff with "feature parity" compared to manual tests
+	* [rgdd] fix http status 405 (see sigsum-log-go issues)
+	* [rgdd] review and merge the sshsig stuff in sigsum-tools-go
+	* [ln5] last things on log v0, then deploy new poc instance
+	* [ln5] check sigsum branch assests, merge and deploy
+	* [Anwesha] continue working on new apache2 role
+	* [Anwesha] Set the process for testing (before we deploy on production)
+	* [Anwesha] basic understanding of monitoring
+	* [Anwesha] trying checkmk
