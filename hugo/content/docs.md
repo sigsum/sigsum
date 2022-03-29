@@ -4,7 +4,7 @@
   - [API specification][] - a succinct description of the Sigsum API
   - [History][] - a brief history about how Sigsum came together
   - [Archive][] - notes and meeting minutes
-  - [Visuals](/visuals) - logo, colors, and font
+  - [Assets](/assets) - logo, colors, and font
 
 [Design document]: https://git.sigsum.org/sigsum/plain/doc/design.md
 [API specification]: https://git.sigsum.org/sigsum/plain/doc/api.md

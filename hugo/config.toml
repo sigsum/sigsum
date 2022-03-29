@@ -35,3 +35,6 @@ theme = "researcher"
     name = "About"
     url = "/about"
     weight = 3
+
+[markup.goldmark.renderer]
+  unsafe = true # allow raw HTML in markdown files
