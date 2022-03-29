@@ -1,0 +1,39 @@
+# Background
+
+Our implementation of SSHSIG and the remove arbitrary bytes proposal recommends
+a "double hash" of the data.
+
+    message = H(data)
+    blob = SSHSIG{
+        ...
+        H(message)
+    }
+
+Logs are strict to enforce that len(message) = sha256.HashSize.  This means that
+the message could be 32 arbitrary bytes, but the resulting checksum is a hash.
+
+# Misc notes from discussion
+
+From sigsum-tools-go, test/ssh.sh:
+
+    openssl dgst -binary $msg-$i | ssh-keygen \
+                                                -Y sign \
+                                                -O hashalg=sha256 \
+                                                -f $priv \
+                                                -n $(./sigsum namespace) > $msg-$i.sig
+
+Could potentially s/openssl/sigsum
+
+The pipe into ssh-keygen is potentially a UX burden.
+  - How proportional is this trade-off compared to the log eating 32 arbitrary bytes?
+  - I.e., an option would be to let the submitter send H(message) as before, in which case the log does not know if it is a hash or something else of the same byte-size.
+
+Manual verification is not in-scope for UX.  Manual verification is not done.  In the few cases that it is done without sigsum tooling, a pipe will not be the hard part.
+
+UX here is mainly important for "deploy" and "debugging".
+
+The sigsum tool should be as convenient as possible, and we should also list what relevant helpers does (in case you are in an environment without the sigsum tool).
+
+# Conclusion
+
+No planned changes right now.  Continue to improve tooling and documentation.
