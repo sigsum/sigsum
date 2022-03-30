@@ -18,7 +18,7 @@ theme = "researcher"
     title = "git"
     url = "https://git.sigsum.org/"
   [[params.socialIcons]]
-    icon = "fas fa-envelope"
+    icon = "fab fa-envelope"
     title = "E-mail"
     url = "https://lists.sigsum.org/"
 
