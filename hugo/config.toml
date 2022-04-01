@@ -5,6 +5,7 @@ theme = "researcher"
 [params]
   author = "The Sigsum Project"
   description = "The Sigsum Project website"
+  favicon = "/media/avatar.ico"
   logo = "/media/logo.svg"
   [params.footer]
     text = ""
