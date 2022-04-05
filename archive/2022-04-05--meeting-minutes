@@ -1,0 +1,46 @@
+Date: 2022-04-05 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: ln5
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* Anwesha
+
+Status round
+	* [rgdd] milestone pad based on discussion with ln5
+		* https://pad.sigsum.org/p/sigsum-ms
+	* [rgdd] dashboard pad based on discussion with ln5
+		* a manual system to track issues, MRs, etc
+		* should be replaced by something better in the future
+		* pull it with curl ~hourly to reduce the risk of losing it
+		* https://pad.sigsum.org/p/sigsum-db
+	* [rgdd, ln5] restructure repositories proposal
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-04-restructure-repositories.md
+	* [rgdd] fixed misuse of http status 405 in log-go
+	* [anwesha] deployed the new apache role on pause.so, listen.so, getuid.so
+	* [ln5] almost nothing but various non-exciting sysadmin stuff
+
+Decisions
+	* Decision: adopt restructure repositories proposal
+
+Next steps
+	* [ln5] preparing for being away (back Mon the 18th)
+	* [ln5] merge pkg/log from rgdd before vaccay
+	* [anwesha] blog post on the apache2 issue
+	* [anwesha] try out monitoring tool : checkmk
+	* [anwesha] study : networking
+	* [rgdd] put the restructure proposal into action
+		* ln5 will be inovolved with the renaming of repos before leaving
+	* [rgdd] merge ssh-sig tooling (after restructure in sigsum-go)
+	* [rgdd] finalize integration stuff in log-go
+
+Other useful links
+	* "How Go Mitigates Supply Chain Attacks" by Filippo Valsorda
+		* https://go.dev/blog/supply-chain
