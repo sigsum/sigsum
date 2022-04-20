@@ -1,0 +1,39 @@
+Date: 2022-04-19 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* anwesha
+
+Status round
+	* [rgdd] appoligies that the meet last week had to be cancelled
+	* [rgdd] renamed repositories according to decided proposal
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-04-restructure-repositories.md
+		* have yet to port sigsum-tools-go into sigsum-go
+	* [rgdd] proposal simplify ascii names
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-04-simplify-ascii-names.md
+	* [rgdd] added proof verification algorithms from RFC 9162
+		* rgdd/merkle, have yet to be picked-up before being an MR
+	* [anwesha] reading on tcp/ip
+	* [anwesha] building basic ideas on monitoring, mapping the space
+	* [ln5] vacation
+
+Decisions
+	* Decision: adopt simplify ascii names proposal
+
+Next steps
+	* [rgdd] wrap up integration test
+	* [rgdd] ask for sigsum logo to be replaced on binary.transparency.dev
+	* [ln5] log v0 work
+	* [anwesha] continue with monitoring work
+	* [anwesha] come up with an option for our monitoring tool
+	* [anwesha] read sigsum docs and discuss with rgdd
+	* [anwesha] go through the admin task list, clean up what is done
