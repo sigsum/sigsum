@@ -1,0 +1,42 @@
+Date: 2022-04-26 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* anwesha
+	* ln5
+
+Status round
+	* [rgdd] sigsum-debug tool in sigsum-go (to be merged)
+	* [rgdd] integration test in log-go (to be merged)
+	* [rgdd] complete simple ascii package, drafty pick-up and refactor in rgdd/sketch
+		* not ready to be merged, needs to be discussed
+	* [rgdd] started on a list of potential topics for next week's in-person meet
+		* https://pad.sigsum.org/p/be72-cd82-bf74-dc37
+		* add more topics as you see fit
+	* [anwesha] reading about the sigsum design/api
+		* getting a hang of the basics
+		* identifying endpoints to be monitored
+	* [anwesha] continued research on monitoring tools
+	* [anwesha] fixed tls certs for our onion site
+	* [ln5] minor sysadmin tasks
+	* [ln5] code review
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] hacker session with ln5, issues #5 and #40
+	* [rgdd] still need to request that sigsum logo is replaced on bintrans website (#36)
+	* [anwesha] monitoring
+	* [anwesha] gather more knowledge about some "basic cs stuff"
+	* [ln5] finish merging log MRs
+	* [ln5] flash and install 2x new log machines
+	* [ln5] log v0 implementation
