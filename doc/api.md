@@ -115,7 +115,7 @@ The message is meant to represent some data and it is recommended that
 the signer uses `H(data)` as the message, in which case `checksum`
 will be `H(H(data))`.
 
-`signature` is computed by treating the above message as the `M`
+`signature` is computed by treating the above message as `M`
 in SSH's
 	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
 The hash algorithm string must be "SHA256".  The reserved string must be empty.
