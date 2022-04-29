@@ -102,7 +102,7 @@ signature, and key hash.
 ```
 struct tree_leaf {
     u64 shard_hint;
-    u8 checksum_hash[32];
+    u8 checksum[32];
     u8 signature[64];
     u8 key_hash[32];
 }
@@ -110,11 +110,12 @@ struct tree_leaf {
 
 `shard_hint` is a shard hint that matches the log's shard interval.
 
-`checksum_hash` is a hash of a preimage.  The signer submits a 32-byte preimage
-representing some data.  It is recommended to set this preimage to `H(data)`, in
-which case the checksum hash will be `H(H(data))`.
+`checksum` is a hash of the 32-byte message submitted by the signer.
+The message is meant to represent some data and it is recommended that
+the signer uses `H(data)` as the message, in which case `checksum`
+will be `H(H(data))`.
 
-`signature` is computed by treating the above preimage as the message `M`
+`signature` is computed by treating the above message as the `M`
 in SSH's
 	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
 The hash algorithm string must be "SHA256".  The reserved string must be empty.
@@ -290,7 +291,7 @@ POST <log URL>/add-leaf
 Input:
 - `shard_hint`: shard hint to use as tree leaf context, ASCII-encoded decimal
   number.
-- `preimage`: the preimage used to compute `tree_leaf.statement.checksum`, hex-encoded.
+- `message`: the message used to compute `tree_leaf.statement.checksum`, hex-encoded.
 - `signature`: `tree_leaf.signature`, hex-encoded.
 - `verification_key`: public verification key that can be used to verify the
   above signature.  The key is encoded as defined in [RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2),
@@ -316,7 +317,7 @@ should (re)send their add-leaf request until observing HTTP status 200 OK.
 Example:
 ```
 $ echo "shard_hint=1633039200
-preimage=315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
+message=315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
 signature=0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
 verification_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c
 domain_hint=_sigsum_v0.example.com" | curl --data-binary @- <log URL>/add-leaf

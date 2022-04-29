@@ -229,9 +229,9 @@ Sigsum logs implement an HTTP(S) API.  Input and output is human-readable and
 use a simple ASCII format.  A more complex parser like JSON is not needed
 since the data structures being exchanged are primitive enough.
 
-The signer submits their shard hint, checksum preimage, signature, public
+The signer submits their shard hint, message, signature, public
 verification key and domain hint as ASCII key-value pairs.  The log uses the
-specified preimage to compute the signer's checksum.  The log also verifies
+submitted message to compute the signer's checksum.  The log also verifies
 that the public verification key is present in DNS, and uses it to check that
 the signature is valid for the resulting checksum and shard hint.  The public
 verification key is then hashed to construct the Merkle tree leaf as described
@@ -342,14 +342,14 @@ tweaking a few constants it would be compatible with SSH's signing format.  If
 it is possible to share format with an existing reliable and widely deployed
 ecosystem, great!
 
-#### 4.2 - What is the point of submitting a checksum's preimage?
+#### 4.2 - What is the point of hashing the submitted message?
 Logging arbitrary bytes can poison a log with inappropriate content.  While a
 leaf is already light-weight in Sigsum, a stream of leaves could be made to carry more
 meaning. Disallowing checksums to contain arbitrary bytes, by having logs compute
 them, makes crafting of leaves with chosen content computationally costly.
 
-It is worth pointing out that the submitted preimage is limited to be a 32-byte
-buffer.  If the data to be transparently signed is `D`, the recommended preimage
+It is worth pointing out that the submitted message is limited to be a 32-byte
+buffer.  If the data to be transparently signed is `D`, the recommended message
 is `H(D)`.  The resulting checksum would be `H(H(D))`.  The log will not be in a
 position to observe the data `D`, thereby removing power in the form of trivial
 data mining while at the same time making the overall protocol less heavy.
