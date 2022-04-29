@@ -168,7 +168,7 @@ we give a brief primer below.
 A signer wants to make their key-usage transparent.  Therefore, they sign a
 statement that sigsum logs accept.  That statement encodes a checksum for some
 data.  Minimal metadata must also be logged, such as the checksum's signature
-and a hash of the public verification key.  A hash of the public verification
+and a hash of the public key.  A hash of the public
 key is configured in DNS as a TXT record to help log operators combat spam.
 
 The signing party waits for their submission to be included in the log.  When an
@@ -195,7 +195,7 @@ are accepted.  Once elapsed, the log can be shut down or be made read-only.
 - **checksum**: a cryptographic hash that commits to some data.
 - **signature**: a digital signature that is computed by a signer for the
 selected shard hint and checksum.
-- **key_hash**: a cryptographic hash of the signer's verification key that can
+- **key_hash**: a cryptographic hash of the signer's public key that can
 be used to verify the signature.
 
 Any additional metadata that is use-case specific can be stored as part of the
@@ -203,7 +203,7 @@ data that a checksum represents.  Where data is located is use-case specific.
 
 Note that a key hash is logged rather than the public key itself.  This reduces
 the likelihood that an untrusted key is discovered and used by mistake.  In
-other words, end-users and monitors must locate signer verification keys
+other words, end-users and monitors must locate signer public keys
 independently of logs, and trust them explicitly.
 
 ### 3.2 - Usage pattern
@@ -220,9 +220,9 @@ incorporates the shard hint.  The exact signing format is compatible with
 `ssh-keygen -Y sign` when using Ed25519 and SHA256.
 
 The signer also has to do a one-time DNS setup.  As outlined below, logs will
-check that _some domain_ is aware of the signer's verification key.  This is
+check that _some domain_ is aware of the signer's public key.  This is
 part of a defense mechanism that helps log operators to deal with log spam.
-Once present in DNS, a verification key can be used in subsequent log requests.
+Once present in DNS, a public key can be used in subsequent log requests.
 
 #### 3.2.2 - Submit request
 Sigsum logs implement an HTTP(S) API.  Input and output is human-readable and
@@ -230,11 +230,11 @@ use a simple ASCII format.  A more complex parser like JSON is not needed
 since the data structures being exchanged are primitive enough.
 
 The signer submits their shard hint, message, signature, public
-verification key and domain hint as ASCII key-value pairs.  The log uses the
+key and domain hint as ASCII key-value pairs.  The log uses the
 submitted message to compute the signer's checksum.  The log also verifies
-that the public verification key is present in DNS, and uses it to check that
+that the public key is present in DNS, and uses it to check that
 the signature is valid for the resulting checksum and shard hint.  The public
-verification key is then hashed to construct the Merkle tree leaf as described
+key is then hashed to construct the Merkle tree leaf as described
 in Section 3.1.
 
 A sigsum log will
@@ -278,7 +278,7 @@ reproduce a logged checksum.
 
 **Metadata:**
 the shard hint to use as signing context, the resulting signature over checksum,
-and the verification key hash used in the log request.  Note that the
+and the public key hash used in the log request.  Note that the
 combination of data and metadata can be used to reconstruct the logged leaf.
 
 **Proof:**

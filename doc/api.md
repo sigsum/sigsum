@@ -123,7 +123,7 @@ The namespace field must be set to `tree_leaf:v0:<shard_hint>@sigsum.org`, where
 `<shard_hint>` is replaced with the shortest decimal ASCII representation of `shard_hint`.
 This ensures a _sigsum shard-specific tree leaf context_.
 
-`key_hash` is a hash of the signer's public verification key using the same
+`key_hash` is a hash of the signer's public key using the same
 format as Section 2.3.2.  It is included
 in `tree_leaf` so that each leaf can be attributed to a signer.  A hash,
 rather than the full public key, is used to motivate monitors and end-users to
@@ -197,7 +197,7 @@ Output on success:
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 - `cosignature`: witness signature for the above tree head, hex-encoded.
-- `key_hash`: hashed witness verification key that can be used to verify the
+- `key_hash`: hashed witness public key that can be used to verify the
   above cosignature.  The key is encoded as defined in [RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)
   before hashing.  The resulting hash value is hex-encoded.
 
@@ -293,7 +293,7 @@ Input:
   number.
 - `message`: the message used to compute `tree_leaf.statement.checksum`, hex-encoded.
 - `signature`: `tree_leaf.signature`, hex-encoded.
-- `verification_key`: public verification key that can be used to verify the
+- `public_key`: public key that can be used to verify the
   above signature.  The key is encoded as defined in [RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2),
   then hex-encoded.
 - `domain_hint`: domain name indicating where `tree_leaf.key_hash` can be found
@@ -304,7 +304,7 @@ Output on success:
 - None
 
 A submission will not be accepted if `signature` or `shard_hint` is invalid.
-The retrieved key hash must also match the specified verification key.
+The retrieved key hash must also match the specified public key.
 
 A submission may not be accepted if the second-level domain name has exceeded its
 rate limit.  A rate limit should only be charged for the specified domain hint
@@ -319,7 +319,7 @@ Example:
 $ echo "shard_hint=1633039200
 message=315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
 signature=0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
-verification_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c
+public_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c
 domain_hint=_sigsum_v0.example.com" | curl --data-binary @- <log URL>/add-leaf
 ```
 
@@ -335,7 +335,7 @@ POST <log URL>/add-cosignature
 
 Input:
 - `cosignature`: witness signature over `tree_head`, hex-encoded.
-- `key_hash`: hashed witness verification key that can be used to verify the
+- `key_hash`: hashed witness public key that can be used to verify the
   above cosignature.  The key is encoded as defined in [RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)
   prior to hashing.  The resulting hash value is hex-encoded.
 
@@ -343,7 +343,7 @@ Output on success:
 - None
 
 `key_hash` can be used to identify which witness cosigned a tree head.  A
-key-hash, rather than the full verification key, is used to motivate monitors
+key-hash, rather than the full public key, is used to motivate monitors
 and end-users to locate the appropriate key and make an explicit trust decision.
 
 Note that logs must be configured with relevant public keys for witnesses.
@@ -362,7 +362,7 @@ on how one could produce it "byte-for-byte" using Python and ssh-keygen -Y.
 Ed25519 as signature scheme. SHA256 as hash function.
 
 ### 4.1 - Log
-- **Public key**: public verification key that is used to verify tree head
+- **Public key**: public key that is used to verify tree head
   signatures.
 - **Base URL**: Where the log can be reached over HTTP(S).  It is the
   prefix to be used to construct a version 0 specific endpoint.
@@ -372,5 +372,5 @@ Ed25519 as signature scheme. SHA256 as hash function.
   use the number of seconds since the UNIX epoch as a dynamic shard end.
 
 ### 4.2 - Witness
-- **Public key**: public verification key that is used to verify tree head
+- **Public key**: public key that is used to verify tree head
   cosignatures.
