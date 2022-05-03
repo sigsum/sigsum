@@ -1,0 +1,34 @@
+Date: 2022-05-03 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* ln5
+	* anwesha
+	* rgdd
+
+Status round
+	* [rgdd, ln5, anwesha] in-person meet in stockholm
+	* [rgdd, ln5] pair-programmed get-* requests w/ input to HTTP GET (#5)
+	* [ln5] multiple smaller issues fixed on the log and the witness
+	* [ln5] released log-go v0.4.0 and deployed crocodile-icefish with rgdd
+	* [anwesha] updated etherpad version
+	* [anwesha] continued exploration of monitoring tools and self-studies
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] write up a few more ascii name changes
+	* [rgdd] log-go issues #24, #43
+	* [anwesha] availability monitoring based on requirements (defined at in-person meet)
+	* [anwesha] summarize api error code session in a pad
+	* [ln5] more v0, including log primary/secondary roles
+	* [ln5] mariadb replication
+	* [ln5] new server hardware installation
