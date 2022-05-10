@@ -1,0 +1,103 @@
+Notes from in-person meet to make error-cases in api.md more well-defined.
+
+Status codes 200, 404, 405, and 500 are not endpoint specific.  When we take a
+pass over api.md, it might be a good idea to not list them redundantly for each
+endpoint.
+
+§3.1, get-tree-head-to-cosign
+	* http method - Get
+	* Input - None
+	* Output - timestamp, tree_size, root_hash, signature
+	* Users - Witness
+	* Status Code
+		* 200 - Success
+		* 404 - Not Found
+		* 405 - Method Not Allowed
+		* 500 - Internal Server Error
+
+§3.2, get-tree-head-cosigned
+	* http method - Get
+	* Input - None
+	* Output - timestamp, tree_size, root_hash, signature, cosignature, key_hash
+	* Users - signers, monitors
+	* Status Code
+		* 200 - Success
+			* consider request successful even if the list of cosignatures is empty
+			* update api.md to allow empty list by simply not listing a key-value pair
+		* 404 - Not Found
+		* 405 - Method Not Allowed
+		* 500 - Internal Server Error
+
+§3.3 - get-inclusion-proof
+	* http method - Get
+	* Input - tree_size, leaf_hash
+	* Output - leaf_index, inclusion_path
+	* Users - signer, monitor
+	* Status Code
+		* 200 - Success
+		* 400 - Bad Request (bad input)
+		* 404 - Not Found
+		* 405 - Method Not Allowed
+		* 500 - Internal Server Error
+
+§3.4, get-consistency-proof
+	* http method - Get
+	* Input - old_size, new_size
+	* Output - consistency_path
+	* Users - witness, optionally signer and monitor
+	* Status Code
+		* 200 - Success
+		* 400 - Bad Request (bad input)
+		* 404 - Not Found
+		* 405 - Method Not Allowed
+		* 500 - Internal Server Error
+
+§3.5, get-leaves
+	* http method - Get
+	* Input - start_size, end_size
+	* Output - shard_hint, checksum, signature, key_hash
+	* Users - monitors
+	* Status Code
+		* 200 - Success
+		* 400 - Bad Request (bad input)
+		* 404 - Not Found
+		* 405 - Method Not Allowed
+		* 500 - Internal Server Error
+
+§3.6, add-leaf
+	* http method - Post
+	* Input - shard_hint, message, signature, public_key, domain_hint
+	* Output - None
+	* Users - Signer
+	* Status Code
+		* 200 - Success (will be in the log after signing next tree head)
+		* 202 - Accepted (trying to add to the log, still not commited)
+		* 400 - Bad Request (e.g., invalid signature, TBD: duplicate as well?)
+		* 403 - Forbidden (bad domain hint)
+		* 404 - Not Found
+		* 405 - Method Not Allowed
+		* 429 - Too Many Requests (rate-limit kicked in for domain hint)
+		* 500 - Internal Server Error
+
+§3.7, add-cosignature
+	* http method - Post
+	* Input - cosignature, key_hash
+	* Output - None
+	* Users - Witness
+	* Status Code
+		* 200 - Success
+		* 400 - Bad Request (e.g., bad signature)
+		* 403 - Forbidden (witness key_hash is not configured)
+		* 404 - Not Found
+		* 405 - Method Not Allowed
+		* 500 - Internal Server Error
+
+Note that clients may encountered other status codes from components that are
+placed in front of log-go, e.g., from nginx/apache/etc:
+	* 301 - Moved Permanently
+	* 307 - Temporary Redirect
+	* 429 - Too Many Requests
+	* 503 - Service Unavailable
+
+Human-readable string should be free-form and not "error=" due to the above.
+I.e., nginx is not going to give a text string on the format "error=".
