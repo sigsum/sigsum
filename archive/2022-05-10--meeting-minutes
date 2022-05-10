@@ -1,0 +1,46 @@
+Date: 2022-05-10 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* anwesha
+	* ln5
+	* rgdd
+
+Status round
+	* [rgdd, ln5, anwesha] availability monitoring requirements
+		* https://git.sigsum.org/sigsum/tree/archive/2022-05-10-availability-monitoring-requirements.md
+	* [rgdd, ln5, anwesha] plan forward wrt. social media precense
+		* setup account in a relevant mastodon community
+			* [anwesha] possible communities that might be a good fit
+				* https://fosstodon.org/about
+				* https://toot.cafe/about
+				* https://mastodon.technology/about
+		* setup twitter account
+			* link to mastodon in bio
+			* mirror mastodon posts
+			* engamenent (e.g., replies/responses) are not mirrored 
+		* rgdd will setup eventually, no rush
+	* [rgdd, ln5, anwesha] plan forward wrt. some kind of cla
+		* we probably don't want a formal cla, get a contributing.md similar to tor
+		* https://gitlab.torproject.org/tpo/core/tor/-/blob/main/CONTRIBUTING
+	* [anwesha] summary of api error codes session
+		* https://git.sigsum.org/sigsum/tree/archive/2022-05-10-api-error-codes
+	* [rgdd] read key from file in log-go (#24)
+	* [rgdd] replace glog with sigsum-go's log package (#43)
+	* [anwesha] monitoring phase 1
+		* all endpoints except get-inclusion-proof and add cosignature
+	* [ln5] installation of one out of two new servers in datacenter
+
+Decisions
+	* None
+
+Next steps
+	* [ln5] mariadb replication
+	* [anwesha] finish monitoring phase 1
