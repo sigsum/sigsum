@@ -1,0 +1,31 @@
+Date: 2022-05-22 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* anwesha
+
+Status round
+	* [rgdd] added merkle package, need proper test vectors later on
+	* [rgdd] added branch rgdd/client-skeleton for ln5 to use as reference
+	* [ln5] log primary/secondary role implementation (ongoing)
+	* [anwesha] finshed coding and deployed the 2nd phase of monitoring tool
+		* spec in active pad: https://pad.sigsum.org/p/ca08-da66-dd20-cd75
+	* [anwesha] requested that Sigsum logo is replaced on binary.transparency.dev (#36)
+		* https://github.com/transparency-dev/binary-transparency-website/pull/8
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] trademark registration email
+	* [ln5] log primary/secondary role implementation
+	* [anwesha] contributing text (not cla)
