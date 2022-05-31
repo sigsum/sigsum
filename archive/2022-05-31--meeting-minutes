@@ -1,0 +1,30 @@
+Date: 2022-05-31 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd, anwesha] quick play-date with git-bug, not mature enough
+		* https://git.sigsum.org/sigsum/tree/archive/2022-05-31-notes-on-git-bug
+	* [ln5] log-go primary/secondary going forward
+		* primary fetching STH from secondary
+		* secondary fetching STH and leaves from primary
+
+Decisions
+	* None
+
+Next steps
+	* [ln5] continuing primary/secondary, focusing on "lycky path" to verify overall flow
+
+Other useful links
+	* More on how Let's Encrypt run their CT logs
+		* https://letsencrypt.org/2022/05/19/database-to-app-tls.html
