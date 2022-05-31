@@ -1,0 +1,25 @@
+TL;DR:
+
+  - git-bug is cool but does not seem to be mature enough yet.
+
+Some notes from rgdd:
+
+  - Command-line UX works well locally.
+  - It took me several attempts to get "git bug pull|push" work without SSH
+    errors.  There are several issues related to this from early 2021 @ GH.
+  - Bridge mode can be setup when compiling from source.  Pulling and pushing
+    from GH works to some extent, but is buggy and includes git-bug panics.
+  - Issues are stored in git's internal storage (.git/).  This is why git-bug
+    doesn't pollute a repo with commits related to issue tracking.  I am a bit
+    worried that git-bug will break and that we need to debug this format.
+  - It was not immeaditely obvious to me how to git push|pull the internal
+    storage without using git-bug (if so, maybe it would be an OK hot-fix).
+    
+Further notes from Anwesha:
+
+  - Not packaged for Debian. Installing from source may not be a good idea for
+    production.
+  - "This is now more than a proof of concept, but still not fully stable.
+    Expect dragons and unfinished business." Where the developers of the project
+    themselves are saying that it is an unstable version then it is red flag for
+    me.
