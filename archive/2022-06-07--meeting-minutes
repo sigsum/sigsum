@@ -1,0 +1,25 @@
+Date: 2022-06-07 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [ln5] log roles and add-leaf => 202, then 200 seems to be working in smallish tests
+
+Decisions
+	* None
+
+Next steps
+	* [ln5] log roles: verify tree heads and proofs, code cleanup, unit tests, more extended (long running) integration tests
+
+Other useful links
+	* https://web.archive.org/web/20220506091009/www.court.gov.cn/zixun-xiangqing-309591.html
