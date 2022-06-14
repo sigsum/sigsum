@@ -1,0 +1,34 @@
+Date: 2022-06-14 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* gregoire
+	* ln5
+
+Status round
+	* [rgdd] sketch on next milestone, few edits to current milestone
+		* https://pad.sigsum.org/p/sigsum-ms
+		* https://pad.sigsum.org/p/sigsum-ms-next
+	* [ln5] log roles continued
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] assist ln5 with log roles and merging
+	* [ln5] finish log roles, including the small refactoring of "instance" and unit tests
+	* [ln5] install the log-01 hardware and deploy The New Log (TBD: names, both DNS and "URL prefixes")
+	* [gregoire] run witness
+	* [gregoire] look into witness key format
+
+Other useful links
+	* A sketch on combining SRI and transparency logs
+		* https://arxiv.org/pdf/2104.06136.pdf
