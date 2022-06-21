@@ -1,0 +1,32 @@
+Date: 2022-06-21 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* gregoire
+	* ln5
+
+Status round
+	* [rgdd et al.] drafty trademark registration for Sigsum
+		* https://git.sigsum.org/sigsum/tree/archive/2022-06-21-trademark-registration-notes
+	* [rgdd] bunch of misc stuff (assist ln5, osfc proposal, etc.)
+	* [ln5] primary/secondary roles, finishing up
+	* [ln5] fighting the Debian installer, again
+	* [gregoire] changing private key format
+
+Decisions
+	* Decision: submit trademark registration for Sigsum
+
+Next steps
+	* [rgdd] assist ln5 with reivewing and merging of primary-secondary stuff
+	* [ln5] getting logsrv-01 up and running with new code, acting as secondary node with logsrv-02 as primary
+	* [ln5] vacation, back on july 11
+	* [ln5] making sure that rgdd is able to restart and deploy new versions of the log, on all three systems (the poc and logsrv-{01,02})
+	* [gregoire] long-lived witness
