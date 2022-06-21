@@ -1,0 +1,22 @@
+# Trademark registration
+
+Notes on trademark registration for Sigsum:
+
+  - Purpose: protect users, e.g., we don't want users to mistakenly download
+    malicious tooling from zigsum.org.  Such threats can now be combatted.
+  - Purpose: defensive, prevents someone else from doing a trademark
+    registration that could potentially give us trouble.
+  - Scope: "checksum", "signed checksum", and "time" with verbs like
+    "publishing", "verifying", and "checking".
+  - Scope: class 9 (software) and class 42 (services).
+
+We had some discussion regarding including or excluding class 42.  If we do not
+trademark register this, our lawyer explained that someone else could.  This
+would be a threat towards our own and others operations of Sigsum services.
+
+The Tor Project has a more [lengthy text][] about trademark registration that
+matches our motivation, intent, and goals.
+
+The proposed decision is to go ahead and trademark register based on the above.
+
+[lengthy text]: https://web.archive.org/web/20220530012234/https://www.torproject.org/about/trademark/
