@@ -1,0 +1,35 @@
+Date: 2022-07-05 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* gregoire
+
+Status round
+	* [rgdd] osfc talk accepted
+	* [rgdd] finalized next milestone and rotated {ms,ms-next} pads
+		* https://pad.sigsum.org/p/sigsum-ms
+	* [gregoire] deploy witness for ghost-shrimp
+	* [gregoire] small fixes in sigsum-py, merged by rgdd
+		* allow symlinks with unit tests that covered the behavior ln5 was worried about
+		* catch connection error from requests lib, maybe what's causing #44
+		* stop using error code 1
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] start working on "nail a v0 api again"
+
+Other useful links
+	* OpenSSF Best Practice
+		* https://bestpractices.coreinfrastructure.org/en/projects/5716
+	* Setting defaults to not get your memory exhausted in Go's http / grpc libs
+		* https://www.evanjones.ca/rate-limit-for-reliable-servers.html
