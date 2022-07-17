@@ -1,0 +1,28 @@
+Date: 2022-07-12 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd] checking and testing gregoire's daemon wip branch in sigsum-py
+	* [ln5] log-go primary/secondary roles
+	* [ln5] ghost-shrimp deployed
+
+Decisions
+	* None
+
+Next steps
+	* [rgdd] work on "nail a v0 API, again"
+	* [ln5] monitoring of ghost-shrimp, focusing on detecting problems and emitting alerts (email is good enough)
+
+Other useful links
+	* https://github.com/tomrittervg/checker
