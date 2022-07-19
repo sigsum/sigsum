@@ -1,0 +1,30 @@
+Date: 2022-07-19 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+
+Status round
+	* [rgdd, ln5] drafty sigsum-spam tool to send many leaves request
+		* still needs a little bit of work but can at least spam aggresively
+		* sigsum-go, branch sigsum-spam
+	* [rgdd, ln5] in-person meet in stockholm
+
+Decisions
+	* Decision: cancel weekly meet on 2022-07-26
+	* Decision: cancel weekly meet on 2022-08-09
+
+Next steps
+	* [rgdd, ln5] proposals
+	* [rgdd] wrap-up sigsum-spam and request for it to be merged
+	* [rgdd] vaccay
+	* [ln5] checker, or similar, deployed for alerting when services are not externally reachable
+	* [ln5] vaccay
