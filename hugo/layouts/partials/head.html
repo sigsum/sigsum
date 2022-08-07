@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="/cdnjs/bootstrap.min.css">
     <link rel="stylesheet" href="/cdnjs/all.min.css">
+    <link rel="stylesheet" href="/fontawesome/all.css">
 
     {{ $style := resources.Get "sass/researcher.scss" | resources.ExecuteAsTemplate "sass/researcher.scss" . | toCSS | minify }}
     <link rel="stylesheet" href="{{ $style.RelPermalink }}">
