@@ -9,7 +9,7 @@ theme = "researcher"
   logo = "/media/logo.svg"
   [params.footer]
     text = "er3n3jnvoyj2t37yngvzr35b6f4ch5mgzl3i6qlkvyhzmaxo62nlqmqd.onion"
-    url = "http://er3n3jnvoyj2t37yngvzr35b6f4ch5mgzl3i6qlkvyhzmaxo62nlqmqd.onion/"
+    url = "https://er3n3jnvoyj2t37yngvzr35b6f4ch5mgzl3i6qlkvyhzmaxo62nlqmqd.onion/"
   [params.style]  # appearance options (can be omitted)
     fontFamily = "Outfit"
     pageWidth = "750px"
