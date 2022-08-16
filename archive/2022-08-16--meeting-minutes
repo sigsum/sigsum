@@ -1,0 +1,54 @@
+Date: 2022-08-16 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: ln5
+
+Agenda
+
+    Hello
+
+    Status round
+
+    Decisions
+
+    Next steps
+
+
+Hello
+
+    ln5
+
+    gregoire
+
+
+Status round
+
+    [ln5] checker bug fixes, half way deployed
+
+    [ln5] log operations sysadmin
+
+    [ln5] service planning
+
+    [ln5] new onion cert for www.so
+
+    [gregoire] some pollish on long-lived witness
+
+
+Decisions
+
+    No decisions.
+
+
+Next steps
+
+    [ln5] checker running
+
+    [ln5] review the spamming tool
+
+    [gregoire] merge request for longe-lived witness
+
+
+Other useful links
+
+    https://www.usenix.org/conference/usenixsecurity21/presentation/schmitt
+
+    https://www.usenix.org/system/files/sec21-schmitt.pdf
