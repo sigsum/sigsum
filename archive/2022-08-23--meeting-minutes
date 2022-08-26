@@ -1,0 +1,41 @@
+Date: 2022-08-23 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* gregoire
+	* ln5
+
+Status round
+	* [rgdd] booting up from vaccay from where we left off
+		* proposals: doc/proposals/2022-07*
+		* sigsum-debug: https://git.sigsum.org/sigsum-go/log/?h=sigsum-spam
+		* tool sketch: https://git.sigsum.org/sigsum-go/tree/cmd/sigsum/main.go?h=sigsum
+	* [gregoire] MR long-lived witness
+
+Decisions
+	* Decision: adopt case-insensitive hex proposal
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-07-case-insensitive-hex.md
+	* Decision: adopt no required "sigsum/v0" constant proposal
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-07-endpoint-url.md
+	* Decision: adopt permit lack of witness cosignatures proposal
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-07-permit-lack-of-witness-cosignatures.md
+
+Next steps
+	* [gregoire] add metrics for last tree height and timestamp
+	* [gregoire] start looking at updating trillian api, get links from rgdd
+	* [ln5] merge long-lived witness
+	* [ln5] checker running
+	* [ln5] (sys)admin things
+	* [rgdd] proposals, MR sigsum-debug, admin stuff
+
+Other useful links
+	* https://gitlab.torproject.org/rgdd/ct
+	* https://gitlab.torproject.org/tpo/onion-services/sauteed-onions/monitor
