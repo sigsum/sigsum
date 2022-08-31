@@ -1,0 +1,36 @@
+Date: 2022-08-30 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* gregoire
+	* nisse
+	* ln5
+
+Status round
+	* [gregoire] started looking at trillian update (#18)
+		* Missing tests that were a prerequisite have been re-added and merged already
+		* Actual update to Trillian version is still waiting to be merged, ran into issues
+			* shutting down trillian log server with kill signal fails with new version
+			* path forward: report issue, provide fix if cla issues can be resolved, and in the mean time kill twice which solves this particular bug
+	* [rgdd] merging stuff from gregoire and discussing changes
+	* [rgdd] proposal to replace cgit with gitlab, including some gitlab dog fooding
+
+Decisions
+	* Decision: replace cgit with GitLab
+		* https://git.sigsum.org/sigsum/tree/doc/proposals/2022-08-replace-cgit-with-gitlab.md
+
+Next steps
+	* [gregoire] split trillian update from README changes into two separate MRs
+	* [rgdd] setup issues and milestones in gitlab
+	* [rgdd] review MRs from gregoire
+	* [rgdd] talk monitor with gregoire and nisse
+	* [rgdd] start onboarding nisse
+	* [ln5] sysadmin issues, like checker and specifying hw requirements
