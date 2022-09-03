@@ -1,0 +1,42 @@
+\mode<presentation>
+
+%
+% Frame header
+%
+\defbeamertemplate*{frametitle}{corporate}[1][]{%
+	\nointerlineskip
+	% Add frame title
+	\begin{beamercolorbox}[wd=\paperwidth, ht=3ex, dp=1.5ex, left, leftskip=2ex]{header}
+		\centering\insertframetitle
+	\end{beamercolorbox}
+	% Add line after
+	\nointerlineskip
+		\begin{beamercolorbox}[wd=\paperwidth, ht=0.25ex ]{trailer}
+	\end{beamercolorbox}
+}
+
+%
+% Frame trailer
+%
+\defbeamertemplate*{footline}{corporate}{\hbox{%
+	% Add website in the left-most portion of the trailer
+	\begin{beamercolorbox}[wd=0.20\paperwidth, ht=2ex, dp=0.5ex, left]{trailer}
+		\hfill
+		www.sigsum.org
+		\hfill
+	\end{beamercolorbox}%
+	% Add in the trailer's middle portion
+	\begin{beamercolorbox}[wd=0.6\paperwidth, ht=2ex, dp=0.5ex, left]{header}
+		\hfill
+		\inserttitle
+		\hfill
+	\end{beamercolorbox}%
+	% Add page counter in the right-most portion of the trailer
+	\begin{beamercolorbox}[wd=0.20\paperwidth, ht=2ex, dp=0.5ex, left]{trailer}
+		\hfill
+		\insertframenumber/\inserttotalframenumber
+		\hfill
+	\end{beamercolorbox}
+}}
+
+\mode<all>

@@ -1,0 +1,45 @@
+\begin{frame}
+	\frametitle{Text and lists}
+	Normal text,
+	\emph{emphasized text},
+	\textbf{bold text},
+	\texttt{code text},
+	$\mathsf{math text\;\frac{1}{2}}$,
+	\alert{alert text}
+	\begin{columns}
+		\begin{column}{.33\textwidth}
+			\begin{itemize}
+				\item test
+					\begin{itemize}
+						\item a
+						\item b
+					\end{itemize}
+				\item again
+			\end{itemize}
+		\end{column}
+		\begin{column}{.33\textwidth}
+			\begin{enumerate}
+				\item test
+					\begin{enumerate}
+						\item a
+						\item b
+					\end{enumerate}
+				\item again
+			\end{enumerate}
+		\end{column}
+		\begin{column}{.33\textwidth}
+			\begin{description}
+				\item[first] abcd
+				\item[second] efgh
+				\item[third] ijkl
+			\end{description}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\mktitle{An alternative way to make less dense frame titles}
+
+	The last slide used \texttt{\textbackslash{frametitle}}.\\
+	This slide used \texttt{\textbackslash{mktitle}}.
+\end{frame}

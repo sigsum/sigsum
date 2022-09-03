@@ -1,0 +1,43 @@
+\mode<presentation>
+
+\defbeamertemplate*{title page}{sigsum}[1][]{
+	\begin{tikzpicture}[remember picture, overlay]
+		\usebeamercolor{titlepage}
+		%
+		% Draw top-most rectangle with logo
+		%
+		\filldraw[draw=none,fill=sigsumOrange]
+		($ (current page.east) + (1,0) $) --
+		($ (current page.north east) + (1,1) $) --
+		($ (current page.north west) + (-1,1) $) --
+		($ (current page.west) + (-1,0) $) --
+		($ (current page.east) + (1,0) $);
+		\node[draw=none] (Logo) at ($ (current page.center) !.5! (current page.north) $) {
+			\includegraphics[width=.6\textwidth]{img/logo}
+		};
+
+		%
+		% Add title
+		%
+		\node[text=fg, text width=0.75\paperwidth] (Title) at ([shift={(0,-0.5cm)}]current page){
+			\centering\usebeamerfont{title}\inserttitle\\
+		};
+
+		%
+		% Add date
+		%
+		\node[text=fg, text width=0.75\paperwidth, below=0pt of Title] (Subtitle){
+			\centering\usebeamerfont{date}\today\\%
+		};
+
+		%
+		% Add authors
+		%
+		\usebeamercolor{author}
+		\node[text=fg, text width=0.75\paperwidth, below=0pt of Subtitle] (Author){
+			\centering\usebeamerfont{author}\insertauthor\\%
+		};
+	\end{tikzpicture}
+}
+
+\mode<all>
