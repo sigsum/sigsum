@@ -1,0 +1,53 @@
+Date: 2022-09-06 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: ln5
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* gregoire
+	* ln5
+	* nisse (on and off due to connectivity issues)
+
+Status round
+	* [rgdd, gregoire] monitor webgui prototype sketch on whiteboard
+		* https://nextcloud.glasklarteknik.se/index.php/s/E9szYA6PHa2ExnH
+	* [rgdd] some initial things to read for nisse
+		* https://pad.sigsum.org/p/fb98-aa73-ef11-ec99 (ongoing, do not persist yet)
+	* [rgdd] drafty sigsum beamer template
+		* https://git.sigsum.org/sigsum/tree/beamer?h=beamer&id=5dd6c416aa6e14dd5ddbe4622274b71b86b7a030
+		* https://www.rgdd.se/volatile/demo.pdf
+	* [rgdd] proposal to migrate some self-hosted services to gtse
+		* https://pad.sigsum.org/p/ce36-ec54-bf94-ca72 (ongoing, do not persist)
+	* [rgdd] started importing issues into gitlab, wip
+	* [gregoire] Monitor PoC (have the UX mostly working for a single log)
+	* [gregoire] Python modules
+		* Related to the serialization module: https://git.sigsum.org/sigsum-go/tree/pkg/types/ascii/ascii.go?h=rgdd/sketch
+
+Decisions
+	* Decision? migrate some self-hosted services to gtse
+		* Needs more work, comments to address:
+		* Should we keep sigsum.org names for jitsi and pads (similar to gitlab?)
+		* Should we use gitlab specific URLs for our Go modules, or, e.g., shorten them so that they are independent of where we host git?  For example:
+			* sigsum.org/log-go could be redirected to gitlab.sigsum.org/core/log-go
+		* For how long should we keep cgit around and why?  Any ballpark to start with?
+
+Next steps
+	* [rgdd] add more issues to gitlab
+	* [rgdd] continue onboarding nisse and pair review patches from gregoire
+	* [ln5] get the go book handed over to nisse, thursday
+	* [ln5] sysadmin issues, like checker and specifying hw requirements
+	* [gregoire] Deploy the monitor prototype for testing/demo
+	* [gregoire] Continue modularizing python package
+		* Maybe helpful for consistency proof: https://gitlab.torproject.org/rgdd/ct/-/tree/main/pkg/merkle
+	* [gregoire] Patch to sigsum-go with public key func
+	* [gregoire] Monitor verification?
+		* Maybe helpful: https://gitlab.torproject.org/rgdd/ct/-/blob/main/doc/tlog-algorithms.md#compact-range-extension
+
+Other useful links
+	* https://gitlab.com/gitlab-org/cli
