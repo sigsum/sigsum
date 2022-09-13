@@ -1,0 +1,57 @@
+Go:
+
+  - Interactive tour: https://go.dev/tour/
+  - Book: https://www.gopl.io/
+  - https://research.swtch.com/vgo-mvs
+  - https://go.dev/doc/modules/managing-dependencies
+  - Tests: https://www.digitalocean.com/community/tutorials/how-to-write-unit-tests-in-go-using-go-test-and-the-testing-package
+  - Tests: https://pkg.go.dev/testing
+  - gomock: https://gist.github.com/thiagozs/4276432d12c2e5b152ea15b3f8b0012e
+  - Useful reference / cheat sheet: https://go.dev/ref/spec
+
+Brief blog posts about Trillian:
+
+  - https://www.rgdd.se/post/observations-from-a-trillian-play-date/
+  - https://www.rgdd.se/post/trillian-log-sequencing-demystified/
+
+Merkle trees, inclusion proofs, and consistency proofs:
+
+  - https://gitlab.torproject.org/rgdd/ct/-/blob/main/doc/tlog-preliminaries.md
+  - https://gitlab.torproject.org/rgdd/ct/-/blob/main/doc/tlog-algorithms.md
+
+SSH signatures:
+
+  - https://www.agwa.name/blog/post/ssh_signatures
+  - https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig#L79
+  - (might be a good read to also read some of the other docs in the same repo,
+    just to get an idea of how, e.g., an SSH certificate looks; etc.)
+  - (if you want some pointers on how to use SSH with a yubikey, you may want to
+    take a quick look at https://gitlab.sigsum.org/glasklar/services/ssh/-/merge_requests/1)
+
+API and design docs:
+
+  - https://git.sigsum.org/sigsum/tree/doc/api.md
+  - https://git.sigsum.org/sigsum/tree/doc/design.md
+  - https://git.sigsum.org/sigsum/tree/doc/proposals
+    - some of the 2022-07-* ones are open
+    - see issues: https://gitlab.sigsum.org/sigsum/project/documentation/-/issues
+    - see v1 milestone: https://gitlab.sigsum.org/groups/sigsum/-/milestones/1
+    - (sorry that it's a bit messy that some stuff are at git.so and others
+      not.  As you know we are currently migrating, both issues, milestones, and
+      source code to be moved into the gitlab instance.)
+    - Old issue pad: https://pad.sigsum.org/p/sigsum-db
+    - Old milestone pad: https://pad.sigsum.org/p/sigsum-ms
+  - (Follow links as you see fit when you read here; and might want to revisit $later.)
+  - https://git.sigsum.org/sigsum/tree/archive/2022-03-15-notes-on-sigsum-and-rekor.md
+
+Very brief sketch of the sigsum tool's usage message:
+
+  - https://git.sigsum.org/sigsum-go/commit/?h=sigsum&id=43d190d1ec5f1964a85e7b5befe1cde8ab3107d6
+  - especially the policy aspect and formats of the thing that the tool spits
+    out is $TBD
+
+Code is currently located at:
+
+  - https://gitlab.sigsum.org/sigsum
+
+(After reading for a bit it would be a good idea to try and run some things, like creating an SSH signature; curling some API endpoints, etc.  There's information about our POC instance in the log-go repo's README.)
