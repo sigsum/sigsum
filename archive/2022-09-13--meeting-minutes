@@ -1,0 +1,52 @@
+Date: 2022-09-13 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* nisse
+	* gregoire
+
+Status round
+	* [rgdd] cancelling proposal to host services with name gtse
+		* i.e., keep everything as is right now
+	* [rgdd] migrated most repos, issues, and milestone stuff to gitlab.so
+	* [rgdd] proposal to let gregoire take the lead on everything sigsum-py
+		* Improve witness, refactor, add documentation that's missing, etc.
+		* Main responsile for what does (not) get into sigsum-py
+	* [rgdd] switch to operating the daemonized witness
+	* [nisse] getting started with fixing sigsum issues
+		* Replaced hex encoding (making it case insensitive)
+		* Looking into thread safety issues in pkg/log
+		* Some more docs on log-go integration tests
+	* [ln5] prepared and presented at foss-sthlm
+	* [ln5] smaller sysadmin things all over the place
+	* [gregoire] deploy monitor, gitlab MRs
+
+Decisions
+	* Decision: let gregoire take the lead on everything sigsum-py
+	* Decision: cancel next week's meet due to OSFC
+
+Next steps
+	* [rgdd] prepare OSFC presentation, be nisse's rubberduck / merge things
+	* [ln5] look into some irregularities with logsrv-02 that we've been seeing warnings for
+	* [ln5] hw requirement spec for richard
+	* [ln5] checker
+	* [gregoire] log verification in monitor
+	* [gregoire] modularizing mod-py to use as "submitter"
+	* [gregoire] if time, test gitlab ci (got machine from ln5 now)
+	* [nisse] work through issue list
+
+Other useful links and info
+	* planned infrastructure maintencance tomorrow thursday 07:00-09:00
+	* https://gitlab.sigsum.org/sigsum/project/documentation/-/blob/main/archive/2022-09-13-reading-list
+	* https://gitlab.glasklarteknik.se/glasklar/services/gitlab/-/issues/27
+	* https://pyrsia.io/
+	* https://gitlab.sigsum.org/sigsum/core/log-go/-/issues/27
