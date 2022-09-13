@@ -1,61 +1,33 @@
-# The Sigsum Project
-Sigsum is a free and open source software project that brings transparency
-logging to **sig**ned check**sum**s.  The overall design is kept general
-by not logging a more concrete data structure like TLS certificates.
+# Documentation
 
-- [x] Discoverability of signed checksums for the data of your choice
-- [x] Centralised log operations but distributed trust assumptions
-- [x] Minimalistic design that simplifies log operations and usage
+This repository contains documentation related to the [Sigsum project][].
 
-Sigsum logging can be used to make a signer's key-usage transparent.  For
-example, malicious and unintended key-usage can be detected.  Transparent
-key-usage also facilitates verification of falsifiable claims.
+[Sigsum project]: https://www.sigsum.org/
 
-Examples include:
+## Structure
 
-- Everyone gets the same executable binaries
-- A domain does not serve malicious javascript
-- A list of key-value pairs is maintained with a certain policy
+  - [archive/](./archive) - persisted pads and meeting minutes
+  - [assets/](./assets) - project assets such as fonts, colors, and logos
+  - [proposals/](./proposals) - proposals relating to design or the project at large
+  - [www.sigsum.org/](./www.sigsum.org) - source code of the project website
+  - Top-level - documents like [logging design](./design.md),
+    [api specification](./api.md), and [project history](HISTORY.md)
 
-Please refer to the sigsum logging
-	[design document](https://git.sigsum.org/sigsum/tree/doc/design.md),
-	[API specification](https://git.sigsum.org/sigsum/tree/doc/api.md), and
-	[public prototype](https://git.sigsum.org/sigsum-log-go/tree/README.md)
-to learn more.  There is also an
-	[archive](https://git.sigsum.org/sigsum/tree/archive)
-of meeting minutes and discuss
-	[pads](https://pad.sigsum.org).
-All project repositories are located at
-	[git.sigsum.org](https://git.sigsum.org).
+## Contributing
 
-## Contact
-### Chat
-Chat with users and developers on IRC or Matrix. The rooms
-are bridged so it does not matter which one you choose.
+Feedback ranging from minor nits to proposals are most welcome.  Get in touch
+via the sigsum-general [email list][], in room `#sigsum` at OFTC.net and Matrix,
+or through GitLab issues and merge requests.  Anything that requires a formal
+decision is decided on Tuesdays at 1100 UTC during [weekly project meets][].
 
-- IRC: \#sigsum @ [OFTC.net](https://oftc.net/)
-- Matrix: [#sigsum:matrix.org](https://app.element.io/#/room/#sigsum:matrix.org)
+[email list]: https://lists.sigsum.org/
+[weekly project meets]: https://meet.sigsum.org/sigsum
 
-There are open video/voice meeting on Tuesdays at 1200 UTC, in the
-'sigsum' Jitsi room.
+## Maintainers
 
-- Jitsi: [meet.sigsum.org/sigsum](https://meet.sigsum.org/sigsum)
+  - Linus Nordberg (ln5)
+  - Rasmus Dahlberg (rgdd)
 
-### Email
-Subscribe to the
-[Sigsum-general mailing list](https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/)
-by sending an email with 'subscribe' in the subject to
+## Licence
 
-    sigsum-general-join@lists.sigsum.org
-
-or use the form at
-[the list info page](https://lists.sigsum.org/mailman3/postorius/lists/sigsum-general.lists.sigsum.org/).
-
-After being subsribed, you can provide feedback, report issues, and
-submit patches by sending an email to the list, at
-
-    sigsum-general@lists.sigsum.org
-
-## Sponsors
-- [Mullvad VPN](https://mullvad.net/), financial sponsor
-- [DFRI](https://www.dfri.se/), mailing list sponsor
+CC BY-SA 4.0 unless specified otherwise.
