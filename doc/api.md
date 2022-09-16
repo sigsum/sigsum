@@ -97,15 +97,12 @@ Verifier("append-only") and Verifier("freshness").
 
 #### 2.3.3 - Tree leaf
 Logs support a single leaf type.  It contains a signer's statement,
-signature, and key hash.
+signature, and key hash. The signer assembles the data to be signed,
 
 ```
-struct tree_leaf {
+struct tree_leaf_data {
     u64 shard_hint;
     u8 checksum[32];
-    u8 signature[64];
-    u8 key_hash[32];
-}
 ```
 
 `shard_hint` is a shard hint that matches the log's shard interval.
@@ -115,13 +112,17 @@ The message is meant to represent some data and it is recommended that
 the signer uses `H(data)` as the message, in which case `checksum`
 will be `H(H(data))`.
 
-`signature` is computed by treating the above message as `M`
-in SSH's
-	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
-The hash algorithm string must be "SHA256".  The reserved string must be empty.
-The namespace field must be set to `tree_leaf:v0:<shard_hint>@sigsum.org`, where
-`<shard_hint>` is replaced with the shortest decimal ASCII representation of `shard_hint`.
-This ensures a _sigsum shard-specific tree leaf context_.
+The log appends that signature and corresponding key hash to the
+`leaf_data` to form the `tree_leaf`:
+
+```
+struct tree_leaf {
+    u64 shard_hint;
+    u8 checksum[32];
+    u8 signature[64];
+    u8 key_hash[32];
+}
+```
 
 `key_hash` is a hash of the signer's public key using the same
 format as Section 2.3.2.  It is included
