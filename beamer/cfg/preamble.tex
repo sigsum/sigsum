@@ -1,0 +1,112 @@
+%
+% Packages
+%
+\usepackage[utf8]{inputenc}
+
+\usepackage[
+	lambda, advantage, operators, sets, adversary, landau, probability, notions,
+	logic, ff, mm, primitives, events, complexity, asymptotics, keys
+]{cryptocode}
+
+\usepackage{rotate}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{flowchart}
+\usepackage{smartdiagram}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{drawstack}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{
+	arrows,
+	decorations.markings,
+	backgrounds,
+	calc,
+	fit,
+	positioning,
+	shapes.misc,
+	shadows,
+	shapes.arrows,
+	shapes,
+	snakes,
+}
+\usepackage{booktabs}
+\usepackage{smartdiagram}
+\usepackage[position=bottom]{subfig}
+
+\usepackage{xcolor}
+\definecolor{darkGreen}{HTML}{008000}
+\definecolor{darkBlue}{HTML}{2809B2}
+\definecolor{darkRed}{HTML}{CC0000}
+\definecolor{darkGray}{HTML}{808080}
+\definecolor{darkOrange}{HTML}{D77D00}
+\definecolor{darkPurple}{HTML}{800080}
+\colorlet{lightGray}{gray!33}
+\colorlet{lightYellow}{yellow!50}
+\definecolor{darkGreen}{HTML}{008000}
+\definecolor{darkBlue}{HTML}{2809B2}
+\definecolor{darkRed}{HTML}{CC0000}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks = true,
+	urlcolor   = darkBlue,
+	linkcolor  = darkBlue,
+	citecolor  = darkBlue,
+}
+
+%
+% Figures, tables and code
+%
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{flowchart}
+\usepackage{adjustbox}
+\usepackage{listings}
+
+%
+% Code listings
+%
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{lightGray!25},
+    commentstyle=\color{darkGreen},
+    keywordstyle=\color{darkBlue},
+    numberstyle=\tiny\color{darkRed},
+    stringstyle=\color{darkPurple},
+    basicstyle=\scriptsize,
+    breakatwhitespace=false,
+    breaklines=false,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    language=C,
+    morekeywords={size_t,def,in,zip,True,False,ord,u8,u64},
+}
+
+%
+% Defines
+%
+\makeatletter
+\let\@@magyar@captionfix\relax %needed for \titlefloatright
+\makeatother
+
+\newcommand{\floatright}[1]{\hspace{0pt plus 1 filll}#1$\;$}
+\newcommand{\tyes}{\textcolor{darkGreen}{\ding{51}}}
+\newcommand{\tno}{\textcolor{darkRed}{\ding{55}}}
+\newcommand{\burl}[1]{\tiny{\url{#1}}}
+
+\def\rding{\rotatebox[origin=c]{-91}{\ding{224}}}
+\def\lding{\rotatebox[origin=c]{91}{\ding{224}}}
+
+\newcommand{\mktitle}[1]{\centering\textbf{\large#1}\vfill\normalsize}
+\newcommand{\TODO}[1]{\textcolor{red}{TODO}: #1}
