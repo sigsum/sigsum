@@ -1,0 +1,108 @@
+Proposal to add log's `key_hash` to the `tree_head` struct
+
+# Background
+
+The hash of a log's public signing key should be included in the signed
+data when a tree head is signed or co-signed. This is motivated in the
+api spec as "This ensures a sigsum log specific tree head context that
+prevents a possible attack in multi-log ecosystems.".
+
+Currently the key_hash is included (hex encoded?) in the "namespace"
+component when forming the ssh signature. This proposal argues that
+the namespace is the wrong place.
+
+# Argument
+
+The argument is essentially about layer-separation. The data specific
+to the sigsum application should be represented in the body of the
+message being signed. Real security will obviously depend on the
+details of the signature algorithm and format, but to make security
+arguments easier, it should suffice to assume that the signature
+algorithm is hard to forge, with no need to make further assumptions
+on its internals.
+
+# Proposal
+
+Extend the tree_head struct like this:
+
+```
+struct tree_head {
+	u64 timestamp;
+	u64 tree_size;
+	u8 root_hash[32];
+	u8 key_hash[32];
+};
+```
+
+where `key_hash` is the SHA256 hash of the log's public key (encoded
+according to RFC 8032). When forming the ssh signature, the "reserved"
+string is empty and the namespace string is set to
+"tree_head:v0@sigsum.org".
+
+# What ssh format boils down to
+
+With this proposal, the data passed to ed25519 signature primitive
+boils down to (in pseudo-trunnel syntax)
+
+```
+u8 magic[6] = "SSHSIG"
+u32 reserved_length = 0 
+u32 namespace_length = 23
+u8 namespace[23] = "tree_head:v0@sigsum.org"
+u32 hash_algorithm_length = 6
+u8 hash_algorithm[6] = "sha256"
+u32 hash_length = 32
+u8 hash[32]
+```
+
+where the final field is the SHA256 hash of the serialized tree_head
+struct. So essentially a fixed 51-byte prefix prepended to the hash of
+the tree head. 
+
+This prefix serves two unrelated purposes: 
+
+1. Avoid cross-protocol attacks if the signing key is re-used for
+other purposes (unless the other protocol can be coerced to accept or
+produce signatures of messages with this particular prefix).
+
+2. To be compatible to the ssh-keygen tool, in particular, to piggy
+back on it's support for hardware keys, ssh-agent, and the like.
+
+# Security considerations
+
+There is one subtle difference: With this proposal, the key hash is
+subject to one additional level of hashing before being passed to the
+signature primitive. This might be relevant for cross-protocol
+attacks, in case the key is reused with an application that can be
+coerced to use messages that match the syntax of an ssh signature, but
+allows arbitrary data rather than a hash value for the last field.
+
+Do avoid potential problem, key reuse is generally discouraged, and if
+the signing key is reused, it should only be used to create ssh
+signatures, using a different namespace string.
+
+# Additional notes
+
+## Similar issue for the tree_leaf struct
+
+The current specification of tree_leaf signatures includes the
+(decimal representation of) the shard hint in the namespace string.
+For security, this appears redundant, since the shard hint is already
+included in the struct body. If this proposal is accepted, for
+consistency, the name space used for signatures of `tree_leaf` should
+also be changed to a constant string, "tree_leaf:v0@sigsum.org".
+
+## On use of ssh signature format
+
+My understanding is that the use of ssh signature format is mainly a
+practical choice, to piggy back on existing tools. From a pure
+protocol perspective, it would be cleaner strip away this layer. We
+can still use our own magic string to make cross-protocol attacks less
+likely, e.g., passing the message
+
+```
+u8 magic[20] = "sigsum:v0:tree_head\0"
+struct tree_head
+```
+
+directly to ed25519 for tree head signatures and co-signatures.
