@@ -13,7 +13,7 @@ problems with this:
 
 * The "shard hint" is rather difficult to explain.
 * It's a bit ugly to have state needed only for the rate limiting
-  mechanism inclded in the merkle tree.
+  mechanism included in the merkle tree.
 
 # Proposal
 
@@ -62,9 +62,9 @@ by that key.
 Exactly how the envelope should look like, and exactly what should be
 signed, needs further discussion. The simplest thing would be that the
 signature is over the same checksum as the main submit signature (but
-with a different namespace?), but that would enable the log to submit
+with a different namespace), but that would enable the log to submit
 leaf and envelope to other logs on the submitter's behalf, exhausting
-the submitter's rate limit there. For that reason, the log's keyhash
+the submitter's rate limit there. For that reason, the log's key hash
 should be included in the signature.
 
 The envelope could be represented as
@@ -72,7 +72,7 @@ additional key value pairs, like `envelope_domain_hint`,
 `envelope_public_key`, `envelope_signature`, added in the request
 body.
 
-Another options mey be to use the HTTP authorization header, something
+Another options may be to use the HTTP authorization header, something
 like
 
 ```
@@ -85,42 +85,59 @@ of the HTTP request (taking transfer encoding into account). If we can
 do rate-limiting on the HTTP level like this, it makes things rather
 flexible:
 
-* Logs can use other means of HTTP
-  authentication if they so desire, e.g,., basic or digest
-  authentication, client tls certificates, secret cookie values, ...
+* Logs can use other means of HTTP authentication if they so desire,
+  e.g,., basic or digest authentication, client tls certificates,
+  secret cookie values, ...
 
 * Rate limit can be applied to other requests than add-leaf, if needed.
 
-* Rate-lmiting could be implemented in an HTTP proxy or frontend,
+* Rate-limiting could be implemented in an HTTP proxy or frontend,
   which wouldn't need to know any details of the sigsnum request api
-  (it would need to know the log's key hash, though, to varify the signature).
+  (it would need to know the log's key hash, though, to verify the
+  signature).
 
 # Security considerations
 
-The envelope signatures don't include any means to prevent replay
-attacks. This may be acceptable, because the envelope signatures
-aren't published anywhere, they are accessible exclusively to
-submitter and log. Also, the requests that are authenticated in this
-way should represent either pure data retrieavel, or idempotent
-changes to the log's state.
+First, recall that rate limit isn't intended to protect the log server
+from arbitrary denial of service attacks to overload the log's
+capacity in terms of computational resources or network bandwidth. It
+is only intended to enable limiting, per domain, of the rate at which
+leaves are added to the merkle tree.
 
-As mentioned, the the envelope has to be bound to the target log, to
-rule out replay attacks performed by the target log on other logs.
+The envelope signatures don't include any means to prevent replay
+attacks. There are a couple of reasons that appears fine for this
+application.
+
+* The envelope signatures aren't published anywhere, they are
+  accessible exclusively to submitter and log.
+
+* Replays to the same log are harmless, because all requests represent
+  either pure data retrieval, or idempotent changes to the log's
+  state.
+
+* Including the target log's key hash in the envelope
+  signature means that the envelope will be rejected if sent anywhere
+  else.
 
 It seems undesirable to add in a nonce provided by the log, since that
 makes the protocol more stateful or interactive, but one could add a
 timestamp to the envelope, and then the log could accept requests
-timestamped only in a small time window, on the order of a few minutes.
+timestamped only in a small time window, on the order of a few
+minutes. However, for the reasons above, that appears unnecessary.
 
 # HTTP considerations
 
-The HTTP auth framework is defined in RFC 7235. We need to review that
+The HTTP authorization framework is defined in RFC 7235. We need to review that
 carefully before attempting to use the HTTP Authorization header. In
 particular, presence of that header seems to have implications for
 caching, and it's not obvious how to best deal with requests such as
 get-inclusion-proof, where the result should be cached aggressively,
 but we may want to rate limit those requests that don't hit the cache.
 
-The log's key hash, to be included in the signature, doesn't fit that
-naturally as an extra parameter in the Authorization header. Maybe it
-would make sense to instead use the realm parameter for that?
+The HTTP layer, processing the Authorization header, and the
+application layer, are tied together via the log's key_hash, which
+must be included in the signed envelope data. Making that connection
+fit in a good way in the HTTP authorization framework seems to be a
+key issue, to be able to perform the rate limiting in the HTTP layer.
+
+One could also consider additional HTTP headers.
