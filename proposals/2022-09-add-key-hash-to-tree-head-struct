@@ -90,7 +90,8 @@ The current specification of tree_leaf signatures includes the
 this proposal is accepted, for consistency, the namespace used for
 signatures of `tree_leaf` should also be changed to a constant string,
 "tree_leaf:v0@sigsum.org", and the `shard_hint` moved elsewhere in the
-signed data.
+signed data. Moving/removing the `shard_hint` is a topic for a
+separate proposal.
 
 ## On use of ssh signature format
 
