@@ -1,0 +1,39 @@
+Date: 2022-09-27 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* nisse
+	* gregoire
+
+Status round
+	* [rgdd] osfc talk
+		* https://gitlab.glasklarteknik.se/rgdd/osfc-22
+	* [nisse] proposal to add key hash to tree head struct
+		* https://gitlab.glasklarteknik.se/sigsum/project/documentation/-/blob/main/proposals/2022-09-add-key-hash-to-tree-head-struct
+	* [nisse] reading specs, working on proposals; experimenting with sigsum tool
+	* [gregoire] CI is working isch, added basic CI in python and one of the Go projects
+
+Decisions
+	* Decision: adopt proposal to add key hash to tree head struct
+
+Next steps
+	* [ln5] install modern podman on CI runners
+	* [nisse] continue on sigsum tools
+	* [nisse] implement change to tree head struct
+	* [nisse] working on proposal to elimiante shard hint
+	* [nisse] propose mr to document copyright holders
+	* [gregoire] MR: integration test witouth client setup
+	* [gregoire] finish integration tests with CI service
+	* [gregoire] sigsum-py v1 issues
+
+Other useful links
+	* https://gitlab.glasklarteknik.se/sigsum/admin/checker
