@@ -60,17 +60,12 @@ key hash can be found, the corresponding public key, and a signature
 by that key.
 
 Exactly how the envelope should look like, and exactly what should be
-signed, needs further discussion. The simplest thing would be that the
+signed, is sketched below. The simplest thing would be that the
 signature is over the same checksum as the main submit signature (but
 with a different namespace), but that would enable the log to submit
 leaf and envelope to other logs on the submitter's behalf, exhausting
 the submitter's rate limit there. For that reason, the log's key hash
 should be included in the signature.
-
-The envelope could be represented as
-additional key value pairs, like `envelope_domain_hint`,
-`envelope_public_key`, `envelope_signature`, added in the request
-body.
 
 Another options may be to use the HTTP authorization header, something
 like
@@ -96,6 +91,90 @@ flexible:
   (it would need to know the log's key hash, though, to verify the
   signature).
 
+## Modification to tree_leaf
+
+The `tree_leaf`, when the `shard_hint` is deleted, consists of the
+following fields:
+```
+struct tree_leaf_data {
+    u8 checksum[32];
+    u8 signature[64];
+    u8 key_hash[32];
+}
+```
+
+The signature is based on the submitted `message` submitted to, but
+not published by, the log. It is signed using ssh format, using sha256
+as the hash function, empty reserved string, and namespace
+"tree_leaf:v0@sigsum.org". The ssh signature format internally
+computes `H(message)`, as part of formatting the data to be signed,
+and it is this value that is stored in the leaf's checksum field.
+
+## Envelope details
+
+For discussion, this proposal sketches two ways if representing the
+envelope.
+
+### In-body envelope
+
+The submitter formats the following struct
+
+```
+struct envelope_data {
+  u8 message[32]
+  u8 log_key_hash[32]
+}
+```
+
+This is serialized and signed with the submitters envelope key, using
+ssh format, and namespace "submit_envelope:v0@sigsum.org".
+
+In the add-leaf request, the `shard_hint` is deleted, and
+`domain_hint` is renamed to `envelope_domain_hint`. There are two
+additional key-value pairs, `envelope_public_key` and
+`envelope_signature`. The envelope fields are optional (not needed if
+access the log service is controlled by other means), but for a log
+enforcing domain-based rate limiting, it will check that the public
+key hash is published in DNS, form the same `envelope_data` struct,
+and verify the envelope signature.
+
+### HTTP-header envelope
+
+To be able to apply rate limiting at the HTTP-level, it should be
+possible to do most of the enforcement at the HTTP-level, with minimal
+awareness of the sigsum application details. It then seems more
+reasonable to form the signature over the request body, rather than
+over a serialized `envelope_data` struct like above. But we need the
+key_hash to be included in the signed data. We could add the following
+custom HTTP headers:
+
+* sigsum-v0-submit-to: Value should be the hex-encoded hash of the
+  log's public key.
+
+* sigsum-v0-submit-from: Value should be hex-encoded public key and
+  domain hint, space separated (could alternatively, could use param
+  syntax).
+
+* sigsum-v0-submit-signature: Hex encoded signature.
+  ssh-format-signature, namespace
+  "submit-http-envelope:v0@sigsum.org".
+
+The signed data should be a "sigsum-v0-submit-to" pseudo header
+followed by the literal request body (after decoding of any
+transfer-encoding). Or more precisely, the concatenation of the string
+"sigsum-v0-submit-to: " (lowercase), the hex-encoded hash of the log's
+public key (also lower-case), the four characters "\r\n\r\n", and the
+complete HTTP request body.
+
+The verification including DNS check and signature verification could
+be done as part of HTTP processing. The sigsum-v0-submit-to must be
+compared to the log's proper key hash, either by the log application,
+or by configuring http processing with this value. I think it is
+possible to also do rate limiting in the HTTP layer, provided that the
+clients add these headers only on requests where they are required.
+Then all that remains to do for the log application is to check that
+these headers were present on the addl-leaf request.
+
 # Security considerations
 
 First, recall that rate limit isn't intended to protect the log server
@@ -115,9 +194,8 @@ application.
   either pure data retrieval, or idempotent changes to the log's
   state.
 
-* Including the target log's key hash in the envelope
-  signature means that the envelope will be rejected if sent anywhere
-  else.
+* Including the target log's key hash in the envelope signature means
+  that the envelope will be rejected if sent anywhere else.
 
 It seems undesirable to add in a nonce provided by the log, since that
 makes the protocol more stateful or interactive, but one could add a
@@ -141,3 +219,36 @@ fit in a good way in the HTTP authorization framework seems to be a
 key issue, to be able to perform the rate limiting in the HTTP layer.
 
 One could also consider additional HTTP headers.
+
+# Digression on the checksum field
+
+The specification of the checksum is a bit convoluted in the current
+version of the api document. My current understanding is that the
+submitter starts with its `message`. This is signed with ssh format by
+the submitter. Message, signature and public key are submitted to the
+log, which can then verify the signature. The ssh signature procedure
+includes computation of the sha256 hash value `H(message)`, and it's
+this value that is stored in the `checksum` field. One implication is
+that it is possible in principle to verify the signature given only
+the leaf and the public key, but it can't be done easily with the
+`ssh-keygen` tool, since it really wants the `message` as input.
+
+It's not clear to which parties have an interest in verifying this
+signatures, but I think the most natural verifiers would be provided
+with both the message and the public key out of band.
+
+It's also not clear to me if it matters if the checksum stored in the
+leaf actually is the same as is used internally in the ssh signature.
+What we really want to secure (in broad meaning) is `message`. Say
+that the submitter signs `message` using some arbitrary but secure
+signature algorithm, using some arbitrary hash function H1 internally.
+We verify the signature, and then compute H2(message) using some
+secure but totally unrelated hash function H2. The value H2(message) +
+submiters signature is then published via the merkle-tree machinery.
+
+It seems that would be good enough for sigsum usecases? A sigsum
+verifier that has the message, and the submitters public key, the tree
+leaf and related inclusion proofs, can both verify the signature and
+recompute the H2(message) value that is in the leaf.
+
+Actually, do we even need to publish the checksum at all?
