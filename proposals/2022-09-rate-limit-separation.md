@@ -146,34 +146,25 @@ awareness of the sigsum application details. It then seems more
 reasonable to form the signature over the request body, rather than
 over a serialized `envelope_data` struct like above. But we need the
 key_hash to be included in the signed data. We could add the following
-custom HTTP headers:
+custom HTTP header, carrying key-value pairs separated by semicolon:
 
-* sigsum-v0-submit-to: Value should be the hex-encoded hash of the
-  log's public key.
+```
+sigsum-envelope: log-key-hash=HEX; domain-hint=_sigsum_v0.example.com;
+  public-key=HEX; signature=HEX
+```
 
-* sigsum-v0-submit-from: Value should be hex-encoded public key and
-  domain hint, space separated (could alternatively, could use param
-  syntax).
-
-* sigsum-v0-submit-signature: Hex encoded signature.
-  ssh-format-signature, namespace
-  "submit-http-envelope:v0@sigsum.org".
-
-The signed data should be a "sigsum-v0-submit-to" pseudo header
-followed by the literal request body (after decoding of any
-transfer-encoding). Or more precisely, the concatenation of the string
-"sigsum-v0-submit-to: " (lowercase), the hex-encoded hash of the log's
-public key (also lower-case), the four characters "\r\n\r\n", and the
-complete HTTP request body.
+The signed data should be a all-lowercase string
+"log-key-hash=HEX\r\n" concatenated with the literal request body
+(after decoding of any transfer-encoding).
 
 The verification including DNS check and signature verification could
-be done as part of HTTP processing. The sigsum-v0-submit-to must be
-compared to the log's proper key hash, either by the log application,
-or by configuring http processing with this value. I think it is
-possible to also do rate limiting in the HTTP layer, provided that the
-clients add these headers only on requests where they are required.
-Then all that remains to do for the log application is to check that
-these headers were present on the addl-leaf request.
+be done as part of HTTP processing. The log-key-hash must be compared
+to the log's proper key hash, either by the log application, or by
+configuring http processing with this value. I think it is possible to
+also do rate limiting in the HTTP layer, provided that the client adds
+this header only on requests where they are required. Then all that
+remains to do for the log application is to check that the header was
+present on the add-leaf request.
 
 # Security considerations
 
