@@ -1,0 +1,38 @@
+Date: 2022-10-04 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* nisse
+	* gregoire
+	* ln5
+
+Status round
+	* [nisse] merge change to api docs that moves tree hash
+	* [nisse] start refactoring types/, MR to break out ssh formating into a package
+	* [nisse] making progress on sigsum tool (keygen + sign with ssh-agent works)
+		* https://git.glasklar.is/nisse/sigsum-tools
+	* [nisse] making progress on proposal to remove shard hint w/ feedback from others
+	* [nisse] making progress on copyright documentation w/ feedback from others
+	* [ln5] a (poor) attempt at fixing the runners, still not properly set up
+	* [ln5] some review
+	* [gregoire] add sigsum-py issues
+	* [gregoire] MR to make integration test run without explicit key generation
+
+Decisions
+	* None
+
+Next steps
+	* [ln5] ci runners
+	* [gregoire] ssh agent issue in sigsum-py
+	* [nisse] continue the 'making progress' items
+	* [nisse] implement tree head change
+	* [nisse] merge stuff from gregoire, and provide ssh-agent pointers
+	* [rgdd] feedback to nisse on sigsum tool, rubberduck
