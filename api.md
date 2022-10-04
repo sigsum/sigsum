@@ -64,6 +64,7 @@ struct tree_head {
 	u64 timestamp;
 	u64 tree_size;
 	u8 root_hash[32];
+	u8 key_hash[32];
 };
 ```
 `timestamp` is the time since the UNIX epoch (January 1, 1970 00:00 UTC) in
@@ -76,19 +77,20 @@ to prove to an end-user that public logging happened within some interval
 
 `root_hash` is a Merkle tree root hash that fixes a log's structure and content.
 
-#### 2.3.2 - (Co)signed tree head
-Logs and witnesses perform (co)signing operations by treating the serialized
-tree head as the message `M` in SSH's
-	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
-The hash algorithm string must be "SHA256".  The reserved string must be empty.
-The namespace field must be set to `tree_head:v0:<key-hash>@sigsum.org`, where
-`<key hash>` is substituted with the log's hashed public key.  The public key is
+`key_hash` is the SHA256 hash of the log's public key. The public key is
 encoded as defined in
 	[RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)
 before hashing it.  This ensures a _sigsum log specific tree head context_ that
 prevents a possible
 	[attack](https://git.sigsum.org/sigsum/tree/archive/2021-08-10-witnessing-broader-discuss#n95)
 in multi-log ecosystems.
+
+#### 2.3.2 - (Co)signed tree head
+Logs and witnesses perform (co)signing operations by treating the serialized
+tree head as the message `M` in SSH's
+	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
+The hash algorithm string must be "SHA256".  The reserved string must be empty.
+The namespace field must be set to `tree_head:v0@sigsum.org`.
 
 A witness must not cosign a tree head if it is inconsistent with prior history
 or if the timestamp is older than five (5) minutes.  This means that a witness plays
