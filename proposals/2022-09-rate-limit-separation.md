@@ -27,10 +27,11 @@ There are two parts of this proposal:
    planned to stop accepting new entries and switch to read-only mode,
    and when it is planned to also turn down read-only access).
 
-2. Introduce a submission envelope, to which the rate-limit is
-   applied. We need to specify the domain-based rate-limiting, while
-   leaving open for extensions using other means of authentication.
-   The changes for domain based rate limiting is specified below.
+2. Introduce an optional submission envelope, to which the rate-limit
+   is applied. We need to specify the domain-based rate-limiting,
+   while leaving open for extensions using other means of
+   authentication. The changes for domain based rate limiting is
+   specified below.
 
 ## Domain-based rate-limit.
 
@@ -65,31 +66,7 @@ signature is over the same checksum as the main submit signature (but
 with a different namespace), but that would enable the log to submit
 leaf and envelope to other logs on the submitter's behalf, exhausting
 the submitter's rate limit there. For that reason, the log's key hash
-should be included in the signature.
-
-Another options may be to use the HTTP authorization header, something
-like
-
-```
-Authorization: sigsum-rate-limit domain=... public_key=...
-  signature=...
-```
-
-In that case, the signature should be over the log's key hash + body
-of the HTTP request (taking transfer encoding into account). If we can
-do rate-limiting on the HTTP level like this, it makes things rather
-flexible:
-
-* Logs can use other means of HTTP authentication if they so desire,
-  e.g,., basic or digest authentication, client tls certificates,
-  secret cookie values, ...
-
-* Rate limit can be applied to other requests than add-leaf, if needed.
-
-* Rate-limiting could be implemented in an HTTP proxy or frontend,
-  which wouldn't need to know any details of the sigsnum request api
-  (it would need to know the log's key hash, though, to verify the
-  signature).
+should be included in the signed data.
 
 ## Modification to tree_leaf
 
@@ -112,11 +89,6 @@ and it is this value that is stored in the leaf's checksum field.
 
 ## Envelope details
 
-For discussion, this proposal sketches two ways if representing the
-envelope.
-
-### In-body envelope
-
 The submitter formats the following struct
 
 ```
@@ -136,35 +108,10 @@ additional key-value pairs, `envelope_public_key` and
 access the log service is controlled by other means), but for a log
 enforcing domain-based rate limiting, it will check that the public
 key hash is published in DNS, form the same `envelope_data` struct,
-and verify the envelope signature.
-
-### HTTP-header envelope
-
-To be able to apply rate limiting at the HTTP-level, it should be
-possible to do most of the enforcement at the HTTP-level, with minimal
-awareness of the sigsum application details. It then seems more
-reasonable to form the signature over the request body, rather than
-over a serialized `envelope_data` struct like above. But we need the
-key_hash to be included in the signed data. We could add the following
-custom HTTP header, carrying key-value pairs separated by semicolon:
-
-```
-sigsum-envelope: log-key-hash=HEX; domain-hint=_sigsum_v0.example.com;
-  public-key=HEX; signature=HEX
-```
-
-The signed data should be a all-lowercase string
-"log-key-hash=HEX\r\n" concatenated with the literal request body
-(after decoding of any transfer-encoding).
-
-The verification including DNS check and signature verification could
-be done as part of HTTP processing. The log-key-hash must be compared
-to the log's proper key hash, either by the log application, or by
-configuring http processing with this value. I think it is possible to
-also do rate limiting in the HTTP layer, provided that the client adds
-this header only on requests where they are required. Then all that
-remains to do for the log application is to check that the header was
-present on the add-leaf request.
+and verify the envelope signature. There's also a possibility to
+configure a rate-limit, or lack thereof, specifically for certain
+keys, in which case the `envelope_domain_hint`field and the DNS lookup
+can be omitted.
 
 # Security considerations
 
@@ -194,24 +141,9 @@ timestamp to the envelope, and then the log could accept requests
 timestamped only in a small time window, on the order of a few
 minutes. However, for the reasons above, that appears unnecessary.
 
-# HTTP considerations
+# Appendices
 
-The HTTP authorization framework is defined in RFC 7235. We need to review that
-carefully before attempting to use the HTTP Authorization header. In
-particular, presence of that header seems to have implications for
-caching, and it's not obvious how to best deal with requests such as
-get-inclusion-proof, where the result should be cached aggressively,
-but we may want to rate limit those requests that don't hit the cache.
-
-The HTTP layer, processing the Authorization header, and the
-application layer, are tied together via the log's key_hash, which
-must be included in the signed envelope data. Making that connection
-fit in a good way in the HTTP authorization framework seems to be a
-key issue, to be able to perform the rate limiting in the HTTP layer.
-
-One could also consider additional HTTP headers.
-
-# Digression on the checksum field
+## Digression on the checksum field
 
 The specification of the checksum is a bit convoluted in the current
 version of the api document. My current understanding is that the
@@ -220,26 +152,94 @@ the submitter. Message, signature and public key are submitted to the
 log, which can then verify the signature. The ssh signature procedure
 includes computation of the sha256 hash value `H(message)`, and it's
 this value that is stored in the `checksum` field. One implication is
-that it is possible in principle to verify the signature given only
-the leaf and the public key, but it can't be done easily with the
-`ssh-keygen` tool, since it really wants the `message` as input.
+that it is possible to verify the signature given only the leaf and
+the public key, but it can't be done easily with the `ssh-keygen`
+tool, since that tool really wants the `message` as input.
 
-It's not clear to which parties have an interest in verifying this
-signatures, but I think the most natural verifiers would be provided
-with both the message and the public key out of band.
+The sigsum verifier, which has both `message` and the public key at
+hand, doesn't really need the `checksum` published by the log. It is
+needed by monitors, though: A monitor with interest in a particular
+public extracts all logged leafs containing signatures with that key.
+If it finds an unexpected entry on the log, it verifies the signature,
+and since it doesn't get `message`, it has to verify the signature
+based on the published `checksum`. If the signature is valid, that
+indicates unauthorized usage of the private key. On the other hand, if
+the signature is not valid, that indicates that the log itself is
+misbehaving.
 
-It's also not clear to me if it matters if the checksum stored in the
-leaf actually is the same as is used internally in the ssh signature.
-What we really want to secure (in broad meaning) is `message`. Say
-that the submitter signs `message` using some arbitrary but secure
-signature algorithm, using some arbitrary hash function H1 internally.
-We verify the signature, and then compute H2(message) using some
-secure but totally unrelated hash function H2. The value H2(message) +
-submiters signature is then published via the merkle-tree machinery.
+## Doing rate-limiting on the HTTP layer
 
-It seems that would be good enough for sigsum usecases? A sigsum
-verifier that has the message, and the submitters public key, the tree
-leaf and related inclusion proofs, can both verify the signature and
-recompute the H2(message) value that is in the leaf.
+Another options that was considered was to use the HTTP authorization
+header. This sectino documents the alternative proposal, which was
+rejected because (i) it's not quite a general sigsum-agnostic
+rate-limit anyway,a nd (ii) there are lots of additional details to
+get right, to fit well in the HTTP protocol.
 
-Actually, do we even need to publish the checksum at all?
+```
+Authorization: sigsum-rate-limit domain=... public_key=...
+  signature=...
+```
+
+In that case, the signature should be over the log's key hash + body
+of the HTTP request (taking transfer encoding into account). If we can
+do rate-limiting on the HTTP level like this, it makes things rather
+flexible:
+
+* Logs can use other means of HTTP authentication if they so desire,
+  e.g,., basic or digest authentication, client tls certificates,
+  secret cookie values, ...
+
+* Rate limit can be applied to other requests than add-leaf, if needed.
+
+* Rate-limiting could be implemented in an HTTP proxy or frontend,
+  which wouldn't need to know any details of the sigsnum request api
+  (it would need to know the log's key hash, though, to verify the
+  signature).
+
+### HTTP-header envelope
+
+To be able to apply rate limiting at the HTTP-level, it should be
+possible to do most of the enforcement at the HTTP-level, with minimal
+awareness of the sigsum application details. It then seems more
+reasonable to form the signature over the request body, rather than
+over a serialized `envelope_data` struct like above. But we need the
+key_hash to be included in the signed data. We could add the following
+custom HTTP header, carrying key-value pairs separated by semicolon:
+
+```
+sigsum-envelope: log-key-hash=HEX; domain-hint=_sigsum_v0.example.com;
+  public-key=HEX; signature=HEX
+```
+
+The signed data should be a all-lowercase string
+"log-key-hash=HEX\r\n" concatenated with the literal request body
+(after decoding of any transfer-encoding).
+
+The verification including DNS check and signature verification could
+be done as part of HTTP processing. The log-key-hash must be compared
+to the log's proper key hash, either by the log application, or by
+configuring http processing with this value. I think it is possible to
+also do rate limiting in the HTTP layer, provided that the client adds
+this header only on requests where they are required. Then all that
+remains to do for the log application is to check that the header was
+present on the add-leaf request.
+
+HTTP-level rate limiting would also need to distinguish between
+add-leaf requests actually adding a new leaf, and requests polling for
+a request to be completed.
+
+### HTTP considerations
+
+The HTTP authorization framework is defined in RFC 7235. We need to
+review that carefully before attempting to use the HTTP Authorization
+header, or itnroducing custom headers. In particular, presence of the
+Authorzation header seems to have implications for caching, and it's
+not obvious how to best deal with requests such as
+get-inclusion-proof, where the result should be cached aggressively,
+but we may want to rate limit those requests that don't hit the cache.
+
+The HTTP layer, processing the Authorization header, and the
+application layer, are tied together via the log's key_hash, which
+must be included in the signed envelope data. Making that connection
+fit in a good way in the HTTP authorization framework seems to be a
+key issue, to be able to perform the rate limiting in the HTTP layer.
