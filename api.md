@@ -132,10 +132,9 @@ rather than the full public key, is used to motivate monitors and end-users to
 locate the appropriate key and make an explicit trust decision.
 
 ## 3 - Public endpoints
-A log must have a fixed and unique log URL.  A valid log URL is any valid
-HTTP(S) URL that ends with "/sigsum/v0".  Example:
+A log must have a fixed and unique log URL.  Example:
 ```
-https://log.example.com:4711/opossum/2021/sigsum/v0`.
+https://log.example.com:4711/opossum/2021/sigsum`.
 ```
 
 Input data in `get-*` requests are added at the end of an endpoint's
