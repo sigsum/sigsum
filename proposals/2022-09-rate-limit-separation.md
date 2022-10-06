@@ -102,7 +102,7 @@ This is serialized and signed with the submitters envelope key, using
 ssh format, and namespace "submit_envelope:v0@sigsum.org".
 
 In the add-leaf request, the `shard_hint` is deleted, and
-`domain_hint` is renamed to `envelope_domain_hint`. There are two
+`domain_hint` is renamed to `envelope_domain`. There are two
 additional key-value pairs, `envelope_public_key` and
 `envelope_signature`. The envelope fields are optional (not needed if
 access the log service is controlled by other means), but for a log
@@ -110,7 +110,7 @@ enforcing domain-based rate limiting, it will check that the public
 key hash is published in DNS, form the same `envelope_data` struct,
 and verify the envelope signature. There's also a possibility to
 configure a rate-limit, or lack thereof, specifically for certain
-keys, in which case the `envelope_domain_hint`field and the DNS lookup
+keys, in which case the `envelope_domain` field and the DNS lookup
 can be omitted.
 
 # Security considerations
@@ -207,7 +207,7 @@ key_hash to be included in the signed data. We could add the following
 custom HTTP header, carrying key-value pairs separated by semicolon:
 
 ```
-sigsum-envelope: log-key-hash=HEX; domain-hint=_sigsum_v0.example.com;
+sigsum-envelope: log-key-hash=HEX; domain=_sigsum_v0.example.com;
   public-key=HEX; signature=HEX
 ```
 
