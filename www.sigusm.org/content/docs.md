@@ -6,7 +6,7 @@
   - [Archive][] - notes and meeting minutes
   - [Assets](/assets) - logo, colors, and font
 
-[Design document]: https://git.sigsum.org/sigsum/plain/doc/design.md
-[API specification]: https://git.sigsum.org/sigsum/plain/doc/api.md
-[History]: https://git.sigsum.org/sigsum/plain/doc/history.md
-[Archive]: https://git.sigsum.org/sigsum/tree/archive
+[Design document]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/design.md
+[API specification]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/api.md
+[History]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/history.md
+[Archive]: https://git.glasklar.is/sigsum/project/documentation/-/tree/main/archive
