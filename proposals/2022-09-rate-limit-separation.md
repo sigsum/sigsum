@@ -53,7 +53,7 @@ public key, and signature).
 
 In case the log doesn't enforce any rate limits, the submitter emits
 the add-leaf request. If the log wants to enforce rate-limits, such a
-request will fail with some HTTP error, possibly 401 (Unauthorized).
+request will fail with HTTP status code 401 (Unauthorized).
 
 To pass rate-limit requirements, the submitter now has to prepare a
 submission envelope. The envelope should include the domain where the
@@ -141,7 +141,7 @@ timestamp to the envelope, and then the log could accept requests
 timestamped only in a small time window, on the order of a few
 minutes. However, for the reasons above, that appears unnecessary.
 
-# Appendices
+# Appendices (misc notes from related discussions and earlier drafts)
 
 ## Digression on the checksum field
 
@@ -170,10 +170,11 @@ misbehaving.
 ## Doing rate-limiting on the HTTP layer
 
 Another options that was considered was to use the HTTP authorization
-header. This sectino documents the alternative proposal, which was
+header. This section documents the alternative proposal, which was
 rejected because (i) it's not quite a general sigsum-agnostic
-rate-limit anyway,a nd (ii) there are lots of additional details to
-get right, to fit well in the HTTP protocol.
+rate-limit anyway, (ii) there are lots of additional details to get
+right, to fit well in the HTTP protocol, (iii) generalization implies
+a much broader scope.
 
 ```
 Authorization: sigsum-rate-limit domain=... public_key=...
