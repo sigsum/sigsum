@@ -2,6 +2,13 @@
 
 Sigsum's brand assets were developed by Lars Wästfelt.
 
+## Font
+
+We use a geometric sans-serif font named [outfit][], licensed under [SIL OFL][].
+
+[outfit]: https://outfit.io/outfit-font
+[SIL OFL]: https://github.com/Outfitio/Outfit-Fonts/blob/main/OFL.txt
+
 ## Colors
 
 The color codes we use are:
@@ -12,15 +19,9 @@ The color codes we use are:
   - \#581303, rgba(219, 77, 44, 1)
   - \#6B60E3, rgba(107, 96, 227, 1)
 
-## Font
-
-We use a geometric sans-serif font named [outfit][], licensed under [SIL OFL][].
-
-[outfit]: https://outfit.io/outfit-font
-[SIL OFL]: https://github.com/Outfitio/Outfit-Fonts/blob/main/OFL.txt
-
 ## Visuals
 
-All visuals are licensed under [CC BY-SA 4.0][].
+All [visuals][] are licensed under [CC BY-SA 4.0][].
 
 [CC BY-SA 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
+[visuals]: https://git.glasklar.is/sigsum/project/documentation/-/tree/main/assets

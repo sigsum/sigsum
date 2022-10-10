@@ -5,17 +5,10 @@ used to enforce public logging of signed checksums.
 
 [launched officially]: https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/thread/ZCWCOWYTBQSVYWADEHBAWYEHNS3FJ6RK/
 
-## Core members
-
-  - Anwesha Das (anwesha)
-  - Fredrik Strömberg (kfreds)
-  - Linus Nordberg (ln5)
-  - Rasmus Dahlberg (rgdd)
-
 ## Sponsors
 
-  - [DFRI][], mailing list infrastructure
-  - [Mullvad VPN][], financial funder
+Sigsum is funded by [Glasklar Teknik AB][], a sister company to [Mullvad VPN][].
+See also [past sponsors](/past-sponsors).
 
-[Mullvad VPN]: https://www.mullvad.net
-[DFRI]: https://www.dfri.se
+[Glasklar Teknik AB]: https://www.glasklarteknik.se/
+[Mullvad VPN]: https://www.mullvad.net/

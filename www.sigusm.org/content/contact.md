@@ -21,7 +21,11 @@ provide feedback, report issues, and submit patches by sending an email to
 [sigsum-general mailing list]: https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/
 [the list info page]: https://lists.sigsum.org/mailman3/postorius/lists/sigsum-general.lists.sigsum.org/
 
-Join open video/voice meetings on Tuesdays at 1200 UTC.
+You can also report issues and submit merge requests on [GitLab][].
+
+[GitLab]: https://git.glasklar.is/sigsum/
+
+Join open video/voice meetings on Tuesdays at 1100 UTC.
 
   - Jitsi: [meet.sigsum.org/sigsum][]
   - Pad: [pad.sigsum.org/p/sigsum-YYMMDD][]
