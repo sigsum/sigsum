@@ -53,7 +53,9 @@ public key, and signature).
 
 In case the log doesn't enforce any rate limits, the submitter emits
 the add-leaf request. If the log wants to enforce rate-limits, such a
-request will fail with HTTP status code 401 (Unauthorized).
+request will fail with HTTP status code 403 (Forbidden). (Note that
+the status code 401, Authorization Required, should be used only for
+authorization on the HTTP level).
 
 To pass rate-limit requirements, the submitter now has to prepare a
 submission envelope. The envelope should include the domain where the
@@ -196,6 +198,18 @@ flexible:
   which wouldn't need to know any details of the sigsnum request api
   (it would need to know the log's key hash, though, to verify the
   signature).
+
+### Using fixed token
+
+One issue that has been brought up in discussion, is that maybe
+there's no need to let the envelope signature include the actual
+message, and instead use a fixed token. E.g., submitter could sign the
+concatenation of a random nonce/salt with the log's key hash, and
+submit the values (public key, domain, nonce, signature) with the
+request to the log. This is a fixed token, and if we go this way, we
+may want to revisit the HTTP option. We could fit it in HTTP basic
+authorization, with either the domain or the public key as the user
+name, and the rest packaged as a the user password.
 
 ### HTTP-header envelope
 
