@@ -7,7 +7,7 @@ used to enforce public logging of signed checksums.
 
 ## Sponsors
 
-Sigsum is funded by [Glasklar Teknik AB][], a sister company to [Mullvad VPN][].
+Sigsum is funded by [Glasklar Teknik AB][], a sister company of [Mullvad VPN][].
 See also [past sponsors](/past-sponsors).
 
 [Glasklar Teknik AB]: https://www.glasklarteknik.se/
