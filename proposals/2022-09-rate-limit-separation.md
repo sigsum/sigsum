@@ -115,6 +115,42 @@ configure a rate-limit, or lack thereof, specifically for certain
 keys, in which case the `envelope_domain` field and the DNS lookup
 can be omitted.
 
+## Minimalistic header alternative
+
+Including the `message` in the signed data as above, ties the envelope
+to the message, so that it can't be reused, and it doesn't have any
+value if leaked to an attacker. However, since this is of small value
+even if not tied to the message, we could consider dropping this
+message part, turning the signature into a fixed token. To do this as
+minimally as possible, consider this alternative:
+
+1. Publish the envelope public key (not just the hash of it) in DNS.
+
+2. Create a token by signing only `log_key_hash` (no message, no
+   salt).
+
+3. Add a custom header that provides the domain name and that
+   signature/token.
+
+The intention is to make understanding and operating the envelope
+secret as simple as possible.
+
+Then the new header is just a fixed token. New tokens can be created
+at will by rotating the envelope key. The private half of the key pair
+could even be destroyed immediately after the token is created (only
+reason to keep it is if one want to keep the ability to create tokens
+for additional logs, without creating a new key pair at the same time).
+
+At the sever side, fetch public keys from dns (up to a maximum of,
+say, 10 TXT records). Attempt to verify the given signature. If
+verification succeeds for any of those keys, the request is treated as
+originating from legitimate the domain owner. By signing the log's key
+hash, the token can not be used for submission anywhere else.
+
+On token leak, an attacker can exhaust the legitimate user's request
+quota at the specific target log, and the remedy is to rotate the key,
+by removing the DNS record.
+
 # Security considerations
 
 First, recall that rate limit isn't intended to protect the log server
@@ -199,18 +235,6 @@ flexible:
   (it would need to know the log's key hash, though, to verify the
   signature).
 
-### Using fixed token
-
-One issue that has been brought up in discussion, is that maybe
-there's no need to let the envelope signature include the actual
-message, and instead use a fixed token. E.g., submitter could sign the
-concatenation of a random nonce/salt with the log's key hash, and
-submit the values (public key, domain, nonce, signature) with the
-request to the log. This is a fixed token, and if we go this way, we
-may want to revisit the HTTP option. We could fit it in HTTP basic
-authorization, with either the domain or the public key as the user
-name, and the rest packaged as a the user password.
-
 ### HTTP-header envelope
 
 To be able to apply rate limiting at the HTTP-level, it should be
@@ -258,3 +282,8 @@ application layer, are tied together via the log's key_hash, which
 must be included in the signed envelope data. Making that connection
 fit in a good way in the HTTP authorization framework seems to be a
 key issue, to be able to perform the rate limiting in the HTTP layer.
+
+Using the Authorization header also has the drawback that it will be
+in the way if an organization wants to add HTTP authorization on top
+of the sigsum protocols, e.g, in a reverse proxy with additional
+access control.
