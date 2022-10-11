@@ -1,0 +1,33 @@
+Date: 2022-10-11 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* gregoire
+	* nisse
+
+Status round
+	* [gregoire] few cycles on ssh-agent signing in python, wip
+	* [nisse] discussion of rate-limit proposal
+		* Added a possible simplification that would also remove the envelope
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/5
+	* [nisse] started writing code relating to rate limits
+		* https://git.glasklar.is/sigsum/core/log-go/-/issues/11
+
+Decisions
+	* None
+
+Next steps
+	* [nisse] continue working on rate-limit implementation
+	* [gregoire] think about error body format / type associated with it
+	* [rgdd] detailed review of rate limit proposal, ensure it gets merged
+
+Other useful links
+	* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2022-05-10-api-error-codes
