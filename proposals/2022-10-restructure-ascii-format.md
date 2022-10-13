@@ -1,43 +1,46 @@
 Proposal to restructure the ascii key-value representation of requests
-and responses, with arrays of structs represented using a single line
-per entry.
+and responses, with fixed order of keys, ant with arrays of structs
+represented using a single line per entry.
 
 # Background
 
 The current api specification include some messages with multiple
 repeated keys. E.g., the response to `get-leaves` includes four keys
 (reduced to 3 when `shard_hint` is eliminated) that can be repeated.
-The curent specification, as I interpret it, says that the response is
-a sequence of n `checksum` keys, ordered by leaf index, n `signature`
-keys, also ordered by leaf index, etc, but the sequences can be
-interleaved in any arbitrary way.
+The current specification, as I interpret it, says that the response
+is a sequence of n `checksum` keys, ordered by leaf index, n
+`signature` keys, also ordered by leaf index, etc, but the sequences
+can then be interleaved in any arbitrary way.
 
 The objective of this proposal is to have at most one keyword per
 message that may be repeated, to avoid order dependencies between
-distinct keys. I thnk this will be conceptually simpler, even though I
-don't expect any major simplification in implementation.
+distinct keys. I think this will be conceptually simpler, even though
+I don't expect any major simplification in implementation.
+
+To further reduce parsing complexity, also require a fix order of all
+keys.
 
 # Ascii key value format
 
-Divide keys into two types. A "regular" key has a single value, and
-must occur exactly one time, and regular keys can occur in any order.
-The syntax for a message may specify a single "repeated" key. A
-repeated key can occur zero or more times, it must be after all
-regular keys. A repeated key can carry multiple values (but number of
-values is fixed for each message type; one can think of the value as
-representing a struct). When there are multiple value, they are
-separated by comma.
+Divide keys into two types. A "regular" key has a single value, must
+occur exactly once. Regular keys must occur in the specified order for
+the message. The syntax for a message type may specify a single
+"repeated" key. A repeated key can occur zero or more times, it must
+be after all regular keys. A repeated key can carry multiple values
+(but number of values is fixed for each message type; one can think of
+the value as representing a struct). When there are multiple value,
+they are separated by comma.
 
-This format can easily be extended with regular but optional keys if
-the need arises, but currently we don't have any optional keys.
+Note that the name of the repeated key is redundant in this proposal,
+which relates to the lack of support for optional keys, in order to
+keep down parsing complexity. If at some point we want to introduce
+optional keys, it cold be extended, e.g., by placing optional keys
+between regular and repeated, but we then need a clear way to identify
+the start of repeated keys.
 
-Note that the name of the repeated key is somewhat redundant in this
-proposal, the only reason we need key + equals character on the lines
-carrying the repeated key is to make it obvious where the regular keys
-end and the lines with the repeated data starts. If we used a
-different way to indicate this (e.g., empty line), we could drop the
-"key" part from the repeated lines. That way, we would get structure
-more similar to headers + body as found in http and smtp.
+We could also consider adding an expliit separator, e.g., an empty
+line, between regular and repated keys, and then we could drop the key
+part from the repeated lines without any ambiguity.
 
 # Naming
 
@@ -98,5 +101,6 @@ representation is different in this request.
 Main security concern with designing the message format is attacks
 that might use invalid or unusual inputs to trigger and exploit bugs
 in parsing, and it is therefore important to keep down the complexity.
-I think the proposal gives a very modest reduction in implementation
-complexity.
+I think the restructured repeated fields in itself gives a very modest
+reduction in implementation complexity, but fixed order of all fields
+should have a more significant impact.
