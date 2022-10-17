@@ -48,29 +48,22 @@ corresponding TXT records, in accordance with the DNS ttl settings.
 
 From this key, the submitter creates an authentication token by simply
 signing the target log's key hash. The namespace for this signature is
-"submit_token:v0@sigsum.org". (Possible extension: Also include a
-random nonce/salt, to make it possible to replace token without
-replacing the key).
+"submit-token:v0@sigsum.org".
 
 ## Custom HTTP header
 
 When rate-limiting is required by the log, the submitter adds a custom
-HTTP header to the request, "sigsum-submitter:", followed by the
+HTTP header to the request, "sigsum-token:", followed by the
 domain name where the key is registered, a space, and the hex-encoded
 token/signature. The log can then lookup the public key in DNS, and
-verify the signature (if there are multiple keys in DNS, the log will
-try them all up to a limit of, e.g., 10 keys. If the signature is
-valid for any of those keys it is accepted, and rate limit is applied
-on the domain, e.g., using https://publicsuffix.org/list/ to identify
-the appropriate "registered domain".
-
-Possible variants: Include the public key in the header, and store key
-hash only in DNS. I see no clear benefit of doing that (but there
-would be a size issue if we were using other types of signatures than
-ed25519, with larger public keys). A salt/nonce could be added to the
-generated token, and published in DNS together with the key. That
-would make it possible to revoke a token without also rotating the
-rate-limit key pair.
+verify the signature. If there are multiple keys in DNS, the log
+should try them all up to an implementation-dependent limit (we
+tentatively recommend that implementations should support at least 10
+keys, to support key rotation and some flexibility in key
+management). If the signature is valid for any of those keys it is
+accepted, and rate limit is applied on the domain, e.g., using
+https://publicsuffix.org/list/ to identify the appropriate "registered
+domain".
 
 ## Modification to tree_leaf
 
@@ -125,6 +118,24 @@ makes the protocol more stateful or interactive. One could add a
 timestamp to the token/envelope, so that old tokens expire.
 
 # Appendices (misc notes from related discussions and earlier drafts)
+
+## Some possible extensions/variants
+
+### Key hash in DNS
+
+We could store only key hash in DNS, and include the public key
+together with the token. I see no clear benefit of doing that (but there
+would be a size issue if we were using other types of signatures than
+ed25519, with larger public keys). It might simplify logic slightly in the case
+of multiple keys: Check if one of the multiple key hashes in DNS match
+the given key, but use only the single given key to verify the signature.
+
+### Salted token
+
+A salt/nonce could be added to the generated token, i.e., sign
+concatenation of salt and log's key hash. The nonce would then be
+published in DNS together with the key. That would make it possible to
+revoke a token without also rotating the rate-limit key pair.
 
 ## Digression on the checksum field
 
