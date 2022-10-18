@@ -1,0 +1,41 @@
+Date: 2022-10-18 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* ln5
+	* gregoire
+	* nisse
+	* filippo
+
+Status round
+	* [nisse] proposal to remove shard hint and re-work dns-based rate-limits
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2022-09-rate-limit-separation.md
+		* (The concrete proposal is the part before the Appendix.)
+	* [nisse] proposal on restructuring ascii key-value format 
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2022-10-restructure-ascii-format.md
+	* [nisse] wip rate limit implementation 
+		* https://git.glasklar.is/sigsum/core/log-go/-/merge_requests/17
+		* what level of testing is needed?
+		* what should be the default behavior? can we bundle a copy of the public suffix list?
+	* [nisse] Reviewing state management (internal/state/single.go), in preparation for adding support for multiple secondaries
+	* [ln5] gitlab runners set up
+	* [ln5] rate limit proposal read -- good stuff
+	* [gregoire] sigsum-py MRs with some lingering changes
+
+Decisions
+	* Decision: adopt proposal to remove shard hint and re-work dns-based rate-limits
+
+Next steps
+	* [nisse] implement the above decision in spec + code, continue with rate limit implementation and multiple secondaries if time permits
+	* [gregoire] fix integration test branch for ci, if time permits continue with ssh agent client in sigsum-py
+	* [everyone] look at ascii proposal
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2022-10-restructure-ascii-format.md
+	* [rgdd] provide feedback on rate limit MR
