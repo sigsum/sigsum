@@ -295,7 +295,7 @@ Output on success:
 A submission will not be accepted if `signature` is invalid.
 
 Processing of add-leaf request is subject to rate-limit, and public
-logs are expexted to require an [authentication token](#rate-limiting)
+logs are expected to require an [authentication token](#rate-limiting)
 passed in HTTP headers. A submission may not be accepted if the
 submitter has exceeded its rate limit. A rate limit should only be
 applied on success.
