@@ -187,8 +187,7 @@ A sigsum log maintains a public append-only Merkle tree.  Independent witnesses
 verify that this tree is fresh and append-only before cosigning it to achieve a
 distributed form of trust.  A tree leaf contains three fields:
 - **checksum**: a cryptographic hash that commits to some data.
-- **signature**: a digital signature that is computed by a signer for the
-selected shard hint and checksum.
+- **signature**: a digital signature on that checksum, computed by a signer.
 - **key_hash**: a cryptographic hash of the signer's public key that can
 be used to verify the signature.
 
@@ -221,15 +220,15 @@ Sigsum logs implement an HTTP(S) API.  Input and output is human-readable and
 use a simple ASCII format.  A more complex parser like JSON is not needed
 since the data structures being exchanged are primitive enough.
 
-The signer submits their message, signature, public key and domain
-hint as ASCII key-value pairs. The log uses the submitted message to
-compute the signer's checksum, and verifies the signature. The public
-key is then hashed to construct the Merkle tree leaf as described in
-Section 3.1.
+The signer submits their message, signature and public key as ASCII
+key-value pairs. The log uses the submitted message to compute the
+signer's checksum, and verifies the signature. The public key is then
+hashed to construct the Merkle tree leaf as described in Section 3.1.
 
-Before a new leaf is accepter, the log also verifies that the
-secondary rate-limit key is present in DNS, and uses it check validity
-of the submit token, and apply domain-based rate limiting.
+Before a new leaf is accepted, the log may verify the submitter's
+domain and submit token and apply a domain-based rate limit. To verify
+the token, the log looks up the submitter's public rate-limit key in
+DNS, and uses it check validity of the submit token.
 
 A sigsum log will
 	[try](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-add-leaf-endpoint)
@@ -351,7 +350,7 @@ data mining while at the same time making the overall protocol less heavy.
 
 #### 4.3 - What is the point of the submit token?
 The submit token, and associated rate limit public key registered in
-DNS, helpd log operators combat spam. By verifying that every signer
+DNS, help log operators combat spam. By verifying that every signer
 controls a domain name that is aware of their public key, rate limits
 can be applied per registered domain (e.g, using
 <https://publicsuffix.org/list/>). You would need a large number of
@@ -367,14 +366,11 @@ Using DNS as an anti-spam mechanism is not a perfect solution.  It is however
 better than not having any anti-spam mechanism at all.  We picked DNS because
 many signers have a domain.  A single domain name is also relatively cheap.
 
-A signer's domain hint is not part of the logged leaf because key management is
-more complex than that.  A separate project should focus on transparent key
-management.  Our work is about transparent _key-usage_.
-
-A signer's domain hint must have the left-most label set to `_sigsum_v0` to
-reduce the space of valid DNS TXT RRs that a log needs to permit queries for.
-See further details in the
-	[proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-domain-hint)
+The public rate-limit key is attached as a TXT record on a domain with
+the left-most label set `_sigsum_v0`, to reduce the space of valid DNS
+TXT RRs that a log needs to permit queries for. See further details in
+the
+[proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-domain-hint)
 that added this criteria.
 
 We are considering if additional anti-spam mechanisms should be supported in v1.
@@ -429,7 +425,7 @@ A list of some debated topics:
   while only giving _lower latency_; not _low latency_.  The "slow" cosigned
   tree head endpoint could also be implemented to just rotate a bit faster.
   - Should there be support for any alternative rate-limiting mechanism?  A
-  domain hint could be viewed as a subset of several possible _ownership hints_.
+  domain + submit token hint could be viewed as a subset of several possible _ownership hints_.
   - Should there be any IANA registration for the future `_sigsum_v1` DNS label?
 
 [checkpoint format]: https://github.com/google/trillian-examples/blob/master/formats/log/README.md

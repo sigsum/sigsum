@@ -294,15 +294,18 @@ Output on success:
 
 A submission will not be accepted if `signature` is invalid.
 
-Processing of add-leaf request is subject to rate-limit, and public
-logs are expected to require an [authentication token](#rate-limiting)
-passed in HTTP headers. A submission may not be accepted if the
-submitter has exceeded its rate limit. A rate limit should only be
-applied on success.
-
 HTTP status 200 OK must not be returned unless the log has sequenced its Merkle
 tree so that the next signed tree head merged the added leaf.  A submitter
 should (re)send their add-leaf request until observing HTTP status 200 OK.
+
+Processing of the add-leaf request may be subject to rate limiting.
+When a public log is configured to allows submissions from anyone, it
+is expected to require an [authentication token](#Rate-limiting)
+passed in HTTP headers. A submission may be refused if the submitter
+has exceeded its rate limit. By above, adding a leaf typically
+involves multiple add-leaf requests. The rate limit is not applied to
+the number of requests, but rather to the number of unique leaves
+added.
 
 Example:
 ```
@@ -359,13 +362,13 @@ Ed25519 as signature scheme. SHA256 as hash function.
 - **Public key**: public key that is used to verify tree head
   cosignatures.
 
-## 5 - Domain-based rate-limit mechanism {rate-limiting}
+## 5 - Rate limiting
 
 Domain-based rate limiting is an optional feature of the protocol, but
-it is expected that all public logs will require it. Using this
-mechanism is required only for the `add-leaf` request, and it is
-intended to limit the rate at which leaves are added to the Merkle
-tree, by submitter domain.
+it is expected that a public logs that allows submissions from anyone
+will require it. Using this mechanism is required only for the
+`add-leaf` request, and it is intended to limit the rate at which
+leaves are added to the Merkle tree, by submitter domain.
 
 ### 5.1 Setup
 
@@ -380,12 +383,13 @@ must do a one-time setup, with these three steps.
    e.g., `_sigsum_v0.foocorp.example.com`. The contents of the TXT
    record is the hex-encoded public key.
    
-3. Use the private key to sign the target log's key hash. More
-   precisely, hash the log's public ed25519 key using SHA256, use this
-   hash value as the message `M` in SSH's signing format. The hash
-   algorithm string must be "sha256". The reserved string must be
-   empty. The namespace field must be set to
-   "submit-token:v0@sigsum.org".
+3. Use the private key to sign the target log's public key. More
+   precisely, use the log's public ed25519 key (formatted according to
+   [RFC 8032, section
+   5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)), and use
+   as message `M` in SSH's signing format. The hash algorithm string
+   must be "sha256". The reserved string must be empty. The namespace
+   field must be set to "submit-token:v0@sigsum.org".
 
 The signature will act as the submit token. Since it's a signature on
 the log's key hash, it is not valid for submission to any other log.
@@ -431,8 +435,7 @@ leaves are added to the Merkle tree.
 
 Similarly to HTTP authorization using basic auth or cookies, the
 submitter must use an encrypted channel for the requests that include
-sigsum's submit token. I.e., submission to the log must use HTTPS, not
-plain HTTP.
+sigsum's submit token. E.g., use HTTPS rather than plain HTTP.
 
 The fixed token implies that there is no way to prevent replay
 attacks. There are a couple of reasons that this is ok for this
