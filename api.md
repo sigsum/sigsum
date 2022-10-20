@@ -300,7 +300,7 @@ should (re)send their add-leaf request until observing HTTP status 200 OK.
 
 Processing of the add-leaf request may be subject to rate limiting.
 When a public log is configured to allows submissions from anyone, it
-is expected to require an [authentication token](#Rate-limiting)
+is expected to require an [authentication token](#5-rate-limiting)
 passed in HTTP headers. A submission may be refused if the submitter
 has exceeded its rate limit. By above, adding a leaf typically
 involves multiple add-leaf requests. The rate limit is not applied to
