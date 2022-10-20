@@ -7,11 +7,11 @@ represented using a single line per entry.
 The current api specification allows keys to appear in any order.
 Parsing gets simpler if order is fully specified. There are also some
 messages with multiple repeated keys. E.g., the response to
-`get-leaves` includes four keys (reduced to 3 when `shard_hint` is
-eliminated) that can be repeated. The current specification, as I
-interpret it, says that the response is a sequence of n `checksum`
-keys, ordered by leaf index, n `signature` keys, also ordered by leaf
-index, etc, but the sequences may be interleaved in any arbitrary way.
+`get-leaves` includes three keys that can be repeated. The current
+specification, as I interpret it, says that the response is a sequence
+of n `checksum` keys, ordered by leaf index, n `signature` keys, also
+ordered by leaf index, etc, but the sequences may be interleaved in
+any arbitrary way.
 
 The objective of this proposal is to 
 
@@ -39,9 +39,15 @@ this proposal.
 
 # Concrete changes to the api messages
 
+This proposal changes the syntax of all requests and responses with
+more than one key, since the each requests and response is now
+required to list keys in the same order as they are listed in the api
+specification. Below sections describes changes, beyond this ordering
+requirement, that applies to each of the sigsum requests.
+
 ## get-tree-head-to-cosign
 
-Unchanged.
+None.
 
 ## get-tree-head-cosigned
 
@@ -61,19 +67,19 @@ It is required that `leaf_index` precedes the repeated key
 
 ## get-consistency-proof
 
-Unchanged.
+None.
 
 ## get-leaves
 
 The response is changed to use a single repeated key, with
 each line carrying all the information for a leaf:
 ```
-leaf=<checksum> <key_hash> <signature> <shard_hint>
+leaf=<checksum> <key_hash> <signature>
 ```
 
 ## add-leaf
 
-Unchanged.
+None.
 
 ## add-cosignature
 
