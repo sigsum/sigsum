@@ -82,14 +82,11 @@ but it is mature enough to capture what type of ecosystem we want to bootstrap.
 additional outbound network connections.  Proofs of public logging are provided
 using the same distribution mechanism as is used for distributing the actual data.
 In other words, the signer talks to the log on behalf of the end-user.
-- **Sharding to simplify log life cycles:** sigsum logs have open-ended shard
-intervals that determine the point in time that incoming submissions must be
-scoped for.  Past submissions cannot be replayed in non-overlapping shards.
 - **Defenses against log spam and poisoning:** to keep logs as useful as
 possible they should be open for everyone.  However, accepting logging requests
 from anyone at arbitrary rates can lead to abusive usage patterns.  We store as
 little metadata as possible to combat log poisoning.  We piggyback on DNS to
-combat log spam.  Sharding is also helpful to combat log spam in the long run.
+combat log spam.
 - **Built-in mechanisms that ensure a globally consistent log:** transparency
 logs rely on gossip protocols to detect split-views.  We built a proactive
 gossip protocol directly into the log.  It is a variant of
@@ -188,13 +185,9 @@ cosigning protocol.  More detail is provided in Section 3.2.3.
 ### 3.1 - Merkle tree
 A sigsum log maintains a public append-only Merkle tree.  Independent witnesses
 verify that this tree is fresh and append-only before cosigning it to achieve a
-distributed form of trust.  A tree leaf contains four fields:
-- **shard_hint**: a number that binds the leaf to a particular _shard interval_.
-Sharding means that the log has a predefined time during which logging requests
-are accepted.  Once elapsed, the log can be shut down or be made read-only.
+distributed form of trust.  A tree leaf contains three fields:
 - **checksum**: a cryptographic hash that commits to some data.
-- **signature**: a digital signature that is computed by a signer for the
-selected shard hint and checksum.
+- **signature**: a digital signature on that checksum, computed by a signer.
 - **key_hash**: a cryptographic hash of the signer's public key that can
 be used to verify the signature.
 
@@ -208,34 +201,34 @@ independently of logs, and trust them explicitly.
 
 ### 3.2 - Usage pattern
 #### 3.2.1 - Prepare a request
-A signer computes the checksum to be logged.  For example, it could be a
-hash that commits to an executable binary.
+A signer prepares the message, for which the checksum is to be logged.
+For example, it could be a hash that commits to an executable binary.
 
-The signer also selects a shard hint representing an abstract statement like
-"sigsum logs that are active during 2021".  Shard hints ensure that a log's
-leaves cannot be replayed in a non-overlapping shard.
-
-The signer signs the checksum using a sigsum-specific context that
-incorporates the shard hint.  The exact signing format is compatible with
+The signer signs the checksum. The exact signing format is compatible with
 `ssh-keygen -Y sign` when using Ed25519 and SHA256.
 
-The signer also has to do a one-time DNS setup.  As outlined below, logs will
-check that _some domain_ is aware of the signer's public key.  This is
-part of a defense mechanism that helps log operators to deal with log spam.
-Once present in DNS, a public key can be used in subsequent log requests.
+The signer also has to do a one-time DNS setup. The signer needs to
+create a secondary rate limit keypair and use the private key to
+create a submit token. As outlined below, logs will check that _some
+domain_ is aware of the public key associated with a token. This is
+part of a defense mechanism that helps log operators to deal with log
+spam. Once present in DNS, a public key can be used in subsequent log
+requests.
 
 #### 3.2.2 - Submit request
 Sigsum logs implement an HTTP(S) API.  Input and output is human-readable and
 use a simple ASCII format.  A more complex parser like JSON is not needed
 since the data structures being exchanged are primitive enough.
 
-The signer submits their shard hint, message, signature, public
-key and domain hint as ASCII key-value pairs.  The log uses the
-submitted message to compute the signer's checksum.  The log also verifies
-that the public key is present in DNS, and uses it to check that
-the signature is valid for the resulting checksum and shard hint.  The public
-key is then hashed to construct the Merkle tree leaf as described
-in Section 3.1.
+The signer submits their message, signature and public key as ASCII
+key-value pairs. The log uses the submitted message to compute the
+signer's checksum, and verifies the signature. The public key is then
+hashed to construct the Merkle tree leaf as described in Section 3.1.
+
+Before a new leaf is accepted, the log may verify the submitter's
+domain and submit token and apply a domain-based rate limit. To verify
+the token, the log looks up the submitter's public rate-limit key in
+DNS, and uses it check validity of the submit token.
 
 A sigsum log will
 	[try](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-add-leaf-endpoint)
@@ -277,9 +270,9 @@ the signer's data, for example an executable binary.  It can be used to
 reproduce a logged checksum.
 
 **Metadata:**
-the shard hint to use as signing context, the resulting signature over checksum,
-and the public key hash used in the log request.  Note that the
-combination of data and metadata can be used to reconstruct the logged leaf.
+the resulting signature over checksum, and the public key hash used in
+the log request. Note that the combination of data and metadata can be
+used to reconstruct the logged leaf.
 
 **Proof:**
 an inclusion proof that leads up to a cosigned tree head.  Note that _proof_
@@ -287,7 +280,7 @@ refers to the collection of an inclusion proof and a cosigned tree head.
 
 #### 3.2.5 - Verification
 An end-user should only accept the distributed data if the following criteria hold:
-1. The data's checksum is signed using the specified shard hint and public key.
+1. The data's checksum is signed using the specified public key.
 2. The provided tree head can be reconstructed from the logged leaf and
 its inclusion proof.
 3. The provided tree head is from a known log with enough valid cosignatures.
@@ -295,7 +288,8 @@ its inclusion proof.
 Notice that there are no new outbound network connections for an end-user.
 Therefore, an end-user will not be affected by future log downtime since the
 signer already collected relevant proofs of public logging.  Log downtime may be
-caused by temporary operational issues or simply because a shard is done.
+caused by temporary operational issues or simply because a log has
+been closed.
 
 The lack of external communication means that a proof of public logging cannot
 be more convincing than the tree head an inclusion proof leads up to.  Sigsum
@@ -354,11 +348,14 @@ is `H(D)`.  The resulting checksum would be `H(H(D))`.  The log will not be in a
 position to observe the data `D`, thereby removing power in the form of trivial
 data mining while at the same time making the overall protocol less heavy.
 
-#### 4.3 - What is the point of having a domain hint?
-Domain hints help log operators combat spam.  By verifying that every signer
-controls a domain name that is aware of their public key, rate limits can be
-applied per second-level domain.  You would need a large number of domain names
-to spam a log in any significant way if rate limits are not set too loose.
+#### 4.3 - What is the point of the submit token?
+The submit token, and associated rate limit public key registered in
+DNS, help log operators combat spam. By verifying that every signer
+controls a domain name that is aware of their public key, rate limits
+can be applied per registered domain (e.g, using
+<https://publicsuffix.org/list/>). You would need a large number of
+domain names to spam a log in any significant way if rate limits are
+not set too loose.
 
 Notice that the effect of spam is not only about storage.  It is also about
 merge latencies.  Too many submissions from a single party may render a log
@@ -369,46 +366,16 @@ Using DNS as an anti-spam mechanism is not a perfect solution.  It is however
 better than not having any anti-spam mechanism at all.  We picked DNS because
 many signers have a domain.  A single domain name is also relatively cheap.
 
-A signer's domain hint is not part of the logged leaf because key management is
-more complex than that.  A separate project should focus on transparent key
-management.  Our work is about transparent _key-usage_.
-
-A signer's domain hint must have the left-most label set to `_sigsum_v0` to
-reduce the space of valid DNS TXT RRs that a log needs to permit queries for.
-See further details in the
-	[proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-domain-hint)
+The public rate-limit key is attached as a TXT record on a domain with
+the left-most label set `_sigsum_v0`, to reduce the space of valid DNS
+TXT RRs that a log needs to permit queries for. See further details in
+the
+[proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-domain-hint)
 that added this criteria.
 
 We are considering if additional anti-spam mechanisms should be supported in v1.
 
-#### 4.4 - What is the point of having a shard hint?
-Unlike TLS certificates which already have validity ranges, a checksum does not
-carry any such information.  Therefore, we require that the signer selects a
-shard hint.  The selected shard hint must be within a log's shard interval.
-That shard interval is open-ended, meaning there is a fixed start time and a
-_policy-defined_ end time that the operator may increase but not decrease
-	[\[OESI\]](https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-open-ended-shard-interval.md).
-A log's shard start is inclusive and expressed as the number of seconds since
-the UNIX epoch (January 1, 1970 00:00 UTC).  A log that is still active should
-use the number of seconds since the UNIX epoch as its shard end.
-
-Without sharding, a good Samaritan can add all leaves from an old log into a
-newer one that just started its operations.  This makes log operations
-unsustainable in the long run because log sizes grow indefinitely.  Such
-re-logging also comes at the risk of activating someone else's rate limits.
-
-Note that a signer's shard hint is not a verified timestamp.  We recommend to
-set it to the maximum value that all active logs accept as valid
-	[\[OESI\]](https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-open-ended-shard-interval.md).
-If a verified timestamp is needed to reason about the time of logging, you may
-use a cosigned tree head instead
-	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
-
-A log operator that shuts down a completed shard will not affect end-users.  In
-other words, a signer can continue to distribute proofs that were once
-collected.  This is important because a checksum does not necessarily expire.
-
-#### 4.5 - What parts of witness cosigning are not done?
+#### 4.4 - What parts of witness cosigning are not done?
 There are interesting policy aspects that relate to witness cosigning.  For
 example, what witnessing policy should an end-user use and how are trustworthy
 witnesses discovered.  This is somewhat analogous to a related policy question
@@ -429,7 +396,7 @@ the original proposal by
 	[Syta et al.](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7546521),
 which puts an authority right in the middle of a slowly evolving witnessing policy.
 
-#### 4.6 - What parts of the design are up for debate?
+#### 4.5 - What parts of the design are up for debate?
 Several parts are under consideration for the v1 design.  Any feedback on what
 we have now or might (not) have in the future would be appreciated.  We are not
 in any particular rush to bump the version and want to experiment more with v0.
@@ -458,18 +425,18 @@ A list of some debated topics:
   while only giving _lower latency_; not _low latency_.  The "slow" cosigned
   tree head endpoint could also be implemented to just rotate a bit faster.
   - Should there be support for any alternative rate-limiting mechanism?  A
-  domain hint could be viewed as a subset of several possible _ownership hints_.
+  domain + submit token hint could be viewed as a subset of several possible _ownership hints_.
   - Should there be any IANA registration for the future `_sigsum_v1` DNS label?
 
 [checkpoint format]: https://github.com/google/trillian-examples/blob/master/formats/log/README.md
 ["quick" endpoint adds complexity]: https://git.sigsum.org/sigsum/tree/doc/proposals/2022-01-no-quick-tree-head-endpoint
 [timestamp reflections]: https://git.sigsum.org/sigsum/tree/archive/2022-02-08-timestamp-reflections.md
 
-#### 4.7 - How does Sigsum compare to Sigstore?
+#### 4.6 - How does Sigsum compare to Sigstore?
 A comparison between Sigsum and Sigstore was [archived on March 15, 2022][].
 
 [archived on March 15, 2022]: https://git.sigsum.org/sigsum/tree/archive/2022-03-15-notes-on-sigsum-and-rekor.md
 
-#### 4.8 - More questions
+#### 4.7 - More questions
 - What are the privacy concerns?
 - Add more questions here!

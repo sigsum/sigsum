@@ -89,8 +89,8 @@ in multi-log ecosystems.
 Logs and witnesses perform (co)signing operations by treating the serialized
 tree head as the message `M` in SSH's
 	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
-The hash algorithm string must be "SHA256".  The reserved string must be empty.
-The namespace field must be set to `tree_head:v0@sigsum.org`.
+The hash algorithm string must be "sha256".  The reserved string must be empty.
+The namespace field must be set to "tree_head:v0@sigsum.org".
 
 A witness must not cosign a tree head if it is inconsistent with prior history
 or if the timestamp is older than five (5) minutes.  This means that a witness plays
@@ -103,27 +103,22 @@ signature, and key hash.
 
 ```
 struct tree_leaf {
-    u64 shard_hint;
     u8 checksum[32];
     u8 signature[64];
     u8 key_hash[32];
 }
 ```
 
-`shard_hint` is a shard hint that matches the log's shard interval.
-
-`checksum` is a hash of the 32-byte message submitted by the signer.
+`checksum` is a hash of the 32-byte `message` submitted by the signer.
 The message is meant to represent some data and it is recommended that
 the signer uses `H(data)` as the message, in which case `checksum`
 will be `H(H(data))`.
 
-`signature` is computed by treating the above message as `M`
+`signature` is computed by treating the above `message` as `M`
 in SSH's
 	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
-The hash algorithm string must be "SHA256".  The reserved string must be empty.
-The namespace field must be set to `tree_leaf:v0:<shard_hint>@sigsum.org`, where
-`<shard_hint>` is replaced with the shortest decimal ASCII representation of `shard_hint`.
-This ensures a _sigsum shard-specific tree leaf context_.
+The hash algorithm string must be "sha256".  The reserved string must be empty.
+The namespace field must be set to "tree_leaf:v0@sigsum.org".
 
 `key_hash` is a hash of the signer's public key using the same
 format as Section 2.3.2.  It is included
@@ -266,8 +261,6 @@ Input:
 - `end_size`: index of the last leaf to retrieve, ASCII-encoded decimal number.
 
 Output on success:
-- `shard_hint`: shard hint to use as tree leaf context, ASCII-encoded decimal
-  number.
 - `checksum`: `tree_leaf.statement.checksum`, hex-encoded.
 - `signature`: `tree_leaf.signature`, hex-encoded.
 - `key_hash`: `tree_leaf.key_hash`, hex-encoded.
@@ -290,38 +283,35 @@ POST <log URL>/add-leaf
 ```
 
 Input:
-- `shard_hint`: shard hint to use as tree leaf context, ASCII-encoded decimal
-  number.
 - `message`: the message used to compute `tree_leaf.statement.checksum`, hex-encoded.
 - `signature`: `tree_leaf.signature`, hex-encoded.
 - `public_key`: public key that can be used to verify the
   above signature.  The key is encoded as defined in [RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2),
   then hex-encoded.
-- `domain_hint`: domain name indicating where `tree_leaf.key_hash` can be found
-  as a DNS TXT resource record with hex-encoding.  The left-most label must be
-  set to `_sigsum_v0`.
 
 Output on success:
 - None
 
-A submission will not be accepted if `signature` or `shard_hint` is invalid.
-The retrieved key hash must also match the specified public key.
-
-A submission may not be accepted if the second-level domain name has exceeded its
-rate limit.  A rate limit should only be charged for the specified domain hint
-on success.
+A submission will not be accepted if `signature` is invalid.
 
 HTTP status 200 OK must not be returned unless the log has sequenced its Merkle
 tree so that the next signed tree head merged the added leaf.  A submitter
 should (re)send their add-leaf request until observing HTTP status 200 OK.
 
+Processing of the add-leaf request may be subject to rate limiting.
+When a public log is configured to allows submissions from anyone, it
+is expected to require an [authentication token](#5-rate-limiting)
+passed in HTTP headers. A submission may be refused if the submitter
+has exceeded its rate limit. By above, adding a leaf typically
+involves multiple add-leaf requests. The rate limit is not applied to
+the number of requests, but rather to the number of unique leaves
+added.
+
 Example:
 ```
-$ echo "shard_hint=1633039200
-message=315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
+$ echo "message=315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
 signature=0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
-public_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c
-domain_hint=_sigsum_v0.example.com" | curl --data-binary @- <log URL>/add-leaf
+public_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c" | curl --data-binary @- <log URL>/add-leaf
 ```
 
 TODO: update the above with valid input.  Link
@@ -367,11 +357,97 @@ Ed25519 as signature scheme. SHA256 as hash function.
   signatures.
 - **Base URL**: Where the log can be reached over HTTP(S).  It is the
   prefix to be used to construct a version 0 specific endpoint.
-- **Shard interval start**: the earliest time at which logging
-  requests are accepted as the number of seconds since the UNIX epoch.
-- **Shard interval end**: determined by policy.  A log that is active should
-  use the number of seconds since the UNIX epoch as a dynamic shard end.
 
 ### 4.2 - Witness
 - **Public key**: public key that is used to verify tree head
   cosignatures.
+
+## 5 - Rate limiting
+
+Domain-based rate limiting is an optional feature of the protocol, but
+it is expected that a public logs that allows submissions from anyone
+will require it. Using this mechanism is required only for the
+`add-leaf` request, and it is intended to limit the rate at which
+leaves are added to the Merkle tree, by submitter domain.
+
+### 5.1 Setup
+
+To be allowed to post add-leaf requests to a public log, the submitter
+must do a one-time setup, with these three steps.
+
+1. Create a new ed25519 key pair, which we refer to as the rate limit
+   key pair.
+
+2. Publish the public key in DNS, as a TXT record under a domain that
+   the submitter controls. The left most label must be `_sigsum_v0`,
+   e.g., `_sigsum_v0.foocorp.example.com`. The contents of the TXT
+   record is the hex-encoded public key.
+   
+3. Use the private key to sign the target log's public key. More
+   precisely, use the log's public ed25519 key (formatted according to
+   [RFC 8032, section
+   5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)), and use
+   as message `M` in SSH's signing format. The hash algorithm string
+   must be "sha256". The reserved string must be empty. The namespace
+   field must be set to "submit-token:v0@sigsum.org".
+
+The signature will act as the submit token. Since it's a signature on
+the log's key hash, it is not valid for submission to any other log.
+
+It is strongly recommended that this key pair is different from the
+one used for the leaf signatures to be published by the log, and it
+may be stored on a separate machine with looser security requirements.
+There is also no need for this key to be long-lived; it can be rotated
+as frequently as desired by just adding and removing corresponding TXT
+records, in accordance with the DNS TTL settings. One could even
+discard the private key as soon as the needed token has been created.
+
+### 5.2 Request header
+
+When the submitter is ready to submit an `add-leaf` request to the
+log, it adds a custom HTTP header `sigsum-token` to the request. The
+header value is the domain on which the rate limit key was registered
+(without the left-most `_sigsum_v0` label, which is implicit),
+and the hex-encoded signature created as above, separated by spaces.
+E.g.,
+```
+sigsum-token: foocorp.example.com 0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
+```
+The log will validate this by retrieving the public key by a dns query
+on the given domain, and check that the token is a valid signature on
+the log's key hash. 
+
+If there are multiple TXT records with public keys in DNS, the log
+should try them all up to an implementation-dependent limit. We
+tentatively recommend that implementations should support at least 10
+keys, to support key rotation and some flexibility in key management.
+If the signature is valid for any of those keys it is accepted, and
+rate limit is applied on the domain, e.g., using
+https://publicsuffix.org/list/ to identify the appropriate "registered
+domain".
+
+### 5.3 Security considerations
+
+First, recall that rate limit isn't intended to protect the log server
+from arbitrary denial of service attacks to overload the log's
+capacity in terms of computational resources or network bandwidth. It
+is only intended to enable limiting, per domain, of the rate at which
+leaves are added to the Merkle tree.
+
+Similarly to HTTP authorization using basic auth or cookies, the
+submitter must use an encrypted channel for the requests that include
+sigsum's submit token. E.g., use HTTPS rather than plain HTTP.
+
+The fixed token implies that there is no way to prevent replay
+attacks. There are a couple of reasons that this is ok for this
+application.
+
+* The tokens are visible only to submitter and log (assuming a
+  properly encrypted channel).
+
+* Including the target log's key hash in the token means that it will
+  be rejected if sent anywhere else. So the log can't use it for
+  submission to other logs on the submitter's behalf.
+
+If the token is leaked, the remedy is to create a new rate limit key
+pair and token, and delete the DNS record for the old key.
