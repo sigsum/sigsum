@@ -406,11 +406,12 @@ discard the private key as soon as the needed token has been created.
 
 When the submitter is ready to submit an `add-leaf` request to the
 log, it adds a custom HTTP header `sigsum-token` to the request. The
-header value is the domain on which the rate limit key was registered,
+header value is the domain on which the rate limit key was registered
+(without the left-most `_sigsum_v0` label, which is implicit),
 and the hex-encoded signature created as above, separated by spaces.
 E.g.,
 ```
-sigsum-token: _sigsum_v0.foocorp.example.com 0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
+sigsum-token: foocorp.example.com 0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
 ```
 The log will validate this by retrieving the public key by a dns query
 on the given domain, and check that the token is a valid signature on
