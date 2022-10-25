@@ -1,0 +1,43 @@
+Date: 2022-10-25 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* filippo
+	* nisse
+	* ln5
+
+Status round
+	* [nisse] Working on changes to delete shard_hint and domain_hint, see:
+		* https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/12
+		* https://git.glasklar.is/sigsum/core/log-go/-/merge_requests/23
+	* [nisse] Added utilities to verify the new submit-token, see:
+		* https://git.glasklar.is/sigsum/core/sigsum-go/-/tree/main/pkg/submit-token
+	* [nisse] MR that adds ssh-agent support
+		* https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/16
+		* Reviewer?  (Not urgent.)
+	* [gregoire] Fix runner to use CI services: https://git.glasklar.is/glasklar/services/gitlab/-/issues/12#note_1885
+	* [gregoire] log-go integration tests in CI: https://git.glasklar.is/sigsum/core/log-go/-/merge_requests/21
+	* [gregoire] Cont. work on ssh-agent support in witness
+	* [rgdd] review+discuss
+	* [ln5] read ascii proposal, minor things with runners for gregoire
+
+Decisions
+	* Decision: adopt ascii format proposal
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2022-10-restructure-ascii-format.md
+		* TL;DR: with strict order, and single-line format for repeated keys
+
+Next steps
+	* [nisse] rate-limits, implementing the new ascii format (both Go and Witness)
+	* [rgdd, filippo] design and spec chat
+	* [rgdd] review to nisse
+
+Other useful links
+	* https://www.recurse.com/
