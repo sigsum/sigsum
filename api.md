@@ -44,9 +44,9 @@ is defined by OpenSSH.
 Log requests and responses are transmitted using simple ASCII encodings, for a
 smaller dependency than alternative parsers like JSON or percent-encoded URLs.
 Some input and output data is binary: cryptographic hashes and signatures.
-Binary data must be lower-case base16-encoded, also known as lower-case hex
-encoding.  Using hex as opposed to base64 is motivated by it being simpler,
-favoring ease of decoding and encoding over efficiency on the wire.
+Binary data must be base16-encoded, also known as hex encoding. Using hex as
+opposed to base64 is motivated by it being simpler, favoring ease of decoding
+and encoding over efficiency on the wire. Hex decoding is case-insensitive.
 
 We use the [Trunnel](https://gitweb.torproject.org/trunnel.git)
 [description language](https://www.seul.org/~nickm/trunnel-manual.html)
@@ -140,21 +140,19 @@ Input data in `add-*` requests is POST:ed in the HTTP message body as
 line-terminated ASCII key/value pairs.  The key-value format is `Key=Value\n`.
 Everything before the first equal-sign is considered a key.
 Everything after the first equal sign and before the next new line character is
-considered a value.  Different keys may appear in any order.  A key may be
-repeated, in which case the relative order must be preserved.  Example:
-```
-blue=first value for blue key
-red=some value for red key
-blue=second value for blue key
-```
+considered a value.  Keys must appear in the order specified below.  In some
+requests, the last key may be repeated 0 or more times, e.g., to represent a
+list of cosignatures.  Except for these repeated keys, each key must occur exactly
+once.
 
 Output data (in replies) is sent in the HTTP message body using the same
 key-value format as for `add-*` input data.
+[Example](#32-get-tree-head-cosigned)
 
 The HTTP status code is 200 OK to indicate success.  A different HTTP
-status code is used to indicate failure.  A log must respond with a
-human-readable string describing what went wrong using the key `error`.
-Example:
+status code is used to indicate partial success or failure.  On
+failure, a log must respond with a human-readable string describing
+what went wrong using the key `error`.  Example:
 ```
 error=Invalid signature
 ```
@@ -170,8 +168,8 @@ Input:
 - None
 
 Output on success:
-- `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
-- `tree_size`: `tree_head.tree_size`, ASCII-encoded decimal number.
+- `timestamp`: `tree_head.timestamp`, ASCII-encoded unsigned decimal number.
+- `tree_size`: `tree_head.tree_size`, ASCII-encoded unsigned decimal number.
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 
@@ -188,19 +186,32 @@ Input:
 - None
 
 Output on success:
-- `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
-- `tree_size`: `tree_head.tree_size`, ASCII-encoded decimal number.
+- `timestamp`: `tree_head.timestamp`, ASCII-encoded unsigned decimal number.
+- `tree_size`: `tree_head.tree_size`, ASCII-encoded unsigned decimal number.
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
-- `cosignature`: witness signature for the above tree head, hex-encoded.
-- `key_hash`: hashed witness public key that can be used to verify the
-  above cosignature.  The key is encoded as defined in [RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)
-  before hashing.  The resulting hash value is hex-encoded.
+- `cosignature`: Repeated key, see below.
 
-The `cosignature` and `key_hash` fields may repeat. The first witness signature
-corresponds to the first key hash, the second witness signature corresponds to
-the second key hash, etc.  At least one witness signature must be returned on
-success.  The number of witness signatures and key hashes must match.
+The value for the `cosignature` key consists of two hex-encoded
+fields, separated by a single space character. The first field is the
+hash of the witness public key that can be used to verify the
+cosignature. The key is encoded as defined in [RFC 8032, section
+5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2) before
+hashing. The resulting hash value is hex-encoded. The second field is
+the witness' hex-encoded signature of the tree head.the tree head. 
+
+Example output:
+```
+timestamp=1666856000
+tree_size=10037
+root_hash=e0797361b952f44c4ea73a93ba3ac7b13b809bafd5fd81ab3a0bf5e7a273c90b
+signature=73ca29e903a81e750434ccd76d5c37dbd6219d2e0df162f48a8a0e52cc2066a4ec8bf5f8a57724e7fb3e009cbbc5a063bf0e70ebe01bcc422d727a363b6ef4f7
+cosignature=a82e590febc6b84385b0f20c3cf33636441609c16bd5539624cb930838e083e4 3c7061b10982d8180b08e63cd87d78df97074dbc867f08f23925a9f4525281bd999cbd5aa55356783c08aec72bf13c20806583389e63fb63fad43b3e57c4251e
+cosignature=7c5725cdea3514e2b29a98b3f3b48541538d5561f10ae7261b730ee43bce54ef 1efd1ae64eb8f198712597dc9fe0e4bd01e584590b24e321155513f698699c1bc0d6df470da55c78c808d0a30bd68b26a5e9f9d6e45c5c4ef746dc48a4da5c7a
+```
+
+TODO: update the above with valid input and also provide corresponding keys so
+signatures can be verified.
 
 ### 3.3 - get-inclusion-proof
 ```
@@ -209,19 +220,19 @@ GET <log URL>/get-inclusion-proof/<tree_size>/<leaf_hash>
 
 Input:
 - `tree_size`: tree size of the tree head that the proof should be
-  based on, ASCII-encoded decimal number.
+  based on, ASCII-encoded unsigned decimal number.
 - `leaf_hash`: leaf hash identifying which `tree_leaf` the log should prove
   inclusion of, hex-encoded.
 
 Output on success:
 - `leaf_index`: zero-based index of the leaf that the proof is based on,
-  ASCII-encoded decimal number.
+  ASCII-encoded unsigned decimal number.
 - `inclusion_path`: node hash, hex-encoded.
 
 The leaf hash is computed using the RFC 6962 hashing strategy.  In
 other words, `H(0x00 | tree_leaf)`.
 
-`inclusion_path` must contain one or more hashes.  The order of node hashes
+`inclusion_path` is a repeated key, listing one or more hashes.  The order of node hashes
 follow from the hash strategy, see RFC 6962.
 
 Example:
@@ -236,14 +247,14 @@ GET <log URL>/get-consistency-proof/<old_size>/<new_size>
 
 Input:
 - `old_size`: tree size of an older tree head that the log should prove is
-  consistent with a newer tree head, ASCII-encoded decimal number.
-- `new_size`: tree size of a newer tree head, ASCII-encoded decimal number.
+  consistent with a newer tree head, ASCII-encoded unsigned decimal number.
+- `new_size`: tree size of a newer tree head, ASCII-encoded unsigned decimal number.
 
 Output on success:
 - `consistency_path`: node hash, hex-encoded.
 
-`consistency_path` must contain one or more hashes.  The order of node
-hashes follow from the hash strategy, see RFC 6962.
+`consistency_path` is a repeated key, listing one or more hashes. The
+order of node hashes follow from the hash strategy, see RFC 6962.
 
 Example:
 ```
@@ -256,18 +267,17 @@ GET <log URL>/get-leaves/<start_size>/<end_size>
 ```
 
 Input:
-- `start_size`: index of the first leaf to retrieve, ASCII-encoded decimal
+- `start_size`: index of the first leaf to retrieve, ASCII-encoded unsigned decimal
   number.
-- `end_size`: index of the last leaf to retrieve, ASCII-encoded decimal number.
+- `end_size`: index of the last leaf to retrieve, ASCII-encoded unsigned decimal number.
 
 Output on success:
-- `checksum`: `tree_leaf.statement.checksum`, hex-encoded.
-- `signature`: `tree_leaf.signature`, hex-encoded.
-- `key_hash`: `tree_leaf.key_hash`, hex-encoded.
+- `leaf`: Repeated key, see below.
 
-All fields may be repeated to return more than one leaf.  The first
-value in each list refers to the first leaf, the second value in each
-list refers to the second leaf, etc.  The size of each list must match.
+The value for the `leaf` represents the `tree_leaf` struct, and it consists of
+three hex-encoded fields, with a single space character as separator. The first
+field is the checksum, second is hash of the key used to sign the checksum, and
+the third and last field is the signature.
 
 A log may return fewer leaves than requested.  At least one leaf
 must be returned on success.
@@ -325,17 +335,18 @@ POST <log URL>/add-cosignature
 ```
 
 Input:
-- `cosignature`: witness signature over `tree_head`, hex-encoded.
-- `key_hash`: hashed witness public key that can be used to verify the
-  above cosignature.  The key is encoded as defined in [RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)
-  prior to hashing.  The resulting hash value is hex-encoded.
+- `cosignature`: witness' key hash and signature, hex-encoded, and
+  separated by a single space.
+
+The syntax of the `cosignature` value is identical to the same key in the
+`get-tree-head-cosigned`, however, it is not a repeated key in this request.
 
 Output on success:
 - None
 
-`key_hash` can be used to identify which witness cosigned a tree head.  A
-key-hash, rather than the full public key, is used to motivate monitors
-and end-users to locate the appropriate key and make an explicit trust decision.
+The `key_hash` can be used to identify which witness cosigned a tree head.  A
+key-hash, rather than the full public key, is used to motivate monitors and
+end-users to locate the appropriate key and make an explicit trust decision.
 
 Note that logs must be configured with relevant public keys for witnesses.
 
