@@ -16,6 +16,9 @@ slash-delimited at the end of the respective endpoint URLs.
 - Input data in add-requests and output data in responses are expressed as
 ASCII-encoded key/value pairs.
 - Binary data is hex-encoded before being transmitted.
+- Integers are unsigned and represented in decimal.  More precisely, an integer
+  is represented as a sequence of one or more ASCII decimal digits. Integer
+  values exceeeding 64 bits in size are not allowed.
 
 The motivation for using text-based formats for request and response data is
 that it is simple to parse and understand for humans.  These formats are not
@@ -168,8 +171,8 @@ Input:
 - None
 
 Output on success:
-- `timestamp`: `tree_head.timestamp`, ASCII-encoded unsigned decimal number.
-- `tree_size`: `tree_head.tree_size`, ASCII-encoded unsigned decimal number.
+- `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
+- `tree_size`: `tree_head.tree_size`, ASCII-encoded decimal number.
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 
@@ -186,8 +189,8 @@ Input:
 - None
 
 Output on success:
-- `timestamp`: `tree_head.timestamp`, ASCII-encoded unsigned decimal number.
-- `tree_size`: `tree_head.tree_size`, ASCII-encoded unsigned decimal number.
+- `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
+- `tree_size`: `tree_head.tree_size`, ASCII-encoded decimal number.
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 - `cosignature`: Repeated key, see below.
@@ -200,7 +203,11 @@ cosignature. The key is encoded as defined in [RFC 8032, section
 hashing. The resulting hash value is hex-encoded. The second field is
 the witness' hex-encoded signature of the tree head.the tree head. 
 
-Example output:
+Example request:
+```
+$ curl <log URL>/get-tree-head-cosigned
+```
+Example response:
 ```
 timestamp=1666856000
 tree_size=10037
@@ -220,13 +227,13 @@ GET <log URL>/get-inclusion-proof/<tree_size>/<leaf_hash>
 
 Input:
 - `tree_size`: tree size of the tree head that the proof should be
-  based on, ASCII-encoded unsigned decimal number.
+  based on, ASCII-encoded decimal number.
 - `leaf_hash`: leaf hash identifying which `tree_leaf` the log should prove
   inclusion of, hex-encoded.
 
 Output on success:
 - `leaf_index`: zero-based index of the leaf that the proof is based on,
-  ASCII-encoded unsigned decimal number.
+  ASCII-encoded decimal number.
 - `inclusion_path`: node hash, hex-encoded.
 
 The leaf hash is computed using the RFC 6962 hashing strategy.  In
@@ -247,8 +254,8 @@ GET <log URL>/get-consistency-proof/<old_size>/<new_size>
 
 Input:
 - `old_size`: tree size of an older tree head that the log should prove is
-  consistent with a newer tree head, ASCII-encoded unsigned decimal number.
-- `new_size`: tree size of a newer tree head, ASCII-encoded unsigned decimal number.
+  consistent with a newer tree head, ASCII-encoded decimal number.
+- `new_size`: tree size of a newer tree head, ASCII-encoded decimal number.
 
 Output on success:
 - `consistency_path`: node hash, hex-encoded.
@@ -267,9 +274,9 @@ GET <log URL>/get-leaves/<start_size>/<end_size>
 ```
 
 Input:
-- `start_size`: index of the first leaf to retrieve, ASCII-encoded unsigned decimal
+- `start_size`: index of the first leaf to retrieve, ASCII-encoded decimal
   number.
-- `end_size`: index of the last leaf to retrieve, ASCII-encoded unsigned decimal number.
+- `end_size`: index of the last leaf to retrieve, ASCII-encoded decimal number.
 
 Output on success:
 - `leaf`: Repeated key, see below.
