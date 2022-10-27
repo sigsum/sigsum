@@ -147,11 +147,12 @@ once.
 
 Output data (in replies) is sent in the HTTP message body using the same
 key-value format as for `add-*` input data.
+[Example](#3.2-get-tree-head-cosigned)
 
 The HTTP status code is 200 OK to indicate success.  A different HTTP
 status code is used to indicate partial success or failure.  On
 failure, a log must respond with a human-readable string describing
-what went wrong using the key `error`. Example:
+what went wrong using the key `error`.  Example:
 ```
 error=Invalid signature
 ```
@@ -198,6 +199,19 @@ cosignature. The key is encoded as defined in [RFC 8032, section
 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2) before
 hashing. The resulting hash value is hex-encoded. The second field is
 the witness' hex-encoded signature of the tree head.the tree head. 
+
+Example output:
+```
+timestamp=1666856000
+tree_size=10037
+root_hash=e0797361b952f44c4ea73a93ba3ac7b13b809bafd5fd81ab3a0bf5e7a273c90b
+signature=73ca29e903a81e750434ccd76d5c37dbd6219d2e0df162f48a8a0e52cc2066a4ec8bf5f8a57724e7fb3e009cbbc5a063bf0e70ebe01bcc422d727a363b6ef4f7
+cosignature=a82e590febc6b84385b0f20c3cf33636441609c16bd5539624cb930838e083e4 3c7061b10982d8180b08e63cd87d78df97074dbc867f08f23925a9f4525281bd999cbd5aa55356783c08aec72bf13c20806583389e63fb63fad43b3e57c4251e
+cosignature=7c5725cdea3514e2b29a98b3f3b48541538d5561f10ae7261b730ee43bce54ef 1efd1ae64eb8f198712597dc9fe0e4bd01e584590b24e321155513f698699c1bc0d6df470da55c78c808d0a30bd68b26a5e9f9d6e45c5c4ef746dc48a4da5c7a
+```
+
+TODO: update the above with valid input and also provide corresponding keys so
+signatures can be verified.
 
 ### 3.3 - get-inclusion-proof
 ```
