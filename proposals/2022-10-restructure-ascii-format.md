@@ -109,3 +109,18 @@ Note that the name of keys is somewhat redundant in this proposal. The
 names are kept for clarity, and to ensure that future extensions can
 either be backwards compatible, or fail in an obvious way on version
 mismatch.
+
+# Key order
+
+During sucussion of this proposal, it was suggested that keys should
+be listed in alphabetic/lexicographic order. That would let a general
+parser validate proper order, and populate an unordered map with keys
+and values, without knowing the particular details of the message. Not
+included in this proposal because:
+
+* Repeated keys (always last) would appear out of order, which needs
+further work to fit in this model.
+
+* With the very small number of messages, we expect a parser function
+for each message, with no need for an intermediate step to populate a
+map with keys and values.
