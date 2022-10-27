@@ -142,7 +142,7 @@ Everything before the first equal-sign is considered a key.
 Everything after the first equal sign and before the next new line character is
 considered a value.  Keys must appear in the order specified below.  In some
 requests, the last key may be repeated 0 or more times, e.g., to represent a
-list of cosignatures.  Except for these repeated keys, key must occur exactly
+list of cosignatures.  Except for these repeated keys, each key must occur exactly
 once.
 
 Output data (in replies) is sent in the HTTP message body using the same
@@ -185,14 +185,14 @@ Input:
 - None
 
 Output on success:
-- `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
-- `tree_size`: `tree_head.tree_size`, ASCII-encoded decimal number.
+- `timestamp`: `tree_head.timestamp`, ASCII-encoded unsigned decimal number.
+- `tree_size`: `tree_head.tree_size`, ASCII-encoded unsigned decimal number.
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 - `cosignature`: Repeated key, see below.
 
 The value for the `cosignature` key consists of two hex-encoded
-fields, separated by a single space character. First field is the
+fields, separated by a single space character. The first field is the
 hash of the witness public key that can be used to verify the
 cosignature. The key is encoded as defined in [RFC 8032, section
 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2) before
@@ -206,13 +206,13 @@ GET <log URL>/get-inclusion-proof/<tree_size>/<leaf_hash>
 
 Input:
 - `tree_size`: tree size of the tree head that the proof should be
-  based on, ASCII-encoded decimal number.
+  based on, ASCII-encoded unsigned decimal number.
 - `leaf_hash`: leaf hash identifying which `tree_leaf` the log should prove
   inclusion of, hex-encoded.
 
 Output on success:
 - `leaf_index`: zero-based index of the leaf that the proof is based on,
-  ASCII-encoded decimal number.
+  ASCII-encoded unsigned decimal number.
 - `inclusion_path`: node hash, hex-encoded.
 
 The leaf hash is computed using the RFC 6962 hashing strategy.  In
@@ -233,8 +233,8 @@ GET <log URL>/get-consistency-proof/<old_size>/<new_size>
 
 Input:
 - `old_size`: tree size of an older tree head that the log should prove is
-  consistent with a newer tree head, ASCII-encoded decimal number.
-- `new_size`: tree size of a newer tree head, ASCII-encoded decimal number.
+  consistent with a newer tree head, ASCII-encoded unsigned decimal number.
+- `new_size`: tree size of a newer tree head, ASCII-encoded unsigned decimal number.
 
 Output on success:
 - `consistency_path`: node hash, hex-encoded.
@@ -253,16 +253,16 @@ GET <log URL>/get-leaves/<start_size>/<end_size>
 ```
 
 Input:
-- `start_size`: index of the first leaf to retrieve, ASCII-encoded decimal
+- `start_size`: index of the first leaf to retrieve, ASCII-encoded unsigned decimal
   number.
-- `end_size`: index of the last leaf to retrieve, ASCII-encoded decimal number.
+- `end_size`: index of the last leaf to retrieve, ASCII-encoded unsigned decimal number.
 
 Output on success:
 - `leaf`: Repeated key, see below.
 
 The value for the `leaf` represents the `tree_leaf` struct, and it consists of
 three hex-encoded fields, with a single space character as separator. The first
-field is the checksum, second is hash of the key used to sogn the checksum, and
+field is the checksum, second is hash of the key used to sign the checksum, and
 the third and last field is the signature.
 
 A log may return fewer leaves than requested.  At least one leaf
@@ -325,8 +325,7 @@ Input:
   separated by a single space.
 
 The syntax of the `cosignature` value is identical to the same key in the
-`get-tree-head-cosigned`, but in this request, the key must occur exactly once;
-it is *not* repeated.
+`get-tree-head-cosigned`, however, it is not a repeated key in this request.
 
 Output on success:
 - None
