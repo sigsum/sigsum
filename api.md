@@ -18,7 +18,11 @@ ASCII-encoded key/value pairs.
 - Binary data is hex-encoded before being transmitted.
 - Integers are unsigned and represented in decimal.  More precisely, an integer
   is represented as a sequence of one or more ASCII decimal digits. Integer
-  values exceeeding 64 bits in size are not allowed.
+  values exceeeding 63 bits in size are not allowed. This range (rather than the
+  full range of an unsigned 64-bit integer) lets implementations represent
+  values using either a signed or an unsigned 64-bit integer type. E.g, posix
+  64-bit `time_t` and java `long` are signed types, with no convenient unsigned
+  counterpart.
 
 The motivation for using text-based formats for request and response data is
 that it is simple to parse and understand for humans.  These formats are not
