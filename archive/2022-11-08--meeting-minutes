@@ -1,0 +1,52 @@
+Date: 2022-11-08 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* nisse
+	* ln5 (voice only)
+	* gregoire
+	* filippo
+	* foxboron
+
+Status round
+	* [nisse] ascii refactor in progress
+		* Merged sigsum-go changes
+		* sigsum-py barely started
+		* log-go under review: https://git.glasklar.is/sigsum/core/log-go/-/merge_requests/27
+	* [nisse] rate-limiting tests in progress
+	* [nisse] looking into merkle-tree details, to get a better understanding of state on db side. Current design requires a "reverse map" from leaf hash --> index, which makes things more complex (in terms of either code complexity or needed working storage). I think this is worth a deeper look for v2.
+	* [nisse] merged AUTHORS file mr.
+	* [rgdd, filippo] discuss tlogs and some aspects of sigsum, brief summary:
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2022-11-08-tlog-notes
+	* [filippo] wrote up two draft proposals based on the discussion with rgdd
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/13
+	* [gregoire] ssh-agent support for witness
+		* https://gitlab.sigsum.org/sigsum/core/sigsum-py/-/merge_requests/6
+	* [gregoire] python packaging
+
+Decisions
+	* Decision: update meet time to 1215 UTC
+
+Next steps
+	* [nisse] review ssh agent in witness, merging ascii and rate limiting things
+	* [gregoire] sigsum-py packaging with poetry
+	* [morten, ln5] get started with ansible stuff/examples for sigsum
+	* [gregoire] trillian-images and docker-compose setup to test witness
+	* everyone: think about the added proposals
+
+
+Other useful links
+	* Trillian serverless implementation:
+		* https://github.com/google/trillian-examples/tree/master/serverless
+	* Regarding storage, here's an efficient implementation in C supporting the CT case (and more, supposedly):
+		* https://git.sunet.se/plop.git/tree/c_src/permdb.h
+	* Sigsum calendar for anyone who knows the URL:
+		* https://nextcloud.glasklarteknik.se/index.php/apps/calendar/p/P2RDRwn8gNoCaBJd
