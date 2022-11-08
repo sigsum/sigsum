@@ -1,0 +1,95 @@
+Few notes from two informal chats between rgdd+filippo.
+
+Debian package management now
+
+  - PGP web of trust to get signed packages to a single central server
+  - The single central server signs each package with a key-pair that is visible
+    to end users.  Every X hours, new packages are published.  This is pretty
+    much implemented as a cron-job with a bunch of bash scripts.
+  - The danger: if this single server and/or its key gets owned...ops.  And its
+    then easy to target users with malicious packages from package mirrors.
+
+What Debian package management could look like
+
+  - Don't mess with the way packages reach the central server.  That would be
+    painful to change, and it's a working auth mechanism for what to publish
+  - Run a very minimal transparency log on the single server, just for Debian
+  - Leaf := checksum + package name + package version
+  - Log signs tree head and distributes it to witnesses for cosigning
+  - User downloads .deb files and manifests as usual, and gets inclusion proof
+    to a cosigned tree head as part of the manifest.  Offline verification.
+  - User system is configured with a trust policy for the log and witnesses
+  - While rolling out gradually, users would fail-open and the central server
+    still PGP signs as before.  Eventually, there would be a transition to
+    fail-close with a kill-switch.  Long-term, kill PGP key-pair all together.
+    This signing activity has been replaced by signing its own log instead.
+  - Monitors would likely download entries via apt somehow, details fuzzy
+
+(XXX: the single-server transparency log may be subject to the risk of
+publishing a tree head for cosigning before the sequenced data has been
+replicated in a robust way, e.g., via mirrors.  TBD further sometime.)
+
+Brainstorm - why might Debian go for external witnesses but not an external log?
+
+Less steep adoption curve.  Just a transparency log that runs on the central
+server is a relatively small change compared to how packaging works today.
+Further, you can add witnesses gradually, and argue that these external
+dependencies are easy to operate in contrast to one or more open public logs.
+If what can't be allowed to happen happen, witnessing can be disabled whereas if
+the log ecosystem is unavailable, there are no new packages being published.
+
+An almost quote:
+
+> Hardest part of the entire project is to get the witness ecosystem up and
+> running smoothly.  If we fail the first time we might not get a second shot.
+
+About witness-verified timestamps
+
+  - It's a nice property that monitors can be convinced of freshness, although
+    it could also be achieved if monitors could contact witnesses directly.
+    It could also be a burden if a log is expected to print a new tree head
+    every X time units to prevent alarms from ringing (some relation to MMD).
+  - It's a nice property for some use-cases to be able to say something about
+    when an entry was logged (two cosigned tree heads and an inclusion proof).
+  - It's limiting if all cosigning must happen within X time units, currently
+    defined as 5m in the Sigsum API spec.  We could get rid of this limitation
+    by letting each witness attest what the current time is, and distribute it
+    as part of the cosignature format that's then tree head stuff + timestamp.
+    In other words, the log is not the one setting the timestamp to verify.
+  - Offering witness verified timestamps seems to be reasonable, and then it is
+    up to each log ecosystem to determine for themselves if users and/or
+    monitors make use of them (or, say, is OK with a log that doesn't publish a
+    new tree head for 6 months because updates are meant to be that infrequent.)
+
+(An option that was discussed: checkpoint format with a new signature type that
+signs different bytes that then incorporate a witness-selected timestamp.)
+
+About monitors
+
+  - Some ecosystems will likely want to operate monitors in a "tail" mode to
+    detect issues as soon as possible.  Other ecosystems may be fine with the
+    possibility to detect and dig into the log with less continuous methods.
+    Just that it is possible to monitor is a deterrence factor in itself.
+
+Until next time
+
+  - Think more about leaf data, what should (not) be there and how?  The needs
+    are different for the above Debian model and an open submission log.  We
+    could surely also find a 3rd use-case that wants a different leaf too.
+
+---
+
+- Optimizing the leaf to avoid poisoning doesn't make much sense in a setting
+  where the log operator is also the only submitter.  And leaving the leaf in
+  Sigsum with "options" to facilitate changes is not a direction we see much
+  benefit from.  It will most likely cause confusion and complexity.
+- What we are more excited about sharing is the overall verification pattern in
+  Sigsum: offline verification with witnesing (claims append-only + freshness),
+  as well as how should one be doing monitoring.  Witnesses are trust anchors.
+- If logs are private the current communication pattern for witnessing doesn't
+  fit.  The current communication pattern also doesn't permit low latency.
+- Filippo will sketch on the reversed communication pattern where witnesses
+  have public endpoints, to facilitate further discussion of pros/cons.
+- Perhaps all of the above should be expressed as a framework?  "If you want
+  A,B,C you can do X", "if you want D,E,G you can do Y" etc.  Even in Sigsum,
+  we have yet to provide good recomendations for applications and monitors.
