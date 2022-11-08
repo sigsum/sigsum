@@ -1,0 +1,24 @@
+Date: 2022-11-01 1100 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* None, async meeting due to most of us being unavailable today
+
+Status round
+	* [nisse] rate limit in progress (but not much action last week)
+	* [nisse] working on implementing last weeks ascii proposal, https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/17
+	* [nisse] reorganizing types/crypto package, as a preparation for above. Considering also doing our own signer interface (ed25519 only): https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/19
+	* [rgdd] chat with filippo + discuss and review
+
+Decisions
+	* None
+
+Next steps
+	* None
