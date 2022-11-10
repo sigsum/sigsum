@@ -97,7 +97,7 @@ Logs and witnesses perform (co)signing operations by treating the serialized
 tree head as the message `M` in SSH's
 	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
 The hash algorithm string must be "sha256".  The reserved string must be empty.
-The namespace field must be set to "tree_head:v0@sigsum.org".
+The namespace field must be set to "tree-head:v0@sigsum.org".
 
 A witness must not cosign a tree head if it is inconsistent with prior history
 or if the timestamp is older than five (5) minutes.  This means that a witness plays
@@ -125,7 +125,7 @@ will be `H(H(data))`.
 in SSH's
 	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
 The hash algorithm string must be "sha256".  The reserved string must be empty.
-The namespace field must be set to "tree_leaf:v0@sigsum.org".
+The namespace field must be set to "tree-leaf:v0@sigsum.org".
 
 `key_hash` is a hash of the signer's public key using the same
 format as Section 2.3.2.  It is included
