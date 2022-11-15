@@ -1,0 +1,34 @@
+Date: 2022-11-15 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* nisse
+	* filippo
+	* gregoire
+	* ln5
+
+Status round
+	* [rgdd] reflect more about filippo's MR
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/13
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2022-11-15-discuss-witness-changes
+	* [nisse] 
+		* rate-limit implementation complete
+		* playing with in-memory implementation of merkle tree
+	* [gregoire] merge request for the package management stuff in sigsum-py
+
+Decisions
+	* None
+
+Next steps
+	* [filippo] start drafting a witness.md spec (or similar) based on MR#13, close MR#13.
+	* [rgdd] review rate-limit MR
+	* [nisse] review gregoire's MR in sigsum-py, continue looking at the ASCII format in sigsum-py
+	* [gregoire] continue refactoring the python code to make it reusable (log client)
