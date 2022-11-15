@@ -1,0 +1,71 @@
+----
+INFO
+----
+
+Meet date:  2022-11-15 (ad-hoc, anyone welcome)
+Meet link:  https://meet.sigsum.org/sigsum
+Meet topic: https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/13
+Meet goal:  identify if there are any significant blockers or unwanted side-effects
+
+Please read the above MR thread / proposal in advance.
+
+(Here: rgdd, nisse, ln5, fox)
+
+-----
+NOTES
+-----
+
+Main changes:
+
+1. Claims for witness slightly changed (timestamp)
+2. Witness gets contacted ("log pushes sth")
+
+We all seem to agree that (1) is a strict improvement.
+
+(2) has trade-offs.  Would mean a separate protocol for witnessing that is
+usable for both "public" and "private" log.
+
+Is it only logs that contact witnesses?  Does it have to be only logs?  Does it
+have to be with (forced) low latency, or could it be an infinite latency
+protocol?
+
+(Witness is more than a signing oracle, needs to update state.)
+
+"How hard is it to write a server vs how hard is it to write a client"
+
+- Volume (num requests)
+- Format (what needs to be parsed and by whom)
+
+WG endpoint
+- Can limit access per key
+
+Onion service
+- Possible to not say which basement you're in (protect geo-info)
+- Anonymity aspect of it not really interesting for a useful witness
+
+If witness keys are "more online" than before, would it make sense to have a key
+hierarchy for witnesses with online/offline keys?  Probably not that useful
+because client policies are hard (if not impossible) to change.  In other words,
+a compromised "leaf key" would be difficult to revoke, security in large depends
+on m/n witnesses.
+
+How do we cope with higher risk of witness key being owned?
+- Increase m / n, but the impact of the change in ratio also depends on
+  diversity between witnesses
+
+---------
+Take away
+---------
+
+Key question: how much worse is it to put your signing machinery "online", as
+opposed to semi-online which is "I have a client" vs "I have a server".  To
+answer this question more confidently we need to move forward and define the
+protocol.
+
+An observation: it is likely helpful to consider "glasklar" a "pilot private
+witness".  Our admin team would be able to operate a witness with the current
+sigsum design for a small number of logs.  Is that still reasonable if we update
+the witnessing protocol?
+
+(If yes, probably representative of other smaller orgs that run some services as
+well.)
