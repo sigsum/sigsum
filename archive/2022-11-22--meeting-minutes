@@ -1,0 +1,56 @@
+Date: 2022-11-22 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* nisse
+	* ln5
+	* gregoire
+
+Status round
+	* [nisse] Merged rate limit implemention
+		* (And filed issues for desired extensions and known problems)
+	* [nisse] Merged the in-memory backend
+		* Exercised by running integration tests with --ephemeral
+		* Intend to use it for witness integration test as well, and tests for client command line tools
+	* [nisse] Started looking into the state management code
+		* Lacks tests and docs, and may need some refactoring into more easily testable pieces
+	* [gregoire] poetry setup
+	* [gregoire] Started refactoring HTTP client
+	* [rgdd] review work
+
+Decisions
+	* None
+
+Next steps
+	* What's left when it comes to review of naming for 1.0 review of naming
+	  done? Some parts (e.g., start_size/end_size for get-leaves) is not a
+	  change of wireformat, it's docs + sigsum-go api change to rename
+	  corresponding struct fields. Is there also some renaming on the wire
+	  we want to do?
+		* Check issues in project repo
+		* Read through api doc from start to finnish, any other akward names?
+	* [nisse] Would like to merge
+	  https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/26 and
+	  https://git.glasklar.is/sigsum/core/log-go/-/merge_requests/40
+	  (smaller refactoring) first. Higher-level suggestinos on how to
+	  restructure/refactor state management also welcome, wip MR:s
+	  https://git.glasklar.is/sigsum/core/log-go/-/merge_requests/36,
+	  https://git.glasklar.is/sigsum/core/log-go/-/merge_requests/35.
+	* [nisse] Look into
+	  https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/2 (probably an
+	  easy fix), document primary/secondary interaction.
+	* [rgdd] review first two MRs (especially look at naming), and for the
+	  other MRs high-level review.  And check ssh merge request, anything
+	  more to do there or just merge?
+	* [gregoire] continue http client things in python lib
+	* [ln5] get poc log running again, and it should follow main (will sync
+	  with morten about this too).  Will update name and key of
+	  ghost-shrimp, and update that too.
