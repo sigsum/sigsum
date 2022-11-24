@@ -1,4 +1,4 @@
-# Sigsum Logging API v0
+-# Sigsum Logging API v0
 This document outlines the sigsum logging API, version 0.  The broader picture
 is not explained here.  We assume that you are already familiar with the sigsum
 logging [design document](https://git.sigsum.org/sigsum/tree/doc/design.md).
@@ -274,13 +274,13 @@ $ curl <log URL>/get-consistency-proof/42/4711
 
 ### 3.5 - get-leaves
 ```
-GET <log URL>/get-leaves/<start_size>/<end_size>
+GET <log URL>/get-leaves/<start_index>/<end_index>
 ```
 
 Input:
-- `start_size`: index of the first leaf to retrieve, ASCII-encoded decimal
+- `start_index`: index of the first leaf to retrieve, ASCII-encoded decimal
   number.
-- `end_size`: index of the last leaf to retrieve, ASCII-encoded decimal number.
+- `end_index`: index of the last leaf to retrieve, ASCII-encoded decimal number.
 
 Output on success:
 - `leaf`: Repeated key, see below.
