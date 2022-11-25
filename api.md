@@ -1,4 +1,4 @@
--# Sigsum Logging API v0
+# Sigsum Logging API v0
 This document outlines the sigsum logging API, version 0.  The broader picture
 is not explained here.  We assume that you are already familiar with the sigsum
 logging [design document](https://git.sigsum.org/sigsum/tree/doc/design.md).
