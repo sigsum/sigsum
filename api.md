@@ -274,13 +274,13 @@ $ curl <log URL>/get-consistency-proof/42/4711
 
 ### 3.5 - get-leaves
 ```
-GET <log URL>/get-leaves/<start_size>/<end_size>
+GET <log URL>/get-leaves/<start_index>/<end_index>
 ```
 
 Input:
-- `start_size`: index of the first leaf to retrieve, ASCII-encoded decimal
+- `start_index`: index of the first leaf to retrieve, ASCII-encoded decimal
   number.
-- `end_size`: index of the last leaf to retrieve, ASCII-encoded decimal number.
+- `end_index`: index of the last leaf to retrieve, ASCII-encoded decimal number.
 
 Output on success:
 - `leaf`: Repeated key, see below.
