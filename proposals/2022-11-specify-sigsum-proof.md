@@ -112,7 +112,7 @@ configuration of public keys for submitter, log and witnesses
 # Appendix: Offline revocation
 
 This is somewhat orthogonal to the sigsum service itself, and not part
-of thi sproposal, but I think it is important to have some way to act
+of this proposal, but I think it is important to have some way to act
 when a monitor discovers an unexpected signature log. The basic idea
 is taken from a discussion in the spki context (but I can't find a
 good reference).
