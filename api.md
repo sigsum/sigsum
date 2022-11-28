@@ -231,7 +231,7 @@ GET <log URL>/get-inclusion-proof/<tree_size>/<leaf_hash>
 
 Input:
 - `tree_size`: tree size of the tree head that the proof should be
-  based on, ASCII-encoded decimal number.
+  based on, ASCII-encoded decimal number, must be at least 2.
 - `leaf_hash`: leaf hash identifying which `tree_leaf` the log should prove
   inclusion of, hex-encoded.
 
@@ -245,6 +245,10 @@ other words, `H(0x00 | tree_leaf)`.
 
 `inclusion_path` is a repeated key, listing one or more hashes.  The order of node hashes
 follow from the hash strategy, see RFC 6962.
+
+Note that to check inclusion in a tree of size 1, a client can and
+should check inclusion locally: A given leaf is included if and only
+if the `leaf_hash` and the tree's `root_hash` are equal.
 
 Example:
 ```
@@ -267,6 +271,11 @@ Output on success:
 `consistency_path` is a repeated key, listing one or more hashes. The
 order of node hashes follow from the hash strategy, see RFC 6962.
 
+It's required that `new_size` > `old_size`> 0. In the case of the old
+tree being empty, consistency is trivial, and for trees of the same
+size, a client can and should do a local comparison of respective
+tree's `root_hash`.
+
 Example:
 ```
 $ curl <log URL>/get-consistency-proof/42/4711
@@ -284,6 +293,8 @@ Input:
 
 Output on success:
 - `leaf`: Repeated key, see below.
+
+The leaf indices are zero-based.
 
 The value for the `leaf` represents the `tree_leaf` struct, and it consists of
 three hex-encoded fields, with a single space character as separator. The first
