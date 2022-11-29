@@ -1,0 +1,41 @@
+Date: 2022-11-29 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* ln5
+	* rgdd
+	* nisse
+	* filippo
+	* foxboron
+
+Status round
+	* filippo: working on witness draft
+	* nisse: merged ssh-agent support for sigsum-go (not yet log-go)
+	* rgdd: review/discuss with nisse
+	* rgdd: checking our backlog of issues (closing done things, etc)
+	* foxboron: ansible, untangling roles from an internal repo to a public
+	  repo as reference implementation
+	* ln5: deploying logs from ansible things from foxboron, and checking
+	  handling of backups for our current logs (purpose: document this process)
+
+
+Decisions
+	* Decision: half-open intervals
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2022-11-half-open-intervals.md
+
+Next steps
+	* filippo: push witness draft mr and ask for comments
+	* nisse: looking into state manager test/refactoring
+	* nisse: what should a "sigsum proof" be? Sketch at
+	  https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/18.
+	  Tool to create a proof:
+	  https://git.glasklar.is/nisse/sigsum-tools/-/blob/main/sigsum/main.go#L411
+	* rgdd: look at sigsum proof format
+	* rgdd: continue going through issues, remove "Draft: " from tooling milestone
