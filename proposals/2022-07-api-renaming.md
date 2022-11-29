@@ -2,22 +2,24 @@
 
 Rename the following endpoints:
 
-  - s/get-tree-head-to-cosign/get-untrusted-tree-head/
+  - s/get-tree-head-to-cosign/get-next-tree-head/
   - s/get-tree-head-cosigned/get-tree-head/
-  - s/get-leaves/get-entries/
-  - s/add-leaf/add-entry/
 
-Rename the following ASCII keys:
+Rename the ASCII key:
 
-  - s/start_size/start_index/
-  - s/end_size/end_index/
-
-(Reminder: specify zero-based index.)
-
+  - s/tree_size/size/
+  - s/inclusion_path/node_hash/
+  - s/consistency_path/node_hash/
 # Motivation
 
-Improve readability of api.md, especially for those that skim it quickly.  For
-example, "untrusted-tree-head" is a very strong signal for what you don't want,
-and it should be easier to relate to the term "entry" rather than a "leaf".
+Improve readability of api.md, especially for those that skim it
+quickly.
 
-The renamed ASCII keys better reflect the text that describes them.
+Stick to established "tree" / "leaf" terminology, to follow
+conventions in documents on merkle trees and certificate transparency.
+
+Changing to `size` is consistent with `new_size`/`old_size` in
+description of consistency proof. The term "path" is somewhat
+consistent with terminology in RFC 9162, but in the sigsum protocol,
+each line represents the hash of a single node in the tree, not the
+path as a whole.
