@@ -93,23 +93,18 @@ additional information.
 
 Verification is subject to client "policy". Policy includes the
 configuration of public keys for submitter, log and witnesses
-(together with respective role). In addition, policy needs to specify
+(together with respective role). Policy must also specify which
+subsets of witnesses are considered strong enough, e.g., n-of-k policy
+(it is likely that something a bit more expressive will be needed,
+though, e.g, a partition of the witnesses into disjoint subsets, and a
+separate n-of-k requirement for each such subset).
 
-1. The number of witnesses required. In principle, one could also
-   assign different weights to different witnesses, or list all
-   subsets of witnesses considered strong enough, but I'd expect
-   limited utility of such extensions.
-   
-2. Constraints on the timestamp. One might want to reject too old
-   proofs, e.g., to avoid installing obsolete updates. One might also
-   want to reject or postpone very new proofs, to give monitors some
-   time to detect and take action on unexpected signatures.
-   
-3. Revocation (how to act when a monitor discovers that, e.g., a bad
-   software update has been added to the log)? Or if there's risk that
-   a particular witness' key has been compromised? See appendix.
-   
-# Appendix: Offline revocation
+# Appendices
+
+These are related features, not part of this proposal, but they may be
+subject of later extensions to the proof format.
+
+## Offline revocation
 
 This is somewhat orthogonal to the sigsum service itself, and not part
 of this proposal, but I think it is important to have some way to act
@@ -144,3 +139,16 @@ attach it to the package, close in time to actual delivery to the
 client. For this to work with a minimum of configuration, it might
 make sense to put an id (url + public key?) of the revocation
 authority inside or nearby the sigsum proof.
+
+## Timestamp constraints
+
+One might want to reject too old proofs, e.g., to avoid installing
+obsolete updates. One might also want to reject or postpone very new
+proofs, to give monitors some time to detect and take action on
+unexpected signatures.
+
+To support this, a sigsum proof needs to provide two cosigned tree
+heads. A newer tree head, to which the inclusion proof applies, and an
+older tree with size <= the leaf index for the inclusion proof. This
+proves that the checksum was added to the log during the time interval
+bounded by the timestamps on those two tree heads.
