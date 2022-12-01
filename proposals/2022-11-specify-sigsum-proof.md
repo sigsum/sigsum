@@ -24,41 +24,41 @@ the sigsum command line tools can work with.
 
 ## Ascii representation
 
-Building on the ascii format used ont he wire when interacting with a
+Building on the ascii format used on the wire when interacting with a
 sigsum log, a proof can use the following format, which is essentially
-a leaf + cosigned tree ehad + inclusion proof.
+a leaf + cosigned tree head + inclusion proof, with an empty line
+(i.e., double newline character) separating these parts.
 
 ```
-submitter: CHECKSUM KEYHASH SIGNATURE
-log: TREE_SIZE ROOTHASH KEYHASH SIGNATURE
+version: 0
+log: KEYHASH
+
+leaf: KEYHASH SIGNATURE
+
+timestamp: NUMBER
+tree_size: NUMBER
+root_hash: HASH
+signature: SIGNATURE
+cosignature: KEYHASH SIGNATURE
+cosignature: ...
+
+leaf_index: NUMBER
 inclusion_path: HASH
 inclusion_path: ...
-
-witness: TIMESTAMP KEYHASH SIGNATURE
-witness: ...
 ```
 
-The submitter line corresponds to a leaf, as produced by the
-getl-leaves request. CHECKSUM identifies the message that is logged,
-KEYHASH identifies the submitter. They "identify" in that the values
-are rather useless on there own, to make use of it, the corresponding
-message and public key must be available by other means.
+The version line specifies hte version of the proof format, and will
+be incremented as the format is changed or extended. The `log` line
+identifies the sigsum log.
 
-The log line represents a tree_head signed by the log, and the KEYHASH
-acts as an identifier for the log. There should be a timestamp here as
-well, if we don't move timestamps to the cosignature).
+In the next block, `leaf` is similar to the response to get-leaves, but
+the checksum that is signed is omitted, and must be derived from other
+context.
 
-The inclusion path lines correspond to get-inclusion-proof, as an
-ordered list of hashes of interior nodes. In the corner case of tree
-size 1, list will be empty. Since ascii format specifies a single
-repeated line, I've added an empty separator line before the witness
-lines (there may well be a better way to organize this).
-
-The witness lines correspond to cosignatures from
-get-tree-head-cosigned, but the submitter is free to trim the list,
-and include cosignatures only from witnesses it knows and expects the
-verifier to know as well. The submitter should not inclue a witness
-signature it wasn't able to verify.
+The last two blocks are verbatim responses from get-tree-head-cosigned
+and get-inclusion proof (in the corner case `tree_size` = 1, the last
+part is omitted, since it is implied that `leaf_index` = 0, and there
+is no inclusion path).
 
 # Verifying a proof
 
