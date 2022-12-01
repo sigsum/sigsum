@@ -102,7 +102,7 @@ constrained environments.  Signed and logged data can be (de)serialized using
 or "by hand" in many modern programming languages.  This is the only parsing
 that an end-user is required to support.  Signers, monitors, and witnesses
 additionally need to interact with a sigsum log's ASCII HTTP(S)
-        [API](https://git.sigsum.org/sigsum/tree/doc/api.md).
+        [API](https://git.sigsum.org/sigsum/tree/doc/log.md).
 
 ## 2 - Threat model
 We consider a powerful attacker that gained control of a signer's signing and
