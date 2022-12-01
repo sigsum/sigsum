@@ -295,7 +295,7 @@ Output on success:
 - `leaf`: Repeated key, see below.
 
 The leaf indices are zero-based, and specify a half-open interval, i.e.,
-the request asks for the leafs with indices `i`, `start_index` <= `i`
+the request asks for the leaves with indices `i`, `start_index` <= `i`
 < `end_index`. It is required that `end_index` > `start_index`.
 
 The value for the `leaf` represents the `tree_leaf` struct, and it consists of
