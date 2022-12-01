@@ -30,21 +30,21 @@ a leaf + cosigned tree head + inclusion proof, with an empty line
 (i.e., double newline character) separating these parts.
 
 ```
-version: 0
-log: KEYHASH
+version=0
+log=KEYHASH
 
-leaf: KEYHASH SIGNATURE
+leaf=KEYHASH SIGNATURE
 
-timestamp: NUMBER
-tree_size: NUMBER
-root_hash: HASH
-signature: SIGNATURE
-cosignature: KEYHASH SIGNATURE
-cosignature: ...
+timestamp=NUMBER
+tree_size=NUMBER
+root_hash=HASH
+signature=SIGNATURE
+cosignature=KEYHASH SIGNATURE
+cosignature=...
 
-leaf_index: NUMBER
-inclusion_path: HASH
-inclusion_path: ...
+leaf_index=NUMBER
+inclusion_path=HASH
+inclusion_path=...
 ```
 
 The version line specifies hte version of the proof format, and will
