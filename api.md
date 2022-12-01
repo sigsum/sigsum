@@ -289,20 +289,23 @@ GET <log URL>/get-leaves/<start_index>/<end_index>
 Input:
 - `start_index`: index of the first leaf to retrieve, ASCII-encoded decimal
   number.
-- `end_index`: index of the last leaf to retrieve, ASCII-encoded decimal number.
+- `end_index`: index just after the last leaf to retrieve, ASCII-encoded decimal number.
 
 Output on success:
 - `leaf`: Repeated key, see below.
 
-The leaf indices are zero-based.
+The leaf indices are zero-based, and specify a half-open interval, i.e.,
+the request asks for the leaves with indices `i`, `start_index` <= `i`
+< `end_index`. It is required that `end_index` > `start_index`.
 
 The value for the `leaf` represents the `tree_leaf` struct, and it consists of
 three hex-encoded fields, with a single space character as separator. The first
 field is the checksum, second is hash of the key used to sign the checksum, and
 the third and last field is the signature.
 
-A log may return fewer leaves than requested.  At least one leaf
-must be returned on success.
+The log returns a sequence of consecutive leaves, starting from
+`start_index`. A log may return fewer leaves than requested. At least
+one leaf must be returned on success.
 
 Example:
 ```
