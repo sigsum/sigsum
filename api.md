@@ -69,7 +69,7 @@ A tree head contains a timestamp, a tree size, a root hash, and a key hash.
 ```
 struct tree_head {
 	u64 timestamp;
-	u64 tree_size;
+	u64 size;
 	u8 root_hash[32];
 	u8 key_hash[32];
 };
@@ -80,7 +80,7 @@ enough witnesses added their cosignatures.  A signer can also use timestamps
 to prove to an end-user that public logging happened within some interval
 	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
 
-`tree_size` is the number of leaves in a log.
+`size` is the number of leaves in a log.
 
 `root_hash` is a Merkle tree root hash that fixes a log's structure and content.
 
@@ -164,11 +164,11 @@ what went wrong using the key `error`.  Example:
 error=Invalid signature
 ```
 
-### 3.1 - get-tree-head-to-cosign
+### 3.1 - get-next-tree-head
 Returns a tree head that witnesses should cosign.
 
 ```
-GET <log URL>/get-tree-head-to-cosign
+GET <log URL>/get-next-tree-head
 ```
 
 Input:
@@ -176,17 +176,17 @@ Input:
 
 Output on success:
 - `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
-- `tree_size`: `tree_head.tree_size`, ASCII-encoded decimal number.
+- `size`: `tree_head.size`, ASCII-encoded decimal number.
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 
-### 3.2 - get-tree-head-cosigned
+### 3.2 - get-tree-head
 Returns a tree head that has been cosigned by at least one witness.  The list of
 cosignatures is updated every time a new cosignature gets added.  This
 endpoint is used by Signers that want _enough cosignatures as fast as possible_.
 
 ```
-GET <log URL>/get-tree-head-cosigned
+GET <log URL>/get-tree-head
 ```
 
 Input:
@@ -194,7 +194,7 @@ Input:
 
 Output on success:
 - `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
-- `tree_size`: `tree_head.tree_size`, ASCII-encoded decimal number.
+- `size`: `tree_head.size`, ASCII-encoded decimal number.
 - `root_hash`: `tree_head.root_hash`, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 - `cosignature`: Repeated key, see below.
@@ -209,12 +209,12 @@ the witness' hex-encoded signature of the tree head.the tree head.
 
 Example request:
 ```
-$ curl <log URL>/get-tree-head-cosigned
+$ curl <log URL>/get-tree-head
 ```
 Example response:
 ```
 timestamp=1666856000
-tree_size=10037
+size=10037
 root_hash=e0797361b952f44c4ea73a93ba3ac7b13b809bafd5fd81ab3a0bf5e7a273c90b
 signature=73ca29e903a81e750434ccd76d5c37dbd6219d2e0df162f48a8a0e52cc2066a4ec8bf5f8a57724e7fb3e009cbbc5a063bf0e70ebe01bcc422d727a363b6ef4f7
 cosignature=a82e590febc6b84385b0f20c3cf33636441609c16bd5539624cb930838e083e4 3c7061b10982d8180b08e63cd87d78df97074dbc867f08f23925a9f4525281bd999cbd5aa55356783c08aec72bf13c20806583389e63fb63fad43b3e57c4251e
@@ -226,11 +226,11 @@ signatures can be verified.
 
 ### 3.3 - get-inclusion-proof
 ```
-GET <log URL>/get-inclusion-proof/<tree_size>/<leaf_hash>
+GET <log URL>/get-inclusion-proof/<size>/<leaf_hash>
 ```
 
 Input:
-- `tree_size`: tree size of the tree head that the proof should be
+- `size`: tree size of the tree head that the proof should be
   based on, ASCII-encoded decimal number, must be at least 2.
 - `leaf_hash`: leaf hash identifying which `tree_leaf` the log should prove
   inclusion of, hex-encoded.
@@ -238,12 +238,12 @@ Input:
 Output on success:
 - `leaf_index`: zero-based index of the leaf that the proof is based on,
   ASCII-encoded decimal number.
-- `inclusion_path`: node hash, hex-encoded.
+- `node_hash`: node hash, hex-encoded.
 
 The leaf hash is computed using the RFC 6962 hashing strategy.  In
 other words, `H(0x00 | tree_leaf)`.
 
-`inclusion_path` is a repeated key, listing one or more hashes.  The order of node hashes
+`node_hash` is a repeated key, listing one or more hashes.  The order of node hashes
 follow from the hash strategy, see RFC 6962.
 
 Note that to check inclusion in a tree of size 1, a client can and
@@ -266,9 +266,9 @@ Input:
 - `new_size`: tree size of a newer tree head, ASCII-encoded decimal number.
 
 Output on success:
-- `consistency_path`: node hash, hex-encoded.
+- `node_hash`: node hash, hex-encoded.
 
-`consistency_path` is a repeated key, listing one or more hashes. The
+`node_path` is a repeated key, listing one or more hashes. The
 order of node hashes follow from the hash strategy, see RFC 6962.
 
 It's required that `new_size` > `old_size`> 0. In the case of the old
