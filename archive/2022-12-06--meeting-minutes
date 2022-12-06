@@ -1,0 +1,48 @@
+Date: 2022-12-06 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* filippo
+	* gregoire
+	* ln5
+	* nisse
+
+Status round
+	* [nisse] implemented half-open convention. Added witness integration
+	  test (sigsum-py), but not yet enabled in ci.
+	* [nisse] looking into command line tools, have log submit and verify in
+	  exp. repo.
+	* [filippo] mailed witness MR
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/21/
+	* [rgdd] issue and milestone clean-up
+		* https://git.glasklar.is/groups/sigsum/-/milestones
+	* [rgdd] review/discuss with nisse + read filippo's witnessing proposal
+	* [ln5] setup poc.sigsum.org using ansible stuff from foxboron,
+	  automatically deployed hourly (tracking main).  If anyone wants it to
+	  track a different branch, let linus know.
+
+Decisions
+	* Decision: Rename a few endpoints and ascii keys (recently updated)
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2022-07-api-renaming.md
+	* Are we ready to adopt the witness design or is it too early?
+		* Ready to discuss it with Google?  Defer until next week
+
+Next steps
+	* [filippo] flesh out bastion reverse connection for witnessing
+	* [nisse] implement renaming, commandline tool and proof format, state
+	  management logic
+	* [gregoire] check MR from nisse in sigsum-py, will do renaming too
+	* [rgdd, ln5] read/think more about witnessing proposal and additional
+	  text from filippo, follow-up with feedback async
+
+Other useful links
+	* [nisse] Too early for decision, but I'd like to discuss "sigsum proof" spec
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/18
