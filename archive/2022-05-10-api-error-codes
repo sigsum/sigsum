@@ -4,7 +4,7 @@ Status codes 200, 404, 405, and 500 are not endpoint specific.  When we take a
 pass over api.md, it might be a good idea to not list them redundantly for each
 endpoint.
 
-§3.1, get-tree-head-to-cosign
+§3.1, get-next-tree-head
 	* http method - Get
 	* Input - None
 	* Output - timestamp, tree_size, root_hash, signature
@@ -15,7 +15,7 @@ endpoint.
 		* 405 - Method Not Allowed
 		* 500 - Internal Server Error
 
-§3.2, get-tree-head-cosigned
+§3.2, get-tree-head
 	* http method - Get
 	* Input - None
 	* Output - timestamp, tree_size, root_hash, signature, cosignature, key_hash
@@ -73,7 +73,6 @@ endpoint.
 		* 200 - Success (will be in the log after signing next tree head)
 		* 202 - Accepted (trying to add to the log, still not commited)
 		* 400 - Bad Request (e.g., invalid signature, TBD: duplicate as well?)
-		* 403 - Forbidden (bad domain hint)
 		* 404 - Not Found
 		* 405 - Method Not Allowed
 		* 429 - Too Many Requests (rate-limit kicked in for domain hint)
