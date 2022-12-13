@@ -18,9 +18,9 @@ ASCII-encoded key/value pairs.
 - Binary data is hex-encoded before being transmitted.
 - Integers are unsigned and represented in decimal.  More precisely, an integer
   is represented as a sequence of one or more ASCII decimal digits. Integer
-  values exceeeding 63 bits in size are not allowed. This range (rather than the
+  values exceeding 63 bits in size are not allowed. This range (rather than the
   full range of an unsigned 64-bit integer) lets implementations represent
-  values using either a signed or an unsigned 64-bit integer type. E.g, posix
+  values using either a signed or an unsigned 64-bit integer type. E.g, POSIX
   64-bit `time_t` and java `long` are signed types, with no convenient unsigned
   counterpart.
 
@@ -37,15 +37,17 @@ Figure 1 of our design document gives an intuition of all involved parties.
 
 ## 2 - Primitives
 ### 2.1 - Cryptography
-Logs use the same Merkle tree hash strategy as
-	[RFC 6962,§2](https://tools.ietf.org/html/rfc6962#section-2).
-Any mentions of hash functions or digital signature schemes refer to
-	[SHA256](https://csrc.nist.gov/csrc/media/publications/fips/180/4/final/documents/fips180-4-draft-aug2014.pdf)
-and
-	[Ed25519](https://tools.ietf.org/html/rfc8032).
-The exact
-	[signature format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig)
-is defined by OpenSSH.
+Logs use the same Merkle tree hash strategy as [RFC 6962, Section 2][]. Any
+mentions of hash functions or digital signature schemes refer to [SHA256][] and
+[Ed25519][]. Ed25519 public keys are always encoded according to [RFC 8032,
+section 5.1.2][]. The [signature format][] is defined by OpenSSH, with hash
+algorithm string `sha256`, and empty reserved string.
+
+[RFC 6962, Section 2]: https://tools.ietf.org/html/rfc6962#section-2
+[SHA256]: https://csrc.nist.gov/csrc/media/publications/fips/180/4/final/documents/fips180-4-draft-aug2014.pdf
+[RFC 8032, section 5.1.2]: https://tools.ietf.org/html/rfc8032#section-5.1.2
+[Ed25519]: https://tools.ietf.org/html/rfc8032
+[signature format]: https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig
 
 ### 2.2 - Serialization
 Log requests and responses are transmitted using simple ASCII encodings, for a
@@ -63,46 +65,48 @@ example, metadata includes a magic preamble string and a signing context.  An
 implementer can easily express the SSH signing format using Trunnel.
 
 ### 2.3 - Merkle tree
-#### 2.3.1 - Tree head
-A tree head contains a timestamp, a tree size, a root hash, and a key hash.
+#### 2.3.1 - Signed tree head
+
+Logs perform signing operations by treating a serialized `signed_tree_head` as
+the message and using `signed_tree_head:v0@sigsum.org` as the namespace.
+
+A `signed_tree_head` contains a tree size (the number of leaves in the log) and
+a Merkle tree root hash. The same log key must never be used to sign tree heads
+from other trees.
 
 ```
-struct tree_head {
-	u64 timestamp;
+struct signed_tree_head {
 	u64 size;
 	u8 root_hash[32];
-	u8 key_hash[32];
-};
+}
 ```
-`timestamp` is the time since the UNIX epoch (January 1, 1970 00:00 UTC) in
-seconds.  It is included so that monitors can be convinced of _freshness_ if
-enough witnesses added their cosignatures.  A signer can also use timestamps
-to prove to an end-user that public logging happened within some interval
-	[\[TS\]](https://git.sigsum.org/sigsum/commit/?id=fef460586e847e378a197381ef1ae3a64e6ea38b).
 
-`size` is the number of leaves in a log.
+#### 2.3.2 - Co-signed tree head
 
-`root_hash` is a Merkle tree root hash that fixes a log's structure and content.
+A co-signature consists of three fields, separated by a single space character:
 
-`key_hash` is the SHA256 hash of the log's public key. The public key is
-encoded as defined in
-	[RFC 8032, section 5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)
-before hashing it.  This ensures a _sigsum log specific tree head context_ that
-prevents a possible
-	[attack](https://git.sigsum.org/sigsum/tree/archive/2021-08-10-witnessing-broader-discuss#n95)
-in multi-log ecosystems.
+1. The hex-encoded hash of the witness public key
+2. The time at which the co-signature was generated,
+   ASCII-encoded as a decimal number
+3. The hex-encoded signature from the witness key of a `cosigned_tree_head` with
+   namespace `cosigned_tree_head:v0@sigsum.org`.
 
-#### 2.3.2 - (Co)signed tree head
-Logs and witnesses perform (co)signing operations by treating the serialized
-tree head as the message `M` in SSH's
-	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
-The hash algorithm string must be "sha256".  The reserved string must be empty.
-The namespace field must be set to "tree-head:v0@sigsum.org".
+```
+struct cosigned_tree_head {
+	u64 tree_size;
+	u8 root_hash[32];
+	u8 key_hash[32];
+	u64 timestamp;
+}
+```
 
-A witness must not cosign a tree head if it is inconsistent with prior history
-or if the timestamp is older than five (5) minutes.  This means that a witness plays
-	[two abstract roles](https://git.sigsum.org/sigsum/tree/archive/2021-08-31-checkpoint-timestamp-continued#n84):
-Verifier("append-only") and Verifier("freshness").
+Note that this structure has two additional fields compared to a
+`signed_tree_head`, which is signed by the log's public key:
+
+* the log's `key_hash`, to [bind the co-signature to the
+  log](https://git.sigsum.org/sigsum/tree/archive/2021-08-10-witnessing-broader-discuss#n95),
+* the co-signature `timestamp`, a trusted observed time for the tree head, which
+  can be useful in establishing freshness or a logging timespan for a leaf.
 
 #### 2.3.3 - Tree leaf
 Logs support a single leaf type.  It contains a signer's statement,
@@ -121,17 +125,13 @@ The message is meant to represent some data and it is recommended that
 the signer uses `H(data)` as the message, in which case `checksum`
 will be `H(H(data))`.
 
-`signature` is computed by treating the above `message` as `M`
-in SSH's
-	[signing format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig).
-The hash algorithm string must be "sha256".  The reserved string must be empty.
-The namespace field must be set to "tree-leaf:v0@sigsum.org".
+`signature` is computed over the above `message` with namespace
+`tree_leaf:v0@sigsum.org`.
 
-`key_hash` is a hash of the signer's public key using the same
-format as Section 2.3.2.  It is included
-in `tree_leaf` so that each leaf can be attributed to a signer.  A hash,
-rather than the full public key, is used to motivate monitors and end-users to
-locate the appropriate key and make an explicit trust decision.
+`key_hash` is a hash of the signer's public key.  It is included in `tree_leaf`
+so that each leaf can be attributed to a signer.  A hash, rather than the full
+public key, is used to motivate monitors and end-users to locate the appropriate
+key and make an explicit trust decision.
 
 ## 3 - Public endpoints
 A log must have a fixed and unique log URL.  Example:
@@ -169,7 +169,7 @@ Status codes common to all endpoints:
 - 400 Bad Request (e.g, out of range parameters, or invalid signature)
 - 404 Not Found (endpoint doesn't exist, or requested data doesn't exist)
 - 405 Method Not Allowed (GET request to POST-only endpoint, or vice versa)
-- 500 Internal Server Error (Backend failure, or implementaiton bug)
+- 500 Internal Server Error (Backend failure, or implementation bug)
 
 The specification for each endpoint documents any additional status codes that
 may be returned for that end point.
@@ -188,9 +188,8 @@ Input:
 - None
 
 Output on success:
-- `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
-- `size`: `tree_head.size`, ASCII-encoded decimal number.
-- `root_hash`: `tree_head.root_hash`, hex-encoded.
+- `size`: log size, ASCII-encoded decimal number.
+- `root_hash`: Merkle tree root hash, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 
 ### 3.2 - get-tree-head
@@ -206,19 +205,10 @@ Input:
 - None
 
 Output on success:
-- `timestamp`: `tree_head.timestamp`, ASCII-encoded decimal number.
-- `size`: `tree_head.size`, ASCII-encoded decimal number.
-- `root_hash`: `tree_head.root_hash`, hex-encoded.
+- `size`: log size, ASCII-encoded decimal number.
+- `root_hash`: Merkle tree root hash, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
-- `cosignature`: Repeated key, see below.
-
-The value for the `cosignature` key consists of two hex-encoded
-fields, separated by a single space character. The first field is the
-hash of the witness public key that can be used to verify the
-cosignature. The key is encoded as defined in [RFC 8032, section
-5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2) before
-hashing. The resulting hash value is hex-encoded. The second field is
-the witness' hex-encoded signature of the tree head.the tree head. 
+- `cosignature`: repeated key, as described in Section 2.3.2. 
 
 Example request:
 ```
@@ -226,12 +216,11 @@ $ curl <log URL>/get-tree-head
 ```
 Example response:
 ```
-timestamp=1666856000
 size=10037
 root_hash=e0797361b952f44c4ea73a93ba3ac7b13b809bafd5fd81ab3a0bf5e7a273c90b
 signature=73ca29e903a81e750434ccd76d5c37dbd6219d2e0df162f48a8a0e52cc2066a4ec8bf5f8a57724e7fb3e009cbbc5a063bf0e70ebe01bcc422d727a363b6ef4f7
-cosignature=a82e590febc6b84385b0f20c3cf33636441609c16bd5539624cb930838e083e4 3c7061b10982d8180b08e63cd87d78df97074dbc867f08f23925a9f4525281bd999cbd5aa55356783c08aec72bf13c20806583389e63fb63fad43b3e57c4251e
-cosignature=7c5725cdea3514e2b29a98b3f3b48541538d5561f10ae7261b730ee43bce54ef 1efd1ae64eb8f198712597dc9fe0e4bd01e584590b24e321155513f698699c1bc0d6df470da55c78c808d0a30bd68b26a5e9f9d6e45c5c4ef746dc48a4da5c7a
+cosignature=a82e590febc6b84385b0f20c3cf33636441609c16bd5539624cb930838e083e4 1666856001 3c7061b10982d8180b08e63cd87d78df97074dbc867f08f23925a9f4525281bd999cbd5aa55356783c08aec72bf13c20806583389e63fb63fad43b3e57c4251e
+cosignature=7c5725cdea3514e2b29a98b3f3b48541538d5561f10ae7261b730ee43bce54ef 1666856002 1efd1ae64eb8f198712597dc9fe0e4bd01e584590b24e321155513f698699c1bc0d6df470da55c78c808d0a30bd68b26a5e9f9d6e45c5c4ef746dc48a4da5c7a
 ```
 
 TODO: update the above with valid input and also provide corresponding keys so
@@ -377,32 +366,27 @@ TODO: update the above with valid input.  Link
 on how one could produce it "byte-for-byte" using Python and ssh-keygen -Y.
 
 ### 3.7 - add-cosignature
-=======
+
 ```
 POST <log URL>/add-cosignature
 ```
 
 Input:
-- `cosignature`: witness' key hash and signature, hex-encoded, and
-  separated by a single space.
-
-The syntax of the `cosignature` value is identical to the same key in the
-`get-tree-head` response, however, it is not a repeated key in this request.
+- `cosignature`: witness’s co-signature, as defined by Section 2.3.2.
 
 Output on success:
 - None
 
-The `key_hash` can be used to identify which witness cosigned a tree head.  A
-key-hash, rather than the full public key, is used to motivate monitors and
-end-users to locate the appropriate key and make an explicit trust decision.
+The key hash component of the co-signature can be used to identify which witness
+cosigned a tree head.  A key hash, rather than the full public key, is used to motivate
+monitors and end-users to locate the appropriate key and make an explicit trust decision.
 
 Note that logs must be configured with relevant public keys for witnesses.
 Status code 403 Forbidden is returned if the witness key is unknown.
 
 Example:
 ```
-$ echo "cosignature=d1b15061d0f287847d066630339beaa0915a6bbb77332c3e839a32f66f1831b69c678e8ca63afd24e436525554dbc6daa3b1201cc0c93721de24b778027d41af
-key_hash=662ce093682280f8fbea9939abe02fdba1f0dc39594c832b411ddafcffb75b1d" | curl --data-binary @- <log URL>/add-cosignature
+$ echo "cosignature=d1b15061d0f287847d066630339beaa0915a6bbb77332c3e839a32f66f1831b69c67 1666856001 8e8ca63afd24e436525554dbc6daa3b1201cc0c93721de24b778027d41af" | curl --data-binary @- <log URL>/add-cosignature
 ```
 
 TODO: update the above with valid input.  Link
