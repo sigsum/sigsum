@@ -1,0 +1,57 @@
+# Discuss open witnessing proposals
+
+Notes from chats between rgdd, ln5, nisse, kfreds.
+
+## Reading list (in preparation of meet)
+
+See:
+
+  - Pseudoproposal to move timestamp to cosignature:
+    https://git.glasklar.is/sigsum/project/documentation/-/blob/filippo/witness-pull/proposals/2022-11-timestamped-signatures.md
+  - Initial discuss doc about push-vs-pull model for log-witness interactions:
+    https://git.glasklar.is/sigsum/project/documentation/-/blob/filippo/witness-pull/proposals/2022-11-witness-pull.md
+  - Concrete follow-up proposal that aims to be a small diff compared to current api:
+    https://git.glasklar.is/sigsum/project/documentation/-/blob/filippo/witness/witness.md
+  - One of several ways to setup a proxy for witnesses without public addresses:
+    https://git.glasklar.is/sigsum/project/documentation/-/blob/filippo/witness/bastion.md
+  - Recall checkpoint format:
+    https://github.com/google/trillian-examples/tree/master/formats/log and
+    https://git.glasklar.is/sigsum/core/log-go/-/commit/4a4a4e17d159070ceb7ab7a580c8be6ad2c57e06 for code snippets that serializes
+
+Relevant MRs for the above:
+
+  - https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/13
+  - https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/21
+
+## Agenda
+
+  - Witnessing communication pattern(s)
+  - Tree head and cosignature format (if time permits)
+
+Key question: should we keep the current witnessing design and in addition to
+that support what is in witnessing.md after some polishing, or do we consider
+the option of "private witnesses" that are reachable via proxies good enough?
+
+## Summary
+
+  - Sounds good to to split up specifications into log.md and witness.md.  The
+    former defines aspects of the sigsum log and its endpoints.  The latter
+    defines log-witness interactions ("how a log gets its cosignatures").
+  - We don't consider it a regression to remove the current witnessing pattern
+    and instead rely on a reverse proxy to reach "private witnesses".  We would
+    like to run such proxies as separate components on our sigsum log servers.
+    Nice that this can work for both public, serverless, and low-latency logs.
+  - Move timestamp to cosignature and keep it, important for some of our
+    intended use-cases.  Overall a simplification compared to what we have now.
+  - Hash out the details of possibly moving into the note format if filippo
+    proposes this, document motivation and take the pragmatic approach.  The
+    main blocker before was that we couldn't find a good place for witness
+    timestamps, and that seems to be a solved problem now.  One worry here is
+    that if we start changing formats there might be ripple effects in other
+    parts of sigsum.  (And we would like to sooner rather than later allow for
+    our pilot use-cases to be demonstrated with a log + tooling.  One option
+    that was discussed is that if this becomes an issue in ~Jan, we can tag v0.9
+    and commit to that for some time while communicating that a v1 is still
+    brewing with regards to X,Y,Z.  Updating use-cases we control is doable.)
+  - Ask that filippo (continues) to drive the above forward, and once specs are
+    in a good state also take charge of creating new witness+proxy artifact(s).
