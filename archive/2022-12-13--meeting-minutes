@@ -1,0 +1,51 @@
+Date: 2022-12-13 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* filippo
+	* nisse
+	* ln5
+	* Morten
+	* gregoire
+
+Status round
+	* [rgdd, ln5, nisse, kfreds] discuss witnessing proposal
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2022-12-13-witness-discuss-notes
+		* split up into log.md and witness.md
+		* move timestamp to cosignatures
+		* replace current witness api with what's brewing in MR, and we
+		  should run reverse proxies on our sigsum log machines as
+		  separate components
+		* let's continue hashing out details, broadly the direction is good
+		* aim for some formal decisions to get things merged next week
+		  and itterate further on that new steady state? (yes, sounds
+		  good)
+	* [rgdd] will try to only be around on tuesdays as an fyi, foxboron will
+	  do review and rubberucking with nisse
+	* nisse: Implemented api renaming discussed last week. Updated docs on
+	  api status codes.
+	* Morten: Review code changes, get into the code base and first draft for config file
+	* gregoire: looked at nisse's MR, should be merged (will do this afternoon)
+
+Decisions
+	* Decision: Cancel weekly meet on December 27 due to holidays
+	* Decision: Cancel weekly meet on January 3 due to holidays
+	* Decision: move timestamp to cosignature
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/24
+
+Next steps
+	* [filippo] proposals until next week about witnessing to get a new
+	  steady state, will reach out to al and ryan to let them know what
+	  we're doing and thinking
+	* [gregoire] merge stuff from nisse
+	* [Morten] review/rubberduck with nisse, and prepping config MR
+	* [nisse] working milestones, main prio log server
+	* [rgdd] get notes archived
