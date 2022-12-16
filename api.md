@@ -68,7 +68,7 @@ implementer can easily express the SSH signing format using Trunnel.
 #### 2.3.1 - Signed tree head
 
 Logs perform signing operations by treating a serialized `signed_tree_head` as
-the message and using `signed_tree_head:v0@sigsum.org` as the namespace.
+the message and using `signed-tree-head:v0@sigsum.org` as the namespace.
 
 A `signed_tree_head` contains a tree size (the number of leaves in the log) and
 a Merkle tree root hash. The same log key must never be used to sign tree heads
@@ -89,7 +89,7 @@ A co-signature consists of three fields, separated by a single space character:
 2. The time at which the co-signature was generated,
    ASCII-encoded as a decimal number
 3. The hex-encoded signature from the witness key of a `cosigned_tree_head` with
-   namespace `cosigned_tree_head:v0@sigsum.org`.
+   namespace `cosigned-tree-head:v0@sigsum.org`.
 
 ```
 struct cosigned_tree_head {
@@ -126,7 +126,7 @@ the signer uses `H(data)` as the message, in which case `checksum`
 will be `H(H(data))`.
 
 `signature` is computed over the above `message` with namespace
-`tree_leaf:v0@sigsum.org`.
+`tree-leaf:v0@sigsum.org`.
 
 `key_hash` is a hash of the signer's public key.  It is included in `tree_leaf`
 so that each leaf can be attributed to a signer.  A hash, rather than the full
