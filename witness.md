@@ -135,14 +135,12 @@ Input:
   The order of node hashes follow from the hash strategy, see RFC 6962.
 
 HTTP error codes on failure:
-- 404 Not Found if the `key_hash` is not known
 - 400 Bad request if `size` is not higher than `old_size`
-- 409 Conflict if the `old_size` does not match the latest tree head
-  known by the witness (this should be resolved by making a `get-tree-size`
-  request and retrying)
-- 403 Forbidden if the `signature` doesn't verify or if the `consistency_path`
-  does not prove consistency from the old tree head known to the witness to the
-  new one
+- 409 Conflict if the `old_size` does not match the latest tree head known by the
+  witness (this should be resolved by making a `get-tree-size` request and retrying)
+- 403 Forbidden if the `key_hash` is not known or if the `signature` doesn't verify
+- 422 Unprocessable entity if the `consistency_path` does not prove consistency
+  from the old tree head known to the witness to the new one
 
 Output on success:
 - `cosignature`: witness co-signature for the submitted tree head
