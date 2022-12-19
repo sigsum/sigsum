@@ -114,7 +114,7 @@ https://log.example.com:4711/opossum/2021/sigsum`.
 
 Input data in `get-*` requests are added at the end of an endpoint's
 URL.  Values are delimited by a `/`.  The order of values is defined by
-the respective endpoints.  For an example, see Section 3.3.
+the respective endpoints.  For an example, see Section 3.4.
 
 Input data in `add-*` requests is POST:ed in the HTTP message body as
 line-terminated ASCII key/value pairs.  The key-value format is `Key=Value\n`.
@@ -151,10 +151,25 @@ may be returned for that end point.
 On failure, the log's response body must contain a human-readable string describing
 what went wrong, e.g., "Invalid signature".
 
-### 3.1 - get-tree-head
-Returns a tree head and any associated co-signatures.  The log should wait to
-update the served tree head until it has collected a satisfactory number of
-co-signatures. The list of co-signatures may change over time.
+### 3.1 - get-next-tree-head
+Returns a tree head that witnesses should cosign.
+
+```
+GET <log URL>/get-next-tree-head
+```
+
+Input:
+- None
+
+Output on success:
+- `size`: log size, ASCII-encoded decimal number.
+- `root_hash`: Merkle tree root hash, hex-encoded.
+- `signature`: log signature for the above tree head, hex-encoded.
+
+### 3.2 - get-tree-head
+Returns a tree head that has been cosigned by at least one witness.  The list of
+cosignatures is updated every time a new cosignature gets added.  This
+endpoint is used by Signers that want _enough cosignatures as fast as possible_.
 
 ```
 GET <log URL>/get-tree-head
@@ -168,7 +183,7 @@ Output on success:
 - `root_hash`: Merkle tree root hash, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 - `cosignature`: repeated key, as described in Section 2 of [the witness API
-document](https://git.sigsum.org/sigsum/tree/doc/witness.md). 
+document](https://git.sigsum.org/sigsum/tree/doc/witness.md).
 
 Example request:
 ```
@@ -186,7 +201,7 @@ cosignature=7c5725cdea3514e2b29a98b3f3b48541538d5561f10ae7261b730ee43bce54ef 166
 TODO: update the above with valid input and also provide corresponding keys so
 signatures can be verified.
 
-### 3.2 - get-inclusion-proof
+### 3.3 - get-inclusion-proof
 ```
 GET <log URL>/get-inclusion-proof/<size>/<leaf_hash>
 ```
@@ -220,7 +235,7 @@ Example:
 $ curl <log URL>/get-inclusion-proof/4711/241fd4538d0a35c2d0394e4710ea9e6916854d08f62602fb03b55221dcdac90f
 ```
 
-### 3.3 - get-consistency-proof
+### 3.4 - get-consistency-proof
 ```
 GET <log URL>/get-consistency-proof/<old_size>/<new_size>
 ```
@@ -246,7 +261,7 @@ Example:
 $ curl <log URL>/get-consistency-proof/42/4711
 ```
 
-### 3.4 - get-leaves
+### 3.5 - get-leaves
 ```
 GET <log URL>/get-leaves/<start_index>/<end_index>
 ```
@@ -277,7 +292,7 @@ Example:
 $ curl <log URL>/get-leaves/42/4711
 ```
 
-### 3.5 - add-leaf
+### 3.6 - add-leaf
 ```
 POST <log URL>/add-leaf
 ```
@@ -323,6 +338,31 @@ public_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c" | c
 
 TODO: update the above with valid input.  Link
 	[proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-ssh-signature-format.md)
+on how one could produce it "byte-for-byte" using Python and ssh-keygen -Y.
+
+### 3.7 - add-cosignature
+
+```
+POST <log URL>/add-cosignature
+```
+
+Input:
+- `cosignature`: witness’s co-signature, as defined by Section 2 of [the witness
+API document](https://git.sigsum.org/sigsum/tree/doc/witness.md).
+
+Output on success:
+- None
+
+Note that logs must be configured with relevant public keys for witnesses.
+Status code 403 Forbidden is returned if the witness key is unknown.
+
+Example:
+```
+$ echo "cosignature=d1b15061d0f287847d066630339beaa0915a6bbb77332c3e839a32f66f1831b69c67 1666856001 8e8ca63afd24e436525554dbc6daa3b1201cc0c93721de24b778027d41af" | curl --data-binary @- <log URL>/add-cosignature
+```
+
+TODO: update the above with valid input.  Link
+       [proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-ssh-signature-format.md)
 on how one could produce it "byte-for-byte" using Python and ssh-keygen -Y.
 
 ## 4 - Parameter summary

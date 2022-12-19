@@ -45,6 +45,8 @@ expressed in seconds since the UNIX epoch (January 1, 1970 00:00 UTC).
 A co-signature consists of three fields, separated by a single space character:
 
 1. The hex-encoded hash of the witness public key
+  * A key hash, rather than the full public key, is used to motivate monitors
+    and end-users to locate the appropriate key and make an explicit trust decision.
 2. The time at which the co-signature was generated,
    ASCII-encoded as a decimal number
 3. The hex-encoded signature from the witness key of a `cosigned_tree_head` with
