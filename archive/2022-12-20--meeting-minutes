@@ -1,0 +1,81 @@
+Date: 2022-12-20 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* filippo
+	* morten
+	* ln5
+	* nisse
+
+Status round
+	* [rgdd] read and sync regarding proposals
+	* [nisse] Done some refactoring of state manager. Move of timestamp to
+	  cosignature in progress.  Few other things related to milestones.
+	* [morten] fixup in configuration stuff (nisse is reviewing), and
+	  keeping up with nisse's merge requests
+	* [filippo] work on mrs, and reached out to al with no resonse yet;
+	  played a bit with how to build bastion and witness
+
+Decisions
+	* Decision: Drop error= from failure responses
+		* Motivation: Value is not specified to be machine friendly
+		  anyway. If we later find a usecase for more fine grained
+		  errors than the http status code, we should add a message like
+		  error=, error_code= + a sigsum-specific content type
+		  identifying this format.
+	* Decision: Consistently use 403 Forbidden for errors due to an invalid signature
+		* https://www.rfc-editor.org/rfc/rfc7231#section-6.5.3
+	* Decision: Update get-tree-head semantics to the following
+		* "Returns a tree head and any associated co-signatures.  The
+		  log should wait to update the published tree head until it has
+		  collected a satisfactory number of co-signatures. The list of
+		  co-signatures may change over time."
+	* Decision: Remove get-next-tree-head and add-cosignature
+		* [nisse] My preference would be to postpone that decision until
+		  the new scheme is implemented. Then we'll have a better
+		  understanding of the complexity of keeping both. And I would
+		  like to officially deploy a log (be that v1 or v0.9) pretty
+		  soon, and then it would be nice to be able to have a gradual
+		  migration of the few existing witnesses.
+		* [rgdd] it's ok if v0.9 log server doesn't output any
+		  cosignatures for now, i.e., just have our get-tree-head
+		  endpoint that outputs an STH without cosignatures.  As soon as
+		  the witnessing details are finalized / there's an updated
+		  witnessing poc, we add support for the log server to collect
+		  cosignatures periodically (with high-latency to start with,
+		  keeping it simple and similar to today's state manager).
+	* Decision: Merge witness.md and bastion.md
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/21/diffs
+
+Next steps
+	* [filippo] merge the above, think about if there's any other technical
+	  details that would be reasonable to change (related to
+	  operatablility); will start a sketch / pseudoproposal. And will try to
+	  put together a poc for bastion + witness in go.
+	* [nisse] holiday
+	* [morten] review stuff from nisse
+	* [rgdd] highlevel feeedback, holiday
+
+Other
+	* [nisse] Question on command line conventions: we represent keys as
+	  private keys, public keys and key hashes, in different contexts. We
+	  sometimes pass them directly hex-encoded on the command line,
+	  sometimes via a file (with command line specifying the file name).
+	  It's clearly bad to pass private keys on the command line (since
+	  they're visible in process metadata; hopefully we don't do that). I
+	  would suggest always passing also the public keys via files, one
+	  reason is to be more consistent with tools like ssh-keygen that
+	  produce two files, key + key.pub. I'm more undecided when it comes to
+	  key hashes.
+		* Take a stab at making this consistent, morten is available as
+		  rubberduck.  Note that current log cli is hacky (and under
+		  refactoring), and that sigsum-debug is not a good role model
+		  for what the (non-debug) sigsum tools should be doing.
