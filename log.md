@@ -167,9 +167,9 @@ Output on success:
 - `signature`: log signature for the above tree head, hex-encoded.
 
 ### 3.2 - get-tree-head
-Returns a tree head that has been cosigned by at least one witness.  The list of
-cosignatures is updated every time a new cosignature gets added.  This
-endpoint is used by Signers that want _enough cosignatures as fast as possible_.
+Returns a tree head and any associated co-signatures.  The log should wait to
+update the published tree head until it has collected a satisfactory number of
+co-signatures. The list of co-signatures may change over time.
 
 ```
 GET <log URL>/get-tree-head
