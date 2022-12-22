@@ -11,7 +11,7 @@ This repository contains documentation related to the [Sigsum project][].
   - [proposals/](./proposals) - proposals relating to design or the project at large
   - [www.sigsum.org/](./www.sigsum.org) - source code of the project website
   - Top-level - documents like [logging design](./design.md),
-    [api specification](./api.md), and [project history](HISTORY.md)
+    [api specification](./log.md), and [project history](HISTORY.md)
 
 ## Contributing
 
