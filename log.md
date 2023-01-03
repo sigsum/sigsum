@@ -168,7 +168,7 @@ Output on success:
 - `root_hash`: Merkle tree root hash, hex-encoded.
 - `signature`: log signature for the above tree head, hex-encoded.
 - `cosignature`: repeated key, as described in Section 2 of [the witness API
-document](https://git.sigsum.org/sigsum/tree/doc/witness.md).
+document](./witness.md).
 
 Example request:
 ```
@@ -233,7 +233,7 @@ Input:
 Output on success:
 - `node_hash`: node hash, hex-encoded.
 
-`node_path` is a repeated key, listing one or more hashes. The
+`node_hash` is a repeated key, listing one or more hashes. The
 order of node hashes follow from the hash strategy, see RFC 6962.
 
 It's required that `new_size` > `old_size`> 0. In the case of the old
@@ -322,7 +322,7 @@ public_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c" | c
 ```
 
 TODO: update the above with valid input.  Link
-	[proposal](https://git.sigsum.org/sigsum/tree/doc/proposals/2021-11-ssh-signature-format.md)
+	[proposal](./proposals/2021-11-ssh-signature-format.md)
 on how one could produce it "byte-for-byte" using Python and ssh-keygen -Y.
 
 ## 4 - Parameter summary
@@ -361,7 +361,7 @@ must do a one-time setup, with these three steps.
    5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)), and use
    as message `M` in SSH's signing format. The hash algorithm string
    must be "sha256". The reserved string must be empty. The namespace
-   field must be set to "submit-token:v0@sigsum.org".
+   field must be set to `submit-token:v0@sigsum.org`.
 
 The signature will act as the submit token. Since it's a signature on
 the log's key hash, it is not valid for submission to any other log.
