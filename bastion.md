@@ -21,7 +21,7 @@ This documents uses the same key encoding and hash as the [log API document](htt
 
 ### 2.1 — Witness to bastion connection
 
-A witness connects to the bastion’s witness endpoint with TLS 1.3. Other TLS versions must be rejected. TLS 1.3 hides client certificates from network observers. It presents as its client certificate a self-signed Ed25519 certificate containing the witness public key. The witness verifies the bastion’s TLS certificate chain like usual. The bastion optionally checks if the witness public key is accepted.
+A witness connects to the bastion’s witness endpoint with TLS 1.3, specifying the ALPN protocol `bastion/0`. Other TLS versions must be rejected, as only TLS 1.3 hides client certificates from network observers. The witness presents as its client certificate a self-signed Ed25519 certificate containing the witness public key. The witness verifies the bastion’s TLS certificate chain like usual. The bastion checks the witness public key against an allow list.
 
 After opening the connection, the witness starts serving HTTP/2 traffic on it as if it was a client-initiated connection. HTTP/2’s multiplexing allows serving multiple parallel requests on a single connection efficiently. None of the witness API is modified, except observing the `X-Forwarded-For` header.
 
