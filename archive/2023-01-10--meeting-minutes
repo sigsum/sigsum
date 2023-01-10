@@ -1,0 +1,73 @@
+Date: 2022-01-10 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* nisse
+	* filippo
+	* Foxboron
+	* Grégoire
+	* ln5
+
+Status round
+	* [rgdd] wip planning and contrib guidelines + providing input where wanted
+	* [filippo] discussed with Google folks
+	* [filippo] bastion implementation at
+	  https://github.com/FiloSottile/mostly-harmless/tree/main/bastion
+	  (running at https://example-bastion.fly.dev/)
+	* [filippo] witness PoC on top of Google's backend with checkpoint
+	  format, see: https://github.com/google/trillian-examples/pull/712
+		* Differences from witness.md to think about
+			* Checkpoint format
+			* Consistency proof hashes are base64-encoded
+			* Update API takes JSON and returns a checkpoint
+			* Get size API takes origin line (instead of public key hash)
+				* This is probably a good idea beyond interop, as it allows key rotation
+	* [nisse] ssh-agent support (also to work in integration tests) +
+	  tooling (sigsum-token), started looking at state manager to wrap it up
+	  + unit tests for rotation
+	* [foxboron] mktree-config stuff has been merged, revieweing MRs from
+	  nisse, and fix so config stuff can be used with asible (wip)
+	* [gregoire] two MRs in sigsum-py, one larger to make a log client 
+
+Decisions
+	* Decision: Prefix in private key files
+		* https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/11
+		* https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/40
+		* use ssh format for both public and private key
+
+Next steps
+	* [filippo] continued talking with google folks to converge
+	* [filippo] write down the comment about "one log with multiple keys"
+	* [filippo] document with some proposed changes (like ssh signature with
+	  note format, witness API encodings)
+	* [filippo] open issue about framework idea in project/doc repo
+	* [ln5] take bastion host for a test run
+		* https://github.com/FiloSottile/mostly-harmless/tree/main/bastion
+		* see also this usage example:
+		  https://github.com/google/trillian-examples/blob/e53d0d16fce31748e1d50f7b9d4dbdefb55ec388/witness/golang/cmd/addrwitness/README.md
+	* [nisse] log server milestone
+	* [nisse, foxboron] check access to poc log, ln5 will add
+	* [nisse] review gregoire's MRs
+	* [foxboron] review nisse stuff, finnish up infra changes, and have some
+	  opinions on how we deploy stuff so would like to discuss with ln5
+	* [gregoire] make the log client speak the rest of the api (python),
+	  might not have much time this week though
+	* [rgdd] planning and giving feedback
+
+Other
+	* rgdd would like to chat with (at least) morten/ln5 about ansible stuff + doc needs
+		* any blockers/needs that stops starting a hand-over to a log operator?
+	* rgdd would like to chat with (at least) nisse about:
+		* https://git.glasklar.is/sigsum/core/log-go/-/issues/6
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/23
+		* https://git.glasklar.is/groups/sigsum/-/milestones/2#tab-issues
+			* any blockers/needs that stops starting a hand-over to a log operator?
+			* (with knowledge that witness changes + bastion are incoming soon-isch)
