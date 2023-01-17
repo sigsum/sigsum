@@ -1,0 +1,51 @@
+Date: 2022-01-17 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* nisse 
+	* ln5
+	* Foxboron
+	* gregoire
+
+Status round
+	* [nisse] Refactoring of state manager done for now. ssh-agent in
+	  progress. openssh public keys (exclusively) merged, openssh private
+	  keys in progress. Started reorg of log server docs.  Reviewed MRs from
+	  Gregoire.
+	* [ln5] Sysadmin snowballs on poc.so when playing with Filippo's bastion
+	* [rgdd] planning / roadmapping
+	* [Foxboron] continued work on infrastructure ansible template,
+	  reviewing code changes from nisse
+
+Decisions
+	* None
+
+Next steps
+	* [nisse] more of the same (log server milestone)
+	* [rgdd] review of log-go docs + assign some smaller log-go issues to
+	  Foxboron that helps getting more familiar with the codebase
+	* [Foxboron] continue with ansible stuff and review MRs from nisse
+	* [gregoire] looking into the renaming of endpoints, will make an MR; if
+	  time continue with cli stuff in python repo
+
+Other
+	* https://github.com/project-oak/transparent-release
+	* https://research.google/pubs/pub51673/
+	* rgdd would like to chat with (at least) morten/ln5 about ansible stuff + doc needs
+		* any blockers/needs that stops starting a hand-over to a log operator?
+		* (item copy-pasted from last week)
+		* need to start using config files in ansible (morten will create an issue)
+		* different users / systemd?  (morten will creat an issue)
+		* morten will put together a doc that linus dogfoods, then we
+		  will send out a link to it on our email list (morten will
+		  create an issue)
+		* linus will be the "customer relations person" wrt. log operators
+	* https://git.glasklar.is/rgdd/osfc-22
