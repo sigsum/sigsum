@@ -1,0 +1,51 @@
+Date: 2023-01-24 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* nisse
+	* foxboron
+	* ln5
+	* gregoire
+
+Status round
+	* [nisse] Openssh-format key files and ssh-agent support merged.
+	* [nisse] Primary/secondary docs in review
+		* https://git.glasklar.is/sigsum/core/log-go/-/merge_requests/71
+	* [rgdd] drafty backlog items for morten to look at, see:
+		* https://git.glasklar.is/groups/sigsum/-/milestones/6#tab-issues
+	* [rgdd] roadmapping, will call for a planning meeting soon
+	* [ln5] figuring out why poc log was dead (follows main)
+	* [Foxboron] testing config setup, and thinking about the infra role changes
+	* [Foxboron] review and discuss with nisse
+	* [gregoire] sigsum-py, fixing client to follow latest api specs
+
+Decisions
+	* Decision? Go with magic sth file to specify startup behavior
+		* https://git.glasklar.is/sigsum/core/log-go/-/issues/43
+		* Morten and nisse will agree on the details after the meet,
+		  looks mostly right but would like to separate sth file from
+		  the "instruction" (separate files)
+	* Decision: Upgrade to golang 1.19
+		* Document in go.mod file that we're following Debian backports version
+
+Next steps
+	* [ln5] monitoring of poc log so we detect when it fails, server restarts automatically
+	* [Foxboron] ansible milestone, misc TODOs
+	* [nisse] start-up issue, complete docs after review, then tooling
+	* [gregoire] follow latest api specs in client (continued)
+	* [rgdd] review docs, planning
+
+Other
+	* Added domain normalization to sigsum-go/pkg/submit-token, should this
+	  be moved to log-go/internal instead?  Keep for now and see if its
+	  useful for any other tooling, otherwise move to log-go internal in a
+	  couple of weeks.
+
