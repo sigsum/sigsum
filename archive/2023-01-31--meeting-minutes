@@ -1,0 +1,53 @@
+Date: 2023-01-31 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* ln5
+	* rgdd
+	* filippo
+	* foxboron
+	* nisse
+
+Status round
+	* nisse: Implemented new sth.startup logic. New log-go server docs.
+	  Updated golang version to 1.19. Updated draft log and verify tools.
+		* log milestone done
+	* [rgdd] drafty notes about project management / gitlab usage (wip)
+		* https://pad.sigsum.org/p/ce88-dc28-aa66-ed09
+		* (Pad is not persisted, will polish and put somewhere more
+		  permanent in gitlab soon.  Feedback here is most welcome, add
+		  comments at the pad's end.)
+	* [rgdd] drafty roadmapping notes
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2023-01-31-drafty-roadmapping.md
+		* (Will fix "Draft: " milestones and and sync more until next
+		  weekly, and then also have our first planning+retro as one
+		  part of the meet)
+	* [filippo] Discussed witness architecture with Ryan
+	* [filippo] Wrote up reflections on log identity and key rotation
+		* https://git.glasklar.is/sigsum/project/documentation/-/issues/26
+	* [filippo] Proposal to switch to the checkpoint format
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/30
+	* [ln5] doc review
+	* [Foxboron] writing up docs in ansible, tinkering about the systemd stuff
+	* [nisse] changes to get-leaves, worth doing, soon? If so, please
+	  comment, and decide on the details next week.
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/29
+
+Decisions
+	* None
+
+Next steps
+	* [ln5] monitoring of poc log so we detect when it fails, server
+	  restarts automatically (copied from previous week)
+	* [Foxboron] ansible milestone, review nisse work
+	* [filippo] more chats with the google folks if they are available, want
+	  to start writing some software.  Will sync with rgdd.
+	* [nisse] tooling milestone
+	* [rgdd] planning of next milestones, sync with those involved
