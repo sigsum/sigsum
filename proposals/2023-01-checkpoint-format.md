@@ -32,14 +32,16 @@ We define two new signature formats that are compatible with the current OpenSSH
 
 Logs sign the note body with namespace `checkpoint:v0`.
 
-Witnesses sign a `timestamped_checkpoint` message with namespace `timestamped-checkpoint:v0` and produce a `timestamped_signature` where the timestamp is in seconds since the UNIX epoch.
+Witnesses sign with namespace `timestamped-checkpoint:v0` a message composed of one line representing the current timestamp in seconds since the UNIX epoch, encoded as an ASCII decimal with no leading zeroes, followed by the note body.
 
 ```
-struct timestamped_checkpoint {
-	u64 timestamp;
-	u8 note_body[];
-}
+1675170805
+go.sum database tree
+15368405
+/g9am3I6YWNKaZX/jkne1fqd9zEyjss+JXyPXG0WfkY=
 ```
+
+Witness signatures are encoded as a `timestamped_signature` before being concatenated with the key hash and encoded as Base64 according to the note specification.
 
 ```
 struct timestamped_signature {
@@ -63,4 +65,4 @@ cosignature=— witness.example.com Az3grqJGUaSGukG9p8nI2vKgiFn7qGHxn0W+mrwyI6Gz
 cosignature=— witness.example.com Az3grt9nc1/mvF9CNywDDfNWY0kvIADFt5mrtpifPYPAsA71DQOLD6DQmal1lVnxBLoVl0t0Ria4H9dxX8CFeNsBtg8=
 ```
 
-**Discussion point:** should these lines be hex-encoded.
+**Discussion point:** should these lines be hex-encoded?
