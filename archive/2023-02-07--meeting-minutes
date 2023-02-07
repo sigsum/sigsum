@@ -1,0 +1,95 @@
+Date: 2023-02-07 1215 UTC
+Meet: https://meet.sigsum.org/sigsum
+Chair: rgdd
+
+Agenda
+	* Hello
+	* Status round
+	* Decisions
+	* Next steps
+
+Hello
+	* rgdd
+	* filippo
+	* ln5
+	* nisse
+	* Foxboron
+
+Status round
+	* [rgdd] more roadmap planning, syncing, and documenting it for a decision today
+	* [rgdd] brief update from grégoire
+	* [nisse] sigsum tooling, atm blocked on client refactoring
+	  (https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/54,
+	  https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/51).
+	  Started looking at witnessing,
+	  https://git.glasklar.is/sigsum/core/log-go/-/merge_requests/99.
+	  Updated log-go/README.md.
+		* "blocked" as in forgot to assign MR to morten, morten will check today
+	* [ln5] rudimentary up-time monitoring running ("checker"), sign up to
+	  our sigsum-log-monitor list at
+	  https://lists.sigsum.org/mailman3/postorius/lists/sigsum-log-monitor.lists.sigsum.org/
+	  if you like email
+	* [filippo] discussed and reviewed roadmap
+	* [Foxboron] working towards anonuncement stuff, in particular working
+	  on how to document ansible; review of nisse's stuff.
+
+Decisions
+	* Decision: Cancel weekly on 2023-02-14
+		* rgdd, nisse, ln5, Foxboron have a scheduling conflict
+		* resume weekly's as usual on 2023-02-21 and forward
+	* Decision: Update roadmap
+		* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2023-02-07-roadmap.md
+		* 1: https://git.glasklar.is/groups/sigsum/-/milestones/1#tab-issues (cont.)
+			* "Now, aim to be done before summer or as soon as possible"
+		* 2: https://git.glasklar.is/groups/sigsum/-/milestones/5#tab-issues (start/cont.)
+			* "Now, aim to be done until end of march"
+			* (nisse: bulk of logic for witnessing: would prefer if it is in sigsum-go)
+		* 3: https://git.glasklar.is/groups/sigsum/-/milestones/3#tab-issues (cont.)
+			* rgdd would like to close this milestone and define a
+			  new one with nisse after meeting in person next week
+			  (i.e., after working and sketching a bit together).
+		* *: https://git.glasklar.is/groups/sigsum/-/milestones/6#tab-issues (cont.)
+		* *: ln5 is working on checker, rgdd will setup a runner after given instructions
+		* The remaining 4 and 5 have yet to be planned in more detail
+			* Not priority yet, any milestones related to this are in "DRAFT: " stage
+			* 4(ii): https://git.glasklar.is/groups/system-transparency/core/-/milestones/11#tab-issues
+		* Milestone overview: https://git.glasklar.is/groups/sigsum/-/milestones
+		* Next update of roadmap: 2023-04-04
+
+Next steps
+	* [rgdd] add "Future" issues in documentation repo
+		* Additional reference use-cases (we want a few)
+		* Additional libraries for sigsum enforcement (python, rust, ...)
+		* Tooling and/or data store service component
+		* Formal verification of design + sigsum paper
+		* Minimal database backend
+		* SMT on-top of Sigsum ("verifiable log-backed map")
+		* Framework (Filippo)
+	* [rgdd] read and then discuss (pseudo)proposals with filippo
+		* https://git.glasklar.is/sigsum/project/documentation/-/issues/26
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/30
+	* [rgdd] read and discuss proposal with nisse
+		* https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/29
+		* Defer decision until 21st
+	* [ln5] get stable log (ghost-shrimp) up to a recent version
+	* [ln5] produce instructions and/or code for setting up uptime monitoring using checker
+	* [Filippo] chat proposals with rgdd
+	* [Foxboron] ansible milestone + review nisse stuff
+	* [nisse] witnessing milestone
+
+Other
+	* Brief team retrospective (rgdd will take local notes only)
+		* Is it clear what you're working on until the next planning meet (every ~8 weeks)?
+		* Is it clear what the project works towards the coming 6 months?
+		* Is it somewhat clear what the project may be working towards after that?
+		* Is someone available to provide input to your work in a timely manner, i.e., is the feedback cycle short enough?  E.g., wrt. code review, discussion of proposals, or anything else that you're doing in the project?
+		* Is there anything that I could do to make your working situation better?
+		* Anything else you would like to bring up?
+		* Any other question you would like me to ask by default?
+	* [ln5] Our stable log, ghost-shrimp, is currently at 0.5.1/0.0.9
+	  (trillian 1.3.13) which is way behind. What's a reasonable process for
+	  upgrading our stable log, you think?
+		* [Moving forward, it would be good if ln5 dogfoods our
+		  "releases", more work needed here and exactly what it means to
+		  make a release.  Pick-up async.]
+		* For now nisse will recommend a tag for ln5 to operate (latest)
