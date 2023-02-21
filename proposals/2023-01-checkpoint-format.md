@@ -1,8 +1,8 @@
-A proposal to adopt the checkpoint format to integrate with the Omniwitness ecosystem and to eventually support key rotation.
+A proposal to adopt the checkpoint format to be interoperable with the Omniwitness ecosystem and to eventually support key rotation.
 
 ## Background
 
-The Go Checksum Database, rekor, and a few other logs adopted [the checkpoint format](https://github.com/transparency-dev/formats/blob/main/log/README.md#checkpoint-format) for their signed tree heads. A checkpoint looks like this: one arbitrary line that specifies the log identity, the log size, and the tree head, followed by one or more signatures.
+The Go Checksum Database and a few other logs use [the checkpoint format](https://github.com/transparency-dev/formats/blob/main/log/README.md#checkpoint-format) for their signed tree heads. A checkpoint looks like this: one arbitrary line that specifies the log identity, log size, tree head, and zero or more arbitrary lines, followed by one or more signatures.
 
 ```
 go.sum database tree
@@ -14,7 +14,7 @@ go.sum database tree
 
 Conversely, Sigsum doesn’t currently specify a signed tree head encoding format, but conveys them as a sequence of `size`, `root_hash`, `signature`, and `cosignature` parameters, where `signature` signs `size` and `root_hash`, while `cosignature` also signs the log key hash and a timestamp.
 
-Adopting the checkpoint format would allow Sigsum logs to be cosigned by witnesses in the Omniwitness ecosystem, with only minor changes necessary to support the respective signature schemes and HTTP APIs.
+Adopting the checkpoint format would allow Sigsum logs to be cosigned by witnesses in the Omniwitness ecosystem (and vice versa), with only minor changes necessary to support the respective signature schemes and HTTP APIs.
 
 Moreover, the checkpoint format natively allows [key rotation](https://git.glasklar.is/sigsum/project/documentation/-/issues/26) if changes to log identity are adopted.
 
