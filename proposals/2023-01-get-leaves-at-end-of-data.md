@@ -4,17 +4,18 @@ current tree size.
 
 # Motivation
 
-To make it possible to "tail" a log, i.e., periodically poll for new
-leaves added to the tree, independently from querying for tree heads.
-The most immediate use-case is for replication using the internal
-get-leaves endpoint (which strictly speaking is not a sigsum api
-issue), but it's nice with consistency between internal and external
-end-points. 
+The internal get-leaves endpoint is used by the log secondary to
+"tail" a log, i.e., periodically poll for new leaves added to the
+tree, independently from querying for tree heads. It depends on the
+log to not reject get-leaves requests with end-index beyond the end of
+the tree, and instead just have the end index clamped to the end.
+
+This approach might make sense also for the external get-leaves
+endpoint, to improve consistency.
 
 And there may be additional usecases. E.g., a monitor organized as one
-component reading all leaves, and independently recomputing the tree
-hash for at every tree size, and a separate component retrieving
-cosigned tree heads.
+component reading all leaves, and independently reconstructing the
+tree, and a separate component retrieving cosigned tree heads.
 
 # Request validity
 
@@ -37,7 +38,7 @@ Request.
 # Log server behavior for valid requests
 
 The case of `start_index == size` is special. In this case, the
-log must respond with HTTP status 204 No Content, and no response
+log must respond with HTTP status 404 Not Found, and no response
 body. 
 
 For all other valid requests, the response should be status 200
@@ -46,9 +47,15 @@ unexpected error conditions, like 500 Internal Server Error).
 
 In case `end_index > size`, the log will simply clamp to `size`. (In
 the case `start_index == size`, we always get `start_index ==
-end_index` after clamping. That's not an error, it's still the 204
+end_index` after clamping. That's not an error, it's still the 404
 case, even though that range would be invalid (400) if it occured
 before clamping).
+
+# Backwards compatibility
+
+Adopting this proposal only changess the meaning of certain requests
+that currently are invalid. So it should be doable without a need to
+change the protocol version or introduce a new endpoint name.
 
 # Tailing a log
 
@@ -61,7 +68,7 @@ the `start_index` is the size of a local copy, `end_index` is the same
 size plus some batch size constant, e.g, always `start_index + 100`.
 If the log's response is 200, the client adds the received leaves to
 the local copy and starts over with a new request. If the log's
-response is 204, the copy is (temporarily) complete, and the client
+response is 404, the copy is (temporarily) complete, and the client
 should sleep for some period of time, before repeating. If the log's
 response status is anything else, that indicates an error, handling of
 which is out of scope for this note.
@@ -79,4 +86,5 @@ Request validation and handling should use a different notion of tree
 size, that includes all non-committed leaves that the primary wants
 the secondary to replicate.
 
-The internal endpoint `get-tree-head-unsigned` becomes reundant.
+The replication has now been reworked in this way, enabling deletion
+of the internal endpoint `get-tree-head-unsigned`.
