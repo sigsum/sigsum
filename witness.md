@@ -134,9 +134,10 @@ Input:
 - `old_size`: the size of the previous tree head the consistency proof is
   built from, ASCII-encoded decimal number
 - `node_hash`: repeated key, listing zero or more hashes representing
-  a consistency proof, hex-encoded. List is empty if and only if
-  `old_size == 0` or `old_size == size`. The order of node hashes
-  follow from the hash strategy, see RFC 6962.
+  a consistency proof, hex-encoded. List is empty (this key not
+  present at all) if and only if `old_size == 0` or `old_size ==
+  size`. The order of node hashes follow from the hash strategy, see
+  RFC 6962.
 
 HTTP error codes on failure:
 - 400 Bad request if `old_size` is higher than `size`.
