@@ -3,12 +3,12 @@ represented.
 
 # Sigsum proof
 
-Our current docs don't specify what a sigsum proof is. The rought idea
-is tha one party, the *submitter*, interacts with the log to submit
+Our current docs don't specify what a sigsum proof is. The rough idea
+is that one party, the *submitter*, interacts with the log to submit
 a message, and collect related inclusion proof and cosignatures. This
-is package, together with message and any associated data to a
+is packaged, together with message and any associated data to a
 *verifier*, e.g., a software update client that uses this information
-to decide whether or not an update package should be installed.
+to decide whether or not an update should be installed.
 
 We need terminology for this, so let's call the package a "sigsum
 proof". We can think about it as a proof of public logging, and it can
@@ -18,7 +18,7 @@ be verified offline.
 
 In principle, each application can choose it's own representation,
 e.g., if a proof is incorporated inside a future version of a binary
-debian package. But it's desirable to specify a conrete format, to
+debian package. But it's desirable to specify a concrete format, to
 make it easier to reason about the contents, and have something that
 the sigsum command line tools can work with.
 
@@ -35,19 +35,18 @@ log=KEYHASH
 
 leaf=KEYHASH SIGNATURE
 
-timestamp=NUMBER
 tree_size=NUMBER
 root_hash=HASH
 signature=SIGNATURE
-cosignature=KEYHASH SIGNATURE
+cosignature=KEYHASH TIMESTAMP SIGNATURE
 cosignature=...
 
 leaf_index=NUMBER
-inclusion_path=HASH
-inclusion_path=...
+node_hash=HASH
+node_hash=...
 ```
 
-The version line specifies hte version of the proof format, and will
+The version line specifies the version of the proof format, and will
 be incremented as the format is changed or extended. The `log` line
 identifies the sigsum log.
 
@@ -67,24 +66,14 @@ additional information.
 
 1. It needs to know the message being logged. Typically, this is the
    hash of some file, and that file is distributed together with the
-   proof. Then message = H(file). The verifier must check that
-   H(message) = CHECKSUM and that the submitter's signature is valid.
+   proof. Then `message = H(file)`. The verifier must check that the
+   submitter's leaf signature is valid.
    
-   Q: Checksum is redundant, if it's clear from context which
-   file/message the proof applies to. So should we drop it from the
-   proof?
-
 2. It needs to know the log's public key. Verifier must check that the
    log's signature is valid.
    
-   Q: Should we care about verifying signature? Or are witness
-   signatures enough? If we only know the log's keyhash (effectively,
-   the id of the log), that's bound to the tree via the tree head
-   signed by witnesses.
-   
-3. Verifier must check that the inclusion proof is valid. No
-   additional information is needed, but the leaf hash must be
-   reconstructed from the proof.
+3. Verifier must check that the inclusion proof is valid. The leaf
+   hash must be reconstructed from the proof and the `message` hash.
    
 4. It must know the public keys of some or all of the witnesses, and
    verify corresponding signatures.
@@ -94,10 +83,9 @@ additional information.
 Verification is subject to client "policy". Policy includes the
 configuration of public keys for submitter, log and witnesses
 (together with respective role). Policy must also specify which
-subsets of witnesses are considered strong enough, e.g., n-of-k policy
-(it is likely that something a bit more expressive will be needed,
-though, e.g, a partition of the witnesses into disjoint subsets, and a
-separate n-of-k requirement for each such subset).
+subsets of witnesses are considered strong enough, the details are out
+of scope for this proposal, but, e.g., one could use an n-of-k policy
+or something a bit more expressive.
 
 # Appendices
 
@@ -109,8 +97,8 @@ subject of later extensions to the proof format.
 This is somewhat orthogonal to the sigsum service itself, and not part
 of this proposal, but I think it is important to have some way to act
 when a monitor discovers an unexpected signature log. The basic idea
-is taken from a discussion in the spki context (but I can't find a
-good reference).
+is based on SPKI revalidation, see [SPKI structure
+draft](https://theworld.com/~cme/spki.txt).
 
 Let's define a revocation authority as follows: The authority
 maintains a list of revoked items. Anyone can submit a query "is this
@@ -150,5 +138,5 @@ unexpected signatures.
 To support this, a sigsum proof needs to provide two cosigned tree
 heads. A newer tree head, to which the inclusion proof applies, and an
 older tree with size <= the leaf index for the inclusion proof. This
-proves that the checksum was added to the log during the time interval
-bounded by the timestamps on those two tree heads.
+proves that the checksum was published by the log during the time interval
+bounded by the cosignature timestamps on those two tree heads.
