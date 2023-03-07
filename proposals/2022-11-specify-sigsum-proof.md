@@ -26,14 +26,14 @@ the sigsum command line tools can work with.
 
 Building on the ascii format used on the wire when interacting with a
 sigsum log, a proof can use the following format, which is essentially
-a leaf + cosigned tree head + inclusion proof, with an empty line
-(i.e., double newline character) separating these parts.
+a log and version id, a leaf (but with truncated checksum) + cosigned
+tree head + inclusion proof, with an empty line (i.e., double newline
+character) separating these parts.
 
 ```
 version=0
 log=KEYHASH
-
-leaf=KEYHASH SIGNATURE
+leaf=SHORT-CHECKSUM KEYHASH SIGNATURE
 
 tree_size=NUMBER
 root_hash=HASH
@@ -48,10 +48,9 @@ node_hash=...
 
 The version line specifies the version of the proof format, and will
 be incremented as the format is changed or extended. The `log` line
-identifies the sigsum log.
-
-In the next block, `leaf` is similar to the response to get-leaves, but
-the checksum that is signed is omitted, and must be derived from other
+identifies the sigsum log. In the next line, `leaf` is similar to the
+response to get-leaves, but the checksum is truncated to only the
+first 16 bits (4 hex digits); full checksum must be derived from other
 context.
 
 The last two blocks are verbatim responses from get-tree-head-cosigned
@@ -66,18 +65,25 @@ additional information.
 
 1. It needs to know the message being logged. Typically, this is the
    hash of some file, and that file is distributed together with the
-   proof. Then `message = H(file)`. The verifier must check that the
-   submitter's leaf signature is valid.
+   proof. Then `message = H(file)`. The verifier must compute
+   `checksum = H(message)`, and check that it matches the truncated
+   checksum on the leaf line. (This check serves to detect accidental
+   mismatch between message and proof).
    
-2. It needs to know the log's public key. Verifier must check that the
-   log's signature is valid.
+2. It needs to know the submitter's public key. Verififier must check
+   that the leaf signature (with `checksum` computed as above) is valid.
    
-3. Verifier must check that the inclusion proof is valid. The leaf
-   hash must be reconstructed from the proof and the `message` hash.
+4. It needs to know the log's public key. Verifier must check that the
+   log's tree head signature is valid.
    
-4. It must know the public keys of some or all of the witnesses, and
-   verify corresponding signatures.
+5. It must know the public keys of some the witnesses, and verify
+   corresponding cosignatures. Policy determines how many valid
+   cosignatures are deemed to be sufficient.
    
+6. Verifier must check that the inclusion proof is valid. The leaf
+   hash must be reconstructed from the leaf line and the computed
+   `checksum`.
+      
 ## Policy
 
 Verification is subject to client "policy". Policy includes the
@@ -105,7 +111,7 @@ maintains a list of revoked items. Anyone can submit a query "is this
 item revoked?", and if it is not, the authority responds with a signed
 statement with the claim "as of time ..., item ... is not revoked".
 
-In the sigsum context, it would make some sense to have an revocation
+In the sigsum context, it would make some sense to have a revocation
 authority close to the monitor. A monitor follows a sigsum log (it
 retrieves all leaves, taking consistency with signed tree heads into
 account, and filters out the ones with a keyhash of interest). When it
