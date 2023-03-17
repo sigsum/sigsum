@@ -36,7 +36,7 @@ holder.
 ## Exactly what consequences do we expect if k of n witnesses are compromised?
 
 Are there other (easier) attacks where compromise of witnesses
-completely breaks detection of key misuse? Of so, protection from
+completely breaks detection of key misuse? If so, protection from
 verifying the log signature still seems low.
 
 # Conversely, what's the value of cosignatures to monitors?
