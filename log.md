@@ -40,14 +40,12 @@ Figure 1 of our design document gives an intuition of all involved parties.
 Logs use the same Merkle tree hash strategy as [RFC 6962, Section 2][]. Any
 mentions of hash functions or digital signature schemes refer to [SHA256][] and
 [Ed25519][]. Ed25519 public keys are always encoded according to [RFC 8032,
-section 5.1.2][]. The [signature format][] is defined by OpenSSH, with hash
-algorithm string `sha256`, and empty reserved string.
+section 5.1.2][].
 
 [RFC 6962, Section 2]: https://tools.ietf.org/html/rfc6962#section-2
 [SHA256]: https://csrc.nist.gov/csrc/media/publications/fips/180/4/final/documents/fips180-4-draft-aug2014.pdf
 [RFC 8032, section 5.1.2]: https://tools.ietf.org/html/rfc8032#section-5.1.2
 [Ed25519]: https://tools.ietf.org/html/rfc8032
-[signature format]: https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig
 
 ### 2.2 - Serialization
 Log requests and responses are transmitted using simple ASCII encodings, for a
@@ -57,29 +55,36 @@ Binary data must be base16-encoded, also known as hex encoding. Using hex as
 opposed to base64 is motivated by it being simpler, favoring ease of decoding
 and encoding over efficiency on the wire. Hex decoding is case-insensitive.
 
+Exceptions are made in the encoding of tree heads, for the purposes of
+compatibility with the broader ecosystem. When using base64, the standard RFC
+4648 alphabet is used, with padding.
+
 We use the [Trunnel](https://gitweb.torproject.org/trunnel.git)
 [description language](https://www.seul.org/~nickm/trunnel-manual.html)
-to define data structures that need to be (de)serialized in the log.  Data
-structures that need to be signed have additional SSH-specific metadata.  For
-example, metadata includes a magic preamble string and a signing context.  An
-implementer can easily express the SSH signing format using Trunnel.
+to define binary data structures in this document.
 
 ### 2.3 - Merkle tree
-#### 2.3.1 - Signed tree head
+#### 2.3.1 - Tree head signature
 
-Logs perform signing operations by treating a serialized `signed_tree_head` as
-the message and using `signed-tree-head:v0@sigsum.org` as the namespace.
+Logs produce tree head signatures by encoding the tree head as a
+[checkpoint](https://github.com/transparency-dev/formats/blob/main/log/README.md#checkpoint-format),
+and signing that directly with their key. (Note that the checkpoint format is
+only used as a signed data serialization format, and is not expressed on the
+wire.)
 
-A `signed_tree_head` contains a tree size (the number of leaves in the log) and
-a Merkle tree root hash. The same log key must never be used to sign tree heads
-from other trees.
+The signed data is composed of three lines, each terminated by a `0x20` byte:
+
+1. the Base64 encoding of the log key hash
+2. the tree size in decimal with no leading zeroes
+3. the Base64 encoding of the Merkle tree root hash
 
 ```
-struct signed_tree_head {
-	u64 size;
-	u8 root_hash[32];
-}
+5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+15368405
+31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 ```
+
+The same log key must never be used to sign tree heads from other trees.
 
 #### 2.3.2 - Tree leaf
 Logs support a single leaf type.  It contains a signer's statement,
@@ -98,8 +103,10 @@ The message is meant to represent some data and it is recommended that
 the signer uses `H(data)` as the message, in which case `checksum`
 will be `H(H(data))`.
 
-`signature` is computed over the above `message` with namespace
-`tree-leaf:v0@sigsum.org`.
+`signature` is computed over the above `message` according to the [signature
+format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig)
+defined by OpenSSH, with namespace `tree-leaf:v0@sigsum.org`, hash algorithm
+string `sha256`, and empty reserved string.
 
 `key_hash` is a hash of the signer's public key.  It is included in `tree_leaf`
 so that each leaf can be attributed to a signer.  A hash, rather than the full
