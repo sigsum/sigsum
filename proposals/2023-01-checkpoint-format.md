@@ -32,7 +32,7 @@ The OpenSSH file signature format is abandoned. Keys are expected not to be used
 
 ### Checkpoint fields
 
-As the origin line, Sigsum logs would currently use the Base64 encoding (for consistency with the tree head line) of the log key hash. This doesn’t lead to smooth key rotation, but this proposal focuses on incrementally adopting the new encoding format without changing semantics. A following proposal may introduce the concept of log identities separate from the log key.
+As the origin line, Sigsum logs would currently use `sigsum.org/v1/` followed by the Base64 encoding (for consistency with the tree head line) of the log key hash. This doesn’t lead to smooth key rotation, but this proposal focuses on incrementally adopting the new encoding format without changing semantics. A following proposal may introduce the concept of log identities separate from the log key.
 
 The log size and tree head lines would have the same semantic meaning as both in current Sigsum and in the checkpoint format, as the two ecosystems both follow RFC 6962, and are encoded according to the checkpoint specification: ASCII decimal for the log size and Base64 for the tree head.
 
@@ -42,9 +42,7 @@ Logs sign the whole note body directly with Ed25519.
 
 The signature output is encoded directly as the `signature` field of `get-tree-head` API requests in the Sigsum ecosystem.
 
-To produce signed notes compatible with the Omniwitness ecosystem, these signatures are encoded according to the [signed note specification](https://pkg.go.dev/golang.org/x/mod/sumdb/note) with the Base64 encoding of the key hash as the key Name, and the first 4 bytes of the key hash as the KeyHash. This is redundant, but it encodes the current 1:1 mapping of key to log identity of Sigsum logs into the more flexible checkpoint ecosystem.
-
-**Discussion point**: instead of reusing the key hash as the key name, should we just call it a more readable `self` and rely on the uint32 key hash to avoid accidental collisions? I can’t quite imagine how this would break but it feels uncomfortable. On the other hand, as specified checkpoints are pretty unreadable.
+To produce signed notes compatible with the Omniwitness ecosystem, these signatures are encoded according to the [signed note specification](https://pkg.go.dev/golang.org/x/mod/sumdb/note) with the log’s origin line as the key Name, and the first 4 bytes of the key hash as the KeyHash. This is redundant, but it encodes the current 1:1 mapping of key to log identity of Sigsum logs into the more flexible checkpoint ecosystem.
 
 #### Example
 
@@ -53,7 +51,7 @@ A log with key hash `5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=` signs a tree 
 The Ed25519 key is used to produce a signature over the following message (including the final newline).
 
 ```
-5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 ```
@@ -61,11 +59,11 @@ The Ed25519 key is used to produce a signature over the following message (inclu
 The signature is then used as-is for Sigsum APIs. To produce a signed checkpoint, it’s encoded as follows.
 
 ```
-5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 
-— 5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE= 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
+— sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE= 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
 ```
 
 ### Witness signatures
@@ -94,7 +92,7 @@ The Ed25519 key is used to produce a signature over the following message (inclu
 ```
 cosignature v1
 1679315147
-5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 ```
@@ -112,6 +110,6 @@ To produce a signed checkpoint, it’s encoded as follows.
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 
-— 5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE= 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
+— sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE= 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
 — witness.example.com/w1 jWbPPwAAAABkGFDLEZMHwSRaJNiIDoe9DYn/zXcrtPHeolMI5OWXEhZCB9dlrDJsX3b2oyin1nPZ\nqhf5nNo0xUe+mbIUBkBIfZ+qnA==
 ```

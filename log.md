@@ -74,12 +74,12 @@ wire.)
 
 The signed data is composed of three lines, each terminated by a `0x20` byte:
 
-1. the Base64 encoding of the log key hash
+1. `sigsum.org/v1/` followed by the Base64 encoding of the log key hash
 2. the tree size in decimal with no leading zeroes
 3. the Base64 encoding of the Merkle tree root hash
 
 ```
-5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 ```

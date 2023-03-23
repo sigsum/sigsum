@@ -57,14 +57,14 @@ and is not expressed on the wire.)
 
 1. the line `cosignature v1`
 2. the time at which the signature is made in decimal with no leading zeroes
-3. the Base64 encoding of the log key hash
+3. `sigsum.org/v1/` followed by the Base64 encoding of the log key hash
 4. the tree size in decimal with no leading zeroes
 5. the Base64 encoding of the Merkle tree root hash
 
 ```
 cosignature v1
 1679315147
-5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 ```
