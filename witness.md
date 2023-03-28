@@ -49,35 +49,25 @@ A co-signature consists of three fields, separated by a single space character:
     and end-users to locate the appropriate key and make an explicit trust decision.
 2. The time at which the co-signature was generated,
    ASCII-encoded as a decimal number
-3. The hex-encoded signature from the witness key of a message defined below.
-
-The signed data is composed of five lines lines, each terminated by a `0x20`
-byte. (Note that this format is only used as a signed data serialization format,
-and is not expressed on the wire.)
-
-1. the line `cosignature v1`
-2. the time at which the signature is made in decimal with no leading zeroes
-3. `sigsum.org/v1/` followed by the Base64 encoding of the log key hash
-4. the tree size in decimal with no leading zeroes
-5. the Base64 encoding of the Merkle tree root hash
+3. The hex-encoded signature from the witness key of a `cosigned_tree_head` with
+   namespace `cosigned-tree-head:v0@sigsum.org`.
 
 ```
-cosignature v1
-1679315147
-sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
-15368405
-31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
+struct cosigned_tree_head {
+	u64 size;
+	u8 root_hash[32];
+	u8 key_hash[32];
+	u64 timestamp;
+}
 ```
 
-The format can be understood as the tree head encoded as a
-[checkpoint](https://github.com/transparency-dev/formats/blob/main/log/README.md#checkpoint-format),
-with two extra leading lines, and no additional “extension” lines. The latter
-are not included because the witness can’t make any statement as to the
-correctness of extensions it doesn’t (yet) support. The fixed prefix is added to
-make it possible to support some extensions or different semantics in the
-future. The timestamp is a trusted observed time for the tree head, which can be
-useful in establishing freshness of the tree head or the logging timespan of a
-leaf.
+Note that this structure has two additional fields compared to a
+`signed_tree_head`, which is signed by the log's public key:
+
+* the log's `key_hash`, to [bind the co-signature to the
+  log](https://git.sigsum.org/sigsum/tree/archive/2021-08-10-witnessing-broader-discuss#n95),
+* the co-signature `timestamp`, a trusted observed time for the tree head, which
+  can be useful in establishing freshness or a logging timespan for a leaf.
 
 ## 3 — Public endpoints
 
@@ -198,8 +188,8 @@ Output:
 - `timestamp`: the time at which this roster was generated, ASCII-encoded as a
   decimal number
 - `signature`: a signature from the witness public key over all other keys in
-  this response, in the order in which they appear, including the final `\n`,
-  with prefix `roster v1\n`
+  this response, in the order in which they appear, including the trailing `\n`,
+  with namespace `roster:v0@sigsum.org`
 
 Witnesses must commit to the period at which they update the roster, and make
 sure that any caching system won't interfere with the roster URL response

@@ -40,12 +40,17 @@ Figure 1 of our design document gives an intuition of all involved parties.
 Logs use the same Merkle tree hash strategy as [RFC 6962, Section 2][]. Any
 mentions of hash functions or digital signature schemes refer to [SHA256][] and
 [Ed25519][]. Ed25519 public keys are always encoded according to [RFC 8032,
-section 5.1.2][].
+section 5.1.2][]. The [signature format][] (for most of the sigsum signatures)
+is defined by OpenSSH, with hash algorithm string `sha256`, and empty
+reserved string. For tree heads, signed data is instead formatted to
+be compatible with the [checkpoint format][], which is used by some other logs.
 
 [RFC 6962, Section 2]: https://tools.ietf.org/html/rfc6962#section-2
 [SHA256]: https://csrc.nist.gov/csrc/media/publications/fips/180/4/final/documents/fips180-4-draft-aug2014.pdf
 [RFC 8032, section 5.1.2]: https://tools.ietf.org/html/rfc8032#section-5.1.2
 [Ed25519]: https://tools.ietf.org/html/rfc8032
+[signature format]: https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig
+[checkpoint format]: https://github.com/transparency-dev/formats/blob/main/log/README.md#checkpoint-format
 
 ### 2.2 - Serialization
 Log requests and responses are transmitted using simple ASCII encodings, for a
@@ -55,8 +60,9 @@ Binary data must be base16-encoded, also known as hex encoding. Using hex as
 opposed to base64 is motivated by it being simpler, favoring ease of decoding
 and encoding over efficiency on the wire. Hex decoding is case-insensitive.
 
-Exceptions are made in the encoding of tree heads, for the purposes of
-compatibility with the broader ecosystem. When using base64, the standard RFC
+Exceptions are made in the encoding of tree heads, for compatibility
+with the checkpoint format which is used by other logs, as well as for
+the Go checksum database. When using base64, the standard RFC
 4648 alphabet is used, with padding.
 
 We use the [Trunnel](https://gitweb.torproject.org/trunnel.git)
@@ -68,18 +74,21 @@ to define binary data structures in this document.
 
 Logs produce tree head signatures by encoding the tree head as a
 [checkpoint](https://github.com/transparency-dev/formats/blob/main/log/README.md#checkpoint-format),
-and signing that directly with their key. (Note that the checkpoint format is
+and signing that directly with their ed25519 key, i.e., without using
+the OpenSSH signature format. (Note that the checkpoint format is
 only used as a signed data serialization format, and is not expressed on the
 wire.)
 
-The signed data is composed of three lines, each terminated by a `0x20` byte:
+The signed data is composed of three lines, each terminated by a
+newline (0x0a) character:
 
-1. `sigsum.org/v1/` followed by the Base64 encoding of the log key hash
-2. the tree size in decimal with no leading zeroes
+1. `sigsum.org/v1/` followed by the lowercase hex encoding of the log key hash
+2. the tree size in decimal with no leading zeroes (empty tree has
+   size "0")
 3. the Base64 encoding of the Merkle tree root hash
 
 ```
-sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+sigsum.org/v1/d99ec0951097ff7b46d6e333ab0f7a68f443846bc81c44b97a7888b6aec31040
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 ```
@@ -103,10 +112,8 @@ The message is meant to represent some data and it is recommended that
 the signer uses `H(data)` as the message, in which case `checksum`
 will be `H(H(data))`.
 
-`signature` is computed over the above `message` according to the [signature
-format](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig)
-defined by OpenSSH, with namespace `tree-leaf:v0@sigsum.org`, hash algorithm
-string `sha256`, and empty reserved string.
+`signature` is computed over the above `message` with namespace
+`tree-leaf:v0@sigsum.org`.
 
 `key_hash` is a hash of the signer's public key.  It is included in `tree_leaf`
 so that each leaf can be attributed to a signer.  A hash, rather than the full
