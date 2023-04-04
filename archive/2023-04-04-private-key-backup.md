@@ -14,7 +14,7 @@ node.
 # Hardware keys
 
 To reduce risk of key exposure, we'd like to keep private keys in a
-hardware device, e.g., a Tillitis key or a Yubico HSH (hardware
+hardware device, e.g., a Tillitis key or a Yubico HSM (hardware
 security module). The idea is that the device provides a signing
 oracle, but no easy means to extract the private key. An attacker with
 temporary physical or online access to the device can use it to create
