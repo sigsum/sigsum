@@ -29,13 +29,16 @@ theme = "researcher"
     url = "/docs"
     weight = 1
   [[menu.main]]
+    name = "Services"
+    url = "/services"
+    weight = 2
+  [[menu.main]]
     name = "Contact"
     url = "/contact"
-    weight = 2
+    weight = 3
   [[menu.main]]
     name = "About"
     url = "/about"
-    weight = 3
-
+    weight = 4
 [markup.goldmark.renderer]
   unsafe = true # allow raw HTML in markdown files
