@@ -2,8 +2,8 @@
 
 Sigsum adopted OpenSSH signature format, see
 [proposal](./2021-11-ssh-signature-format.md). This was done for two
-reasons: To be able to take advantage of OpenSSH tools, and to get domain
-separation of keys are used for multiple purposes.
+reasons: To be able to take advantage of OpenSSH tools, and to get
+domain separation of keys that are used for multiple purposes.
 
 This proposal reconsiders this decision. It appears that
 
@@ -18,14 +18,14 @@ This proposal reconsiders this decision. It appears that
 
 3. Some means of domain separation is still good practice, to make it
    impossible, or very unlikely, that a signature created for an
-   operatino in the Sigsum system can be taken out of context and
+   operation in the Sigsum system can be taken out of context and
    accepted as valid by an unrelated system, or vice versa. It's
    generally discouraged to reuse the same signing key for multiple
    purposes, but we still see some reasonable usecases (e.g., using
    the same key as a general release signing key, as the leaf signing
    key for Sigsum logging of releases. In particular, the set of leaf
    keys that can occur in the Sigsum system is open and potentially
-   huge.
+   huge).
    
 4. Domain separation can be done simpler than adopting the ssh
    signature format wholesale. It's also desirable to get a bit more
@@ -72,7 +72,7 @@ first line is an id that we format as `sigsum.org/v1/HASH`, where the
 log's public key.
 
 For consistency, it seems reasonable to make other namespace prefixes
-start with `sigsum.org/v1/`. That way, if some other applications
+start with `sigsum.org/v1/`. That way, if some other application
 signs a set of messages that can't start with `sigsum.org/`, then we
 can be sure that a data item with a valid Sigsum signatures will be
 rejected if presented to that other application, and vice versa,
@@ -114,13 +114,15 @@ cosignature formats are under discussion), and (ii) it's a reasonably
 pretty way to separate the plain text namespace string from the
 non-text data that follows.
 
+We also add an id compnent to tree head signatures, for consistency.
+
 ## Leaf signatures
 
 Recall that a an add-leaf request includes a 32-octet string called
-the `message` (usually, `message = H(data)`, where `data` is neither
-processed, nor published, by the log). The log receiving the message
-forms `checksum = H(message)`. The signature, created by the submitter
-and published by the log, is formed over the concatenation
+the `message` (usually, `message = H(data)`, where `data` is not
+processed by the log). The log receiving the message forms `checksum =
+H(message)`, and publishes `checksum`. The signature, created by the
+submitter and published by the log, is formed over the concatenation
 `sigsum.org/v1/tree-leaf`, NUL, `checksum`. I.e., a octet string of 56
 octets, the 23-byte ascii prefix, a single 0 octet, and the 32 octet
 checksum.
@@ -137,4 +139,10 @@ total of 113 octets.
 The signed data is the concatenation of the namespace string
 `sigsum.org/v1/submit-token`, NUL, the log's public key, for a total
 of 59 octets.
+
+## Tree head signatures
+
+For consistency, the first line of the checkpoint-compatible
+serialization of tree heads to be signed, is changed from
+`sigsum.org/v1/<key hash>` to `sigsum.org/v1/tree/<key hash>`.
 
