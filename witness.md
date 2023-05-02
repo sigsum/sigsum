@@ -61,6 +61,11 @@ struct cosigned_tree_head {
 }
 ```
 
+**Warning** Format of cosigned data is in flux, and the above
+description is out-of-date. We're moving away from SSH-formatting of
+signatures, and we'd also like to adopt a different interoperable
+format, which will most likely be text-based.
+
 Note that this structure has two additional fields compared to a
 `signed_tree_head`, which is signed by the log's public key:
 

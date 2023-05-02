@@ -40,16 +40,26 @@ Figure 1 of our design document gives an intuition of all involved parties.
 Logs use the same Merkle tree hash strategy as [RFC 6962, Section 2][]. Any
 mentions of hash functions or digital signature schemes refer to [SHA256][] and
 [Ed25519][]. Ed25519 public keys are always encoded according to [RFC 8032,
-section 5.1.2][]. The [signature format][] (for most of the sigsum signatures)
-is defined by OpenSSH, with hash algorithm string `sha256`, and empty
-reserved string. For tree heads, signed data is instead formatted to
-be compatible with the [checkpoint format][], which is used by some other logs.
+section 5.1.2][].
+
+A "namespace" string is attached as a prefix to all messages signed in
+the Sigsum system, to provide domain separation. The namespace string
+is of the form `sigsum.org/<version>/<object-type>`. This is
+particularly important for the leaf signatures: a Sigsum log should
+only publish signatures that were intended for the Sigsum system. It
+shouldn't be possible to take any valid Ed25519 signature, regardless
+of the purpose for which it was made, and submit it to a Sigsum log.
+
+In objects using a binary serialization, the namespace is separated
+from the body of the message with NUL character. For tree heads, the
+signed data is formatted to be compatible with the [checkpoint
+format][], and in this case the namespace `sigsum.org/v1/tree` is a
+prefix of the checkpoint origin line.
 
 [RFC 6962, Section 2]: https://tools.ietf.org/html/rfc6962#section-2
 [SHA256]: https://csrc.nist.gov/csrc/media/publications/fips/180/4/final/documents/fips180-4-draft-aug2014.pdf
 [RFC 8032, section 5.1.2]: https://tools.ietf.org/html/rfc8032#section-5.1.2
 [Ed25519]: https://tools.ietf.org/html/rfc8032
-[signature format]: https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.sshsig
 [checkpoint format]: https://github.com/transparency-dev/formats/blob/main/log/README.md#checkpoint-format
 
 ### 2.2 - Serialization
@@ -60,7 +70,7 @@ Binary data must be base16-encoded, also known as hex encoding. Using hex as
 opposed to base64 is motivated by it being simpler, favoring ease of decoding
 and encoding over efficiency on the wire. Hex decoding is case-insensitive.
 
-Exceptions are made in the encoding of tree heads, for compatibility
+Exceptions are made in the encoding of signed tree heads, for compatibility
 with the checkpoint format which is used by other logs, as well as for
 the Go checksum database. When using base64, the standard RFC
 4648 alphabet is used, with padding.
@@ -74,21 +84,21 @@ to define binary data structures in this document.
 
 Logs produce tree head signatures by encoding the tree head as a
 [checkpoint](https://github.com/transparency-dev/formats/blob/main/log/README.md#checkpoint-format),
-and signing that directly with their ed25519 key, i.e., without using
-the OpenSSH signature format. (Note that the checkpoint format is
-only used as a signed data serialization format, and is not expressed on the
-wire.)
+and signing that directly with their Ed25519 key. (Note that the
+checkpoint format is only used as a signed data serialization format,
+and is not expressed on the wire.)
 
 The signed data is composed of three lines, each terminated by a
 newline (0x0a) character:
 
-1. `sigsum.org/v1/` followed by the lowercase hex encoding of the log key hash
+1. `sigsum.org/v1/tree/` followed by the *lowercase* hex encoding of the
+   log key hash
 2. the tree size in decimal with no leading zeroes (empty tree has
    size "0")
 3. the Base64 encoding of the Merkle tree root hash
 
 ```
-sigsum.org/v1/d99ec0951097ff7b46d6e333ab0f7a68f443846bc81c44b97a7888b6aec31040
+sigsum.org/v1/tree/d99ec0951097ff7b46d6e333ab0f7a68f443846bc81c44b97a7888b6aec31040
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 ```
@@ -112,8 +122,9 @@ The message is meant to represent some data and it is recommended that
 the signer uses `H(data)` as the message, in which case `checksum`
 will be `H(H(data))`.
 
-`signature` is computed over the above `message` with namespace
-`tree-leaf:v0@sigsum.org`.
+`signature` is computed over the concatenation of the namespace string
+`sigsum.org/v1/tree-leaf`, a single NUL character, and the `checksum`
+(total 56 octets of signed data).
 
 `key_hash` is a hash of the signer's public key.  It is included in `tree_leaf`
 so that each leaf can be attributed to a signer.  A hash, rather than the full
@@ -335,9 +346,7 @@ signature=0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479ad
 public_key=46a6aaceb6feee9cb50c258123e573cc5a8aa09e5e51d1a56cace9bfd7c5569c" | curl --data-binary @- <log URL>/add-leaf
 ```
 
-TODO: update the above with valid input.  Link
-	[proposal](./proposals/2021-11-ssh-signature-format.md)
-on how one could produce it "byte-for-byte" using Python and ssh-keygen -Y.
+TODO: update the above with valid input.
 
 ## 4 - Parameter summary
 Ed25519 as signature scheme. SHA256 as hash function.
@@ -361,7 +370,7 @@ leaves are added to the Merkle tree, by submitter domain.
 To be allowed to post add-leaf requests to a public log, the submitter
 must do a one-time setup, with these three steps.
 
-1. Create a new ed25519 key pair, which we refer to as the rate limit
+1. Create a new Ed25519 key pair, which we refer to as the rate limit
    key pair.
 
 2. Publish the public key in DNS, as a TXT record under a domain that
@@ -370,12 +379,11 @@ must do a one-time setup, with these three steps.
    record is the hex-encoded public key.
    
 3. Use the private key to sign the target log's public key. More
-   precisely, use the log's public ed25519 key (formatted according to
+   precisely, the data signed are the 59 octets formed by concatening
+   the namespace string `sigsum.org/v1/submit-token`, a single NUL
+   character, and the log's public Ed25519 key (formatted according to
    [RFC 8032, section
-   5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)), and use
-   as message `M` in SSH's signing format. The hash algorithm string
-   must be "sha256". The reserved string must be empty. The namespace
-   field must be set to `submit-token:v0@sigsum.org`.
+   5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)).
 
 The signature will act as the submit token. Since it's a signature on
 the log's key hash, it is not valid for submission to any other log.
