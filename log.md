@@ -45,15 +45,15 @@ section 5.1.2][].
 A "namespace" string is attached as a prefix to all messages signed in
 the Sigsum system, to provide domain separation. The namespace string
 is of the form `sigsum.org/<version>/<object-type>`. This is
-particularly important for the leaf signatures: A Sigsum log should
-only publish signatures that were intended for the Sigsum system: it
+particularly important for the leaf signatures: a Sigsum log should
+only publish signatures that were intended for the Sigsum system. It
 shouldn't be possible to take any valid Ed25519 signature, regardless
-of the purpose for which it was made, and submit to a Sigsum log.
+of the purpose for which it was made, and submit it to a Sigsum log.
 
 In objects using a binary serialization, the namespace is separated
 from the body of the message with NUL character. For tree heads, the
 signed data is formatted to be compatible with the [checkpoint
-format][], an in this case, the namespace `sigsum.org/v1/tree` is a
+format][], and in this case the namespace `sigsum.org/v1/tree` is a
 prefix of the checkpoint origin line.
 
 [RFC 6962, Section 2]: https://tools.ietf.org/html/rfc6962#section-2
@@ -382,7 +382,7 @@ must do a one-time setup, with these three steps.
 3. Use the private key to sign the target log's public key. More
    precisely, the data signed are the 59 octets formed by concatening
    the namespace string `sigsum.org/v1/submit-token`, a single NUL
-   character, and log's public ed25519 key (formatted according to
+   character, and the log's public ed25519 key (formatted according to
    [RFC 8032, section
    5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)).
 
