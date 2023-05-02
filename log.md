@@ -84,10 +84,9 @@ to define binary data structures in this document.
 
 Logs produce tree head signatures by encoding the tree head as a
 [checkpoint](https://github.com/transparency-dev/formats/blob/main/log/README.md#checkpoint-format),
-and signing that directly with their Ed25519 key, and the sigsum
-namespace string goes inside the checkpoint, as a prefix of the origin
-line. (Note that the checkpoint format is only used as a signed data
-serialization format, and is not expressed on the wire.)
+and signing that directly with their Ed25519 key. (Note that the
+checkpoint format is only used as a signed data serialization format,
+and is not expressed on the wire.)
 
 The signed data is composed of three lines, each terminated by a
 newline (0x0a) character:
@@ -371,7 +370,7 @@ leaves are added to the Merkle tree, by submitter domain.
 To be allowed to post add-leaf requests to a public log, the submitter
 must do a one-time setup, with these three steps.
 
-1. Create a new ed25519 key pair, which we refer to as the rate limit
+1. Create a new Ed25519 key pair, which we refer to as the rate limit
    key pair.
 
 2. Publish the public key in DNS, as a TXT record under a domain that
@@ -382,7 +381,7 @@ must do a one-time setup, with these three steps.
 3. Use the private key to sign the target log's public key. More
    precisely, the data signed are the 59 octets formed by concatening
    the namespace string `sigsum.org/v1/submit-token`, a single NUL
-   character, and the log's public ed25519 key (formatted according to
+   character, and the log's public Ed25519 key (formatted according to
    [RFC 8032, section
    5.1.2](https://tools.ietf.org/html/rfc8032#section-5.1.2)).
 
