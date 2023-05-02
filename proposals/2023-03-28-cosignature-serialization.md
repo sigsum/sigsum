@@ -20,15 +20,16 @@ This proposal only concerns the serialization of cosigned tree heads.
 ## Description
 
 Witnesses sign a message composed of one line spelling `cosignature/v1`, one
-line representing the current timestamp in seconds since the UNIX epoch, encoded
-as an ASCII decimal with no leading zeroes and with the prefix `time `, followed
-by the first three lines of the note body (including the final newline).
+line representing the current timestamp in seconds since the UNIX epoch encoded
+as an ASCII decimal with no leading zeroes and prefixed with the string `time`
+and a space (0x20), followed by the first three lines of the tree head encoded
+as a checkpoint (including the final newline).
 
 Semantically, a v1 co-signature is a statement that, as of the current time, the
 *consistent* tree head **with the largest size** the witness has observed for
 the log identified by the origin line has the specified hash. This means
 witnesses are expected not to ever sign a tree head with size N+K at T and N at
-T+D (with K and D ≠ 0) for the same log. Logs are identified only by their
+T+D (with K and D > 0) for the same log. Logs are identified only by their
 origin line, and there can’t be two separate logs with the same origin line.
 Tree heads for which consistency with the previously observed tree head(s) can’t
 be verified should be logged but must not be co-signed.
@@ -45,7 +46,7 @@ signature over the following message (including the final newline).
 
     cosignature/v1
     time 1679315147
-    sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+    sigsum.org/v1/tree/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
     15368405
     31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 
