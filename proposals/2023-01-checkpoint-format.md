@@ -32,7 +32,7 @@ The OpenSSH file signature format is abandoned. Keys are expected not to be used
 
 ### Checkpoint fields
 
-As the origin line, Sigsum logs would currently use `sigsum.org/v1/` followed by the Base64 encoding (for consistency with the tree head line) of the log key hash. This doesn’t lead to smooth key rotation, but this proposal focuses on incrementally adopting the new encoding format without changing semantics. A following proposal may introduce the concept of log identities separate from the log key.
+As the origin line, Sigsum logs would currently use `sigsum.org/v1/` followed by the lowercase hex encoding of the log key hash. This doesn’t lead to smooth key rotation, but this proposal focuses on incrementally adopting the new encoding format without changing semantics. A following proposal may introduce the concept of log identities separate from the log key.
 
 The log size and tree head lines would have the same semantic meaning as both in current Sigsum and in the checkpoint format, as the two ecosystems both follow RFC 6962, and are encoded according to the checkpoint specification: ASCII decimal for the log size and Base64 for the tree head.
 
@@ -46,12 +46,12 @@ To produce signed notes compatible with the Omniwitness ecosystem, these signatu
 
 #### Example
 
-A log with key hash `5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=` signs a tree head with size 15368405 and hash `31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=`.
+A log with key hash `a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd` signs a tree head with size 15368405 and hash `31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=`.
 
 The Ed25519 key is used to produce a signature over the following message (including the final newline).
 
 ```
-sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 ```
@@ -59,11 +59,11 @@ sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
 The signature is then used as-is for Sigsum APIs. To produce a signed checkpoint, it’s encoded as follows.
 
 ```
-sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 
-— sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE= 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
+— sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
 ```
 
 ### Witness signatures
@@ -92,7 +92,7 @@ The Ed25519 key is used to produce a signature over the following message (inclu
 ```
 cosignature v1
 1679315147
-sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 ```
@@ -106,10 +106,10 @@ The cosignature for Sigsum APIs looks like follows.
 To produce a signed checkpoint, it’s encoded as follows.
 
 ```
-5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd
 15368405
 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 
-— sigsum.org/v1/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE= 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
+— sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
 — witness.example.com/w1 jWbPPwAAAABkGFDLEZMHwSRaJNiIDoe9DYn/zXcrtPHeolMI5OWXEhZCB9dlrDJsX3b2oyin1nPZ\nqhf5nNo0xUe+mbIUBkBIfZ+qnA==
 ```

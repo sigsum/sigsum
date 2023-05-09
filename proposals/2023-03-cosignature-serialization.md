@@ -39,14 +39,14 @@ and can make no statements about their validity or global visibility. Note that
 Sigsum logs never produce additional lines.
 
 **Example:** a witness named witness.example.com/w1 with key hash
-`jWbPP4actZDz+uVvOT7qCd2Fdb8G4qcGc9jwh0w25iA=` wants to sign a tree head at size
-`15368405` with hash `31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=`; the current
-UNIX time is `1679315147`.  The witness Ed25519 key is used to produce a
-signature over the following message (including the final newline).
+`3620c0d515f87e60959d29a4682fd1f0db984704981fda39b3e9ba0a44f57e2f` wants to sign
+a tree head at size `15368405` with hash `31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=`;
+the current UNIX time is `1679315147`. The witness Ed25519 key is used to
+produce a signature over the following message (including the final newline).
 
     cosignature/v1
     time 1679315147
-    sigsum.org/v1/tree/5+z2zyuRoW99pcVlMhSPL4npdw/U+no8o8Ekw8CHiHE=
+    sigsum.org/v1/tree/3620c0d515f87e60959d29a4682fd1f0db984704981fda39b3e9ba0a44f57e2f
     15368405
     31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 

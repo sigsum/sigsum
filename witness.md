@@ -49,30 +49,24 @@ A co-signature consists of three fields, separated by a single space character:
     and end-users to locate the appropriate key and make an explicit trust decision.
 2. The time at which the co-signature was generated,
    ASCII-encoded as a decimal number
-3. The hex-encoded signature from the witness key of a `cosigned_tree_head` with
-   namespace `cosigned-tree-head:v0@sigsum.org`.
+3. The hex-encoded signature from the witness key of a message composed of one
+   line spelling `cosignature/v1`, one line representing the current timestamp
+   in seconds since the UNIX epoch encoded as an ASCII decimal with no leading
+   zeroes and prefixed with the string `time` and a space (0x20), followed by
+   the first three lines of the tree head encoded as a checkpoint (including the
+   final newline).
 
 ```
-struct cosigned_tree_head {
-	u64 size;
-	u8 root_hash[32];
-	u8 key_hash[32];
-	u64 timestamp;
-}
+cosignature/v1
+time 1679315147
+sigsum.org/v1/tree/3620c0d515f87e60959d29a4682fd1f0db984704981fda39b3e9ba0a44f57e2f
+15368405
+31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 ```
 
-**Warning** Format of cosigned data is in flux, and the above
-description is out-of-date. We're moving away from SSH-formatting of
-signatures, and we'd also like to adopt a different interoperable
-format, which will most likely be text-based.
-
-Note that this structure has two additional fields compared to a
-`signed_tree_head`, which is signed by the log's public key:
-
-* the log's `key_hash`, to [bind the co-signature to the
-  log](https://git.sigsum.org/sigsum/tree/archive/2021-08-10-witnessing-broader-discuss#n95),
-* the co-signature `timestamp`, a trusted observed time for the tree head, which
-  can be useful in establishing freshness or a logging timespan for a leaf.
+Semantically, a v1 co-signature is a statement that, as of the current time, the
+*consistent* tree head *with the largest size* the witness has observed for
+the log identified by that key has the specified hash.
 
 ## 3 — Public endpoints
 
@@ -116,9 +110,9 @@ A log with strict latency goals may choose to issue a `get-tree-size` request
 before or in parallel with creating a tree head, so that it will be immediately
 ready to issue a `add-tree-head` request. A log that is frequently producing
 tree heads may choose to keep track of the latest `add-tree-head` request it
-issued, and only issue a `get-tree-size` on `bad_old_size` errors.
+issued, and only issue a `get-tree-size` on 409 Conflict errors.
 
-Caching this response is discouraged as it is likely to lead to `bad_old_size`
+Caching this response is discouraged as it is likely to lead to 409 Conflict
 error responses to `add-tree-head` requests.
 
 ### 3.2 — add-tree-head
@@ -157,8 +151,13 @@ Output on success:
 
 The witness must persist the new tree head before returning the cosignature.
 
-If the `key_hash` is known, and the `signature` is valid, the witness may choose
-to log the request if it might suggest log misbehavior.
+If the `key_hash` is known, and the `signature` is valid, the witness should log
+the request even if the consistency proof doesn't verify (but must not co-sign
+it) as it might suggest log misbehavior.
+
+Note that the client can't request an `old_size` lower than the latest known to
+the log. This means witnesses are expected not to ever sign a tree head with
+size N+K at T and N at T+D (with K and D > 0) for the same log.
 
 A log with strict latency goals may choose to issue `add-tree-head` requests to
 all witnesses in parallel, and to start serving the co-signed tree head once a
@@ -194,7 +193,7 @@ Output:
   decimal number
 - `signature`: a signature from the witness public key over all other keys in
   this response, in the order in which they appear, including the trailing `\n`,
-  with namespace `roster:v0@sigsum.org`
+  with a prefix of `sigsum.org/v1/witness-roster\n`
 
 Witnesses must commit to the period at which they update the roster, and make
 sure that any caching system won't interfere with the roster URL response
@@ -205,3 +204,6 @@ roster from a quorum of witnesses and comparing the timestamp in the roster with
 that on the most recent co-signature, a monitor can ensure the "freshness" of
 the tree head it is inspecting. Otherwise, a log could hide entries from a
 monitor by pretending it has stopped issuing tree heads.
+
+**Note**: should a roster list timestamps or tree sizes? How should a monitor
+handle a very recent timestamp?
