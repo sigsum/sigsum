@@ -8,7 +8,7 @@ Sigsum currently runs two log servers.
 	`log 154f49976b59ff09a123675f58cb3e346e0455753c3c3b15d465dcb4f6512b0b https://poc.sigsum.org/jellyfish`
 
   - Test log, running the latest log server release. Public key and url:
-    `log 3cdfb5eba72bc2c0fcfe12b246de04f98ef411826f58207e48fe55eed4b84619 https://ghost-shrimp.sigsum.org`
+    `log 80d115da542b67bb7a15448f50fe951e59cfa9db73807bfc12a2a4a981ba251e https://ghost-shrimp.sigsum.org`
 
 We plan to deploy a production log, with stronger commitment on
 availability and documented security practices.
