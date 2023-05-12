@@ -1,10 +1,65 @@
-# Sigsum Logging API v0
-This document outlines the sigsum logging API, version 0.  The broader picture
-is not explained here.  We assume that you are already familiar with the sigsum
-logging [design document](https://git.sigsum.org/sigsum/tree/doc/design.md).
+# Sigsum Logging API v1
+This document outlines the sigsum logging API.
 
 **Warning.**
-This is a work-in-progress document that may be moved or modified.
+This is a work-in-progress document, we expect a few more changes
+before all details of the version 1 protocols are settled.
+
+## Introduction
+
+A Sigsum log provides key-usage transparency. There are several
+parties to the system:
+
+1. The log (the main topic of this document). The log maintains an
+   append-only Merkle-tree, where each leaf in the tree is signed by
+   the leaf's submitter. The log signs its tree heads, and it also
+   collects cosignatures from witnesses.
+
+2. A witness observes tree heads from one or several logs, and checks
+   that tree heads are consistent, i.e., it certifies that each later
+   tree head it cosigns includes everything that was in the tree
+   heads it signed previously.
+
+3. A submitter signs and submits a leaf to a log, and collects a
+   cosigned tree head and an inclusion proof tying the submitted leaf
+   to that tree head. This data can then be used as a proof of logging.
+
+4. A verifier receives a data item together with a proof of logging
+   (the distribution mechanism is considered out of scope of the
+   Sigsum system), and verifies that the proof is valid and complies
+   with policy. Policy defines which logs are considered known and
+   which witnesses are trusted. Note that verification is an off-line
+   procedure.
+
+5. A monitor periodically requests latest tree head and corresponding
+   leaves from one or more logs. It ensures that the tree head carries
+   recent cosignatures by trusted witnesses, and that the monitor gets
+   all the leaves that make up the published tree head. A monitor
+   usually has particular interest in certain submission keys, and
+   will output all leafs including signatures by those keys, to enable
+   detection of unexpected or unauthorized signatures.
+
+The objective is that if an unauthorized signature is made, then the
+signature will either be refused by the verifier, or it will detected
+after the fact by a monitor that has interest in that key.
+
+The threat model includes compromise of the submitter's signing key
+and distribution system, compromise of the log itself, and compromize
+of some (but not too many!) of the witnesses. In this setting, the
+attacker can sign a data item and produce a valid "proof of logging"
+that is accepted by the verifier. However, as long as sufficient
+number of the witnesses are not compromised, the unauthorized
+signature will be visible to monitors.
+
+This document specifies the protocol used to interact with a log,
+implemented by logs, submitters and monitors. There are companion
+documents for the [Sigsum
+proof](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md)
+passed from submitter to verifier, and the [Witness
+protocol](./witness.md) used between a log and a witness.
+
+TODO: Refer to some big-picture doc, rework or replace [design
+document](./design.md)?
 
 ## 1 - Overview
 A log implements an HTTP(S) API for accepting requests and sending responses.
