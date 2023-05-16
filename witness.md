@@ -150,6 +150,16 @@ Output on success:
 - `cosignature`: witness co-signature for the submitted tree head
 
 The witness must persist the new tree head before returning the cosignature.
+Note that checking the `old_size` against the previous tree head and persisting
+the new tree head must be performed atomically: otherwise the following race can
+occur.
+
+1. Request A with `size` N is checked for consistency.
+2. Request B with `size` N+K is checked for consistency.
+3. The stored size is updated to N+K for request B.
+4. A cosignature for N+K is returned to request B.
+5. The stored size is updated to N for request A, **rolling back K leaves**.
+6. A cosignature for N is returned to request A.
 
 If the `key_hash` is known, and the `signature` is valid, the witness should log
 the request even if the consistency proof doesn't verify (but must not co-sign
