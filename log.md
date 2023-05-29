@@ -39,6 +39,8 @@ parties to the system:
    will output all leafs including signatures by those keys, to enable
    detection of unexpected or unauthorized signatures.
 
+### Threat model
+
 The objective is that if an unauthorized signature is made, then the
 signature will either be refused by the verifier, or it will detected
 after the fact by a monitor that has interest in that key.
@@ -51,12 +53,18 @@ that is accepted by the verifier. However, as long as sufficient
 number of the witnesses are not compromised, the unauthorized
 signature will be visible to monitors.
 
+### Related documentation
+
 This document specifies the protocol used to interact with a log,
 implemented by logs, submitters and monitors. There are companion
 documents for the [Sigsum
 proof](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md)
 passed from submitter to verifier, and the [Witness
 protocol](./witness.md) used between a log and a witness.
+
+Documentation on how to run and operate a log server is maintained
+together with the [log server
+implementation](https://git.glasklar.is/sigsum/core/log-go/-/blob/main/doc/readme.md).
 
 TODO: Refer to some big-picture doc, rework or replace [design
 document](./design.md)?
