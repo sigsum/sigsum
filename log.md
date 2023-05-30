@@ -32,7 +32,7 @@ and is thus detactable by a monitor.
 
 ### System overview
 
-There are several parties to the Sigsum system:
+There are several parties to the sigsum system:
 
 1. The log (the main topic of this document). The log maintains an
    append-only Merkle-tree, where each leaf in the tree is signed by
@@ -50,7 +50,7 @@ There are several parties to the Sigsum system:
 
 4. A verifier receives a data item together with a proof of logging
    (the distribution mechanism is considered out of scope of the
-   Sigsum system), and verifies, off-line, that the proof is valid and
+   sigsum system), and verifies, off-line, that the proof is valid and
    complies with policy. Policy defines which logs are considered
    known and which witnesses are trusted.
 
@@ -68,7 +68,7 @@ The purpose of this document is to specify the protocol used to
 interact with a log. This protocol is used by logs, submitters and
 monitors. 
 
-There are companion documents for the [Sigsum
+There are companion documents for the [sigsum
 proof](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md)
 passed from submitter to verifier, and the [Witness
 protocol](./witness.md) used between a log and a witness.
@@ -117,12 +117,12 @@ mentions of hash functions or digital signature schemes refer to [SHA256][] and
 section 5.1.2][].
 
 A "namespace" string is attached as a prefix to all messages signed in
-the Sigsum system, to provide domain separation. The namespace string
+the sigsum system, to provide domain separation. The namespace string
 is of the form `sigsum.org/<version>/<object-type>`. This is
-particularly important for the leaf signatures: a Sigsum log should
-only publish signatures that were intended for the Sigsum system. It
+particularly important for the leaf signatures: a sigsum log should
+only publish signatures that were intended for the sigsum system. It
 shouldn't be possible to take any valid Ed25519 signature, regardless
-of the purpose for which it was made, and submit it to a Sigsum log.
+of the purpose for which it was made, and submit it to a sigsum log.
 
 In objects using a binary serialization, the namespace is separated
 from the body of the message with NUL character. For tree heads, the
