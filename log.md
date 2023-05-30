@@ -7,8 +7,29 @@ before all details of the version 1 protocols are settled.
 
 ## Introduction
 
-A Sigsum log provides key-usage transparency. There are several
-parties to the system:
+The aim of the Sigsum project is to provide key-usage transparency. A
+Sigsum log publishes signed checksums. Together with the other parties
+in the system, in particular, witnesses and monitors, this makes it
+difficult for an attacker to delete or hide log entries, without
+raising alarms.
+
+### Threat model
+
+The objective is that if an unauthorized signature is made, then the
+signature will either be refused by the verifier, or it will detected
+after the fact by a monitor that has interest in that key.
+
+The threat model includes compromise of the submitter's signing key
+and distribution system, compromise of the log itself, and compromize
+of some (but not too many!) of the witnesses. In this setting, the
+attacker can sign a data item and produce a valid "proof of logging"
+that is accepted by the verifier. However, as long as sufficient
+number of the witnesses are not compromised, the unauthorized
+signature will be visible to monitors.
+
+### System overview
+
+There are several parties to the Sigsum system:
 
 1. The log (the main topic of this document). The log maintains an
    append-only Merkle-tree, where each leaf in the tree is signed by
@@ -39,25 +60,13 @@ parties to the system:
    will output all leafs including signatures by those keys, to enable
    detection of unexpected or unauthorized signatures.
 
-### Threat model
-
-The objective is that if an unauthorized signature is made, then the
-signature will either be refused by the verifier, or it will detected
-after the fact by a monitor that has interest in that key.
-
-The threat model includes compromise of the submitter's signing key
-and distribution system, compromise of the log itself, and compromize
-of some (but not too many!) of the witnesses. In this setting, the
-attacker can sign a data item and produce a valid "proof of logging"
-that is accepted by the verifier. However, as long as sufficient
-number of the witnesses are not compromised, the unauthorized
-signature will be visible to monitors.
-
 ### Related documentation
 
-This document specifies the protocol used to interact with a log,
-implemented by logs, submitters and monitors. There are companion
-documents for the [Sigsum
+The purpose of this document is to specify the protocol used to
+interact with a log. This protocol is used by logs, submitters and
+monitors. 
+
+There are companion documents for the [Sigsum
 proof](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md)
 passed from submitter to verifier, and the [Witness
 protocol](./witness.md) used between a log and a witness.
