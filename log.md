@@ -7,25 +7,28 @@ before all details of the version 1 protocols are settled.
 
 ## Introduction
 
-The aim of the Sigsum project is to provide a _simple building block_ with a _strong threat model_ that can be used for _key-usage transparency_. A
-sigsum log publishes signed checksums. Together with other parties
-in the system, in particular, witnesses and monitors, this makes it
-difficult for an attacker to delete or hide log entries, without
-raising alarms.
+The aim of the Sigsum project is to provide a _simple building block_
+with a _strong threat model_ that can be used for _key-usage
+transparency_. A sigsum log publishes signed checksums. Together with
+other parties in the sigsum system (so called _witnesses_ and _monitors_),
+this makes it difficult for an attacker to remove or tamper with
+published entries, without being detected.
 
-### Security goal and threat model
+### Security objective and threat model
 
 The objective is that if an unauthorized signature is made, then the
-signature will either be refused by the (offline) verifier, or it will be detected
-after the fact by a monitor that has interest in that key.
+signature will either be refused by the (off-line) verifier, or it will
+be detected after the fact by a monitor that takes an interest in that
+key.
 
 The threat model includes compromise of the submitter's signing key
-and distribution system, compromise of the log itself, and compromize
-of some (but not too many!) of the witnesses. In this setting, the
-attacker can sign a data item and produce a valid "proof of logging"
-that is accepted by the verifier. However, as long as a sufficient
-number of the witnesses are not compromised, the unauthorized
-signature will be visible to monitors.
+and distribution system, compromise of the log itself, and compromise
+of some (but not too many, subject to configured policy) of the
+witnesses. In this setting, the attacker can sign a data item and
+produce a valid "proof of logging" that is accepted by the verifier.
+However, as long as a sufficient number of the witnesses are not
+compromised, the unauthorized signature stays in the public record,
+and is thus detactable by a monitor.
 
 ### System overview
 
@@ -47,10 +50,9 @@ There are several parties to the Sigsum system:
 
 4. A verifier receives a data item together with a proof of logging
    (the distribution mechanism is considered out of scope of the
-   Sigsum system), and verifies that the proof is valid and complies
-   with policy. Policy defines which logs are considered known and
-   which witnesses are trusted. Note that verification is an off-line
-   procedure.
+   Sigsum system), and verifies, off-line, that the proof is valid and
+   complies with policy. Policy defines which logs are considered
+   known and which witnesses are trusted.
 
 5. A monitor periodically requests latest tree head and corresponding
    leaves from one or more logs. It ensures that the tree head carries
