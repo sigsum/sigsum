@@ -7,23 +7,23 @@ before all details of the version 1 protocols are settled.
 
 ## Introduction
 
-The aim of the Sigsum project is to provide key-usage transparency. A
-Sigsum log publishes signed checksums. Together with the other parties
+The aim of the Sigsum project is to provide a _simple building block_ with a _strong threat model_ that can be used for _key-usage transparency_. A
+sigsum log publishes signed checksums. Together with other parties
 in the system, in particular, witnesses and monitors, this makes it
 difficult for an attacker to delete or hide log entries, without
 raising alarms.
 
-### Threat model
+### Security goal and threat model
 
 The objective is that if an unauthorized signature is made, then the
-signature will either be refused by the verifier, or it will detected
+signature will either be refused by the (offline) verifier, or it will be detected
 after the fact by a monitor that has interest in that key.
 
 The threat model includes compromise of the submitter's signing key
 and distribution system, compromise of the log itself, and compromize
 of some (but not too many!) of the witnesses. In this setting, the
 attacker can sign a data item and produce a valid "proof of logging"
-that is accepted by the verifier. However, as long as sufficient
+that is accepted by the verifier. However, as long as a sufficient
 number of the witnesses are not compromised, the unauthorized
 signature will be visible to monitors.
 
