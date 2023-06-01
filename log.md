@@ -17,7 +17,7 @@ published entries, without being detected.
 ### Security objective and threat model
 
 The objective is that if an unauthorized signature is made, then the
-signature will either be refused by the (off-line) verifier, or it will
+signature will either be refused by the (offline) verifier, or it will
 be detected after the fact by a monitor that takes an interest in that
 key.
 
@@ -50,16 +50,16 @@ There are several parties to the sigsum system:
 
 4. A verifier receives a data item together with a proof of logging
    (the distribution mechanism is considered out of scope of the
-   sigsum system), and verifies, off-line, that the proof is valid and
-   complies with policy. Policy defines which logs are considered
-   known and which witnesses are trusted.
+   sigsum system), and verifies, offline, that the proof is valid and
+   complies with the verifier's policy. The policy defines which logs
+   are considered known and which witnesses are trusted.
 
-5. A monitor periodically requests latest tree head and corresponding
+5. A monitor periodically requests the latest tree head and corresponding
    leaves from one or more logs. It ensures that the tree head carries
    recent cosignatures by trusted witnesses, and that the monitor gets
    all the leaves that make up the published tree head. A monitor
    usually has particular interest in certain submission keys, and
-   will output all leafs including signatures by those keys, to enable
+   will output all leaves including signatures by those keys, to enable
    detection of unexpected or unauthorized signatures.
 
 ### Related documentation
