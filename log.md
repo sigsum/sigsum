@@ -1,10 +1,84 @@
-# Sigsum Logging API v0
-This document outlines the sigsum logging API, version 0.  The broader picture
-is not explained here.  We assume that you are already familiar with the sigsum
-logging [design document](https://git.sigsum.org/sigsum/tree/doc/design.md).
+# Sigsum Logging API v1
+This document outlines the sigsum logging API.
 
 **Warning.**
-This is a work-in-progress document that may be moved or modified.
+This is a work-in-progress document, we expect a few more changes
+before all details of the version 1 protocols are settled.
+
+## Introduction
+
+The aim of the Sigsum project is to provide a _simple building block_
+with a _strong threat model_ that can be used for _key-usage
+transparency_. A sigsum log publishes signed checksums. Together with
+other parties in the sigsum system (so called _witnesses_ and _monitors_),
+this makes it difficult for an attacker to remove or tamper with
+published entries, without being detected.
+
+### Security objective and threat model
+
+The objective is that if an unauthorized signature is made, then the
+signature will either be refused by the (offline) verifier, or it will
+be detected after the fact by a monitor that takes an interest in that
+key.
+
+The threat model includes compromise of the submitter's signing key
+and distribution system, compromise of the log itself, and compromise
+of some (but not too many, subject to configured policy) of the
+witnesses. In this setting, the attacker can sign a data item and
+produce a valid "proof of logging" that is accepted by the verifier.
+However, as long as a sufficient number of the witnesses are not
+compromised, the unauthorized signature stays in the public record,
+and is thus detactable by a monitor.
+
+### System overview
+
+There are several parties to the sigsum system:
+
+1. The log (the main topic of this document). The log maintains an
+   append-only Merkle-tree, where each leaf in the tree is signed by
+   the leaf's submitter. The log signs its tree heads, and it also
+   collects cosignatures from witnesses.
+
+2. A witness observes tree heads from one or several logs, and checks
+   that tree heads are consistent, i.e., it certifies that each later
+   tree head it cosigns includes everything that was in the tree
+   heads it signed previously.
+
+3. A submitter signs and submits a leaf to a log, and collects a
+   cosigned tree head and an inclusion proof tying the submitted leaf
+   to that tree head. This data can then be used as a proof of logging.
+
+4. A verifier receives a data item together with a proof of logging
+   (the distribution mechanism is considered out of scope of the
+   sigsum system), and verifies, offline, that the proof is valid and
+   complies with the verifier's policy. The policy defines which logs
+   are considered known and which witnesses are trusted.
+
+5. A monitor periodically requests the latest tree head and corresponding
+   leaves from one or more logs. It ensures that the tree head carries
+   recent cosignatures by trusted witnesses, and that the monitor gets
+   all the leaves that make up the published tree head. A monitor
+   usually has particular interest in certain submission keys, and
+   will output all leaves including signatures by those keys, to enable
+   detection of unexpected or unauthorized signatures.
+
+### Related documentation
+
+The purpose of this document is to specify the protocol used to
+interact with a log. This protocol is used by logs, submitters and
+monitors. 
+
+There are companion documents for the [sigsum
+proof](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md)
+passed from submitter to verifier, and the [Witness
+protocol](./witness.md) used between a log and a witness.
+
+Documentation on how to run and operate a log server is maintained
+together with the [log server
+implementation](https://git.glasklar.is/sigsum/core/log-go/-/blob/main/doc/readme.md).
+
+TODO: Refer to some big-picture doc, rework or replace [design
+document](./design.md)?
 
 ## 1 - Overview
 A log implements an HTTP(S) API for accepting requests and sending responses.
@@ -43,12 +117,12 @@ mentions of hash functions or digital signature schemes refer to [SHA256][] and
 section 5.1.2][].
 
 A "namespace" string is attached as a prefix to all messages signed in
-the Sigsum system, to provide domain separation. The namespace string
+the sigsum system, to provide domain separation. The namespace string
 is of the form `sigsum.org/<version>/<object-type>`. This is
-particularly important for the leaf signatures: a Sigsum log should
-only publish signatures that were intended for the Sigsum system. It
+particularly important for the leaf signatures: a sigsum log should
+only publish signatures that were intended for the sigsum system. It
 shouldn't be possible to take any valid Ed25519 signature, regardless
-of the purpose for which it was made, and submit it to a Sigsum log.
+of the purpose for which it was made, and submit it to a sigsum log.
 
 In objects using a binary serialization, the namespace is separated
 from the body of the message with NUL character. For tree heads, the
