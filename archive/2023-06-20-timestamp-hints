@@ -1,0 +1,36 @@
+Some **quick and drafty** timestamp notes as requested last weekly.
+
+We already established before that timestamps are not falsifiable:
+
+  https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2021-08-24-checkpoint-timestamp#L51-60
+
+Note that an offline verifier cannot perform any additional verification either
+way.  Security comes from the quorum specified in the user's trust policy, not a
+reactive gossip-audit mechanism.  But even in a reactive model you could come up
+with some ways to check if a timestamp is not sound.  Is it always increasing?
+Are independent witnesses in rough agreement about the time, over time?  Etc.
+
+Some example use-cases of timestamps:
+- Freshness for monitors to detect slow-down attacks.  And an alternative
+  solution is to use the rooster endpoint (important for low-frequency logs).
+- During which timeframe (a,b] was a given entry transparency logged?
+  - E.g., to convince a verifier that an entry is fresh, say, "not older than X
+    time units" to heal with time instead of having to bother with revocation.
+  - E.g., to build a TKey app that only signs some data if it was transparency
+    logged between 9-17, mon-fri.  (So far we prototyped this, minus timestamp.)
+  - E.g., to convince a 3rd-party that a particular document existed at a given
+    time, say, during a future legal dispute that happens to have a tlog trail.
+  - Or to give an example much closer to home for the Google folks, in the
+    Sigstore paper it is stated "Similarly, the timestamp on the signature must
+    be in the validity period of the certificate (as attested by a signed
+    certificate timestamp from Rekor); this is possible only if the signature
+    was submitted to Rekor during that window".  Witness-timestamps would be a
+    pretty significant improvement, largely eliminating the need for an SCT.
+
+For clarification, how an offline verifier can be convinced of timeframe (a,b]:
+
+1. Get the current cosigned tree head X.
+2. Log an entry E. Leaf index will be larger or equal to X.tree_size.
+3. Get inclusion proof to a newer cosigned tree head Y.
+4. Now a verifier can be convinced that E was logged in the interval
+(X.timestamps, Y.timestamps] from the respective witness timestamps.
