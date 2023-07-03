@@ -269,7 +269,7 @@ A log must have at least one fixed and unique URL.  A few examples:
   - `http://er3n3jnvoyj2t37yngvzr35b6f4ch5mgzl3i6qlkvyhzmaxo62nlqmqd.onion/`
 
 This URL is henceforth referred to as a log's _base URL_.  To form a
-complete URL, the endpoint's name and parameters (if any) are appended.
+complete URL, an endpoint's name and parameters (if any) are appended.
 
 The HTTP status code is 200 OK to indicate success.  A different HTTP
 status code is used to indicate partial success or failure.  Note that
@@ -313,8 +313,8 @@ number of cosignatures. The list of cosignatures may change over time.
   - `size`: log size, ASCII-encoded decimal number.
   - `root_hash`: Merkle tree root hash, hex-encoded.
   - `signature`: log signature for the above tree head, hex-encoded.
-  - `cosignature`: repeated key, as described in Section 2 of [the
-     witness cosigning specification](./witness.md).
+  - `cosignature`: repeated zero or more times, as described in Section 2 of
+    [the witness cosigning specification](./witness.md).
 
 **Example:**
 
@@ -399,7 +399,7 @@ and should simply do a local comparison of the respective root hashes.
 
 **Output on success:**
 
-  - `leaf`: Repeated one or more times.  Each value represents the
+  - `leaf`: repeated one or more times.  Each value represents the
     `tree_leaf` struct as three hex-encoded fields with a single space
     character as separator.  The first field is the leaf's checksum.
     The second field is the leaf's hashed public key.  The third field
