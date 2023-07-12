@@ -149,7 +149,8 @@ by the log.  There are several companion specifications for other parts:
 A log uses the Merkle tree hash strategy defined in [RFC 6962, Section
 2][].  Any mentions of hash functions or digital signature schemes refer
 to [SHA256][] and [Ed25519][].  Ed25519 public keys are encoded as in
-[RFC 8032, section 5.1.2][].  No cryptographic agility is supported.
+[RFC 8032, section 5.1.2][].  No cryptographic agility is supported,
+any changes in algorithms would be handled with a whole version revision.
 
 A _namespace_ string is attached as a prefix to all messages signed in
 the sigsum system (to provide domain separation).  The namespace string
