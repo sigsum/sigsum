@@ -431,7 +431,7 @@ fewer than one leaf for a request to be considered successful.
 **Input:**
 
   - `message`: the message used to compute `tree_leaf.checksum`,
-    hex-encoded.
+    hex-encoded.  Must be exactly 64 hex-characters (32 bytes).
   - `signature`: `tree_leaf.signature`, hex-encoded.
   - `public_key`: public key that can be used to verify the above
     signature, hex-encoded.
