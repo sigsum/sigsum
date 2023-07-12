@@ -407,7 +407,7 @@ and should simply do a local comparison of the respective root hashes.
     `tree_leaf` struct as three hex-encoded fields with a single space
     character as separator.  The first field is the leaf's checksum.
     The second field is the leaf's hashed public key.  The third field
-    field is the leaf's signature.
+    is the leaf's signature.
 
 Leaf indices are zero-based, specifying a half-open interval.  In other
 words, a request asks for the leaves with indices `i` for `i in
