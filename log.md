@@ -134,7 +134,8 @@ by the log.  There are several companion specifications for other parts:
     for logs and witnesses can be expressed and (optionally) formatted.
   - [A witness protocol][] that describes how logs collect cosignatures
     from witnesses to convince verifiers that they see the same logs.
-  - [A bastion protocol][] that can proxy requests to an HTTPS server.
+  - [A bastion protocol][] that can proxy requests to an HTTPS server,
+    such as a witness.
 
 [A sigsum proof format]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md
 [A sigsum policy format]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md
