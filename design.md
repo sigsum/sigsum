@@ -1,3 +1,6 @@
+**This document requires a major revision and will likely be retired/replaced.
+For the most up-to-date documentation, see log.md and its companion documents.**
+
 # Sigsum Logging Design v0
 We propose sigsum logging.  It is similar to Certificate Transparency and Go's
 checksum database, except that cryptographically **sig**ned check**sum**s are
