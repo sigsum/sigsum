@@ -204,9 +204,9 @@ known as hex-encoding.  Hex-encoding is not case-sensitive on the wire.
 
 Data that represents integers (such as leaf indices) must be a sequence
 of one or more ASCII decimal digits, regex `0|[1-9][0-9]*`.  Integer
-values exceeding 2^63 - 1.  This range, rather
-than the full range of an unsigned 64-bit integer, lets implementations
-represent values using a signed or an unsigned 64-bit integer type.
+values exceeding 2^63 - 1 are not allowed.  This range, rather than the
+full range of an unsigned 64-bit integer, lets implementations represent
+values using a signed or an unsigned 64-bit integer type.
 
 [base16]: https://datatracker.ietf.org/doc/html/rfc4648#section-8
 
