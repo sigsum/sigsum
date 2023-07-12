@@ -10,6 +10,7 @@ monitoring the public log, thus providing key-usage transparency.  For
 security, a quorum of witnesses (configurable trust policy in the
 offline verifier) need to follow a cosigning protocol.  This document
 specifies formats and interactions related to the sigsum log server.
+A separate document specifies the witness cosigning protocol.
 
 **Table of contents:**
 
@@ -84,18 +85,18 @@ There are several parties to the sigsum system:
      the submitted leaf to that tree head.  This data (leaf, cosigned
      tree head, and inclusion proof) can be used as a proof of logging.
   4. **Verifier**.  A verifier receives a data item together with a
-     proof of logging (the distribution mechanism is considered out of
-     scope of the sigsum system but could, e.g., be a git repository),
-     and verifies, offline, that the proof is valid and complies with
-     the verifier's policy.  This policy defines which logs are
-     considered known and which witnesses to be depended on for trust.
+     proof of logging (using the same distribution mechanism already in
+     place for the data item) and verifies, offline, that the proof is
+     valid and complies with the verifier's policy.  This policy defines
+     known logs and which witnesses to be depended on for security.
   5. **Monitor**.  A monitor periodically requests the latest tree head
      and corresponding leaves from one or more logs.  It ensures that
      the tree heads carry recent cosignatures by trusted witnesses, and
      that the monitor gets all leaves that make up the published tree
      heads.  A monitor usually takes particular interest in certain
      submission keys, and will output all leaves that they produced to
-     enable detection of unexpected or unauthorized signatures.
+     enable detection of unexpected or unauthorized signatures.  Some
+     monitors may additionally obtain the associated data out-of-band.
 
 Below is a visual overview of the sigsum system and its interactions.
 
@@ -104,9 +105,9 @@ Below is a visual overview of the sigsum system and its interactions.
              | signed   +-----------+          | data
              | checksum       ^                | proof of logging
              v                |                v
-        +---------+     proof |        +--------------+
-        |   Log   |-----------+        | Distribution |
-        +---------+                    +--------------+
+        +---------+     proof |               ///
+        |   Log   |-----------+           Distribution
+        +---------+                           ///
             ^ |                               | |
             | | leaves                        | |
             | | proofs   +---------+    data  | | data
@@ -197,7 +198,7 @@ Example output from the `get-inclusion-proof` endpoint:
     node_hash=11a2b46fb34efed4abbd144f8666bda8b83ee2ee6f7685062ed5cd68d616412a
 
 Binary input (such as cryptographic hashes) must be in [base16][], also
-known as hex-encoding.  Case sensitivity is not enforced on the wire.
+known as hex-encoding.  Hex-encoding is not case-sensitive on the wire.
 
 Data that represents integers (such as leaf indices) must be a sequence
 of one or more ASCII decimal digits, regex `0|[1-9][0-9]*`.  Integer
@@ -249,7 +250,8 @@ This happens to be the following struct with [Trunnel-serialization][]:
 `checksum` is the hash of a `message` submitted to the log.  This
 message is meant to represent some data.  It is recommended that the
 submitter uses `H(data)` as the message, in which case `checksum` is
-`H(H(data))`.  Logs must reject messages that are not exactly 32 bytes.
+`H(H(data))`.  Logs must reject messages that are not exactly 32 bytes,
+making it unlikely that any personally identifiable data is observed.
 
 `signature` is computed over the concatenation of the namespace string
 `sigsum.org/v1/tree-leaf`, a single NUL character, and the `checksum`.
@@ -325,7 +327,7 @@ number of cosignatures. The list of cosignatures may change over time.
     cosignature=1a450ecf1f49a4e4580c35e4d83316a74deda949dbb7d338e89d4315764d88de 1687170591 cacc54d315609b796f72ac1d71d1bbc15667853ed980bd3e0f957de7a875b84bd2dcde6489fc3ed66428190ce588ac1061b0d5748e73cfb887ebf38d0b53060a
     cosignature=73b6cbe5e3c8e679fb5967b78c59e95db2969a5c13b3423b5e69523e3d52f531 1687170591 7f568da17c57ea322a9c2668ae9fc2c1d6ab5556d9a997e7bfa1cbc4dc5cf7b94e0cead42d481bf0d3d90ad2ee0d272e9e687f8f82fddf76d37d722c6815fe0f
 
-### 3.2 - get-inclusion-proof
+### 3.2.  get-inclusion-proof
 
     GET <base URL>/get-inclusion-proof/<size>/<leaf_hash>
 
@@ -358,7 +360,7 @@ if and only if the `leaf_hash` and the tree's `root_hash` are equal.
     node_hash=35fd6eb70d46d60679775c346225688e6e84c02c3c7978e5c51daf8decc22d2f
     node_hash=11a2b46fb34efed4abbd144f8666bda8b83ee2ee6f7685062ed5cd68d616412a
 
-### 3.3 - get-consistency-proof
+### 3.3.  get-consistency-proof
 
     GET <base URL>/get-consistency-proof/<old_size>/<new_size>
 
@@ -386,7 +388,7 @@ and should simply do a local comparison of the respective root hashes.
     node_hash=3f94ccfa9482768b2ab42805df9c7612773bcb35c286a91d5aec5fbf42f50fec
     node_hash=b4e2ff9fb485b20e63b3406ee5a17ddfe6287dd7614549debdca34fefb7334e7
 
-### 3.4 - get-leaves
+### 3.4.  get-leaves
 
     GET <base URL>/get-leaves/<start_index>/<end_index>
 
@@ -420,7 +422,7 @@ fewer than one leaf for a request to be considered successful.
     leaf=a2eefef4abcafd5cb2d36fe4f30c624cab048466b73eda3100e72f8fab2d3442 aa5bd628d88be12d4f09feefe4bf65290b03bdeba8523fa38e396218140d79e0850132082914b08876cdc4a6041be8217402a57bfb8328310ad5407bc440060e 5aa7e6233f9f4d2efbeb9eeef766dce8ba2aa5e8cdd3f53da94b5d59e67d92fc
     leaf=3ad4741a750a30f08f351d8f681b8bd404c53be1ef7c61d867bd6d1786ef4317 e5ad99f22ff85c3fae259017cbbf5b0ebc7f2880aa4f234ea65d0319a88891baae4e60b7f776e867861c8744f50360b002cfaef43916745c3e18fadea1724e0a 49fee94050634ea537ffac3300a5af2d25b9b3f76836df37c2029b5c9469b007
 
-### 3.5 - add-leaf
+### 3.5.  add-leaf
 
     POST <base URL>/add-leaf
 
