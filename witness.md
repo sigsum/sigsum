@@ -103,6 +103,10 @@ GET <witness URL>/get-tree-size/<key_hash>
 Input:
 - `key_hash`: hash of the log's public key, hex-encoded
 
+HTTP error codes on failure:
+- 400 Bad request if `key_hash` is invalidly encoded.
+- 404 Not Found if the `key_hash` is not known.
+
 Output:
 - `size`: log size, ASCII-encoded decimal number
 
@@ -142,7 +146,8 @@ HTTP error codes on failure:
 - 400 Bad request if `old_size` is higher than `size`.
 - 409 Conflict if the `old_size` does not match the latest tree head known by the
   witness (this should be resolved by making a `get-tree-size` request and retrying).
-- 403 Forbidden if the `key_hash` is not known or if the `signature` doesn't verify.
+- 403 Forbidden if the `signature` doesn't verify.
+- 404 Not Found if the `key_hash` is not known.
 - 422 Unprocessable entity if the `node_hash` list does not prove consistency
   from the old tree head known to the witness to the new one.
 
