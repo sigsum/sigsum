@@ -42,14 +42,19 @@ HTTP API description language, hash, and signature scheme as the [log API
 document](https://git.sigsum.org/sigsum/tree/doc/log.md). All timestamps are
 expressed in seconds since the UNIX epoch (January 1, 1970 00:00 UTC).
 
-A co-signature consists of three fields, separated by a single space character:
+A co-signature consists of four fields, separated by a single space character:
 
-1. The hex-encoded hash of the witness public key
+```
+v1 1a450ecf1f49a4e4580c35e4d83316a74deda949dbb7d338e89d4315764d88de 1687170591 cacc54d315609b796f72ac1d71d1bbc15667853ed980bd3e0f957de7a875b84bd2dcde6489fc3ed66428190ce588ac1061b0d5748e73cfb887ebf38d0b53060a
+```
+
+1. The fixed "v1" string
+2. The hex-encoded hash of the witness public key
   * A key hash, rather than the full public key, is used to motivate monitors
     and end-users to locate the appropriate key and make an explicit trust decision.
-2. The time at which the co-signature was generated,
+3. The time at which the co-signature was generated,
    ASCII-encoded as a decimal number
-3. The hex-encoded signature from the witness key of a message composed of one
+4. The hex-encoded signature from the witness key of a message composed of one
    line spelling `cosignature/v1`, one line representing the current timestamp
    in seconds since the UNIX epoch encoded as an ASCII decimal with no leading
    zeroes and prefixed with the string `time` and a space (0x20), followed by
@@ -152,7 +157,14 @@ HTTP error codes on failure:
   from the old tree head known to the witness to the new one.
 
 Output on success:
-- `cosignature`: witness co-signature for the submitted tree head
+- `cosignature`: witness co-signature for the submitted tree head, can be
+  repeated multiple times (but must not be missing).
+
+  Different cosignatures can have different versions, key hashes, and
+  timestamps, but there may be at most one v1 cosignature for each key hash.
+  Clients must ignore cosignatures of unknown version (that is, where the first
+  field is not `v1`) or bearing an unexpected witness key hash. The timestamps
+  can be expected to all be recent and in the same range.
 
 The witness must persist the new tree head before returning the cosignature.
 Note that checking the `old_size` against the previous tree head and persisting
