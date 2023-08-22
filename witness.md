@@ -153,12 +153,13 @@ HTTP error codes on failure:
 
 Output on success:
 - `cosignature`: witness co-signature for the submitted tree head, can be
-  repeated multiple times.
+  repeated multiple times (but must not be missing).
 
   Different cosignatures can have different versions, key hashes, and
-  timestamps. Clients must ignore cosignatures of unknown version (that is,
-  where the first field is not `v1`) or bearing an unrecognized witness key
-  hash. The timestamps can be expected to all be recent and in the same range.
+  timestamps, but there may be at most one v1 cosignature for each key hash.
+  Clients must ignore cosignatures of unknown version (that is, where the first
+  field is not `v1`) or bearing an unexpected witness key hash. The timestamps
+  can be expected to all be recent and in the same range.
 
 The witness must persist the new tree head before returning the cosignature.
 Note that checking the `old_size` against the previous tree head and persisting
