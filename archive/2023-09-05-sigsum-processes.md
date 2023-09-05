@@ -139,8 +139,12 @@ The project lead ensures that new "DRAFT: " milestones get proposed for the next
 roadmap.  Once the roadmap is decided, the "DRAFT: " prefixes are dropped.  The
 project lead takes a stab at this with input from those that are doing the work.
 
+After the new roadmap has been set, we also have a short team retrospective.
+The chair goes through the questions in [the following pad template][].
+
 [deciding on the roadmap]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2023-05-16--meeing-minutes.md#decisions
 [a concrete example]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2023-05-16-roadmap.md
+[the following pad template]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/template/retrospective.md
 
 ## Releases and announcements
 
