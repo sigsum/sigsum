@@ -1,0 +1,166 @@
+Be warned: some unpolished rgdd+filippo notes from july and august.
+
+We talked about:
+
+  1.  How to think about a witness that ceases to operate, and how to design
+      a monitor based on what we can say about a particular offline policy.
+      We basically agree about the initial part of the Matrix wall that is
+      copy-pasted below, and we need to document witness life cycles.
+
+  2.  We continued talking extensively about the special case of a quorum that
+      is not a majority, and how a minority policy leads to a very high
+      connectivity assumption between monitors and witnesses.  E.g., 3/10
+      offline verifier policy -> monitor need 8/10 witness cosignatures to be
+      convinced that it is observing the same append-only log as verifiers.
+
+      The cause is due to no consensus / gossip between benign witnesses.  Not
+      addressing this (and simply acknowleding the above semantics) is likely a
+      crucial part to keep witness operations as simple as possible, largely on
+      the level "you say hi i'm a witness, operate, and eventually say bye";
+      "you respond to email if a log monitor detects issues with your witness".
+
+      A witness is not expected to report even a hypotethically found
+      split-view, and instead will just halt for the log that misbehaved and
+      serve its evidence upon request from a party that performs investigation.
+
+      [So one of our conclusions here: investigation of issues falls on and is
+      initated by monitors.  Some investigations may require the entire Merkle
+      tree.  Monitors that store all leaves or logs can then investigate, both
+      of which are closely tied to the app/system, unlike witnesses, which we
+      are trying to keep out-of-the-loop to the largest extent possible.]
+
+      We discussed several options on how to deal with this limitation.
+
+      1)  Accept it.  The witness rooster is now very important for all logs.
+          We should think about if we want to define a "slow" log endpoint for
+          public logs, to serve cosignatures for all witnesses over time.
+
+	  [A post-meet reflection: is it not the case that a log that publishes
+	  a tree head as quickly as possible after 3/10 and then ignoring the
+	  rest will always get itself out-of-sync with most witnesses?  As
+	  opposed to always being in-sync and able to provide the right
+	  consistency proof?  Seems like the log would roughly have 3 witnesses
+	  that are fast and in-sync, and for all other witnesses will push the
+	  wrong consistency proof, in which case the log needs to figure out
+	  their new sizes and then push again.  So maybe it is actually
+	  important to let each push to a witness complete with timeout?  If
+	  this is the case, it would be a pretty small step to also offer a
+	  "slow endpoint".]
+
+	  [And one more: another "regression" here is low-latency, i.e., a log
+	  that is deployed with the goal of collecting n/m as quick as possible.
+	  A log that does accept just a little bit of latency, order ~10
+	  seconds, is likely already slow enough to be considered having a
+	  "slow" endpoint.  I think this is what most Sigsum logs will do either
+	  way, to avoid forcing which trust policy to be used onto offline
+	  verifiers.]
+
+      2)  Add some sparks to witnesses, either so they can agree about their
+          state (e.g., BFT protocol) or detect if they have inconsistensies
+          (e.g., use an anonymity network to break out of a local view).  Both
+          options add lots of complexity to witnesses that we want to avoid.
+
+          E.g., even the "light" option of breaking out of a local vantage point
+          through Tor requires careful tinkering to avoid fingerprinting, but
+          the larger problem is that witnesses can now discover issues and would
+          have to initiate investigation "this log doesn't respond over Tor...".
+          This scales **very poorly** for a system where we anticpate many logs.
+
+  3.  We talked about how the Google folks have defined, or started to define, a
+      work in progress HTTP API for witnessing.  Largely similar to our API,
+      expect that it natively eats checkpoints and so far there's no rooster.
+
+        - https://github.com/transparency-dev/witness/blob/main/api/http.go
+        - https://github.com/transparency-dev/witness/blob/b6f65498256ffcf3d38e914f307e882fe5e9afc7/internal/http/server.go#L47
+
+      Filippo plans to implement/maintain support for both HTTP APIs.  The
+      Sigsum witness API is stricter: fixed origin line, no other data lines.
+
+  4.  We also preliminary sync:ed a bit about longer-term planning stuff.
+
+---
+Wall from Matrix:
+
+Maybe one way to think about a witness that ceases to operate is: if the witness
+is benign (and simply just wants to stop operating), we depend on that witness
+actually destroying its key material and communicating its final roster. (A
+rational attacker would not cease to operate its witness. In other words, that
+would lead to eventual removal from trust policies which is not desired.)
+
+If the old offline policy was 3/10; it would under this interpretation become 3/9
+and the monitor would have to be connected to 7/9 (rather than 8/10) witnesses.
+
+[Thinking more about and documenting a "correct exit" would be a good idea.]
+
+On the other side of the spectrum one could assume that a witness that ceases to
+operate is compromised (i.e., the least optimistic interpretation). Then the
+effective client policy becomes 2/9, and the new monitor policy would be 8/9.
+
+The first interpretation, "witnesses that cease operations are assumed to follow
+protocol", is probably most appropriate for an incremental deployment story. It
+is strictly better than using no techniques for split-view detection, and can in
+the long run provide stronger guarantees if the policy is not 1/3, 1/5, etc.
+
+One way to design a monitor is probably to be able to output alerts for
+different policies, to be aware of which ones may (not) be in a good state. For
+example, "given the current information, we can not rule out a split-view for
+policy X because missing a cosignature from either A,B,C". The way to silence
+such an alarm would be to figure out why it is happening, and whether the
+(local) monitor policy should be updated or if there is a temporary issue.
+
+And on a related note, I think I spotted where our current design had a slight
+regression. When witnesses initiated communication (polling a signed tree head
+from the log), e.g., behind an anonymity network like Tor, then at the time of
+querying the log's most recent state, the log does not know which witness it is
+talking to. This (or at least the possibility of this) made it very risky to
+present different views to different witnesses. Removing this risk is what
+leads to the high connectivity requirement between monitors and witnesses when
+the offline policy uses a quorum policy that is not based on a majority.
+
+It would be possible to account for this by saying that witness operators should
+occasionally check consistency with a tree head obtained via Tor, for example.
+This is neat because benign witnesses are then hard to partition, but without
+them having to have any direct communication between each other. (And as noted
+above, our current design has no regression if the policy is majority-based.)
+
+---
+Notes going into our walk 22/8 by rgdd.
+
+Recap:
+- We concluded that public log -> fast + slow endpoint, the slow one serves
+  monitors to allow them to get a large majority of cosignatures.
+- And "offline" log -> actually need rooster for split-view detection, so it is
+  insufficient to not rooster-sign the log's full tree head (size+root).
+- We were a bit unsatisified with this, but we don't have a better idea on how
+  to solve the "3/10 offline verifier -> 8/10 monitor connectivity" challenge
+  without adding complexity (e.g., by adding stronger witness connectivity).
+
+It's a TODO to document this relationship between verifier and monitor policy.
+
+I don't think we discussed:
+- The exact format of the rooster, are we essentially arriving on the message
+  <log key hash> <tree size> <root hash>?  The good part of not including the
+  log's signature / full message is that it becomes hard to abuse the rooster.
+  As long as witnesses store the latest signed tree head for each log, this
+  should not result in disputes as they can just reveal those if accusted of
+  trying to frame a log for revealing a particular (split-view) of their tree.
+
+We also concluded that we're not quite done with witness.md, in particular wrt.
+the input on add-tree-head as it currently cannot accept extension lines and
+is too tailored for sigsum-only.  One of rgdd's concerns was basically: if the
+first thing a non-sigsum-log has to do is define a new HTTP API for witnessing
+with the same semantics but different encoding -> not helpful/desired.
+
+Today's walk: what's (realistically) left on witness.md so that, e.g., Filippo
+would use it as-is without having to change anything to fit for other logs?
+
+(rgdd notes that simply adding with checkpoint format on the add-tree-head
+endpoint is a non-solution; our endpoint also takes tree size and consistency
+proof as input.  Would it be good enough to just add a key named message
+instead, which would be encoded as the note body and then hex-encoded?)
+
+---
+Notes post-walk.
+
+Did not happen, sorry.  But filippo will prep a proposal outlining ~three
+alternative paths forward to wrap up witness.md.
