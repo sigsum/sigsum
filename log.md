@@ -235,9 +235,11 @@ Example serialization:
 Note that each line is terminated by a new-line (`0x0a`), and that this
 format happens to be compatible with the existing [checkpoint format][].
 
+[base64-encoding]: https://datatracker.ietf.org/doc/html/rfc4648#section-4
+
 ### 2.2.3. Cosignatures
 
-When a witness co-signs a tree head, two additional lines are
+When a witness cosigns a tree head, two additional lines are
 prepended to the above serialization of the tree head,
 for a total of 5 lines.
 
@@ -258,13 +260,13 @@ Example serialization:
     15368405
     31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
 
-To co-sign a tree head, a witness signs this serialization directly
-using Ed25519. Semantically, a v1 co-signature is a statement that, as
+To cosign a tree head, a witness signs this serialization directly
+using Ed25519. Semantically, a v1 cosignature is a statement that, as
 of the given time, the *consistent* tree head *with the largest size*
 the witness has observed for the log identified by that key has the
 specified hash.
 
-[base64-encoding]: https://datatracker.ietf.org/doc/html/rfc4648#section-4
+See [A witness protocol][] for more details on the witness protocol.
 
 ### 2.2.4.  Merkle Tree Leaf
 
@@ -367,7 +369,7 @@ number of cosignatures. The list of cosignatures may change over time.
 
 Cosignatures with a version different from "v1" must be ignored. The
 cosignature version field is intended for future interop with
-witnesses that might use different serialization and semntics than
+witnesses that might use different serialization and semantics than
 specified for the current "v1" cosignature.
 
 ### 3.2.  get-inclusion-proof
