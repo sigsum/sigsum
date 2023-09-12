@@ -6,13 +6,16 @@ design might need to take this into account. In particular, the current API only
 supports witnessing Sigsum logs, which is short of the interoperability goal of
 the witness ecosystem.
 
+(Specifically, the witness.md doesn't support arbitrary origin lines, and
+extension lines in the checkpoint.)
+
 This proposal presents three potential APIs for witness.md v1. They all expose
 the same functionality: submitting a tree head for witnessing, getting the
 current size of a log, and retrieving a signed roster.
 
-Note that the roster is being expanded to include both log size and tree head,
+(Note that the roster is being expanded to include both log size and tree head,
 which is necessary for anti-split view for reasons beyond the scope of this
-proposal. That change will be necessary regardless and will be documented elsewhere.
+proposal. That change will be necessary regardless and will be documented elsewhere.)
 
 These are not full fledged specifications, but just API overviews to help pick
 an option.
@@ -25,15 +28,19 @@ checkpoints and origin lines.
 ```
 POST <witness URL>/add-tree-head
 
-> checkpoint=<hex encoded checkpoint, including log signature>
+> origin=<hex encoded origin line>
+> size=<ASCII-encoded decimal number>
+> root_hash=<Merkle tree root hash, hex-encoded>
+> signature=<log signature, hex-encoded>
+> extra=<extension lines, concatenated then hex-encoded, can be empty>
 > old_size=<ASCII-encoded decimal size>
 > node_hash=<repeated key, hex encoded consistency proof>
 
 < cosignature=<repeated key, v1 cosignature>
 ```
 
-Note that key hash / origin, new size, root hash, and log signature are parsed
-from the checkpoint.
+The extension lines are concatenated before encoding because only one key can
+be repeated in this encoding.
 
 ```
 POST <witness URL>/get-tree-size
@@ -69,7 +76,9 @@ implement the opposite conversion.
 
 ## 2. Checkpoint style API
 
-This API is instead fairly similar to github.com/transparency-dev/witness/api.
+This API is instead based on the checkpoint format,
+and on github.com/transparency-dev/witness/api.
+
 The names of the endpoints are picked to match the current witness.md, because
 the transparency-dev/witness API has log IDs in the URL, which is a concept we'd
 like to avoid and replace with origin lines.
@@ -77,15 +86,17 @@ like to avoid and replace with origin lines.
 ```
 POST <witness URL>/add-tree-head
 
-> {
->   "Checkpoint": "<base64 encoded checkpoint, including log signature>",
->   "OldSize": 15368300,
->   "Proof": [
->       "<base64 encoded hash>",
->       "<base64 encoded hash>",
->       "<base64 encoded hash>"
->   ]
-> }
+> old 15368377
+> PlRNCrwHpqhGrupue0L7gxbjbMiKA9temvuZZDDpkaw=
+> jrJZDmY8Y7SyJE0MWLpLozkIVMSMZcD5kvuKxPC3swk=
+> 5+pKlUdi2LeF/BcMHBn+Ku6yhPGNCswZZD1X/6QgPd8=
+> /6WVhPs2CwSsb5rYBH5cjHV/wSmA79abXAwhXw3Kj/0=
+>
+> sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd
+> 15368405
+> 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
+>
+> — sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
 
 < sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd
 < 15368405
@@ -95,9 +106,13 @@ POST <witness URL>/add-tree-head
 < — witness.example.com/w1 jWbPPwAAAABkGFDLEZMHwSRaJNiIDoe9DYn/zXcrtPHeolMI5OWXEhZCB9dlrDJsX3b2oyin1nPZ\nqhf5nNo0xUe+mbIUBkBIfZ+qnA==
 ```
 
-The client uses note.Open with the witness keys it expects, and if that call
-succeeds, moves the valid signatures to its own view of the checkpoint, or
-extracts the signatures for the Sigsum format.
+The input is formatted in line with how checkpoints are encoded, with the
+old size on its own prefixed line, followed by the consistency proof,
+one hash per line.
+
+To parse the output, the client uses note.Open with the witness keys it
+expects, and if that call succeeds, moves the valid signatures to its
+own view of the checkpoint, or extracts the signatures for the Sigsum format.
 
 ```
 POST <witness URL>/get-tree-size
@@ -125,14 +140,10 @@ GET <roster URL>
 < — witness.example.com/w1 jWbPPwAAAABkGFDLEZMHwSRaJNiIDoe9DYn/zXcrtPHeolMI5OWXEhZCB9dlrDJsX3b2oyin1nPZ\nqhf5nNo0xUe+mbIUBkBIfZ+qnA==
 ```
 
-This API nearly matches the Omniwitness one, so there is a good chance of
-converging, and if not, supporting both will require minor tweaks rather than
-vastly different code paths. Introducing JSON is unfortunate, but it's
-somewhat unlikely to be avoidable to interoperate with the whole ecosystem.
-
-Another advantage of this API is that the roster encoding is much more natural,
+An advantage of this API is that the roster encoding is much more natural,
 simply using a signed note with a header and a sequence of checkpoints. Also,
-we don't introduce the concept of a hex-encoded origin line anywhere.
+we don't introduce the concept of a hex-encoded origin line or checkpoint
+anywhere, nor we introduce any checkpoint-unlike encoding.
 
 ## 3. Porque no los dos
 
