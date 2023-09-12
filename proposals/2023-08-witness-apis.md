@@ -43,12 +43,12 @@ The extension lines are concatenated before encoding because only one key can
 be repeated in this encoding.
 
 ```
-POST <witness URL>/get-tree-size
-
-> log=<hex-encoded origin line>
+GET <witness URL>/get-tree-size/<hex-encoded origin line>
 
 < size=<ASCII-encoded decimal size>
 ```
+
+The response must be non-cacheable.
 
 ```
 GET <roster URL>
@@ -71,8 +71,8 @@ It also requires non-Sigsum clients to do a non-trivial change in cosignature
 encoding to convert it to a note signature.
 
 If the rest of the ecosystem doesn't adopt this API, and Sigsum logs wish to use
-non-Sigsum witnesses, they will have to implement the non-Sigsum API anyway, and
-implement the opposite conversion.
+non-Sigsum witnesses (and vice versa), they will have to implement the
+(non-)Sigsum API anyway, and implement the opposite conversion.
 
 ## 2. Checkpoint style API
 
@@ -121,6 +121,9 @@ POST <witness URL>/get-tree-size
 
 < 15368405
 ```
+
+This is a POST so that the origin line can be passed in the body, and also
+so that the HTTP semantics are naturally non-cacheable.
 
 ```
 GET <roster URL>
