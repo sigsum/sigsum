@@ -110,6 +110,9 @@ The input is formatted in line with how checkpoints are encoded, with the
 old size on its own prefixed line, followed by the consistency proof,
 one hash per line.
 
+This format is similar to the Go Checksum Database lookup API output, e.g.
+https://sum.golang.org/lookup/filippo.io/age@v1.0.0
+
 To parse the output, the client uses note.Open with the witness keys it
 expects, and if that call succeeds, moves the valid signatures to its
 own view of the checkpoint, or extracts the signatures for the Sigsum format.
