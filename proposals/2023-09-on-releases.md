@@ -1,7 +1,8 @@
 # How Sigsum could do software releases, take one
 
 This document proposes how Sigsum could get started with releases.  Don't let
-perfect be the enemy of good enough.  Several iterations on this is anticipated.
+perfect be the enemy of good enough.  Several iterations on this are
+anticipated.
 
 ## Background
 
