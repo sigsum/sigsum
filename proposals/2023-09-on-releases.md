@@ -57,7 +57,11 @@ We announce releases on the sigsum-general mailing list.
 > 1: ... links
 >
 
-Below is the actual proposal that provides more detail.
+[Note: this is not a template or the exact email we would send out.  The intent
+is to give you some intuition of what it might look like to release something.
+Below is the actual proposal that provides more detail for us to agree on; and
+then we can use regular MRs to get the RELEASES files etc into place with good
+wordings.  I.e., the purpose of this proposal: agree on the overall process.]
 
 ## Proposal
 
