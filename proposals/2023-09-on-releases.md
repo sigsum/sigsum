@@ -139,7 +139,7 @@ is essentially the ping-pongs that allow ln5 rgdd to have things running.]
 
 We do recommend operations of the log software in production environments.
 
-We strongly discourage failed-close usage in end-user applications until
+We strongly discourage fail-closed usage in end-user applications until
 production-grade witnesses are available and operated as well.
 
 [If this was sigsum-go, we could also state expectations wrt. the v0 library.]
