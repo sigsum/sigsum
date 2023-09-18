@@ -46,7 +46,7 @@ We announce releases on the sigsum-general mailing list.
 >   - All tools in sigsum-go, tag v0.5.6 [6]
 >   - Witness implementation in litetlog, tag v0.0.3 [7]
 >
-> Up-to-date log server documentation is available in the log-go repository [5].
+> Corresponding log server documentation is available in the log-go repository [5].
 >
 > If you have any problems with this release or the log server software in
 > general, please file a GitLab issue or report it on the sigsum-general list.
