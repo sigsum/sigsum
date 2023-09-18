@@ -14,6 +14,7 @@ Things we will likely want to release:
   - Monitor (sigsum-go: `sigsum-monitor`)
   - Witness (litetlog: `litewitness` and `witnessctl`)
   - Bastion (litetlog: `litebastion`)
+  - Other sigsum-go tools that didn't fit into the above: `sigsum-mktree`
   - Ansible collection
   - Specifications
 
