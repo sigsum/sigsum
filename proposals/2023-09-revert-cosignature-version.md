@@ -34,11 +34,11 @@ implemented).
 An interoperable log <--> witness protocol, supporting multiple key
 types (for crypto-agility) is still in development, with cryptographic
 details compatible with Sigsum cosignatures (as long as the witness
-uses as Ed25519 signing key). However, this need to be visible to log
-users; a Sigsum log could talk to a witness that produces additional
-cosignatures that are not compatible with Sigsum, verify and publish
-the Ed25519 cosignatures in the Sigsum log protocol, and simply ignore
-any non-Ed25519 cosignatures.
+uses as Ed25519 signing key). However, this does not need to be
+visible to log users; a Sigsum log could talk to a witness that
+produces additional cosignatures that are not compatible with Sigsum,
+verify and publish the Ed25519 cosignatures in the Sigsum log
+protocol, and simply ignore any non-Ed25519 cosignatures.
 
 At a later point, e.g., if Sigsum adopts a particular flavor of
 post-quantum cosignatures, we would extend the Sigsum log protocol
