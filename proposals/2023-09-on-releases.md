@@ -139,10 +139,12 @@ is essentially the ping-pongs that allow ln5 rgdd to have things running.]
 
 We do recommend operations of the log software in production environments.
 
-We strongly discourage fail-closed usage in end-user applications until
+We strongly discourage [fail-closed][] usage in end-user applications until
 production-grade witnesses are available and operated as well.
 
 [If this was sigsum-go, we could also state expectations wrt. the v0 library.]
+
+[fail-closed]: https://chat.openai.com/share/00b88e34-3de8-4305-bb46-efa2f1486fd8
 
 ### Where to document the release process
 
