@@ -351,12 +351,10 @@ number of cosignatures. The list of cosignatures may change over time.
   - `root_hash`: Merkle tree root hash, hex-encoded.
   - `signature`: log signature for the above tree head, hex-encoded.
   - `cosignature`: repeated zero or more times. The value on each line
-    consists of 4 fields, separated by single space characters. The
-    first field is the cosignature version, an arbitrary non-empty
-    string of non-space ascii characters, currently "v1". Second field
-    is the hash of the witness' public key, in hex, third field is the
-    cosignature timestamp, in decimal, and the fourth field is the
-    witness' cosignature, in hex.
+    consists of 3 fields, separated by single space characters. The
+    first field is the hash of the witness' public key, in hex, the
+    second field is the cosignature timestamp, in decimal, and the
+    third field is the witness' cosignature, in hex.
 
 **Example:**
 
@@ -364,13 +362,8 @@ number of cosignatures. The list of cosignatures may change over time.
     size=1285
     root_hash=8100f29c0e9017a7512dab0911bf06a4b5b99cd77d8c710635307b5d217af1f6
     signature=e327fe13e5c3d2043cbf69fe1b778f77cb10a8e14fc09309dd375c9af25903f9ec35906cfb2c36ab2d210329eb538a6673487d2d101800370c978634b6f9f70d
-    cosignature=v1 1a450ecf1f49a4e4580c35e4d83316a74deda949dbb7d338e89d4315764d88de 1687170591 cacc54d315609b796f72ac1d71d1bbc15667853ed980bd3e0f957de7a875b84bd2dcde6489fc3ed66428190ce588ac1061b0d5748e73cfb887ebf38d0b53060a
-    cosignature=v1 73b6cbe5e3c8e679fb5967b78c59e95db2969a5c13b3423b5e69523e3d52f531 1687170591 7f568da17c57ea322a9c2668ae9fc2c1d6ab5556d9a997e7bfa1cbc4dc5cf7b94e0cead42d481bf0d3d90ad2ee0d272e9e687f8f82fddf76d37d722c6815fe0f
-
-Cosignatures with a version different from "v1" must be ignored. The
-cosignature version field is intended for future interop with
-witnesses that might use different serialization and semantics than
-specified for the current "v1" cosignature.
+    cosignature=1a450ecf1f49a4e4580c35e4d83316a74deda949dbb7d338e89d4315764d88de 1687170591 cacc54d315609b796f72ac1d71d1bbc15667853ed980bd3e0f957de7a875b84bd2dcde6489fc3ed66428190ce588ac1061b0d5748e73cfb887ebf38d0b53060a
+    cosignature=73b6cbe5e3c8e679fb5967b78c59e95db2969a5c13b3423b5e69523e3d52f531 1687170591 7f568da17c57ea322a9c2668ae9fc2c1d6ab5556d9a997e7bfa1cbc4dc5cf7b94e0cead42d481bf0d3d90ad2ee0d272e9e687f8f82fddf76d37d722c6815fe0f
 
 ### 3.2.  get-inclusion-proof
 
