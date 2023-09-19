@@ -83,6 +83,8 @@ The names of the endpoints are picked to match the current witness.md, because
 the transparency-dev/witness API has log IDs in the URL, which is a concept we'd
 like to [avoid and replace with origin lines](https://github.com/transparency-dev/formats/issues/22).
 
+### add-tree-head
+
 ```
 POST <witness URL>/add-tree-head
 
@@ -116,6 +118,66 @@ note.Open with the witness keys it expects. If that call succeeds, it moves the
 valid signatures to its own view of the checkpoint, or extracts the signatures
 for the Sigsum format.
 
+#### Signature lines
+
+Per the [signed note format](https://pkg.go.dev/golang.org/x/mod/sumdb/note#hdr-Signed_Note_Format),
+a note signature line is
+
+```
+— <name> base64(32-bit key hash || signature)
+```
+
+where the name is arbitrary, and the key hash and signature are specified by the
+signing algorithm.
+
+For the name, we recommend using a schema-less URL that identifies the witness.
+Like with the log origin line, this is for disambiguation, and doesn't need to
+host a publicly reachable endpoint.
+
+For log signatures, the key hash is
+
+    SHA-256(<name> || "\n" || 0x01 || 32-byte Ed25519 public key)[:4]
+
+while the signature is a 64-byte Ed25519 signature.
+
+For the cosignature/v1 format, the key hash is
+
+    SHA-256(<name> || "\n" || 0x04 || 32-byte Ed25519 public key)[:4]
+
+while the signature is a 72-byte `timestamped_signature`.
+
+```
+struct timestamped_signature {
+	u64 timestamp;
+	u8 signature[64];
+}
+```
+
+There is an implementation at
+[transparency-dev/witness#41](https://github.com/transparency-dev/witness/pull/41).
+
+A hypothetical future cosignature/v2 format can use, e.g., for the key hash
+
+    SHA-256(<name> || "\n" || 0x05 || public key)[:4]
+
+whether it changes the public key format or not.
+
+Clients are configured with tuples of (witness name, public key, supported
+cosignature version) and based on that they can compute the expected name and
+key hash, and ignore any signature lines that don't match the name and key hash.
+
+Note that the key hash is intentionally short, as it is an identifier, and not a
+cryptographically strong hash. An attacker can easily compute a public key that
+will collide the key hash, but all they will get is a signature verification
+failure, because the client was necessarily securely configured with the
+expected public key for the key hash.
+
+Sigsum clients can compute the key hash to identify signatures from expected
+public keys (using known cosignature versions), then parse out the timestamp and
+Ed25519 signature to serve in a log.md format.
+
+### get-tree-size
+
 ```
 POST <witness URL>/get-tree-size
 
@@ -126,6 +188,8 @@ POST <witness URL>/get-tree-size
 
 This is a POST so that the origin line can be passed in the body, and also
 so that the HTTP semantics are naturally non-cacheable.
+
+### roster
 
 ```
 GET <roster URL>
