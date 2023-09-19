@@ -81,7 +81,7 @@ and on github.com/transparency-dev/witness/api.
 
 The names of the endpoints are picked to match the current witness.md, because
 the transparency-dev/witness API has log IDs in the URL, which is a concept we'd
-like to avoid and replace with origin lines.
+like to [avoid and replace with origin lines](https://github.com/transparency-dev/formats/issues/22).
 
 ```
 POST <witness URL>/add-tree-head
@@ -98,24 +98,23 @@ POST <witness URL>/add-tree-head
 >
 > — sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
 
-< sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd
-< 15368405
-< 31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
-<
-< — sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
 < — witness.example.com/w1 jWbPPwAAAABkGFDLEZMHwSRaJNiIDoe9DYn/zXcrtPHeolMI5OWXEhZCB9dlrDJsX3b2oyin1nPZ\nqhf5nNo0xUe+mbIUBkBIfZ+qnA==
 ```
 
-The input is formatted in line with how checkpoints are encoded, with the
-old size on its own prefixed line, followed by the consistency proof,
-one hash per line.
+The input is formatted in line with how checkpoints are encoded, with the old
+size on the first line, followed by the consistency proof, one hash per line,
+and then an empty line and the checkpoint signed by the log.
 
 This format is similar to the Go Checksum Database lookup API output, e.g.
 https://sum.golang.org/lookup/filippo.io/age@v1.0.0
 
-To parse the output, the client uses note.Open with the witness keys it
-expects, and if that call succeeds, moves the valid signatures to its
-own view of the checkpoint, or extracts the signatures for the Sigsum format.
+The output is one or more note signature lines, one for each cosignature the
+witness has produced.
+
+To parse the output, the client may concatenate it to the input, and use
+note.Open with the witness keys it expects. If that call succeeds, it moves the
+valid signatures to its own view of the checkpoint, or extracts the signatures
+for the Sigsum format.
 
 ```
 POST <witness URL>/get-tree-size
