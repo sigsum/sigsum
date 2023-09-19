@@ -47,7 +47,7 @@ with a way to publish those.
 So we delete the "v1" version tag both in the Sigsum log protocol, and
 in the current, Sigsum-specific, log <--> witness protocol.
 
-## Open question
+## Considered flexibility in signature format
 
 To provide a bit more flexibility for future extension of the Sigsum
 log protocol, we could relax the syntax of the cosignature line to
@@ -58,3 +58,8 @@ an arbitrary length string of printable non-space ascii characters.
 When processing a cosignature line, if the keyhash corresponds to a
 known Ed25519 public key, only then is the signature field required to
 be exactly 128 hex digits, representing an Ed25519 signature.
+
+This idea was rejected, for the sake of simplicity. If we want to add,
+e.g., support for post-quantum signatures, one possibility is to bump
+the protocol version, and other alternatives can be considered when
+there's a concrete need for the extension.
