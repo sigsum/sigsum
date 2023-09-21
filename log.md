@@ -23,7 +23,8 @@ A separate document specifies the witness cosigning protocol.
       2.  [Serialization](#22-serialization)
           1.  [Request-Response Format](#221-request-response-format)
           2.  [Merkle Tree Head](#222-merkle-tree-head)
-          3.  [Merkle Tree Leaf](#223-merkle-tree-leaf)
+          3.  [Cosignatures](#223-cosignatures)
+          4.  [Merkle Tree Leaf](#224-merkle-tree-leaf)
   3.  [HTTP Endpoints](#3-http-endpoints)
       1.  [get-tree-head](#31-get-tree-head)
       2.  [get-inclusion-proof](#32-get-inclusion-proof)
@@ -202,11 +203,12 @@ Example output from the `get-inclusion-proof` endpoint:
 Binary input (such as cryptographic hashes) must be in [base16][], also
 known as hex-encoding.  Hex-encoding is not case-sensitive on the wire.
 
-Data that represents integers (such as leaf indices) must be a sequence
-of one or more ASCII decimal digits, regex `0|[1-9][0-9]*`.  Integer
-values exceeding 2^63 - 1 are not allowed.  This range, rather than the
-full range of an unsigned 64-bit integer, lets implementations represent
-values using a signed or an unsigned 64-bit integer type.
+Data that represents integers (such as leaf indices and timestamps)
+must be a sequence of one or more ASCII decimal digits, regex
+`0|[1-9][0-9]*`.  Integer values exceeding 2^63 - 1 are not allowed.
+This range, rather than the full range of an unsigned 64-bit integer,
+lets implementations represent values using a signed or an unsigned
+64-bit integer type.
 
 [base16]: https://datatracker.ietf.org/doc/html/rfc4648#section-8
 
@@ -235,7 +237,38 @@ format happens to be compatible with the existing [checkpoint format][].
 
 [base64-encoding]: https://datatracker.ietf.org/doc/html/rfc4648#section-4
 
-### 2.2.3.  Merkle Tree Leaf
+### 2.2.3. Cosignatures
+
+When a witness cosigns a tree head, two additional lines are
+prepended to the above serialization of the tree head,
+for a total of 5 lines.
+
+The first line is the fixed string "cosignature/v1", to provide domain
+separation. The convention of using a "sigsum.org" namespace is not
+applied here, since we aim for interoperability with witnesses
+otherwise unrelated to the Sigsum project. The second line consists of
+the string "time", a single space, and a decimal timestamp
+representing the number of seconds since the UNIX epoch (January 1, 1970
+00:00 UTC). The next three lines are the serialized tree head, i.e.,
+the same data that is signed by the log itself.
+
+Example serialization:
+
+    cosignature/v1
+    time 1679315147
+    sigsum.org/v1/tree/3620c0d515f87e60959d29a4682fd1f0db984704981fda39b3e9ba0a44f57e2f
+    15368405
+    31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
+
+To cosign a tree head, a witness signs this serialization directly
+using Ed25519. Semantically, a v1 cosignature is a statement that, as
+of the given time, the *consistent* tree head *with the largest size*
+the witness has observed for the log identified by that key has the
+specified hash.
+
+See [A witness protocol][] for more details on the witness protocol.
+
+### 2.2.4.  Merkle Tree Leaf
 
 A tree leaf contains a (SHA256) checksum, a signature, and a key hash.
 It is serialized by concatenating these three binary values in-order,
@@ -317,8 +350,11 @@ number of cosignatures. The list of cosignatures may change over time.
   - `size`: log size, ASCII-encoded decimal number.
   - `root_hash`: Merkle tree root hash, hex-encoded.
   - `signature`: log signature for the above tree head, hex-encoded.
-  - `cosignature`: repeated zero or more times, as described in Section 2 of
-    [the witness cosigning specification](./witness.md).
+  - `cosignature`: repeated zero or more times. The value on each line
+    consists of 3 fields, separated by single space characters. The
+    first field is the hash of the witness' public key, in hex, the
+    second field is the cosignature timestamp, in decimal, and the
+    third field is the witness' cosignature, in hex.
 
 **Example:**
 
@@ -326,8 +362,8 @@ number of cosignatures. The list of cosignatures may change over time.
     size=1285
     root_hash=8100f29c0e9017a7512dab0911bf06a4b5b99cd77d8c710635307b5d217af1f6
     signature=e327fe13e5c3d2043cbf69fe1b778f77cb10a8e14fc09309dd375c9af25903f9ec35906cfb2c36ab2d210329eb538a6673487d2d101800370c978634b6f9f70d
-    cosignature=v1 1a450ecf1f49a4e4580c35e4d83316a74deda949dbb7d338e89d4315764d88de 1687170591 cacc54d315609b796f72ac1d71d1bbc15667853ed980bd3e0f957de7a875b84bd2dcde6489fc3ed66428190ce588ac1061b0d5748e73cfb887ebf38d0b53060a
-    cosignature=v1 73b6cbe5e3c8e679fb5967b78c59e95db2969a5c13b3423b5e69523e3d52f531 1687170591 7f568da17c57ea322a9c2668ae9fc2c1d6ab5556d9a997e7bfa1cbc4dc5cf7b94e0cead42d481bf0d3d90ad2ee0d272e9e687f8f82fddf76d37d722c6815fe0f
+    cosignature=1a450ecf1f49a4e4580c35e4d83316a74deda949dbb7d338e89d4315764d88de 1687170591 cacc54d315609b796f72ac1d71d1bbc15667853ed980bd3e0f957de7a875b84bd2dcde6489fc3ed66428190ce588ac1061b0d5748e73cfb887ebf38d0b53060a
+    cosignature=73b6cbe5e3c8e679fb5967b78c59e95db2969a5c13b3423b5e69523e3d52f531 1687170591 7f568da17c57ea322a9c2668ae9fc2c1d6ab5556d9a997e7bfa1cbc4dc5cf7b94e0cead42d481bf0d3d90ad2ee0d272e9e687f8f82fddf76d37d722c6815fe0f
 
 ### 3.2.  get-inclusion-proof
 
