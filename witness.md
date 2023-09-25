@@ -1,4 +1,4 @@
-# Witness API v0
+# Witness API v0, rc-1
 
 **Warning.** This is an interrim witness protocol that is likely to be
 replaced with a more interoperable protocol, suitable also for
@@ -158,14 +158,14 @@ HTTP error codes on failure:
   from the old tree head known to the witness to the new one.
 
 Output on success:
-- `cosignature`: witness co-signature for the submitted tree head, can be
-  repeated multiple times (but must not be missing).
-
-  Different cosignatures can have different versions, key hashes, and
-  timestamps, but there may be at most one v1 cosignature for each key hash.
-  Clients must ignore cosignatures of unknown version (that is, where the first
-  field is not `v1`) or bearing an unexpected witness key hash. The timestamps
-  can be expected to all be recent and in the same range.
+- `cosignature`: witness cosignature for the submitted tree head.  The
+  value on this single line consists of 3 fields, separated by single space
+  characters. The first field is the hash of the witness' public key, in
+  hex, the second field is the cosignature timestamp, in decimal, and
+  the third field is the witness' cosignature, in hex.  [The "version"
+  field has been dropped as an interim; the cosignature line must always
+  be v1.  That this is a repeated key has also been dropped as an
+  interim.  Both of these constructs will likely be back in "rc-2".]
 
 The witness must persist the new tree head before returning the cosignature.
 Note that checking the `old_size` against the previous tree head and persisting
