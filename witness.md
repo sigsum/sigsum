@@ -1,4 +1,4 @@
-# Witness API v0, rc-1
+# Witness API v0
 
 **Warning.** This is an interrim witness protocol that is likely to be
 replaced with a more interoperable protocol, suitable also for
