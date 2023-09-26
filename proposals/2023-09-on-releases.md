@@ -47,6 +47,9 @@ no promises that upgrading to release X from X-2 works.  What we aim to provide
 are **clear instructions on how to upgrade from release X-1 to X**.  In other
 words, it is assumed that users follow along in the linear upgrade history.
 
+[And obviously: we have tested that linear upgrades work.  What "tested" means
+we specify in the repository's RELEASES file.  See example at the bottom.]
+
 We don't backport bug-fixes.  To get a fix, upgrade to the next release.
 
 [Practically speaking, this may mean that we checkout the previously released
