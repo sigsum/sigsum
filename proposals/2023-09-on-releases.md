@@ -1,8 +1,13 @@
 # How Sigsum could do software releases, take one
 
-This document proposes how Sigsum could get started with releases.  Don't let
-perfect be the enemy of good enough.  Several iterations on this are
-anticipated.
+This document proposes how Sigsum could do releases.  The goal is define
+something that is good enough to **get started**, in particular for the log-go
+repository and its `sigsum-log-primary` and `sigsum-log-secondary` tools.
+
+This proposal is expected to be directly applicable to releases of our other
+repositories with CLI tools.  It is also expected that we will have to iterate
+on this process/proposal over time.  Please add any suggestions that you think
+can be omitted in this initial stage at the end, see "Future ideas" section.
 
 ## Background
 
@@ -17,145 +22,78 @@ Things we will likely want to release:
   - Other sigsum-go tools that didn't fit into the above: `sigsum-mktree`
   - Ansible collection
   - Specifications
+  - Libraries
 
-We need to figure out which ones we are releasing, what that means, and how.  To
-keep this proposal small, the focus is on repositories that contain Go code.
+We need to figure out which ones we are releasing, what that means, and how.  As
+already stated, the scope to consider here is CLI tools / log-go stuff.
 
-## TL;DR - An example log-go release
+## Proposal in general
 
-We announce releases on the sigsum-general mailing list.
-
-> Hi everyone,
->
-> The log server software is now released as git-tag v0.13.4 [1], succeeding the
-> previous release at git-tag v0.12.2 [2].  See the NEWS file for a complete
-> list of changes [3].  Note that **manual steps** are needed before upgrading,
-> and that it is assumed you are upgrading (linearly) from the previous release.
->
-> This release concerns the following log-go executables:
->
->   - sigsum-log-primary
->   - sigsum-log-secondary
->
-> The expectations and intended use of the log server software is documented in
-> the log-go RELEASES file [4].  No changes to these expectations have been
-> done.  You can expect that the above is compatible with the following:
->
->   - log.md, rc-1
->   - witness.md, rc-1
->   - All tools in sigsum-go, tag v0.5.6 [6]
->   - Witness implementation in litetlog, tag v0.0.3 [7]
->
-> Corresponding log server documentation is available in the log-go repository [5].
->
-> If you have any problems with this release or the log server software in
-> general, please file a GitLab issue or report it on the sigsum-general list.
->
-> Cheers,
-> The Sigsum team
-> 
-> 1: ... links
->
-
-[Note: this is not a template or the exact email we would send out.  The intent
-is to give you some intuition of what it might look like to release something.
-Below is the actual proposal that provides more detail for us to agree on; and
-then we can use regular MRs to get the RELEASES files etc into place with good
-wordings.  I.e., the purpose of this proposal: agree on the overall process.]
-
-## Proposal
-
-### General procedure
-
-Releases are announced on the sigsum-general mailing list.  A release announces
-that one or more executables from a single repository are ready to be used.
-
-Exactly which parts are being released is stated in the announcement.
+Releases are announced on the sigsum-general mailing list.  A release is
+tailored for a single repository.  For example, if we want to release something
+in both log-go and sigsum-go, then that would require two separate releases.
 
 [This ensures that we don't have to put everything on the same release cycle.
-And as, say, a log operator, you can care only about the log server release.]
+And as, say, a log operator, you can care only about the log server software.]
 
-For the Go libraries themselves, we follow [Go's module version numbering][].
-At the time of writing that means our libraries are still being developed, v0.
-Let's defer the release process of Go libraries until we want a v1 Go API.
+If something in a repository is being released, there must be a RELEASES file
+and a NEWS file.  The RELEASES file documents the release process at large and
+which expectations users of the released software can have.  The NEWS file
+documents what changed since the last release, including **detailed** migration
+steps if there are any breaking changes with regard to the previous release.
 
-Note that there may be multiple git-tags between adjacent releases.  We are not
-properly documenting NEWS files and similar for those intermediate git-tags.
-Any information about the v0 libraries in these NEWS files are "best effort",
-and most likely a side-affect of high-level explanations of what's been done.
+There are no promises that downgrading from release X to X-1 works.  There are
+no promises that upgrading to release X from X-2 works.  What we aim to provide
+are **clear instructions on how to upgrade from release X-1 to X**.  In other
+words, it is assumed that users follow along in the linear upgrade history.
 
-There are no promises that downgrading from announcement X to X-1 works.  There
-are no promises that upgrading with the announcement notes in X from X-2 works.
-We aim to provide clear instructions to upgrade from announcement X-1 to X.
+We don't backport bug-fixes.  To get a fix, upgrade to the next release.
 
-Sometimes these instructions may require manual edits, such as updating a file
-path, a file format, or a command-line option name.  In other cases, it might
-even be a protocol change.  What to expect is documented for each artifact.
+[Practically speaking, this may mean that we checkout the previously released
+tag, make a critical bug-fix, release a new version with that, then incorporate
+that bug-fix into the main branch that may have other work-in-progress things.]
 
-### Announcement email
+[And if we are starting to tag the main branch without making a release,
+always bump v0.X.Y to v0.X+1.0 so we can do emergency release v0.X.Y+1.)
 
-Checklist:
+There's no release cycle.  We release when something new is available.  But to
+reassure that following along with the release history linearly is not going to
+result in excessive overhead, our intent is to not release more often than every
+four weeks.  In most cases we will likely release even less frequently.  And in
+some cases, we may have to fix a critical bug and release as soon as possible.
 
-  - [ ] Link to the previous announcement
-  - [ ] Specify a new recommended tag to be used
-  - [ ] Specify what executables in the repository is being released
-  - [ ] The source repository has a NEWS file
-    - A list of high-level changes
-    - If any of the cmd/ changes are breaking with regard to to the previous
-      announcement, detailed instructions on how to resolve those issues.  For
-      example, "replace option `--foo` with option `--bar`".
-  - [ ] The NEWS file is linked in the announcement
-  - [ ] Highlight in the announcement if there are any breaking cmd/ changes.
-        It is sufficient to state it and refer to the NEWS file with details.
-  - [ ] The source repository contains a RELEASES file that outlines the release
-        process and which expectations a consumer can have.
-    - E.g., what is (not) expected to break in upcoming releases
-  - [ ] The RELEASES file is linked in the announcement
-  - [ ] Specify how to report bugs and any other issues
-  - [ ] State what this release is known to be compatible with
-    - E.g., "log.md rc-2" and "all command-line tools in the sigsum-go".
+[As our implementations and processes mature we update these expectations.  The
+intent here is to get started with something that we can try and iterate on.]
 
-### What are we releasing with what expectations
+### NEWS file, checklist
 
-Let's start by only releasing the log server software.  In other words,
-`sigsum-log-primary` and `sigsum-log-secondary`.
+  - [ ] The previous NEWS entry is the previous release
+  - [ ] Broad summary of changes
+  - [ ] Detailed instructions on how to upgrade from the previous release, only
+    applicable if there are breaking changes (or if breaking changes are being
+    fixed in the background as a result of starting to run the new software).
+  - [ ] Other repositories/tools/tags that are known to be interoperable.
 
-#### Log server software (expectations)
+### RELEASES file, checklist
 
-[The below is written based on us toggling the log.md to a v1 protocol.  If that
-is not the case, we will need to weaken the language in the first expectation.]
+  - [ ] What in the repository is being released and supported
+  - [ ] Where are releases announced (sigsum-general mailing list)
+  - [ ] The overall release process (based on the above procedure)
+  - [ ] The expectation we as maintainers have on users
+  - [ ] The expectations users can have as us on maintainers
+    - E.g., including how we're testing a release and what we intend to (not)
+      break in the future.
 
-The expectation that log operators can have are:
+### Announcement email, checklist
 
-  1. No planned changes to the interface between log clients <-> log servers.
-     The log.md, version 1, protocol is used.  Any breaking changes would have
-     to be considered **very carefully** and be coordinated well in advance.
-  2. Expect changes between log servers <-> witnesses, however only on the API
-     level ("wire bytes") and not wrt. cryptographic stuff ("signed bytes").  In
-     other words, these changes would be completely invisible to log clients.
-  3. Expect changes to be done for fixing log server configuration UIs and other
-     non-protocol aspects like tuning metrics, performance, etc.
-
-As described in the general procedure, we state in each announcement what other
-specifications and tooling is interoperable with a particular release.  We
-determine if something is "interoperable" based on CI/CD and manual testing.
-
-[It is not in the scope of this proposal to hash out "manual testing", but that
-is essentially the ping-pongs that allow ln5 rgdd to have things running.]
-
-We do recommend operations of the log software in production environments.
-
-We strongly discourage [fail-closed][] usage in end-user applications until
-production-grade witnesses are available and operated as well.
-
-[If this was sigsum-go, we could also state expectations wrt. the v0 library.]
-
-[fail-closed]: https://chat.openai.com/share/00b88e34-3de8-4305-bb46-efa2f1486fd8
-
-### Where to document the release process
-
-We would create a RELEASES file in each software artifact repository.  If
-helpful, we could have a general outline for this in project/documentation.
+  - [ ] What is being releases
+    - E.g., log server software / log-go.
+  - [ ] Specify new release tag
+  - [ ] Specify previous release tag 
+  - [ ] Specify how to report bugs
+  - [ ] Refer to the RELEASES file for information on the release process and
+    expectations
+  - [ ] Copy-paste the latest NEWS file entry
 
 ## Comparison to what we're doing today
 
@@ -164,20 +102,12 @@ the sigsum-general mailing list stating the log-go and ansible tags to be used
 and what to expect.  The above is a stricter version of our prior commitments,
 expect that it is not proposing anything about having ansible releases yet.
 
-[released once]: https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/thread/3VBGVETN3Q44RFGVZJZDF4ZF4QLEMBC2/
-
-## Open questions
-
-  - Should we sign the released git-tag?
-  - How do we deal with bug-fix releases?  E.g., if main has moved forward and
-    is in no state to be released.  Backport that bug-fix if it is urgent?
-
 ## Future ideas
 
-  - Hash out the "manual" testing procedure, so we can be clear about how we're
-    testing **and** that is one step closer to getting this into our CI/CD.
+  - Hash out "manual" testing procedures, so we can be clear about how we're
+    testing **and** that is one step closer to getting this into our CI.
   - Specify all tags of other "artifacts" that are known to be working?  Also
-    related to improved CI/CD, which is expected to happen over time.
+    related to improved CI, which is expected to happen over time.
   - More broadly, stronger expectations/language on how things will not break.
   - Signing?
     - Tarball / other packaging
@@ -185,3 +115,77 @@ expect that it is not proposing anything about having ansible releases yet.
   - A predictable release cycle?
   - Releases of library code?
   - Releases of ansible?
+  - Releases of specs?
+
+[Based on our discussions, it seems like signing and packaging are the two most
+urgent things to improve on in the near future.]
+
+[released once]: https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/thread/3VBGVETN3Q44RFGVZJZDF4ZF4QLEMBC2/
+
+## Example: log-go
+
+Based on the above general procedure: a RELEASES file and an announce email,
+included here mostly as examples.  If this proposal is accepted, there will be a
+separate log-go MR based on the below.  In other words, the exact text doesn't
+have to be polished to perfection right now.
+
+### RELEASES
+
+The following command-line tools are released and supported:
+
+  - `cmd/sigsum-log-primary`
+  - `cmd/sigsum-log-secondary`
+
+Releases are announced on the [sigsum-general][] mailing list.  All information
+that operators need to upgrade is listed in this repository's [NEWS
+file](./NEWS).  Pay close attention to manual migration steps, if any.
+
+Note that a release is simply a git-tag specified on our mailing list.  You are
+expected to build the released tools yourself, e.g., with `go install`.  There
+may be intermediate git-tags between two adjacent releases.  Don't deploy those.
+
+As of now there is no release cycle.  We release when something new is ready.
+Unless there are critical bug fixes, expect at least a month between releases.
+
+You are expected to upgrade linearly from release X to X+1 unless specified
+otherwise.  Downgrading (X to X-1) or jumping ahead (X to X+2) may break things.
+
+You can expect the following about the released log server software:
+
+  1. No planned changes to the interface between log clients <-> log servers.
+     The log.md, v1, protocol is used.  Any breaking changes would have to be
+     considered **very carefully** and then be **coordinated well in advance**.
+  2. Changes between log servers <-> witnesses on the API level ("wire bytes"),
+     but not with regard to cryptographic stuff (such as "signed bytes").  In
+     other words, these changes would be completely invisible to log clients.  
+  3. Changes to improve log server configuration interfaces and other
+     non-protocol aspects like tuning metrics, performance, etc.
+
+The exact specifications and tags in other Sigsum repositories that are
+interoperable are listed in the [NEWS](./NEWS) file for each release.  We
+determine what is interoperable based on our CI pipelines and manual testing.
+
+It is not recommended to [fail closed][] on the operated Sigsum logs yet.  At
+least one production witness should be deployed before any such dependence.
+
+[fail closed]: https://chat.openai.com/share/00b88e34-3de8-4305-bb46-efa2f1486fd8
+
+### log-go email announcement template
+
+Hi everyone,
+
+The log server software is now released as git-tag vY.Y.Y, succeeding
+the previous release at git-tag vX.X.X'.
+
+If you find any bugs, please report them here on the sigsum-general
+mailing list or open an issue on GitLab in the log-go repository:
+
+  https://git.glasklar.is/sigsum/core/log-go/
+
+The expectations and intended use of the log server software is
+documented in the log-go RELEASES file.  You will also find more
+information about the overall release process there.
+
+Below is an extract from the release notes in the log-go NEWS file.
+
+  Copy-paste NEWS file for git-tag vY.Y.Y here.
