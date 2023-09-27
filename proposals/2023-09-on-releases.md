@@ -34,21 +34,21 @@ tailored for a single repository.  For example, if we want to release something
 in both log-go and sigsum-go, then that would require two separate releases.
 
 [This ensures that we don't have to put everything on the same release cycle.
-And as, say, a log operator, you can care only about the log server software.]
+And as, say, a log operator, you may care only about the log server software.]
 
 If something in a repository is being released, there must be a RELEASES file
 and a NEWS file.  The RELEASES file documents the release process at large and
-which expectations users of the released software can have.  The NEWS file
-documents what changed since the last release, including **detailed** migration
+what expectations users of the released software should have.  The NEWS file
+documents what changed since the previous release, including **detailed** migration
 steps if there are any breaking changes with regard to the previous release.
 
 There are no promises that downgrading from release X to X-1 works.  There are
-no promises that upgrading to release X from X-2 works.  What we aim to provide
-are **clear instructions on how to upgrade from release X-1 to X**.  In other
+no promises that upgrading from release X to X+2 works.  What we aim to provide
+are **clear instructions on how to upgrade from release X to X+1**.  In other
 words, it is assumed that users follow along in the linear upgrade history.
 
 [And obviously: we have tested that linear upgrades work.  What "tested" means
-we specify in the repository's RELEASES file.  See example at the bottom.]
+is explained in the RELEASES file.  See example below.]
 
 We don't backport bug-fixes.  To get a fix, upgrade to the next release.
 
@@ -57,20 +57,21 @@ tag, make a critical bug-fix, release a new version with that, then incorporate
 that bug-fix into the main branch that may have other work-in-progress things.]
 
 [And if we are starting to tag the main branch without making a release,
-always bump v0.X.Y to v0.X+1.0 so we can do emergency release v0.X.Y+1.)
+always bump minor and set patch level to 0 (v0.X.Y --> v0.X+1.0) so that we always
+can do an emergency release (v0.X.Y+1).]
 
 There's no release cycle.  We release when something new is available.  But to
 reassure that following along with the release history linearly is not going to
 result in excessive overhead, our intent is to not release more often than every
-four weeks.  In most cases we will likely release even less frequently.  And in
+four weeks.  In most cases we will likely release less frequently.  And in
 some cases, we may have to fix a critical bug and release as soon as possible.
 
-[As our implementations and processes mature we update these expectations.  The
-intent here is to get started with something that we can try and iterate on.]
+[As our implementations and processes mature we will be updating these expectations.
+The intent here is to get started with something that we can try to iterate on.]
 
 ### NEWS file, checklist
 
-  - [ ] The previous NEWS entry is the previous release
+  - [ ] The previous NEWS entry is for the previous release
   - [ ] Broad summary of changes
   - [ ] Detailed instructions on how to upgrade from the previous release, only
     applicable if there are breaking changes (or if breaking changes are being
@@ -83,7 +84,7 @@ intent here is to get started with something that we can try and iterate on.]
   - [ ] Where are releases announced (sigsum-general mailing list)
   - [ ] The overall release process (based on the above procedure)
   - [ ] The expectation we as maintainers have on users
-  - [ ] The expectations users can have as us on maintainers
+  - [ ] The expectations users can have on us as maintainers
     - E.g., including how we're testing a release and what we intend to (not)
       break in the future.
 
@@ -103,7 +104,7 @@ intent here is to get started with something that we can try and iterate on.]
 We don't have any documented process.  We [released once][], sending an email to
 the sigsum-general mailing list stating the log-go and ansible tags to be used
 and what to expect.  The above is a stricter version of our prior commitments,
-expect that it is not proposing anything about having ansible releases yet.
+expect that it is not proposing anything about having Ansible releases.
 
 ## Future ideas
 
@@ -140,12 +141,12 @@ The following command-line tools are released and supported:
   - `cmd/sigsum-log-secondary`
 
 Releases are announced on the [sigsum-general][] mailing list.  All information
-that operators need to upgrade is listed in this repository's [NEWS
+that operators need in order to perform an upgrade is listed in the [NEWS
 file](./NEWS).  Pay close attention to manual migration steps, if any.
 
 Note that a release is simply a git-tag specified on our mailing list.  You are
 expected to build the released tools yourself, e.g., with `go install`.  There
-may be intermediate git-tags between two adjacent releases.  Don't deploy those.
+may be intermediate git-tags between two adjacent releases.  Don't deploy these.
 
 As of now there is no release cycle.  We release when something new is ready.
 Unless there are critical bug fixes, expect at least a month between releases.
@@ -157,7 +158,7 @@ You can expect the following about the released log server software:
 
   1. No planned changes to the interface between log clients <-> log servers.
      The log.md, v1, protocol is used.  Any breaking changes would have to be
-     considered **very carefully** and then be **coordinated well in advance**.
+     considered **very carefully** and be **coordinated well in advance**.
   2. Changes between log servers <-> witnesses on the API level ("wire bytes"),
      but not with regard to cryptographic stuff (such as "signed bytes").  In
      other words, these changes would be completely invisible to log clients.  
@@ -168,7 +169,7 @@ The exact specifications and tags in other Sigsum repositories that are
 interoperable are listed in the [NEWS](./NEWS) file for each release.  We
 determine what is interoperable based on our CI pipelines and manual testing.
 
-It is not recommended to [fail closed][] on the operated Sigsum logs yet.  At
+It is not recommended to [fail closed][] on the Sigsum logs yet.  At
 least one production witness should be deployed before any such dependence.
 
 [fail closed]: https://chat.openai.com/share/00b88e34-3de8-4305-bb46-efa2f1486fd8
