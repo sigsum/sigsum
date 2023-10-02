@@ -169,11 +169,10 @@ The exact specifications and tags in other Sigsum repositories that are
 interoperable are listed in the [NEWS](./NEWS) file for each release.  We
 determine what is interoperable based on our CI pipelines and manual testing.
 
-It is not recommended to [fail closed][] on the Sigsum logs yet.  At
+It is not recommended to fail closed on the Sigsum logs yet.  At
 least one production witness should be deployed before any such dependence.
 
 [sigsum-general]: https://lists.glasklarteknik.se/mailman3/postorius/lists/sigsum-general.lists.sigsum.org/
-[fail closed]: https://chat.openai.com/share/00b88e34-3de8-4305-bb46-efa2f1486fd8
 
 ### log-go email announcement template
 
