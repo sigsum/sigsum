@@ -60,11 +60,12 @@ that bug-fix into the main branch that may have other work-in-progress things.]
 always bump minor and set patch level to 0 (v0.X.Y --> v0.X+1.0) so that we always
 can do an emergency release (v0.X.Y+1).]
 
-There's no release cycle.  We release when something new is available.  But to
-reassure that following along with the release history linearly is not going to
-result in excessive overhead, our intent is to not release more often than every
-four weeks.  In most cases we will likely release less frequently.  And in
-some cases, we may have to fix a critical bug and release as soon as possible.
+We have no fixed release schedule. Releases happen when something new is
+available.  But to reassure that following along with the release history
+linearly is not going to result in excessive overhead, our intent is to not
+release more often than every four weeks.  In most cases we will likely release
+less frequently.  And in some cases, we may have to fix a critical bug and
+release as soon as possible.
 
 [As our implementations and processes mature we will be updating these expectations.
 The intent here is to get started with something that we can try to iterate on.]
