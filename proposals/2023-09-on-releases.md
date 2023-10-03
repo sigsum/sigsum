@@ -60,6 +60,10 @@ that bug-fix into the main branch that may have other work-in-progress things.]
 always bump minor and set patch level to 0 (v0.X.Y --> v0.X+1.0) so that we always
 can do an emergency release (v0.X.Y+1).]
 
+[More on tags: vX.Y.Z, we consider "Z" the current release candidate for "X.Y".
+We may be bumping Z several times before releasing.  The final bump is when
+we're ready to release and finalized the NEWS file.  So, Z>=1 is expected.]
+
 We have no fixed release schedule. Releases happen when something new is
 available.  But to reassure that following along with the release history
 linearly is not going to result in excessive overhead, our intent is to not
