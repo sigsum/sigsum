@@ -179,15 +179,12 @@ Ed25519 signature to serve in a log.md format.
 ### get-tree-size
 
 ```
-POST <witness URL>/get-tree-size
-
-> sigsum.org/v1/tree/3620c0d515f87e60959d29a4682fd1f0db984704981fda39b3e9ba0a44f57e2f
+GET <witness URL>/get-tree-size?origin=sigsum.org%2Fv1%2Ftree%2F3620c0d515f87e60959d29a4682fd1f0db984704981fda39b3e9ba0a44f57e2f
 
 < 15368405
 ```
 
-This is a POST so that the origin line can be passed in the body, and also
-so that the HTTP semantics are naturally non-cacheable.
+The response must be marked non-cacheable with `Cache-Control: no-store`.
 
 ### roster
 
