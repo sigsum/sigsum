@@ -104,6 +104,12 @@ The intent here is to get started with something that we can try to iterate on.]
     expectations
   - [ ] Copy-paste the latest NEWS file entry
 
+### MISC, checklist
+
+Added post-proposal 2023-10-05, suggested by nisse:
+
+  - [ ] Check that the repository has a good enough README
+
 ## Comparison to what we're doing today
 
 We don't have any documented process.  We [released once][], sending an email to
