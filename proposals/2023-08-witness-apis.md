@@ -20,6 +20,8 @@ proposal. That change will be necessary regardless and will be documented elsewh
 These are not full fledged specifications, but just API overviews to help pick
 an option.
 
+After discussion, we propose picking option 2, the checkpoint-style API.
+
 ## 1. log.md style API
 
 This is the closest to the current API, adapted to support arbitrary
