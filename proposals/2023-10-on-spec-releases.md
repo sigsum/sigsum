@@ -28,8 +28,8 @@ The traits we expect to surround a specification that is being released:
 ## Managing versions
 
 The specification is hosted in a (shared) git-repository.  The tag format is
-`<spec-namespace>-<version>`, e.g., `sigsum-logging-v1.0.0`.  The namespace
-ensures that we can have several specifications in the same git-repository.
+`<filename>-release-<version>`, e.g., `log.md-release-v1.0.0`.  The initial
+prefix ensures we can have several specifications in the same git-repository.
 
 If a specification is released, it is always accompanied by an addition to the
 repository's NEWS file and sending of an email to the sigsum-general list.
