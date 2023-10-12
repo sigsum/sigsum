@@ -15,8 +15,19 @@ availability and documented security practices.
 
 # Witnesses
 
-We plan to deploy a witness for cosigning both our own logs and
-other's logs.
+We run two test witnesses for the poc log. A sample policy using the
+proof-of-concept log and requiring cosignatures from both these
+witnesses:
+```
+log 154f49976b59ff09a123675f58cb3e346e0455753c3c3b15d465dcb4f6512b0b https://poc.sigsum.org/jellyfish
+witness nisse 1c25f8a44c635457e2e391d1efbca7d4c2951a0aef06225a881e46b98962ac6c
+witness rgdd 28c92a5a3a054d317c86fc2eeb6a7ab2054d6217100d0be67ded5b74323c5806
+group test-witnesses all nisse rgdd
+quorum test-witnesses
+```
+
+We plan to deploy a production witness for cosigning both our own logs
+and other's logs.
 
 # Development infrastructure
 
