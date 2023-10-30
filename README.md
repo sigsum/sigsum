@@ -12,7 +12,7 @@ documentation related to the [Sigsum project][].
   - [proposals/](./proposals) - proposals relating to design or the project at large
   - [www.sigsum.org/](./www.sigsum.org) - source code of the project website
   - Top-level - documents like [logging design](./design.md),
-    [api specification](./log.md), and [project history](HISTORY.md)
+    [log server protocol](./log.md), and [project history](HISTORY.md)
 
 ## Contributing
 
@@ -27,8 +27,8 @@ decision is decided on Tuesdays at 1100 UTC during [weekly project meets][].
 ## Releases
 
 When technical specifications are released, that means that we assing
-a version number to a particular version of a specification, e.g., API
-specification [api specification](./log.md), version `v1.0.0`.
+a version number to a particular version of a specification, e.g.,
+[log server protocol](./log.md), version `v1.0.0`.
 
 ### Release principles
 
@@ -63,9 +63,7 @@ principles:
 
 ### Publishing released specifications
 
-The specifications are hosted in the
-[sigsum-documentation](https://git.glasklar.is/sigsum/project/documentation)
-git repository. Released versions are identified by git tags of the form
+Released versions are identified by git tags of the form
 `<filename>-release-<version>`, e.g., `log.md-release-v1.0.0`. The
 initial prefix ensures we can have several specifications in the same
 git-repository, with independent releases and version numbers.
