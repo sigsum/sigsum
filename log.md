@@ -39,9 +39,9 @@ A separate document specifies the witness cosigning protocol.
 
 **Cite:**
 
-    @misc{sigsum-rc1,
+    @misc{sigsum-log-protocol,
       author       = {{Sigsum Project}},
-      title        = {Sigsum Logging v1 (rc-1)},
+      title        = {Sigsum Log Server Protocol},
       howpublished = {\url{https://git.glasklar.is/sigsum/project/documentation/-/blob/main/log.md}, accessed YYYY-MM-DD},
     }
 
