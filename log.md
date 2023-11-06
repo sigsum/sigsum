@@ -1,6 +1,7 @@
-# Sigsum Logging v1 (rc-1)
+# Sigsum Log Server Protocol
 
-**Status:** release candidate, rc-1.
+**Status:** Stable version v1 (see [README](./README.md) for how
+releases are identified and published).
 
 **Abstract:** A sigsum log implements five HTTP endpoints to make a
 submitter's signed checksums transparent in an append-only Merkle tree.

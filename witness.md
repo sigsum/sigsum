@@ -1,9 +1,11 @@
-# Witness API v0
+# Sigsum Witness Protocol
 
-**Warning.** This is an interrim witness protocol that is likely to be
-replaced with a more interoperable protocol, suitable also for
-witnessing other types of logs than Sigsum. The specification of the
-data being signed is intended to stay unchanged, though.
+**Status:** Interrim witness protocol used by [log-go server version
+v0.14.1](https://git.glasklar.is/sigsum/core/log-go/-/tree/v0.14.1?ref_type=tags)
+and interoperable witnesses. We intend to change this protocol on the
+surface, for interoperability with non-Sigsum witnesses, without
+changing the cryptographic details or semantics of resulting
+cosignatures.
 
 ## 1 — Overview
 
@@ -41,7 +43,7 @@ including low-latency and "offline" logs.
 
 This documents uses the same textual encodings, binary encoding, key encoding,
 HTTP API description language, hash, and signature scheme as the [log API
-document](https://git.sigsum.org/sigsum/tree/doc/log.md). All timestamps are
+document](./log.md). All timestamps are
 expressed in seconds since the UNIX epoch (January 1, 1970 00:00 UTC).
 
 A co-signature consists of three fields, separated by a single space character:
