@@ -1,0 +1,15 @@
+NEWS for log.md, version v1.0.0
+
+	This is the first official release of the Sigsum Log Server
+	Protocol, i.e., the file log.md. This release is identified by
+	the git tag log.md-release-v1.0.0. It is intended to be
+	stable, and there are no planned breaking changes. See
+	README.md for information on development and release
+	processes for Sigsum specifications.
+
+	The protocol is implemented by the log-go server v0.14.1 announced
+	recently, see
+	https://git.glasklar.is/sigsum/core/log-go/-/blob/v0.14.1/NEWS,
+	and by the command line tools at
+	https://git.glasklar.is/sigsum/core/sigsum-go, current version
+	being v0.6.1.
