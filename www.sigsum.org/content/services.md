@@ -1,4 +1,4 @@
-# Log servers
+## Log servers
 
 Sigsum currently runs two log servers.
 
@@ -13,7 +13,7 @@ Sigsum currently runs two log servers.
 We plan to deploy a production log, with stronger commitment on
 availability and documented security practices.
 
-# Witnesses
+## Witnesses
 
 We run two test witnesses for the poc log. A sample policy using the
 proof-of-concept log and requiring cosignatures from both these
@@ -29,7 +29,7 @@ quorum test-witnesses
 We plan to deploy a production witness for cosigning both our own logs
 and other's logs.
 
-# Development infrastructure
+## Development infrastructure
 
 Repositories for source code and documentation, issue trackers,
 continuous testing, etc, runs at [our gitlab
