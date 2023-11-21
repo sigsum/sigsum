@@ -25,10 +25,10 @@ You can also report issues and submit merge requests on [GitLab][].
 
 [GitLab]: https://git.glasklar.is/sigsum/
 
-Join open video/voice meetings on Tuesdays at 1100 UTC.
+Join open video/voice meetings on Tuesdays at 1215 UTC.
 
   - Jitsi: [meet.sigsum.org/sigsum][]
-  - Pad: [pad.sigsum.org/p/sigsum-YYMMDD][]
+  - Notes: [pad.sigsum.org/p/sigsum-YYMMDD][]
 
 [meet.sigsum.org/sigsum]: https://meet.sigsum.org/sigsum
 [pad.sigsum.org/p/sigsum-YYMMDD]: https://pad.sigsum.org/p/sigsum-YYMMDD
