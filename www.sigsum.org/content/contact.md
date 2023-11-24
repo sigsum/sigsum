@@ -1,8 +1,9 @@
 # Contact
+
 Chat with users and developers on IRC or Matrix. The rooms are bridged so it
 does not matter which one you choose.
 
-  - IRC: \#sigsum @ [OFTC.net][]
+  - IRC: `#sigsum` @ [OFTC.net][]
   - Matrix: [#sigsum:matrix.org][]
 
 [OFTC.net]: https://oftc.net/
