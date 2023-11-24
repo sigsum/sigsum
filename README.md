@@ -69,7 +69,7 @@ initial prefix ensures we can have several specifications in the same
 git-repository, with independent releases and version numbers.
 
 When a specification is released, it is accompanied by an addition to
-the repository's NEWS file and an email to the sigsum-general list.
+the repository's NEWS file and an email to the sigsum-announce list.
 
 If we ever reach a v2 specification while still wanting to make
 another release of a v1 specification, we would do the latter on a
