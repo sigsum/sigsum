@@ -36,3 +36,24 @@ governed by Mullvad VPN
 The Sigsum Project launched in October
 	[\[10\]](https://lists.sigsum.org/sigsum-general/msg00001.html).
 It is managed by Rasmus Dahlberg (Mullvad VPN) and Linus Nordberg (independent).
+
+## 2022
+In September, Rasmus Dahlberg presented the latest revision of the Sigsum design
+on the Open Source Firmware Conference
+    [\[11\]](https://www.osfc.io/2022/talks/using-sigsum-logs-to-detect-malicious-and-unintended-key-usage/).
+
+In October, the project started to receive all its funding from a sister-company
+of Mullvad VPN.  The new sister company is named Glasklar Teknik
+    [\[12\]](https://www.glasklarteknik.se/).
+
+Throughout the year, several new project contributors joined to further develop
+Sigsum's design and prototype implementations.  This included Grégoire Détrez,
+Niels Möller, and Filippo Valsorda.  Rasmus Dahlberg (Glasklar Teknik) manages
+the project with consensus from the other project contributors on weekly meets.
+
+## 2023
+In November, the Sigsum log server protocol v1.0.0 was announced
+    [\[13\]](https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/thread/LX42ONBGWO4JMSMCDGS5Z7ORKJHFHQOO/).
+Filippo Valsardo and Niels möller also presented talks on why an interoperable
+witness system is needed and how Sigsum was designed
+    [\[14\]](https://catsworkshop.dev/program/).
