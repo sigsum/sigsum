@@ -5,6 +5,7 @@ Meant for users that want try Sigsum and understand how it works:
   - [Getting started](/getting-started): step-by-step demo of key-usage transparency
   - [Command-line tools][]: generate keys, sign, submit, and offline verify
   - [Monitor tooling][]: poll the logs to detect signatures produced by your keys
+  - [Glossary](/glossary): central terminology that is often used 
 
 [Command-line tools]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/tools.md
 [Monitor tooling]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/monitor.md
