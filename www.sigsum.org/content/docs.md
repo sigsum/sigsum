@@ -2,6 +2,7 @@
 
 Meant for users that want try Sigsum and understand how it works:
 
+  - [Getting started](/getting-started): step-by-step demo of key-usage transparency
   - [Command-line tools][]: generate keys, sign, submit, and offline verify
   - [Monitor tooling][]: poll the logs to detect signatures produced by your keys
 
