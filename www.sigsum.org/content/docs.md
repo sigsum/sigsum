@@ -36,7 +36,7 @@ Meant for contributors and others that follow the project in detail:
 Meant for implementers that need to know about bits and bytes:
 
   - [Log server protocol][]: stable v1 release
-  - [Witness cosigning protocol][]: work in progress
+  - [Witness cosigning protocol][]: [work in progress](https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/46)
   - [Bastion host protocol][]: work in progress
   - [Proof bundle format][]: work in progress
   - [Trust policy format][]: work in progress
