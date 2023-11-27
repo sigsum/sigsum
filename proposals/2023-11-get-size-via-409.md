@@ -13,6 +13,12 @@ The response will be naturally non-cacheable because
 
 `get-tree-size` was only necessary after a 409 response anyway, because usually
 the entity submitting to a witness is the log, which keeps track of the last
-view of the witness. If that view gets out of sync, a 409 will happen and the
-correct size is necessary to recover. Returning that value with the 409 response
-is more efficient, simplifies the API, and removes the use of query parameters.
+view of the witness (either actively keeping state, or comparing to the previous
+tree head and assuming it was submitted). If that view gets out of sync, a 409
+will happen and the correct size is necessary to recover. Returning that value
+with the 409 response is more efficient, simplifies the API, and removes the use
+of query parameters.
+
+If a client doesn't have (or doesn't keep) information on the size known by the
+witness, it can initially submit the checkpoint with an old size of 0, which
+requires no consistency proof and will cause a 409 response with the tree size.
