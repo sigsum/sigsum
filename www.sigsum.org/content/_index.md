@@ -20,6 +20,5 @@ Sigsum is designed to be secure against a powerful attacker that controls:
   - The log's secret key and infrastructure
   - A threshold of so-called witnesses that cosign the log
 
-Any use-case that cannot tolerate a few minutes of logging latency is out of
-scope.  This and other aspects keep the Sigsum design simple, both with regards
-to operations and end-user verification.
+The Sigsum design aims for simplicity, both with regards to operations
+and end-user verification.
