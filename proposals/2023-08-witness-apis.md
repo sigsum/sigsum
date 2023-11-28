@@ -21,6 +21,7 @@ These are not full fledged specifications, but just API overviews to help pick
 an option.
 
 After discussion, we propose picking option 2, the checkpoint-style API.
+A lot of context is available in [the MR discussion](https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/46).
 
 ## 1. log.md style API
 
