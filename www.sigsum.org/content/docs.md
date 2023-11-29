@@ -36,11 +36,14 @@ Meant for contributors and others that follow the project in detail:
 Meant for implementers that need to know about bits and bytes:
 
   - [Log server protocol][]: stable v1 release
-  - [Witness cosigning protocol][]: work in progress
+  - [Witness cosigning protocol][]: work in progress \[[1][], [2][], [3][]\]
   - [Bastion host protocol][]: work in progress
   - [Proof bundle format][]: work in progress
   - [Trust policy format][]: work in progress
 
+[1]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2023-08-witness-apis.md
+[2]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2023-11-add-checkpoint.md
+[3]: https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/64
 [Log server protocol]: https://git.glasklar.is/sigsum/project/documentation/-/blob/log.md-release-v1.0.0/log.md
 [Witness cosigning protocol]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/witness.md
 [Bastion host protocol]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/bastion.md
