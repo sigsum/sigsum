@@ -27,9 +27,11 @@ Meant for contributors and others that follow the project in detail:
 
   - [Archive][]: various notes and weekly meeting minutes
   - [Proposals][]: supplementary material to push decisions forward
+  - [Design][]: notes and background on the Sigsum design
 
 [Archive]: https://git.glasklar.is/sigsum/project/documentation/-/tree/main/archive
 [Proposals]: https://git.glasklar.is/sigsum/project/documentation/-/tree/main/proposals
+[Design]: https://git.glasklar.is/nisse/cats-2023/-/blob/main/sigsum-design-cats-2023.pdf?ref_type=heads
 
 ## Maintained specifications
 
