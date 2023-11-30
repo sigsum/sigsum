@@ -1,6 +1,6 @@
 ## Documentation for users
 
-Meant for users that want try Sigsum and understand how it works:
+Meant for users who want try Sigsum and understand how it works:
 
   - [Getting started](/getting-started): step-by-step demo of key-usage transparency
   - [Command-line tools][]: generate keys, sign, submit, and offline verify
@@ -11,7 +11,7 @@ Meant for users that want try Sigsum and understand how it works:
 
 ## Documentation for operators
 
-Meant for operators that want to stand up logs and witnesses:
+Meant for operators who want to stand up logs and witnesses:
 
   - [Sigsum's log-go implementation][]: introduction to the implemented log architecture
   - [Sigsum's log-go ansible collection][]: detailed instructions to get log-go up-and-running
@@ -23,7 +23,7 @@ Meant for operators that want to stand up logs and witnesses:
 
 ## Documentation for contributors
 
-Meant for contributors and others that follow the project in detail:
+Meant for contributors and others who follow the project in detail:
 
   - [Archive][]: various notes and weekly meeting minutes
   - [Proposals][]: supplementary material to push decisions forward
@@ -35,7 +35,7 @@ Meant for contributors and others that follow the project in detail:
 
 ## Maintained specifications
 
-Meant for implementers that need to know about bits and bytes:
+Meant for implementers who need to know about bits and bytes:
 
   - [Log server protocol][]: stable v1 release
   - [Witness cosigning protocol][]: work in progress \[[1][], [2][], [3][]\]
