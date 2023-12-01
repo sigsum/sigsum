@@ -1,0 +1,5 @@
+# TeX
+*.aux
+*.log
+# Emacs AucTeX
+/auto
