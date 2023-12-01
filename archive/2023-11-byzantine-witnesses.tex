@@ -126,8 +126,13 @@ and the dual policy would be
 \begin{equation}
   k_2 = n - \floor{k_1/2}
 \end{equation}
-This give a family of reasonable pairs of policy and dual policy, like
-\centerline{
+This give a family of reasonable pairs of policy and dual policy, with
+some examples in Figure~\ref{fig:dual-policies}. Maybe this is good
+enough to document and apply automatically when monitoring, to not
+require users to specify $f$ explicitly?
+
+\begin{figure}[t]
+  \centering
   \begin{tabular}{lll}
     policy & dual & $f$, \# compromized witnesses \\
     $3$-of-n & $(n-1)$-of-$n$ & 1 \\
@@ -137,9 +142,9 @@ This give a family of reasonable pairs of policy and dual policy, like
     $7$-of-n & $(n-3)$-of-$n$ & 3 \\
     \vdots & \vdots & \vdots
   \end{tabular}
-}
-Maybe this is good enough to document and apply automatically when
-monitoring, to not require users to specify $f$ explicitly?
+  \caption{Dual policies}
+  \label{fig:dual-policies}
+\end{figure}
 
 \end{document}
 
