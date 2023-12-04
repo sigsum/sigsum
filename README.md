@@ -11,8 +11,8 @@ documentation related to the [Sigsum project][].
   - [assets/](./assets) - project assets such as fonts, colors, and logos
   - [proposals/](./proposals) - proposals relating to design or the project at large
   - [www.sigsum.org/](./www.sigsum.org) - source code of the project website
-  - Top-level - documents like [logging design](./design.md),
-    [log server protocol](./log.md), and [project history](HISTORY.md)
+  - Top-level - documents like [log server protocol](./log.md), and
+    [project history](HISTORY.md)
 
 ## Contributing
 
