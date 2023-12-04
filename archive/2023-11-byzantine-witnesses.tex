@@ -5,6 +5,8 @@
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
 
+\hyphenation{time-stamp}
+
 \author{Niels Möller}
 \title{Notes on the implication of dishonest witnesses}
 
@@ -23,15 +25,15 @@ A split-view attack is successful if the log can give two parties two
 distinct and inconsistent tree heads, and have both tree heads
 accepted.
 
-An honest witness is assumed to sign any tree head the logs sends it,
-as long as that is consistent with previously signed tree heads. And
+An honest witness is assumed to cosign any tree head the log sends it,
+as long as that is consistent with previously cosigned tree heads. And
 the only property needed for this note is that an honest witness will
-never cosign two inconsistent tree heads. We assume that th attacker
-chooses which view of the log each honest witness signs.
+never cosign two inconsistent tree heads. We assume that the attacker
+chooses which view of the log each honest witness cosigns.
 
 We assume a compromised or dishonest witness is willing to sign any
-tree heads choosen by the attacker, and then cosignatures on different
-inconssitent tree heads can be passed to different parties. This setup
+tree heads chosen by the attacker, and then cosignatures on different
+inconsistent tree heads can be passed to different parties. This setup
 is one kind of Byzantine fault tolerance.
 
 \section{Threshold policy}
@@ -43,9 +45,9 @@ requires at least $k_1$ and $k_2$ valid cosignatures, respectively.
 First note that we must require $k_1 + k_2 > n$, otherwise we are
 vulnerable to split view attack even if all witnesses are honest.
 
-If we assume at most $f$ of the witnesses are compromized, there can
+If we assume at most $f$ of the witnesses are compromised, there can
 be up to $n + f$ cosignatures in total on the two views, where the
-compromized witnesses sign both views, and the attacker choses which
+compromised witnesses sign both views, and the attacker chooses which
 view is signed by each of the honest witnesses. We then have split
 view protection provided that
 
@@ -53,35 +55,36 @@ view protection provided that
   k_1 + k_2 > n + f. \label{eq:majority-condition}
 \end{equation}
 
-
-If we want to have a simple-to understand symmetric policy where
-$k_1 = k_2 = k$, and we only have to assume that $k$ witnesses are
-honest, then $f = n - k$, this condition boils down to
+To make the policies easy to understand, we could use symmetric policy
+where $k_1 = k_2 = k$, with a corresponding assumption that at least
+$k$ witnesses are honest. Then $f = n - k$, and the condition boils
+down to
 \begin{equation}
   k > 2n/3.  %% f = n - k < n - 2n/3 = n/3 < k/2
 \end{equation}
 Readers familiar with byzantine fault tolerance will recognize this
 number. For those of us that are not familiar with that problem, the
-condition may be surprisingly strict. E.g, the smallest confiuration
-of this type that can tolerate a single compromized witness is 3-of-4,
-and the smallest that can tolerate 2 compromized witnesses is 5-of-7.
+condition may appear surprisingly strict. E.g, the smallest
+configuration of this type that can tolerate a single compromised
+witness is 3-of-4, and the smallest that can tolerate 2 compromised
+witnesses is 5-of-7.
 
 So with a small number of witnesses, we need rather high availability.
 
 \section{The case for asymmetric policy}
 
-When one of the parties is the verifier, with threshold $k_1$, and the
+When one of the parties is a verifier, with threshold $k_1$, and the
 other is a monitor, with threshold $k_2$, it may be beneficial with
 $k_2 > k_1$. The reason is that witnesses can be temporarily
 unavailable, so even if a witness is healthy it may not be able to
 cosign each and every tree head published by a log. Maybe for some
-reason it cosigns only every third tree head. A verifiers only sees
-one tree head, and is therefore likely to miss some cosignatures due
+reason it cosigns only every third tree head. A verifier only sees
+one tree head at a time, and is therefore likely to miss some cosignatures due
 to such temporary issues.
 
 A monitor, on the other hand, repeatedly requests the log's tree head,
-and checks consistency between sucessive tree heads. It can keep track
-of the time\-stamp of the most recent cosignature seen for each witness.
+and checks consistency between successive tree heads. It can keep track
+of the timestamp of the most recent cosignature seen for each witness.
 
 E.g., assume that the monitor has a 12 hour window before alerting on
 missing cosignatures. That means that at each point it time, it can
@@ -94,7 +97,7 @@ problems, or witnesses that for some reason cosigns only some of the
 tree heads.
 
 We can make use of this monitor advantage to define a \emph{dual
-  plocy}. Assume that the verifier uses a $k_1$-of-$n$ policy, and the
+  policy}. Assume that the verifier uses a $k_1$-of-$n$ policy, and the
 intention is to tolerate up to $f$ compromised witnesses (we must have
 $f < k_1$). If we apply \eqref{eq:majority-condition} to this case, we
 find $k_2 > n + f - k_1$. The dual policy to be used by the monitor
@@ -105,7 +108,7 @@ would then be
 Unfortunately, this depends on $f$ which must in some way be specified
 by the user. It's not so user friendly to have a $f$-of-$k$-of-$n$
 policy which would mean that we have $n$ witnesses, require $k$ valid
-cosignatures when verifying a sigsum proof, and want to allow for up
+cosignatures when verifying a Sigsum proof, and want to allow for up
 to $f$ compromised witnesses.
 
 It's tempting to derive $f$ from $k_1$ by some fix rule. But, e.g., if
@@ -116,15 +119,16 @@ can easily revoke or detrust witnesses from verifier policy if they
 appear to go offline, but doesn't look very useful for the general
 case.
 
-One could maybe also set $f = \ceil{k_1/2} - 1$, motivated by the
-byzantine fault tolerance condition when $k \approx 2n/3$. With this
-rule, we get
+Another alternative could be to set $f = \ceil{k_1/2} - 1$, motivated
+by the byzantine fault tolerance condition when $k \approx 2n/3$. With
+this rule, we get
 \begin{equation}
   k_2 > n + \ceil{k_1/2} - 1 - k_1 = n - 1 - \floor{k_1/2}
 \end{equation}
-and the dual policy would be
+We should also require that $k_2 \geq k_1$. The dual policy would then
+be
 \begin{equation}
-  k_2 = n - \floor{k_1/2}
+  k_2 = \max (k_1, n - \floor{k_1/2})
 \end{equation}
 This give a family of reasonable pairs of policy and dual policy, with
 some examples in Figure~\ref{fig:dual-policies}. Maybe this is good
@@ -134,7 +138,7 @@ require users to specify $f$ explicitly?
 \begin{figure}[t]
   \centering
   \begin{tabular}{lll}
-    policy & dual & $f$, \# compromized witnesses \\
+    policy & dual & $f$, \# compromised witnesses \\
     $3$-of-n & $(n-1)$-of-$n$ & 1 \\
     $4$-of-n & $(n-2)$-of-$n$ & 1 \\
     $5$-of-n & $(n-2)$-of-$n$ & 2 \\
@@ -152,3 +156,5 @@ require users to specify $f$ explicitly?
 %%% mode: latex
 %%% TeX-master: t
 %%% End:
+
+% LocalWords:  Sigsum verifier cosignature detrust
