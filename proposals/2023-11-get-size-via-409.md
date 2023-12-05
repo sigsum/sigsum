@@ -22,3 +22,7 @@ of query parameters.
 If a client doesn't have (or doesn't keep) information on the size known by the
 witness, it can initially submit the checkpoint with an old size of 0, which
 requires no consistency proof and will cause a 409 response with the tree size.
+
+This helps focus the API on its checkpoint submission function, with the client
+always trying to submit a checkpoint, and sometimes getting a "try again"
+response.
