@@ -26,3 +26,5 @@ requires no consistency proof and will cause a 409 response with the tree size.
 This helps focus the API on its checkpoint submission function, with the client
 always trying to submit a checkpoint, and sometimes getting a "try again"
 response.
+
+This change was suggested by the TrustFabric team at Google.
