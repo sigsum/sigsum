@@ -2,4 +2,5 @@
 *.aux
 *.log
 # Emacs AucTeX
-/auto
+/auto/
+/2023-11-byzantine-witnesses.pdf
