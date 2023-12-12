@@ -17,11 +17,11 @@ documentation related to the [Sigsum project][].
 ## Contributing
 
 Feedback ranging from minor nits to proposals are most welcome.  Get in touch
-via the sigsum-general [email list][], in room `#sigsum` at OFTC.net and Matrix,
+via the [sigsum-general][] email list, in room `#sigsum` at OFTC.net and Matrix,
 or through GitLab issues and merge requests.  Anything that requires a formal
 decision is decided on Tuesdays at 1100 UTC during [weekly project meets][].
 
-[email list]: https://lists.sigsum.org/
+[sigsum-general]: https://lists.sigsum.org/mailman3/postorius/lists/sigsum-general.lists.sigsum.org/
 [weekly project meets]: https://meet.sigsum.org/sigsum
 
 ## Releases
@@ -38,7 +38,7 @@ principles:
   1. **Open process:** The community have had a chance to raise
      concerns and suggest improvements leading up to the release of
      the specification. Discussion takes place on IRC/Matrix and the
-     sigsum-general list. Substantial changes are prepared as written
+     [sigsum-general][] list. Substantial changes are prepared as written
      proposals that are decided on Sigsum's open weekly meets.
   2. **Completeness:** The specification has a clear scope, goal, and
      description language that to the best of our knowledge is non-ambiguous.
@@ -69,7 +69,7 @@ initial prefix ensures we can have several specifications in the same
 git-repository, with independent releases and version numbers.
 
 When a specification is released, it is accompanied by an addition to
-the repository's NEWS file and an email to the sigsum-general list.
+the repository's NEWS file and an email to the [sigsum-announce][] list.
 
 If we ever reach a v2 specification while still wanting to make
 another release of a v1 specification, we would do the latter on a
@@ -80,6 +80,8 @@ release of each specification on
 [www.sigsum.org/specs](https://www.sigsum.org/specs). We don't intend
 to publish each patch version there, but refer to the git repository
 for older patch versions.
+
+[sigsum-announce]: https://lists.sigsum.org/mailman3/postorius/lists/sigsum-announce.lists.sigsum.org/
 
 ## Maintainers
 
