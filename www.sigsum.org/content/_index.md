@@ -21,7 +21,7 @@ attacker that controls:
 
   - The signer's secret key and infrastructure
   - The log's secret key and infrastructure
-  - A quorum of so-called witnesses that cosign the log
+  - A threshold of so called witnesses that keep the log honest
 
 Why not give it a try?  There is a [getting started](/getting-started) demo on
 key-usage transparency.
