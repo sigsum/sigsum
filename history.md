@@ -34,5 +34,5 @@ governed by Mullvad VPN
 	[\[9\]](https://git.sigsum.org/sigsum/tree/archive/2021-06-21--meeting-minutes).
 
 The Sigsum Project launched in October
-	[\[10\]](https://lists.sigsum.org/sigsum-general/msg00001.html).
+	[\[10\]](https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/thread/ZCWCOWYTBQSVYWADEHBAWYEHNS3FJ6RK/).
 It is managed by Rasmus Dahlberg (Mullvad VPN) and Linus Nordberg (independent).
