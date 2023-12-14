@@ -5,21 +5,21 @@ because it is included in a public log.
 > Wait a second, I did not sign anything in the middle of the night.  My key
 > must be compromised.
 
-The ability to say with confidence what signatures exist further makes Sigsum a
-useful _building block_.  For example, to convince the users of some software
-that there are no secret releases with backdoors, the maintainers can ensure
-everyone observes the same reproducible source code signed with Sigsum.
+The ability to say with confidence what signatures exist makes Sigsum a useful
+_building block_.  For example, consider an open-source software project that
+claims there are no secret releases.  By incorporating the use of Sigsum, any
+release not listed on the project website can be detected.
 
-> You claimed each release would be reproducible.  I located the source and its
-> build instructions when signed checksum 7d86...7730 appeared in the logs.  I
-> don't get a bit-for-bit identical output.  Why?
+> You claimed each release would be listed on the project website.  Where is the
+> release for signed checksum 7d86...7730 that appeared in the log?  As you can
+> see it is signed with your release key.
 
 For security, Sigsum's transparency has been designed to resist a powerful
 attacker that controls:
 
-  - The signer's secret key and infrastructure
-  - The log's secret key and infrastructure
-  - A threshold of so called witnesses that keep the log honest
+  - The signer's secret key and distribution infrastructure
+  - The public log, including its hosting infrastructure and secret key
+  - A threshold of so called witnesses that call out if a log fails
 
-Why not give it a try?  There is a [getting started](/getting-started) demo on
-key-usage transparency.
+Why not give Sigsum a try?  There is a [getting started](/getting-started) demo
+on key-usage transparency.
