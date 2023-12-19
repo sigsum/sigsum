@@ -1,24 +1,25 @@
-Sigsum logging brings transparency to signed checksums.  This makes it possible
-to detect malicious and unintended key-usage.  In other words, no signature
-accepted by an end-user goes unnoticed.
+Sigsum is a building block that brings transparency to the way in which signing
+keys are used.  No signature that an end-user accepts as valid goes unnoticed
+because it is included in a public log.
 
-> A new signature made with my key was just logged.
-> Was that signature expected?
+> Wait a second, I did not sign anything in the middle of the night.  My key
+> must be compromised.
 
-Specific use-cases can be implemented on-top of the minimal building block that
-Sigsum provides.  Examples include transparency for executable binaries, TPM
-quotes, and onion address rulesets.
+The ability to say with confidence what signatures exist makes Sigsum a useful
+_building block_.  For example, consider an open-source software project that
+claims there are no secret releases.  By incorporating the use of Sigsum, any
+release not listed on the project website can be detected.
 
-> Everyone gets the same binaries.
-> Signed binary checksums become public in Sigsum logs.
-> Each binary is locatable on a separate release page.
-> An independent monitor can verify these claims.
+> You claimed each release would be listed on the project website.  Where is the
+> release for signed checksum 7d86...7730 that appeared in the log?  As you can
+> see it is signed with your release key.
 
-Sigsum is designed to be secure against a powerful attacker that controls:
+For security, Sigsum's transparency has been designed to resist a powerful
+attacker that controls:
 
-  - The signer's secret key and infrastructure
-  - The log's secret key and infrastructure
-  - A threshold of so-called witnesses that cosign the log
+  - The signer's secret key and distribution infrastructure
+  - The public log, including its hosting infrastructure and secret key
+  - A threshold of so called witnesses that call out if a log fails
 
-The Sigsum design aims for simplicity, both with regards to operations
-and end-user verification.
+Why not give Sigsum a try?  There is a [getting started](/getting-started) demo
+on key-usage transparency.
