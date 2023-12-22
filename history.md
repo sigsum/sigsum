@@ -38,19 +38,27 @@ The Sigsum Project launched in October
 It is managed by Rasmus Dahlberg (Mullvad VPN) and Linus Nordberg (independent).
 
 ## 2022
-In September, Rasmus Dahlberg presented the latest revision of the Sigsum design
-at the Open Source Firmware Conference
-    [\[11\]](https://www.osfc.io/2022/talks/using-sigsum-logs-to-detect-malicious-and-unintended-key-usage/).
 
-In October, the project started to receive all its funding from a sister-company
-of Mullvad VPN.  The new sister company is named Glasklar Teknik
-    [\[12\]](https://www.glasklarteknik.se/).
+Since the project's inception most contributors have been employed by Mullvad
+VPN AB.  During the fall, a new sister company named Glasklar Teknik AB
+[\[11\]](https://www.glasklarteknik.se/) was created to house long-term
+maintenance and development of Sigsum as well as System Transparency. Rasmus
+Dahlberg and Niels Möller transitioned from Mullvad VPN to Glasklar Teknik.
+Linus Nordberg and Fredrik Strömberg also became part of the team at Glasklar
+Teknik.  The Sigsum project continues to be wholly funded but not governed by
+Mullvad VPN.
 
-Throughout the year, several new project contributors joined to further develop
-Sigsum's design and prototype implementations.  This included Grégoire Détrez,
-Niels Möller, and Filippo Valsorda.  Rasmus Dahlberg (Glasklar Teknik) manages
-the project with consensus from the other project contributors on weekly meets.
+Several new project contributors joined to further develop Sigsum's design and
+prototype implementations throughout the year.  In addition to Niels Möller,
+this included Grégoire Détrez (Mullvad VPN) and Filippo Valsorda (independent).
+
+A talk on the Sigsum design was presented by Rasmus Dahlberg at the Open Source
+Firmware Conference
+    [\[12\]](https://www.osfc.io/2022/talks/using-sigsum-logs-to-detect-malicious-and-unintended-key-usage/).
+
+Rasmus Dahlberg leads the project.
 
 ## 2023
+
 In November, the Sigsum log server protocol v1 was announced
     [\[13\]](https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/thread/LX42ONBGWO4JMSMCDGS5Z7ORKJHFHQOO/).
