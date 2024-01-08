@@ -17,7 +17,7 @@ The specifications to be donated and maintained are:
 
 Other related specifications we rely on and/or maintain are:
 
-  - **Note**: maintained by Independent (filippo) and the Go team (russ).
+  - **Note**: maintained by Independent (filippo) and the Go team (rsc).
   - **Checkpoint**: maintained by Trust Fabric (martin), Independent (filippo),
     and Glasklar Teknik AB (rgdd).
 
@@ -41,7 +41,9 @@ be:
      sense to have a pull request while still discussing the proposal, file one.
   5. Once a proposal is accepted, a maintainer merges a corresponding pull
      request.  If a new version of the specification should be released, a
-     maintainer will do that by **FIXME(filippo): describe in more detail.**
+     maintainer will do that by requesting a scoped SemVer git tag (like
+     `spec-short-name/v1.2.3`).  These tags are currently created by the C2SP
+     stewards, and will be automated in the future through GitHub Actions.
 
 The expectation of a proposal is that it describes:
 
@@ -52,8 +54,10 @@ The expectation of a proposal is that it describes:
 For a proposal to be accepted, the appointed maintainers should have a rough
 consensus among themselves on how to move it forward and why.
 
-That the maintainers use these processes will be described **FIXME(filippo) add
-details of where in C2SP, scoped only for our family of specifications.**
+That the maintainers use these processes will be described in a dedicated file
+at `CONTRIBUTING/tlog-specs.md` in the C2SP tree, which we will request from
+C2SP upon requesting the spec name assignments. A table in the main
+`CONTRIBUTING.md` file will map our specifications name to this file.
 
 ## What are we doing today
 
@@ -136,7 +140,8 @@ proposals and process them similar to today.  The main differences are:
 
 With regard to announcing specifications, the differences are:
 
-  - **FIXME(filippo): based on what the above FIXMEs say.**
+  - New versions will be tagged in the C2SP repository, and not necessarily
+    announced on Sigsum mailing lists.
   - We will not render the donated specifications on www.sigsum.org.  That said,
     we will (like others should) link to them and point out our involvement.
 
