@@ -1,26 +1,22 @@
 # Sigsum Witness Protocol
 
-**Status:** Interrim witness protocol used by [log-go server version
-v0.14.1](https://git.glasklar.is/sigsum/core/log-go/-/tree/v0.14.1?ref_type=tags)
-and interoperable witnesses. We intend to change this protocol on the
-surface, for interoperability with non-Sigsum witnesses, without
-changing the cryptographic details or semantics of resulting
-cosignatures.
+**Status:** In development protocol moving towards consensus. Checkpoint
+submission is likely stable. Monitor access may change.
 
 ## 1 — Overview
 
 Logs produce self-contained proofs that can be verified offline by clients. To
-do this they need to obtain and include in the proof co-signatures on the tree
+do this they need to obtain and include in the proof cosignatures on the tree
 head produced by a quorum of witnesses trusted by the client. When producing a
-new tree head, the log reaches out to witnesses to request co-signatures over
+new tree head, the log reaches out to witnesses to request cosignatures over
 it, providing a consistency proof. Witnesses verify that the tree head is
 consistent with the previous state of the tree, and return a timestamped
 signature.
 
-A witness is an entity exposing an HTTP service identified by its public key.
-Each witness is configured with a list of supported tree public keys. For each
-tree, the witness keeps only track of the latest tree head it observed and
-verified, and the timestamp of its latest co-signature.
+A witness is an entity exposing an HTTP service identified by a name and a
+public key. Each witness is configured with a list of supported tree public
+keys. For each tree, the witness keeps only track of the latest tree head it
+observed and verified, and the timestamp of its latest cosignature.
 
 Clients are not expected to communicate directly with the witnesses, logs and
 (sometimes) monitors are, but there is no authentication beyond the validation
@@ -37,44 +33,65 @@ additional witness has sharply diminishing marginal value. Additional log
 deployments, on the other hand, don’t have diminishing returns and are a
 desirable goal. Because of this, witnesses are designed to scale well with a
 large number of rarely active logs, and to support diverse log designs,
-including low-latency and "offline" logs.
+including low-latency and "serverless" logs.
 
 ## 2 — Primitives
 
-This documents uses the same textual encodings, binary encoding, key encoding,
-HTTP API description language, hash, and signature scheme as the [log API
-document](./log.md). All timestamps are
-expressed in seconds since the UNIX epoch (January 1, 1970 00:00 UTC).
+Witnesses deal in [checkpoints][checkpoint], accepting checkpoints signed by the
+log, and returning cosignatures as additional special note signature lines.
 
-A co-signature consists of three fields, separated by a single space character:
+Per the [signed note format][note], a note signature line is
 
-```
-1a450ecf1f49a4e4580c35e4d83316a74deda949dbb7d338e89d4315764d88de 1687170591 cacc54d315609b796f72ac1d71d1bbc15667853ed980bd3e0f957de7a875b84bd2dcde6489fc3ed66428190ce588ac1061b0d5748e73cfb887ebf38d0b53060a
-```
+    — <name> base64(32-bit key hash || signature)
 
-1. The hex-encoded hash of the witness public key.
-   A key hash, rather than the full public key, is used to motivate monitors
-   and end-users to locate the appropriate key and make an explicit trust decision.
-2. The time at which the co-signature was generated,
-   ASCII-encoded as a decimal number.
-3. The hex-encoded signature from the witness key of a message composed of one
-   line spelling `cosignature/v1`, one line representing the current timestamp
-   in seconds since the UNIX epoch encoded as an ASCII decimal with no leading
-   zeroes and prefixed with the string `time` and a space (0x20), followed by
-   the first three lines of the tree head encoded as a checkpoint (including the
-   final newline).
+where the name is arbitrary, and the key hash and signature are specified by the
+signing algorithm.
 
-```
-cosignature/v1
-time 1679315147
-sigsum.org/v1/tree/3620c0d515f87e60959d29a4682fd1f0db984704981fda39b3e9ba0a44f57e2f
-15368405
-31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
-```
+A v1 witness cosignature is a note signature added to a log-issued checkpoint by
+a witness to attest that the log respected its append-only requirements.
 
-Semantically, a v1 co-signature is a statement that, as of the current time, the
-*consistent* tree head *with the largest size* the witness has observed for
-the log identified by that key has the specified hash.
+Semantically, a v1 cosignature is a statement that, as of the given time, the
+*consistent* tree head *with the largest size* the witness has observed for the
+log identified by that key has the specified hash.
+
+The signature is performed over a message composed of newline-terminated lines:
+
+ 1. one line with the fixed string "cosignature/v1", to provide domain
+    separation
+ 2. one line with the fixed string `time`, a single space (`0x20`), and a
+    timestamp representing the number of seconds since the UNIX epoch (January
+    1, 1970 00:00 UTC) as an ASCII decimal with no leading zeroes
+ 3. the checkpoint body as signed by the log, including any extension lines
+
+Note that even though they are part of the signed message, a v1 cosignature has
+no meaning in relation to the extension lines. In particular, clients shouldn't
+expect extension lines to be discoverable, or for a concensus between witnesses
+to exist on the extension lines for a given tree size.
+
+Example serialization:
+
+    cosignature/v1
+    time 1679315147
+    example.com/a-fancy-log
+    15368405
+    31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
+
+To cosign a tree head, a witness signs this serialization directly using Ed25519
+according to [RFC 8032][]. It then encodes the 72-byte note format signature as
+the concatenation of the timestamp as an 8-byte big-endian uint64 and the
+64-byte Ed25519 signature.
+
+To produce a note signature line, the resulting signature is encoded along with
+the witness name and key ID according to the note spec.
+
+The key ID is defined as the first four bytes (interpreted in big-endian order)
+of the SHA-256 hash of the following sequence: the key name, a newline, the
+signature type identifier byte `0x04`, and the 32-byte RFC 8032 encoding of the
+public key.
+
+[checkpoint]: https://github.com/C2SP/C2SP/blob/filippo/tlogs/checkpoint.md
+[note]: https://github.com/C2SP/C2SP/blob/filippo/tlogs/note.md
+[RFC 8032]: https://www.rfc-editor.org/rfc/rfc8032.html
 
 ## 3 — Public endpoints
 
@@ -85,7 +102,7 @@ prefix. Implementing rate-limits based on log key hashes is discouraged as the
 resources required to properly attribute a request to a log (checking the
 signature, and whether the tree head is novel) are equivalent to those required
 to service it. Witnesses may choose to exempt or partition successful
-`add-tree-head` requests from the rate-limit, to avoid affecting high frequency
+`add-checkpoint` requests from the rate-limit, to avoid affecting high frequency
 logs.
 
 Witnesses should support keep-alive HTTP connections to reduce latency and load
@@ -96,144 +113,139 @@ undesirable, operators may choose to operate a "bastion" host that is exposed to
 the Internet, and proxies the requests to a reverse connection established from
 the actual witness to the bastion.
 
-### 3.1 — get-tree-size
-
-Returns the tree size of the latest tree head known to the witness for a given
-tree. This is used to prepare the correct consistency proof for an
-`add-tree-head` request. No other details of the tree head or co-signature are
-returned, to discourage the use of this endpoint by clients other than logs or
-in place of the cacheable roster.
-
-```
-GET <witness URL>/get-tree-size/<key_hash>
-```
-
-Input:
-- `key_hash`: hash of the log's public key, hex-encoded
-
-HTTP error codes on failure:
-- 400 Bad request if `key_hash` is invalidly encoded.
-- 404 Not Found if the `key_hash` is not known.
-
-Output:
-- `size`: log size, ASCII-encoded decimal number
-
-A log with strict latency goals may choose to issue a `get-tree-size` request
-before or in parallel with creating a tree head, so that it will be immediately
-ready to issue a `add-tree-head` request. A log that is frequently producing
-tree heads may choose to keep track of the latest `add-tree-head` request it
-issued, and only issue a `get-tree-size` on 409 Conflict errors.
-
-Caching this response is discouraged as it is likely to lead to 409 Conflict
-error responses to `add-tree-head` requests.
-
-### 3.2 — add-tree-head
+### 3.1 — add-checkpoint
 
 Provides a new signed tree head for the witness to cosign, along with a
-consistency proof from the latest tree head known to the witness (retrieved with
-`get-tree-size`).
+consistency proof from the latest tree head known to the witness.
 
 ```
-POST <witness URL>/add-tree-head
+POST <witness URL>/add-checkpoint
 ```
 
-Input:
-- `key_hash`: hash of the log's public key, hex-encoded
-- `size`: log size, ASCII-encoded decimal number
-- `root_hash`: Merkle tree root hash, hex-encoded
-- `signature`: log signature for the above tree head, hex-encoded
-- `old_size`: the size of the previous tree head the consistency proof is
-  built from, ASCII-encoded decimal number
-- `node_hash`: repeated key, listing zero or more hashes representing
-  a consistency proof, hex-encoded. List is empty (this key not
-  present at all) if and only if `old_size == 0` or `old_size ==
-  size`. The order of node hashes follow from the hash strategy, see
-  RFC 6962.
+The input is a sequence of newline-terminated lines:
+
+- one line starting with the string `old` followed by a space and the size of
+  the previous tree head the consistency proof is built from, encoded as an
+  ASCII decimal number
+- zero or more hashes representing the consistency proof, base64-encoded one per
+  line, in RFC 6962 order
+- one empty line
+- a checkpoint, which includes the log's origin, the tree size, the root hash,
+  and the log signature
+
+    old 15368377
+    PlRNCrwHpqhGrupue0L7gxbjbMiKA9temvuZZDDpkaw=
+    jrJZDmY8Y7SyJE0MWLpLozkIVMSMZcD5kvuKxPC3swk=
+    5+pKlUdi2LeF/BcMHBn+Ku6yhPGNCswZZD1X/6QgPd8=
+    /6WVhPs2CwSsb5rYBH5cjHV/wSmA79abXAwhXw3Kj/0=
+
+    sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd
+    15368405
+    31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
+
+    — sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd 5+z2z6ylAOChjVZMtCHXjq+7r8dFdMWiB6LbJXNksbGCvxcQE6ZbPcHFxFqwb7mfPflQMOjiPl2bvmXvKhQBzM4pq/I=
+
+The list of hashes is empty (that is, the empty line comes immediately after the
+`old` line) if and only if the `old` size is `0` or if it matches the size in
+the checkpoint.
 
 HTTP error codes on failure:
-- 400 Bad request if `old_size` is higher than `size`.
-- 409 Conflict if the `old_size` does not match the latest tree head known by the
-  witness (this should be resolved by making a `get-tree-size` request and retrying).
-- 403 Forbidden if the `signature` doesn't verify.
-- 404 Not Found if the `key_hash` is not known.
-- 422 Unprocessable entity if the `node_hash` list does not prove consistency
-  from the old tree head known to the witness to the new one.
+- 400 Bad request if the `old` size is higher than checkpoint size.
+- 409 Conflict if the `old` size does not match the latest tree head known by the
+  witness. (See below for the response body.)
+- 403 Forbidden if the checkpoint signature doesn't verify against the public
+  key(s) known for the log's origin.
+- 404 Not Found if the log's origin is not known.
+- 422 Unprocessable entity if the hash list does not prove consistency from the
+  old tree head known to the witness to the new one.
 
-Output on success:
-- `cosignature`: witness cosignature for the submitted tree head.  The
-  value on this single line consists of 3 fields, separated by single space
-  characters. The first field is the hash of the witness' public key, in
-  hex, the second field is the cosignature timestamp, in decimal, and
-  the third field is the witness' cosignature, in hex.  [The "version"
-  field has been dropped as an interim; the cosignature line must always
-  be v1.  That this is a repeated key has also been dropped as an
-  interim.  Both of these constructs will likely be back in "rc-2".]
+On a 409 Conflict failure, the response body will contain the tree size known to
+the witness in decimal, followed by a newline. The response will have a
+`Content-Type` of `text/x.tlog.size`. The client can use this to send a new
+`add-checkpoint` request with the correct `old` size. If a client doesn't have
+(or doesn't keep) information on the size known by the witness, it can initially
+submit the checkpoint with an `old` size of `0`, which requires no consistency
+proof and will cause a 409 response with the known size.
+
+On success, the response body is a sequence of one or more cosignature lines
+from the witness key(s) on the checkpoint, each starting with the `—` character
+and ending with a newline.
+
+To parse the response, the client may concatenate it to the checkpoint, and use
+a note verification function with the witness keys it expects. If that call
+succeeds, it can move the valid signatures to its own view of the checkpoint.
 
 The witness must persist the new tree head before returning the cosignature.
-Note that checking the `old_size` against the previous tree head and persisting
+Note that checking the `old` size against the previous tree head and persisting
 the new tree head must be performed atomically: otherwise the following race can
 occur.
 
-1. Request A with `size` N is checked for consistency.
-2. Request B with `size` N+K is checked for consistency.
+1. Request A with size N is checked for consistency.
+2. Request B with size N+K is checked for consistency.
 3. The stored size is updated to N+K for request B.
 4. A cosignature for N+K is returned to request B.
 5. The stored size is updated to N for request A, **rolling back K leaves**.
 6. A cosignature for N is returned to request A.
 
-If the `key_hash` is known, and the `signature` is valid, the witness should log
-the request even if the consistency proof doesn't verify (but must not co-sign
+If the log is known, and the signature is valid, the witness should log
+the request even if the consistency proof doesn't verify (but must not cosign
 it) as it might suggest log misbehavior.
 
-Note that the client can't request an `old_size` lower than the latest known to
+Note that the client can't request an `old` size lower than the latest known to
 the log. This means witnesses are expected not to ever sign a tree head with
 size N+K at T and N at T+D (with K and D > 0) for the same log.
 
-A log with strict latency goals may choose to issue `add-tree-head` requests to
-all witnesses in parallel, and to start serving the co-signed tree head once a
-threshold of co-signatures are obtained, without waiting for the slowest
+A log with strict latency goals may choose to issue `add-checkpoint` requests to
+all witnesses in parallel, and to start serving the cosigned tree head once a
+threshold of cosignatures are obtained, without waiting for the slowest
 witnesses.
 
-### 3.3 — Roster
+### 3.2 — Roster
 
-Returns a list of supported tree public keys, and the timestamps of the latest
-co-signature produced by this witness for each of them.
+Returns the list of the latest tree head witnessed for each known log.
 
-Note that this endpoint may be served from a different base URL than the tree
-head endpoints, to reflect the fact that this endpoint serves a different set of
-clients with potentially different rate limits, and to facilitate delegating it
-to a static hosting service.
+Note that this endpoint may be served from a different base URL than the
+`add-checkpoint` endpoint, to reflect the fact that this endpoint serves a
+different set of clients with potentially different rate limits, and to
+facilitate delegating it to a static hosting service.
 
 ```
 GET <roster URL>
 ```
 
-Input: none
+The response is a [note][] signed by the witness key(s). The note body is a
+sequence of newline-terminated lines:
 
-Output:
-- hex-encoded key hash 1: co-signature 1 timestamp,
-  ASCII-encoded as a decimal number
-- hex-encoded key hash 2: co-signature 2 timestamp,
-  ASCII-encoded as a decimal number
-- hex-encoded key hash 3: co-signature 3 timestamp,
-  ASCII-encoded as a decimal number
-- ...
-- `key_hash`: the witness public key hash, hex-encoded
-- `timestamp`: the time at which this roster was generated, ASCII-encoded as a
-  decimal number
-- `signature`: a signature from the witness public key over all other keys in
-  this response, in the order in which they appear, including the trailing `\n`,
-  with a prefix of `sigsum.org/v1/witness-roster\n`
+- one line with the fixed string `roster/v1`, for domain separation
+- one line starting with the string `time` followed by a space and the time at
+  which this roster was generated in seconds since the UNIX epoch, encoded as an
+  ASCII decimal number
+- for each known log that submitted at least one checkpoint (in an unspecified
+  order) the first three lines of the latest witnessed checkpoint
+
+    roster/v1
+    time 1679315147
+    sigsum.org/v1/a275973457e5a8292cc00174c848a94f8f95ad0be41b5c1d96811d212ef880cd
+    15368405
+    31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
+    example.com/footree
+    8923847
+    9gPZU/wiV/idmMaBmkF8s+S6mNWW7zyBAT0Rordygf4=
+    sigsum.org/v1/6a04bb2889667e322c5818fc10c57ab7e8095527b505095dbbdec478066df4a2
+    99274999
+    jIKavLHDS5/ygY56ZVObZYPz5CS+ejR0fl6VacWMvmw=
+
+    — witness.example.com/w1 jWbPPwAAAABkGFDLEZMHwSRaJNiIDoe9DYn/zXcrtPHeolMI5OWXEhZCB9dlrDJsX3b2oyin1nPZ\nqhf5nNo0xUe+mbIUBkBIfZ+qnA==
 
 Witnesses must commit to the period at which they update the roster, and make
 sure that any caching system won't interfere with the roster URL response
 visibly updating at least every period.
 
 This endpoint is provided for the benefit of monitors. By obtaining a recent
-roster from a quorum of witnesses and comparing the timestamp in the roster with
-that on the most recent co-signature, a monitor can ensure the "freshness" of
-the tree head it is inspecting. Otherwise, a log could hide entries from a
-monitor by pretending it has stopped issuing tree heads.
-
-**Note**: should a roster list timestamps or tree sizes? How should a monitor
-handle a very recent timestamp?
+roster from a quorum of witnesses and comparing the tree head in the roster with
+that in the most recent checkpoint, a monitor can ensure the "freshness" of the
+tree head it is inspecting, as well as ensure it was not partitioned on a split
+view. Otherwise, a log could hide entries from a monitor by pretending it has
+stopped issuing tree heads, or by showing different views to different subsets
+of witnesses. TODO(filippo): elaborate on when, how, and why monitors need to
+use rosters to defend against split view attacks.
