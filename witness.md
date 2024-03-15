@@ -115,8 +115,9 @@ the actual witness to the bastion.
 
 ### 3.1 — add-checkpoint
 
-Provides a new signed tree head for the witness to cosign, along with a
-consistency proof from the latest tree head known to the witness.
+This endpoint is used to submit a new signed tree head to the witness, along
+with a consistency proof from the latest tree head known to the witness, and
+returns the cosignature.
 
 ```
 POST <witness URL>/add-checkpoint
