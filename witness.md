@@ -128,11 +128,11 @@ The input is a sequence of newline-terminated lines:
 - one line starting with the string `old` followed by a space and the size of
   the previous tree head the consistency proof is built from, encoded as an
   ASCII decimal number
-- zero or more hashes representing the consistency proof, base64-encoded one per
-  line, in RFC 6962 order
+- zero or more hashes (up to 63) representing the consistency proof,
+  base64-encoded one per line, in RFC 6962 order
 - one empty line
 - a checkpoint, which includes the log's origin, the tree size, the root hash,
-  and the log signature
+  and one or more log signatures
 
     old 15368377
     PlRNCrwHpqhGrupue0L7gxbjbMiKA9temvuZZDDpkaw=
@@ -154,7 +154,7 @@ HTTP error codes on failure:
 - 400 Bad request if the `old` size is higher than checkpoint size.
 - 409 Conflict if the `old` size does not match the latest tree head known by the
   witness. (See below for the response body.)
-- 403 Forbidden if the checkpoint signature doesn't verify against the public
+- 403 Forbidden if none of the checkpoint signatures verify against the public
   key(s) known for the log's origin.
 - 404 Not Found if the log's origin is not known.
 - 422 Unprocessable entity if the hash list does not prove consistency from the
