@@ -14,6 +14,28 @@ specifies formats and interactions related to the sigsum log server.
 A separate document specifies the witness cosigning protocol.
 
 **Table of contents:**
+- [Sigsum Log Server Protocol](#sigsum-log-server-protocol)
+  - [1.  Introduction](#1--introduction)
+    - [1.1.  Objective and Threat Model](#11--objective-and-threat-model)
+    - [1.2.  System Overview](#12--system-overview)
+    - [1.3.  Companion Specifications](#13--companion-specifications)
+  - [2.  Algorithms and Formats](#2--algorithms-and-formats)
+    - [2.1.  Cryptography](#21--cryptography)
+    - [2.2.  Serialization](#22--serialization)
+    - [2.2.1.  Request-Response Format](#221--request-response-format)
+    - [2.2.2.  Merkle Tree Head](#222--merkle-tree-head)
+    - [2.2.3. Cosignatures](#223-cosignatures)
+    - [2.2.4.  Merkle Tree Leaf](#224--merkle-tree-leaf)
+  - [3.  HTTP Endpoints](#3--http-endpoints)
+    - [3.1.  get-tree-head](#31--get-tree-head)
+    - [3.2.  get-inclusion-proof](#32--get-inclusion-proof)
+    - [3.3.  get-consistency-proof](#33--get-consistency-proof)
+    - [3.4.  get-leaves](#34--get-leaves)
+    - [3.5.  add-leaf](#35--add-leaf)
+  - [4.  Rate limiting](#4--rate-limiting)
+    - [4.1.  Setup](#41--setup)
+    - [4.2.  Request header](#42--request-header)
+    - [4.3.  Security considerations](#43--security-considerations)
 
 **Cite:**
 

@@ -47,34 +47,7 @@ offline verifier) need to follow a cosigning protocol. This document
 specifies formats and interactions related to the sigsum log server. A
 separate document specifies the witness cosigning protocol.
 
-**Table of contents:** - [Sigsum Log Server
-Protocol](#sigsum-log-server-protocol){#toc-sigsum-log-server-protocol} -
-[1. Introduction](#introduction){#toc-introduction} - [1.1. Objective
-and Threat
-Model](#objective-and-threat-model){#toc-objective-and-threat-model} -
-[1.2. System Overview](#system-overview){#toc-system-overview} - [1.3.
-Companion
-Specifications](#companion-specifications){#toc-companion-specifications} -
-[2. Algorithms and
-Formats](#algorithms-and-formats){#toc-algorithms-and-formats} - [2.1.
-Cryptography](#cryptography){#toc-cryptography} - [2.2.
-Serialization](#serialization){#toc-serialization} - [2.2.1.
-Request-Response
-Format](#request-response-format){#toc-request-response-format} -
-[2.2.2. Merkle Tree Head](#merkle-tree-head){#toc-merkle-tree-head} -
-[2.2.3. Cosignatures](#cosignatures){#toc-cosignatures} - [2.2.4. Merkle
-Tree Leaf](#merkle-tree-leaf){#toc-merkle-tree-leaf} - [3. HTTP
-Endpoints](#http-endpoints){#toc-http-endpoints} - [3.1.
-get-tree-head](#get-tree-head){#toc-get-tree-head} - [3.2.
-get-inclusion-proof](#get-inclusion-proof){#toc-get-inclusion-proof} -
-[3.3.
-get-consistency-proof](#get-consistency-proof){#toc-get-consistency-proof} -
-[3.4. get-leaves](#get-leaves){#toc-get-leaves} - [3.5.
-add-leaf](#add-leaf){#toc-add-leaf} - [4. Rate
-limiting](#rate-limiting){#toc-rate-limiting} - [4.1.
-Setup](#setup){#toc-setup} - [4.2. Request
-header](#request-header){#toc-request-header} - [4.3. Security
-considerations](#security-considerations){#toc-security-considerations}
+**Table of contents:**
 
 **Cite:**
 
