@@ -1,0 +1,17 @@
+Email address for registering a witness, both with a bastion host and with a log
+server.
+
+Prop 1. No connection between email address and DNS name for the service.
+
+Prop 2. Use WELL-KNOWN@<domain-name-for-service>, f.ex.
+witness-registration@bastion.glasklar.is
+
+
+Prop 1 is better because simple.
+
+Rationale for why prop 2 is not worth it: 
+- A new service needs to commuinicate metadata anyway, so the need for an email
+  address for witness registration doesn't change anything wrt that.
+- We could add some flexibility later things using SRV or TXT records.
+- Requiring an MTA for @<domain-name-for-service> is potentially demotivating
+  for service operators.

@@ -1,0 +1,69 @@
+Quick comments by rgdd, see file being comment on at:
+https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2024-06-19--filippo-friction-log.md?ref_type=heads
+
+---
+
+Adding a link to source repo for tools makes sense.
+
+RE: trust policy and UX issue, we already have:
+- https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/49
+- https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/50
+
+I've had this in the back of my mind for some time. TL;DR:
+- I think we need to provide a good default policy that "just works".
+- And I would like it to continue working even as the policy is updated.
+- I think the policy either needs to live as part of our tools, or as part of a
+  package that packages our tools.  So the root of trust is either of the two.
+- I'd like the policy transitions to be verifiable.
+- I'd like to be possible to replace and/or extend the policy somehow.  E.g.,
+  "defaults are great, expect I really want this one additional witness in it".
+  But maybe this is too complicated, and one should just support "replace".
+
+RE: we need something that projects can link from READMEs to help end users
+verify releases
+- Agree.
+
+RE: Monitoring...
+- Agree, what's in the getting-started right now wrt. monitoring is not ready
+  for "real use" yet.
+- For context, when I put together the getting-started guide I just put
+  everything we had into it, complete or not.  Just to show where we're at.
+
+RE: wish the artifacts were shown since they are textual
+- I think that's a good idea.  Similar to how we show the entire policy file for
+  example and then explain it briefly.
+
+RE: /etc/sigsum not a friendly path on macOS for users without root
+- Hmm, yeah there's nothing in the tools that enforce this.  I put it here
+  because it seemed nice to have it in a protected location basically.  But for
+  an example this might not be the best, should probably be changed.  And as
+  noted above, I hope we can provide a good default in one way or another.
+
+RE: SSH agent and Ed25519 keys on hardware
+- agent works, yes. I dont think we should do that in the getting started guide,
+  but somehow mentioning this and linking something helpful makes sense
+- tkey works, do you have one of those?
+- IIRC it is possible to make it work with a yubikey too, by tunneling ssh-agent
+  through gpg-agent.  I think I verified that this works at some point, and then
+  I didn't take enough notes and never had time to go back to it.  If this
+  works (to be verified again), I'd be interested to know how gpg agent
+  interacts with the Ed25519 key. Maybe we can write something more sane to get
+  rid of gpg-agent then.
+
+RE: there's a lot of hashing going around. And terminology.
+- Agree, there's room for improvement.  Thanks for all the thoughtful comments!
+  I think the next step here is we take a pass to improve it.
+- I also think a glossary is going to be *very helpful*, so we can also add
+  links on some of the terms.  I have a WIP MR from long ago for glossary.
+
+RE: passed multiple files to sigsum-submit
+- Let's open issues and get this fixed
+
+RE: each submission took exactly 30s, guide says 10
+- Hmm, this sounds like a misconfiguration on the log server side
+
+RE: key + policy in the same file
+- Not sure, I think I'm leaning towards a good default policy
+
+RE: silence is a good think
+- I'd be +1 for adding the stderr print on success
