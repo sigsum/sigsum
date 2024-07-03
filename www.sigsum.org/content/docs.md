@@ -37,7 +37,7 @@ Meant for contributors and others who follow the project in detail:
 [Archive]: https://git.glasklar.is/sigsum/project/documentation/-/tree/main/archive
 [Proposals]: https://git.glasklar.is/sigsum/project/documentation/-/tree/main/proposals
 [Design]: https://git.glasklar.is/nisse/cats-2023/-/blob/main/sigsum-design-cats-2023.pdf
-[C2SP]: https://github.com/C2SP/C2SP
+[C2SP]: https://c2sp.org/
 
 ## Maintained specifications
 
