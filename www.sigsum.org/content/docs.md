@@ -52,7 +52,7 @@ Meant for implementers who need to know about bits and bytes:
 
 [Sigsum log server protocol]: https://git.glasklar.is/sigsum/project/documentation/-/blob/log.md-release-v1.0.0/log.md
 [Witness cosignature format]: https://github.com/C2SP/C2SP/blob/main/tlog-cosignature.md
-[Witness cosigning protocol]: https://github.com/C2SP/C2SP/pull/66
+[Witness cosigning protocol]: https://github.com/C2SP/C2SP/blob/main/tlog-witness.md
 [Bastion host protocol]: https://github.com/C2SP/C2SP/blob/main/https-bastion.md
 [Sigsum proof bundle format]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md
 [Sigsum trust policy format]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md
