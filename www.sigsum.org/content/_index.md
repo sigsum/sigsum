@@ -1,6 +1,6 @@
-Sigsum is a building block that brings transparency to the way in which signing
-keys are used.  No signature that an end-user accepts as valid goes unnoticed
-because it is included in a public log.
+Sigsum brings transparency to the way in which signing keys are used.  No
+signature that an end-user accepts as valid goes unnoticed because it is
+included in a public log.
 
 > Wait a second, I did not sign anything in the middle of the night.  My key
 > must be compromised.
@@ -11,8 +11,8 @@ claims there are no secret releases.  By incorporating the use of Sigsum, any
 release not listed on the project website can be detected.
 
 > You claimed each release would be listed on the project website.  Where is the
-> release for signed checksum 7d86...7730 that appeared in the log?  As you can
-> see it is signed with your release key.
+> release for signature 7d86...7730 that appeared in the public log?  As you can
+> see it was created using your release key.
 
 For security, Sigsum's transparency has been designed to resist a powerful
 attacker that controls:
