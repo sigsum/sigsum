@@ -1,5 +1,5 @@
 # About
-Sigsum is a free and open source software project that [launched officially][]
+Sigsum is a free and open-source software project that [launched officially][]
 in October, 2021.  Its goal is to provide a minimal building block that can be
 used to enforce public logging of signed checksums.
 
