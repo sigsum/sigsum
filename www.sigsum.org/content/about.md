@@ -18,7 +18,7 @@ Maintenance and development of Sigsum is lead by [Glasklar Teknik AB][].
 
 ## Funding and sponsors
 
-Glasklar Teknik's work on Sigsum is paid for by [Mullvad VPN AB][].
+Glasklar Teknik AB's work on Sigsum is paid for by [Mullvad VPN AB][].
 
 [Mullvad VPN AB]: https://www.mullvad.net/
 
