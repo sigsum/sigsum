@@ -11,8 +11,8 @@ claims there are no secret releases.  By incorporating the use of Sigsum, any
 release not listed on the project website can be detected.
 
 > You claimed each release would be listed on the project website.  Where is the
-> release for signature 7d86...7730 that appeared in the public log?  As you can
-> see it was created using your release key.
+> release for signature 7d86...7730 that appeared in the log?  As you can see it
+> was created using your release key.
 
 For security, Sigsum's transparency has been designed to resist a powerful
 attacker that controls:
