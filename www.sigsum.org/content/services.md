@@ -10,12 +10,8 @@ Two test logs are being operated.  Public keys and URLs in policy-file format:
     log 154f49976b59ff09a123675f58cb3e346e0455753c3c3b15d465dcb4f6512b0b https://poc.sigsum.org/jellyfish
 
 `jellyfish` is a proof-of-concept log that follows the main branch of the log-go
-repository.  It is intended for testing and development.  No rate-limits are
-enforced.  The log may be wiped at any time.
-
-`ghost-shrimp` is a test log that follows the latest log server releases.
-Deployment of a log with stronger commitment on availability and documented
-security practises is coming sometime soon.
+repository.  It is intended for testing and development until a stable log is
+deployed.  No rate-limits are enforced.
 
 ## Witnesses
 
