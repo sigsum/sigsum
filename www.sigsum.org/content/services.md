@@ -4,14 +4,13 @@ This page lists services that the Sigsum project are hosting.
 
 ## Log servers
 
-Two test logs are being operated.  Public keys and URLs in policy-file format:
+One test log is being operated.  Public key and URL in policy-file format:
 
-    log 80d115da542b67bb7a15448f50fe951e59cfa9db73807bfc12a2a4a981ba251e https://ghost-shrimp.sigsum.org
     log 154f49976b59ff09a123675f58cb3e346e0455753c3c3b15d465dcb4f6512b0b https://poc.sigsum.org/jellyfish
 
-`jellyfish` is a proof-of-concept log that follows the main branch of the log-go
-repository.  It is intended for testing and development until a stable log is
-deployed.  No rate-limits are enforced.
+Note that `jellyfish` is a proof-of-concept log that follows the main branch of
+the log-go repository.  It is intended for testing and development until a
+stable log is deployed.  No rate-limits are enforced.
 
 ## Witnesses
 
