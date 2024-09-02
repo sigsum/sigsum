@@ -1,6 +1,6 @@
 # About
 Sigsum is a free and open-source software project that [launched officially][]
-in October, 2021.  Its goal is to provide the necessary building blocks for
+in October, 2021.  The goal is to provide the necessary building blocks for
 building, operating and verifying transparent systems.
 
 [launched officially]: https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/thread/ZCWCOWYTBQSVYWADEHBAWYEHNS3FJ6RK/
