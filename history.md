@@ -65,3 +65,15 @@ In November, the Sigsum log server protocol v1 was announced
 Filippo Valsorda and Niels Möller also presented talks on why an interoperable
 witness system is needed and how Sigsum was designed at CATS
     [\[14\]](https://catsworkshop.dev/program/).
+
+## 2024
+
+In January, it was
+    [decided](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2024-01-09--meeting-minutes.md#decisions)
+that the Sigsum project would "donate specifications that are useful outside of
+the Sigsum system [to maximize] the probability that we end up with an
+interoperable witnessing system"
+    [\[15\]](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2024-01-on-specifications-and-governance.md).
+The HTTPS-bastion, cosignature/v1, and witness API specifications have therefore
+been moved to C2SP.org, where they are developed and maintained together with
+other community members.
