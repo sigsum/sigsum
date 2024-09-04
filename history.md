@@ -62,3 +62,6 @@ Rasmus Dahlberg leads the project.
 
 In November, the Sigsum log server protocol v1 was announced
     [\[13\]](https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-general@lists.sigsum.org/thread/LX42ONBGWO4JMSMCDGS5Z7ORKJHFHQOO/).
+Filippo Valsorda and Niels Möller also presented talks on why an interoperable
+witness system is needed and how Sigsum was designed at CATS
+    [\[14\]](https://catsworkshop.dev/program/).
