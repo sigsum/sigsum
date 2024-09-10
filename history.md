@@ -70,9 +70,9 @@ witness system is needed and how Sigsum was designed at CATS
 
 In January, it was
     [decided](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2024-01-09--meeting-minutes.md#decisions)
-that the Sigsum project would "donate specifications that are useful outside of
-the Sigsum system [to maximize] the probability that we end up with an
-interoperable witnessing system"
+that the Sigsum project would donate specifications that are useful outside of
+the Sigsum system to maximize the probability that we end up with an
+interoperable witnessing system
     [\[15\]](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2024-01-on-specifications-and-governance.md).
 The
     HTTPS-bastion [\[16\]](https://c2sp.org/https-bastion).
