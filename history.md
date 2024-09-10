@@ -74,9 +74,12 @@ that the Sigsum project would "donate specifications that are useful outside of
 the Sigsum system [to maximize] the probability that we end up with an
 interoperable witnessing system"
     [\[15\]](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2024-01-on-specifications-and-governance.md).
-The HTTPS-bastion, cosignature/v1, and witness API specifications have therefore
-been moved to C2SP.org, where they are developed and maintained together with
-other community members.
+The
+    HTTPS-bastion [\[16\]](https://c2sp.org/https-bastion).
+    cosignature/v1 [\[17\]](https://c2sp.org/tlog-cosignature), and
+    witness API [\[18\]](https://c2sp.org/tlog-witness)
+specifications have therefore been moved to C2SP.org, where they are developed
+and maintained together with other community members.
 
 In April, Filippo Valsorda presented many of the modern transparency-log design
 patterns that Sigsum is based on (such as witnessing and "spicy" signatures).
