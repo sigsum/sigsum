@@ -82,4 +82,5 @@ specifications have therefore been moved to C2SP.org, where they are developed
 and maintained together with other community members.
 
 In April, Filippo Valsorda presented many of the modern transparency-log design
-patterns that Sigsum is based on (such as witnessing and "spicy" signatures).
+patterns that Sigsum is based on (such as witnessing and "spicy" signatures)
+    [\[19\]](https://www.youtube.com/watch?v=SOfOe_z37jQ).
