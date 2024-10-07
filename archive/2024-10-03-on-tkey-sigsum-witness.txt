@@ -1,0 +1,64 @@
+tillitis storage för sigsum-vittnen, 2024-10-03; nisse, daniel, linus
+
+
+Bakgrund, nisse:
+
+Ett användningsfall vi funderar på är att köra ett sigsum-vittne på en
+tkey. För att göra det, behöver vi lagra det senast signerade
+meddelandet.
+
+Det kritiska för det här användningsfallet är lagringens integritet. Om
+appen lagrar data, så måste appen se precis samma data när den körs
+nästa gång, det får inte finnas någon möjlighet för annan kod att vare
+sig ändra eller radera datat. Det senare är kanske lite eget: Om det är
+möjligt att nuka appens lagring och köra appen igen (på samma sticka och
+med samma hemlighet), så är det ett säkerhetshål. Appen behöver logik
+för att skapa och initialisera lagringen första gången den körs, men den
+initialiseringen får bara göras en enda gång med en given hemlighet.
+
+Det är också önskvärt med atomisk och synkroniserad lagring: Appen
+behöver skriva nytt state, och se till att det är ordentligt committat,
+innan den ger ifrån sig signaturen till hosten. Och ifall angriparen
+pluggar ur tkeyn eller stänger av strömmen, så är det önskvärt att
+uppdateringen av state är atomisk: Om appen fått bekräftelse på att data
+är comittat, så ska det förstås vara lagrat. Om appen inte har fått den
+bekräftelsen än, så är det önskvart att det lagrade datat är antingen
+det gamla, eller det nya. Det skulle också kunna vara ok, men lite
+tråkigare, om datat är trasigt på ett sätt som appen kan identifiera
+nästa gång den kör, i så fall kommer appen att vägra köra och betrakta
+tkeyn som förbrukad.
+
+Mängden data som behöver lagras är liten, storleksordningen 40 bytes per
+log man vill bevittna. Och eftersom datat inte är hemligt, så skulle det
+fungera att spara datat på hosten, och i så fall är det bara en hash av
+datat som behöver lagras persistent på tkeyn, för integritet.
+
+
+idag:
+    - app mode och kernel mode
+    - 1MB flash
+    - CPU-frekvens 18 Mhz
+
+plan framåt, OBS ej bestämt ännu:
+    - app kan allokera lagring, skriva, läsa, avallokera. syscalls till firmware
+    - syscall a la unix
+    - api mot flash är läsa, skriva till och erase av hela sektorer/block (4kB)
+    - [LittleFS](https://github.com/littlefs-project/littlefs) ett
+      exempel på något man skulle kunna lägga ovanpå
+    - 4 appar a 128 kB
+    - CPU frekvens 21 Mhz uppnått, strävar mot 24 Mhz
+    - överföring USB 8-10 ggr snabbare; 500 kbps
+
+sigsum-vittne behov:
+    - 40B per logg, så det behövs i praktiken kanske endast två sektorer
+    - backup av vittnesnyckel?
+    - prestanda signering?
+      - exempel: signering var 10 sekund per logg;
+      - storleksordning på data som ska signeras? max 2.1 kB
+        överföring, signering av 200B; påverkar inte bara
+        USB-överföringen utan även själva tiden för signering
+    - prestanda verifiering?
+    - flash wear out? varje sektor kan raderas 100k ggr; inget stöd
+      för att hålla räkningen på antalet erase per sektor, från hw; 72B
+      (40B + loggidentitet) behöver lagras per signatur; AP daniel:
+      beräkna antalet skrivningar per app
