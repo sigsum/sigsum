@@ -6,7 +6,7 @@ signature is available for the generated public key.
 
 ## Install
 
-Install the [Go toolchain][].  You will need at least Go version 1.19.  If you
+Install the [Go toolchain][].  You will need at least Go version 1.22.  If you
 would like to run a few optional debug commands, also ensure that `sha256sum`,
 `cut`, and `base16` are installed on the system.
 
