@@ -12,10 +12,10 @@ would like to run a few optional debug commands, also ensure that `sha256sum`,
 
 Install the following Sigsum tools:
 
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-key@v0.6.2
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.6.2
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.6.2
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.6.2
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-key@v0.9.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.9.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.9.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.9.1
 
 `sigsum-key` will be used to generate a public key-pair.
 
@@ -35,14 +35,14 @@ Transparency log solutions depend on trust policies being correctly configured
 in user software and monitors.  Not having a trust policy would be similar to
 not having a public key for digital signatures.
 
-Create `/etc/sigsum/trust_policy`:
+Create `~/.config/sigsum/trust_policy`:
 
     log 154f49976b59ff09a123675f58cb3e346e0455753c3c3b15d465dcb4f6512b0b https://poc.sigsum.org/jellyfish
     
     witness poc.sigsum.org/nisse 1c25f8a44c635457e2e391d1efbca7d4c2951a0aef06225a881e46b98962ac6c
     witness rgdd.se/poc-witness  28c92a5a3a054d317c86fc2eeb6a7ab2054d6217100d0be67ded5b74323c5806
     
-    group  demo-quorum-rule all poc.sigsum.org/nisse rgdd.se/poc-witness
+    group  demo-quorum-rule any poc.sigsum.org/nisse rgdd.se/poc-witness
     quorum demo-quorum-rule
 
 The first line declares a Sigsum log, it's public key, and API URL.  This is
@@ -52,7 +52,7 @@ The following two lines declare witnesses and their public keys.  Witnesses
 verify cryptographically that the logs only append new entries.  This helps you
 know you see the same logs as everyone else.
 
-The final two lines define a quorum rule saying that the two witness must have
+The final two lines define a quorum rule saying that any of the two witness must have
 verified that the log is append-only in order for us to trust it.  This results
 in a threat model where we can detect issues like a misbehaving log or a
 compromise of our signing-key as long as a quorum of witnesses are benign.
@@ -80,7 +80,7 @@ A monitor downloads signed checksums from the logs listed in our trust policy.
 
 Start the monitor and print all signed checksums for your public key:
 
-    $ sigsum-monitor --interval 10s -p /etc/sigsum/trust_policy submit-key.pub
+    $ sigsum-monitor --interval 10s -p ~/.config/sigsum/trust_policy submit-key.pub
 
 We have not signed and logged any checksum.  Therefore, no checksum output is
 expected yet.
@@ -109,7 +109,7 @@ would like to compute the same checksum manually for debugging purposes only
 
 Sign and submit for logging using the key generated earlier:
 
-    $ sigsum-submit -p /etc/sigsum/trust_policy -k submit-key hello.py
+    $ sigsum-submit -p ~/.config/sigsum/trust_policy -k submit-key hello.py
     2023/11/25 16:32:40 [INFO] Attempting submit to log: https://poc.sigsum.org/jellyfis 
 
 It might take ~10s or so to get the signed checksum merged into the log so that
@@ -121,12 +121,12 @@ stored as plaintext in `hello.py.proof`.
 Verifying a proof of logging is like verifying a signature.  No outbound
 network connections are needed:
 
-    $ sigsum-verify -k submit-key.pub -p /etc/sigsum/trust_policy hello.py.proof <hello.py
+    $ sigsum-verify -k submit-key.pub -p ~/.config/sigsum/trust_policy hello.py.proof <hello.py
 
 Silence is a good sign, no output is expected if all went well.
 
 Try changing `hello.py` and run again.  Verification should fail.  You can
-also try failing the verification by dropping a witness cosignature or changing
+also try failing the verification by dropping the witness cosignature lines or changing
 one of the log's node hashes in `hello.py.proof`.
 
 ## Detect the signed checksum
