@@ -31,7 +31,6 @@ of the leaf line, which should then be
 ```
 leaf=KEYHASH SIGNATURE
 ```
-(or possibly `leaf_signature=...`?)
 
 ## Relax requirements when processing a version 1 proof
 
@@ -47,3 +46,16 @@ processing.
 In the library package `sigsum.org/sigsum-go/pkg/proof`, the
 corresponding field `ShortChecksum` in the `ShortLeaf` type should be
 deleted. Maybe the type should be renamed as well.
+
+# Other changes for a sigsum proof version=2?
+
+Is there anything else we'd like to change when bumping proof version?
+Radical changes, like moving to checkpoint representation of the tree
+head, will likely not be a version 2 or 3 of the sigsum proof format,
+but identified differently. And we will not make such radical changes
+in the near future.
+
+One fairly simple thing we could do to improve alignment is to replace
+the `log=KEYHASH` with `log=ORIGIN`. For a sigsum v1 log, that just
+adds a fix string between the equals sign and the hash, but it could
+make this format work better for other logs.
