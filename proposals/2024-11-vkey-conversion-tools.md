@@ -41,14 +41,13 @@ sigsum-key to-origin [-k file] [-o output]
 sigsum-key to-note-verifier [-n name] [-k file] [-t type] [-o output]
   Reads public key from file (by default, stdin) and writes a signed
   note verifier line. By defaults, uses the corresponding log origin
-  as the key name.
+  as the key name. Possible types are "ed25519" and "cosignature".
 ```
 
-For reading a vkey string, my current work-in-progress sub command has
-this interface:
+For reading a vkey string, we can have
 
 ```
-sigsum-key from-note-verifier [-o output] [file]
+sigsum-key from-note-verifier [-k file] [-o output]
   Extracts the public key from a note verifier line.
 ```
 
@@ -56,17 +55,32 @@ Feedback on this interface is appreciated (see next section).
 
 ## Design questions
 
-The `sigsum-key to-*` commands are rather straight-forward. While
-proper design is a bit more open for `sigsum-key from-note-verifier`.
+### The `sigsum-key to-*` commands
 
-First question is the input, is it best to just take a file containing
-a note verifier on the command line? Should there be some kind of
---input option? Or should we take the verifier (which is a plain
-string, not even any spaces) directly on the command line?
+These are rather straight-forward, but a few design questions:
 
-This most basic conversion, to get the public key, will likely need to be
-extended, and we therefore should pay some extra attention to the
-interface. Potential additional features:
+Maybe `to-origin` is redundant, since the origin is what you get if
+you run `to-note-verifier` with default arguments, and cut at the
+first `+` sign. Or `to-hex` and prepend a fix string. Depends on what
+usecases we have for just outputting the origin line. Cost of
+implementing and documenting `to-origin`is rather small.
+
+Is it nice with a `-t type` option, or is it better with
+`--cosignature` or `--witness` (and `--log` being the default)?
+
+### The `sigsum-key from-note-verifier` command
+
+Here, the proper design is a bit more open.
+
+First question is the input, we can use -k for input (it still is a
+kind of key, even if in different format than what other commands
+expect).
+
+Or should we take the verifier (which is a plain string, not even any
+spaces) directly on the command line?
+
+This most basic conversion, to get the public key, discards the other
+info included in the vkey string. Potential additional features:
 
 * Specify the expected key type (log or witness key), and fail if the
   key is of unexpected type.
@@ -79,17 +93,24 @@ interface. Potential additional features:
 * Output additional information, like key name and key type, either as
   diagnostic messages on stderr, or in some more structured way.
   
+* Output additional information in the comment field of the ssh pubkey
+  format. Possibly with some configurability.
+
 * Output a witness line in trust policy format, with name and pubkey
   extracted from the vkey.
 
 * Should we have a way to process multiple vkeys, e.g., specifying
-  multiple ones on the command line, orreading a file with a vkey per
+  multiple ones on the command line, or reading a file with a vkey per
   line? E.g., for the case of outputting a witness line in trust
   policy format for each vkey?
 
 Taken to the extreme, we could have an option that accepts a format
 string specifying which parts of the vkey should be output, and in
 which order and format.
+
+First implementation should naturally do only the most needed
+conversion, but we should design it so that it's possible to extend
+with more features, in a consistent way.
 
 Or maybe there should be separate subcommands for each purpose, or
 even a different tool, instead of baking it into sigsum-key?
