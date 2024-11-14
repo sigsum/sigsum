@@ -1,5 +1,7 @@
 # Conversion tools for vkey strings
 
+author: nisse
+
 As the community of operators of (general purpose) witnesses as well
 as operators of various types of witnessed transparency logs grow,
 sigsum users will need tools for conversion between various sigsum
@@ -23,14 +25,44 @@ a human-readable string, `<hash>` is a hex-encoded 32-bit value
 corresponding to the key id in a [signed note][] signature line, and
 the `<keydata>` is a base64-encoded blob where the first byte is an
 algorithm byte, and the remaining bytes are the public key, usually
-ed25519. The algorithm bytes corresponding roughly to the signature
+ed25519. The algorith bytes corresponds roughly to the signature
 type in a signed note line (although that is not yet clearly
 specified, e.g., we don't yet have a spec or consensus on what
 algorithm byte is right for a vkey string for a witness key).
 
-## Proposal
+The signature types are defined at
+https://github.com/C2SP/C2SP/blob/main/signed-note.md#signature-types
 
-Add needed conversion functions to the `sigsum-key` tool. We can have
+It seems natural to use the same ids for public keys in vkeys, but we
+have seen vkeys for witnesses that use the ed25519 in the vkey key
+blob. Then the corresponding keyid is different for what would be used
+to make cosignatures, and which key id should go in the vkey in this
+case is also somewhat unclear.
+
+My view is that it makes sense to want to match known vkeys to the
+signature lines on a checkpoint (or more generally, a signed note),
+and then keyid in the vkey and in the signature ought to match, and
+from that, it seems most reasonable to have the cosignature id in the
+vkey. In the unlikely case that one would want to use the same ed25519
+key for both cosigning and other ed25519 signatures, one would create
+to distinct vkey strings, one for each use.
+
+# Proposal
+
+* Add needed conversion functions to the `sigsum-key` tool.
+
+* We need to decide on naming. "vkey" is a common term, but as far as
+  I've seen, it's nowhere in any normative text; it is used as a
+  variable name in code documentation and examples. An alternative is
+  the more verbose "note verifier", used by the current supporting
+  code in sigsum-go.
+
+* We need to decide on the essential conversion features, to be added
+  first.
+
+Further details can be sorted out in the MRs implementing conversion.
+
+# Draft design
 
 ```
 sigsum-key to-origin [-k file] [-o output]
@@ -51,11 +83,9 @@ sigsum-key from-note-verifier [-k file] [-o output]
   Extracts the public key from a note verifier line.
 ```
 
-Feedback on this interface is appreciated (see next section).
+Feedback on this interface is appreciated, some questions below.
 
-## Design questions
-
-### The `sigsum-key to-*` commands
+## The `sigsum-key to-*` commands
 
 These are rather straight-forward, but a few design questions:
 
@@ -68,7 +98,7 @@ implementing and documenting `to-origin`is rather small.
 Is it nice with a `-t type` option, or is it better with
 `--cosignature` or `--witness` (and `--log` being the default)?
 
-### The `sigsum-key from-note-verifier` command
+## The `sigsum-key from-note-verifier` command
 
 Here, the proper design is a bit more open.
 
