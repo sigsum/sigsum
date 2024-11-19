@@ -13,8 +13,10 @@ because otherwise it is not possible to bridge the public room with IRC.
 
 ## Proposal
 
-Experiment with a bridge from the transparency.dev slack to Sigsum's Matrix
-room.  If it works well enough UX-wise we keep it as an unofficial way to
+Experiment with a bridge from a *sigsum room* in the transparency.dev slack to
+Sigsum's Matrix room.  In other words, *a single slack room would be bridged*.
+
+If the bridge works well enough UX-wise we keep it as an unofficial way to
 interact with Sigsum folks.  If UX (or other issues) are found we disable it.
 
 We continue to only advertise Sigsum's IRC/Matrix on our website.
