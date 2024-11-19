@@ -51,14 +51,13 @@ to distinct vkey strings, one for each use.
 
 * Add needed conversion functions to the `sigsum-key` tool.
 
-* We need to decide on naming. "vkey" is a common term, but as far as
-  I've seen, it's nowhere in any normative text; it is used as a
-  variable name in code documentation and examples. An alternative is
-  the more verbose "note verifier", used by the current supporting
-  code in sigsum-go.
+* Use the "vkey" term for the ui, specifically in naming of
+  subcommands. "vkey" is a common term, but as far as I've seen, it's
+  nowhere in any normative text; it is merely used as a variable name in code
+  documentation and examples. An alternative is the more verbose "note
+  verifier", used by the current supporting code in sigsum-go.
 
-* We need to decide on the essential conversion features, to be added
-  first.
+* Start with to-vkey and from-vkey commands.
 
 Further details can be sorted out in the MRs implementing conversion.
 
