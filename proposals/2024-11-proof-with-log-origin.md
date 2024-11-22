@@ -1,10 +1,13 @@
-Proposal to use origin line to identify the log in a sigsum proof
+# Proposal to use origin line to identify the log in a sigsum proof
 
 author: nisse
 
 My current conclusion is that we can't do this at this point. Unless
 we can find some easy way to support other types of leaves, without
 doing changes beyond the "small update" we intend for version=2.
+
+This proposal was discussed at Sigsum weekly 2024-11-19, and not
+adopted.
 
 # Background
 
