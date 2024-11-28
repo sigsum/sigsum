@@ -89,6 +89,11 @@ Nov 28 14:59:04 www.rgdd.se litewitness-start[759525]: 2024/11/28 14:59:04 WARN 
 
 I'm surprised by the unknown tree size here -- since log-go wasn't restarted
 why were it out of sync with my litewitness tree size?
+- EDIT: could happen for a variety of reasons though, this doesn't mean that the
+  log's old size is 0.
+- nisse: "There are other ways to get out of sync, e.g., if witness recieves and
+  processes an add-checkpoint, but the response cosignature doesn't make it back
+  to the log, e.g., due to bastion restarting or crashing at the wrong time."
 
 Related, in the litebastion logs I also saw:
 ```
@@ -98,3 +103,31 @@ Nov 28 14:59:03 bastion-01 litebastion[8307]: 2024/11/28 14:59:03 70b861a010f250
 
 So also shows that it seems my litewitness did have a working connection, and
 then we see the reconnect 2s later.
+
+---Summary after some more matrix chatting
+
+It would be nice if the litewitness WARN included which old size the tree size
+did not match on.  E.g., to better pinpoint when things stopped working.
+
+WARN for wrong tree size doesn't seem right, seems more like DEBUG.  (And we do
+want that DEBUG, it is useful.)
+
+Also having DEBUG for every time there is an incoming add-checkpoint request
+would help.  E.g., to confirm that the witness is really not getting requests.
+
+(We will obviously then also need a toggle for changing to DEBUG without
+restarting the witness.  So probably with witnessctl?)
+
+In litebastion, can we attribute the many errors that we have no idea what's
+causing them to an existing log/witness backend connection?  That would help.
+
+It might be helpful to know more DEBUG about the log -> bastion/witness
+connection.  Not entirely clear from the top of rgdd's head what to add tho.
+
+We still don't know why the above issue occurred and why litewitness restart
+resolved it.  Is the connection to the bastion (either from the log or the
+witness) "broken" without this becoming obvious to some end?  Debug needed.
+
+It might be a good idea to check what patch was applied for AWs, which also had
+issues with witnesses running but for some reason not being reachable via
+bastion.  Do we have a similar connection/expire/timeout error in litewitness?
