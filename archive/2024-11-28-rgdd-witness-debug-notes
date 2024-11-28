@@ -1,0 +1,100 @@
+```
+root@www:~# systemctl status litewitness@poc-witness
+● litewitness@poc-witness.service - Witnessing of append-only transparency logs
+     Loaded: loaded (/lib/systemd/system/litewitness@.service; enabled; preset: enabled)
+     Active: active (running) since Wed 2024-11-27 13:01:31 CET; 1 day 1h ago
+   Main PID: 715148 (litewitness-sta)
+      Tasks: 7 (limit: 1107)
+     Memory: 11.2M
+        CPU: 2.435s
+     CGroup: /system.slice/system-litewitness.slice/litewitness@poc-witness.service
+             ├─715148 /bin/bash /var/lib/poc-witness/.local/bin/litewitness-start
+             └─715157 /var/lib/poc-witness/go/bin/litewitness -db /var/lib/poc-witness/.local/share/litewitness/database -name example.org/witness -key 70b861a010f25030de6ff6a5267e0b951e70c04b20ba4a3ce41e7fba7b9b7dfc -ssh-agent /var/run/sigsum-agent-poc-witness/sigsum-agent.socket -bastion bastion.glasklar.is:443
+
+Nov 27 13:01:32 www.rgdd.se litewitness-start[715157]: 2024/11/27 13:01:31 INFO found key keyHash=70b861a010f25030de6ff6a5267e0b951e70c04b20ba4a3ce41e7fba7b9b7dfc
+Nov 27 13:01:32 www.rgdd.se litewitness-start[715157]: 2024/11/27 13:01:32 INFO connecting to bastion bastion=bastion.glasklar.is:443
+Nov 27 13:01:32 www.rgdd.se litewitness-start[715157]: 2024/11/27 13:01:32 INFO connected to bastion bastion=bastion.glasklar.is:443
+Nov 27 13:01:31 www.rgdd.se systemd[1]: litewitness@poc-witness.service: Consumed 3.547s CPU time.
+Nov 27 13:01:31 www.rgdd.se systemd[1]: Started litewitness@poc-witness.service - Witnessing of append-only transparency logs.
+Nov 27 13:41:00 www.rgdd.se litewitness-start[715157]: 2024/11/27 13:41:00 WARN rejected signed checkpoint origin=sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b note="sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b\n30586\nOL/0DUgBPo34QHXonuIDl/u2uJK1daRNAT1fze79vYQ=\n\n— sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b 1sib6EHH8I55ffC+msgkH8kl2mNMpNzR5NE8sy520n50DKS891HaZs6I8Dw+TXIt/4kq+iB3Fjo+uRYqtGd9LdVy5w0=\n" error="known tree size doesn't match provided old size"
+Nov 27 14:30:05 www.rgdd.se litewitness-start[715157]: 2024/11/27 14:30:05 WARN rejected signed checkpoint origin=sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b note="sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b\n30586\nOL/0DUgBPo34QHXonuIDl/u2uJK1daRNAT1fze79vYQ=\n\n— sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b 1sib6EHH8I55ffC+msgkH8kl2mNMpNzR5NE8sy520n50DKS891HaZs6I8Dw+TXIt/4kq+iB3Fjo+uRYqtGd9LdVy5w0=\n" error="known tree size doesn't match provided old size"
+Nov 27 14:32:58 www.rgdd.se litewitness-start[715157]: 2024/11/27 14:32:58 WARN rejected signed checkpoint origin=sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b note="sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b\n30586\nOL/0DUgBPo34QHXonuIDl/u2uJK1daRNAT1fze79vYQ=\n\n— sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b 1sib6EHH8I55ffC+msgkH8kl2mNMpNzR5NE8sy520n50DKS891HaZs6I8Dw+TXIt/4kq+iB3Fjo+uRYqtGd9LdVy5w0=\n" error="known tree size doesn't match provided old size"
+Nov 27 15:17:08 www.rgdd.se litewitness-start[715157]: 2024/11/27 15:17:08 WARN rejected signed checkpoint origin=sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b note="sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b\n30586\nOL/0DUgBPo34QHXonuIDl/u2uJK1daRNAT1fze79vYQ=\n\n— sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b 1sib6EHH8I55ffC+msgkH8kl2mNMpNzR5NE8sy520n50DKS891HaZs6I8Dw+TXIt/4kq+iB3Fjo+uRYqtGd9LdVy5w0=\n" error="known tree size doesn't match provided old size"
+Nov 27 18:19:12 www.rgdd.se litewitness-start[715157]: 2024/11/27 18:19:12 WARN rejected signed checkpoint origin=sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b note="sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b\n30586\nOL/0DUgBPo34QHXonuIDl/u2uJK1daRNAT1fze79vYQ=\n\n— sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b 1sib6EHH8I55ffC+msgkH8kl2mNMpNzR5NE8sy520n50DKS891HaZs6I8Dw+TXIt/4kq+iB3Fjo+uRYqtGd9LdVy5w0=\n" error="known tree size doesn't match provided old size"
+```
+
+No more interesting lines from journalctl than what is already shown above.
+(litewitness started not cosigning sometime after lunch Nov 27, and still
+doesn't cosign 1449 CET Nov 28).
+
+---
+
+Since litewitness seems to be running -> there should be a working connection
+to litebastion.  I.e., when litebastion shuts down litewitness also shuts down
+and gets restarted by systemd.  So litebastion connection should be OK from the
+witness' point of view right now.
+
+Questions:
+- Is this a litewitness issue
+- It is a litebastion issue
+- Is it a log-go issue
+
+Doing a restart on litebastion makes it hard to answer any of the above
+questions (and esp. considering it will also restart litewitness as a
+consequence).
+
+There's nothing obvious that shows there are issues with either log-go or my
+litewitness in the litebastion logs. But a lot of:
+
+```
+Nov 28 14:16:53 bastion-01 litebastion[8307]: 2024/11/28 14:16:53 http: proxy error: http2: client conn not usable
+Nov 28 14:16:53 bastion-01 litebastion[8307]: 2024/11/28 14:16:53 http: proxy error: backend unavailable
+```
+
+If we could get a hint of what these lines relate to -> would help.
+
+---
+
+My recovery plan to maybe help us understand where the issue might be:
+- Restart litewitness, don't touch litebastion and log-go. Will this resolve
+  the issue?
+- If no, restart log-go primary. Don't touch anything else. Does that resolve
+  the issue?
+- If no, restart litebastion. Don't touch anything else. Does that resolve the
+  issue?
+- If none of the above works: back to the drawing board.
+
+---
+
+is jellyfish still not being cosigned? yes.
+
+restart my litewitness.
+
+now the cosignature is appearing as expected.
+
+from my litewitness journal:
+
+```
+Nov 28 14:59:01 www.rgdd.se systemd[1]: Stopping litewitness@poc-witness.service - Witnessing of append-only transparency logs...
+Nov 28 14:59:01 www.rgdd.se systemd[1]: litewitness@poc-witness.service: Deactivated successfully.
+Nov 28 14:59:01 www.rgdd.se systemd[1]: Stopped litewitness@poc-witness.service - Witnessing of append-only transparency logs.
+Nov 28 14:59:01 www.rgdd.se systemd[1]: litewitness@poc-witness.service: Consumed 2.478s CPU time.
+Nov 28 14:59:01 www.rgdd.se systemd[1]: Started litewitness@poc-witness.service - Witnessing of append-only transparency logs.
+Nov 28 14:59:01 www.rgdd.se litewitness-start[759525]: 2024/11/28 14:59:01 INFO connected to ssh-agent addr=/var/run/sigsum-agent-poc-witness/sigsum-agent.socket
+Nov 28 14:59:01 www.rgdd.se litewitness-start[759525]: 2024/11/28 14:59:01 INFO found key keyHash=70b861a010f25030de6ff6a5267e0b951e70c04b20ba4a3ce41e7fba7b9b7dfc
+Nov 28 14:59:03 www.rgdd.se litewitness-start[759525]: 2024/11/28 14:59:03 INFO connecting to bastion bastion=bastion.glasklar.is:443
+Nov 28 14:59:03 www.rgdd.se litewitness-start[759525]: 2024/11/28 14:59:03 INFO connected to bastion bastion=bastion.glasklar.is:443
+Nov 28 14:59:04 www.rgdd.se litewitness-start[759525]: 2024/11/28 14:59:04 WARN rejected signed checkpoint origin=sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b note="sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b\n30588\nCutrBxER3MubREAUNV+R4L1tISSKcZme8o40EzErxNA=\n\n— sigsum.org/v1/tree/c9e525b98f412ede185ff2ac5abf70920a2e63a6ae31c88b1138b85de328706b 1sib6H/hEs0hz6EIOwE6Ie5caQctBPE1OuBdlW6xSjL6GFX86M9PyIZJu088/jMVoWE+x21BkXwn9YQnPFiqTh2dRg4=\n" error="known tree size doesn't match provided old size"
+```
+
+I'm surprised by the unknown tree size here -- since log-go wasn't restarted
+why were it out of sync with my litewitness tree size?
+
+Related, in the litebastion logs I also saw:
+```
+Nov 28 14:59:01 bastion-01 litebastion[8307]: 2024/11/28 14:59:01 70b861a010f25030de6ff6a5267e0b951e70c04b20ba4a3ce41e7fba7b9b7dfc: backend connection expired
+Nov 28 14:59:03 bastion-01 litebastion[8307]: 2024/11/28 14:59:03 70b861a010f25030de6ff6a5267e0b951e70c04b20ba4a3ce41e7fba7b9b7dfc: accepted new backend connection
+```
+
+So also shows that it seems my litewitness did have a working connection, and
+then we see the reconnect 2s later.
