@@ -131,3 +131,40 @@ witness) "broken" without this becoming obvious to some end?  Debug needed.
 It might be a good idea to check what patch was applied for AWs, which also had
 issues with witnesses running but for some reason not being reachable via
 bastion.  Do we have a similar connection/expire/timeout error in litewitness?
+
+---More debug notes by nisse via email
+
+Log messages below. I think the lines I've marked with --> are those for
+Rasmus' witness.
+
+```
+  $ sudo journalctl -eu sigsum-log-primary@jellyfish |grep "querying witness"
+  Nov 27 18:19:12 poc.sigsum.org sigsum-log-start.sh[8779]: 2024/11/27 18:19:12 [INFO] querying witness "https://milan.filippo.io/dev-witness" failed: send request: Post "https://milan.filippo.io/dev-witness/add-checkpoint": context canceled
+  Nov 27 18:19:12 poc.sigsum.org sigsum-log-start.sh[8779]: 2024/11/27 18:19:12 [INFO] querying witness "https://bastion.glasklar.is/3a8a5615f38f0e3388d389d031353a6041acd12b30b38d5b6ddcaf16fd01dcc1" failed: send request: Post "https://bastion.glasklar.is/3a8a5615f38f0e3388d389d031353a6041acd12b30b38d5b6ddcaf16fd01dcc1/add-checkpoint": context canceled
+
+  --> Nov 27 18:19:12 poc.sigsum.org sigsum-log-start.sh[8779]: 2024/11/27 18:19:12 [INFO] querying witness "https://bastion.glasklar.is/70b861a010f25030de6ff6a5267e0b951e70c04b20ba4a3ce41e7fba7b9b7dfc" failed: send request: Post "https://bastion.glasklar.is/70b861a010f25030de6ff6a5267e0b951e70c04b20ba4a3ce41e7fba7b9b7dfc/add-checkpoint": context canceled
+  --> Nov 27 18:19:33 poc.sigsum.org sigsum-log-start.sh[8875]: 2024/11/27 18:19:33 [INFO] querying witness "https://bastion.glasklar.is/70b861a010f25030de6ff6a5267e0b951e70c04b20ba4a3ce41e7fba7b9b7dfc" failed: (502) server: ""
+
+  Nov 27 18:19:33 poc.sigsum.org sigsum-log-start.sh[8875]: 2024/11/27 18:19:33 [INFO] querying witness "https://bastion.glasklar.is/3a8a5615f38f0e3388d389d031353a6041acd12b30b38d5b6ddcaf16fd01dcc1" failed: (502) server: ""
+  Nov 27 18:19:43 poc.sigsum.org sigsum-log-start.sh[8875]: 2024/11/27 18:19:43 [INFO] querying witness "https://milan.filippo.io/dev-witness" failed: send request: Post "https://milan.filippo.io/dev-witness/add-checkpoint": context deadline exceeded
+  Nov 27 21:30:27 poc.sigsum.org sigsum-log-start.sh[8875]: 2024/11/27 21:30:27 [INFO] querying witness "https://witness1.smartit.nu/witness1" failed: send request: Post "https://witness1.smartit.nu/witness1/add-checkpoint": context deadline exceeded
+  Nov 27 21:31:27 poc.sigsum.org sigsum-log-start.sh[8875]: 2024/11/27 21:31:27 [INFO] querying witness "https://witness1.smartit.nu/witness1" succeeded, previous attempt failed: send request: Post "https://witness1.smartit.nu/witness1/add-checkpoint": context deadline exceeded
+```
+
+I think the "context canceled" thing is the 10s timeout. 502 is "bad
+gateway", according to
+https://github.com/C2SP/C2SP/blob/main/https-bastion.md, that's the
+bastion response when corresponding backend is not available, and the
+bastion doesn't know if it is expected to serve that backend.
+
+Could happen temporarily if a witness is restarted, ut in that case, I'd
+expect to also see a "querying witness ... succeeded" message when
+witness is up again, like for Elias' witness on startit.nu.
+
+Are there any signs on the witness side that it is connected to bastion,
+and getting requests from it?
+
+There are also similar errors for the other witness accessed via the
+bastion,
+https://bastion.glasklar.is/3a8a5615f38f0e3388d389d031353a6041acd12b30b38d5b6ddcaf16fd01dcc1.
+Is that the aw dev witness?
