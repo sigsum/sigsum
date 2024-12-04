@@ -111,7 +111,7 @@ would like to compute the same checksum manually for debugging purposes only
 Sign and submit for logging using the key generated earlier:
 
     $ sigsum-submit -p ~/.config/sigsum/trust_policy -k submit-key hello.py
-    2023/11/25 16:32:40 [INFO] Attempting submit to log: https://poc.sigsum.org/jellyfis 
+    2023/11/25 16:32:40 [INFO] Attempting submit to log: https://poc.sigsum.org/jellyfish
 
 It might take about 10 seconds to get the signed checksum merged into the log in a way that makes
 the specified trust policy satisfied.  Once it has finished, you should see a proof of logging
