@@ -180,3 +180,98 @@ We need to discuss what to put in the item of each log/witness list.  The
 essential things like origin line, public key, etc., are a given.  What else?
 Information like "this is a high-frequency log", "this is a low-frequency log",
 etc., would be helpful to detect possible abuse / unexpected use.
+
+## Appendix B (misc summary by rgdd when talking to Al)
+
+Some more comments / thinking-out-loud related to Appendix A (it's a slightly
+edited version of what rgdd replied to Al in an email thread.)
+
+The opportunity I see is to make it as easy as possible to operate a witness
+(and to get a log configured by witnesses).  If we can provide a service that
+relieves the witness from being contacted by every log -> win.  This
+approximately sounds like a list of vkeys that is made available on one or more
+well-known URLs, as well as a place for logs to interact with us so we can add
+them to the list.  The only metadata I've been able to think of so far is
+expected add-checkpoint rate and the log's contact information.  Which would
+likely be useful for the witness operator in case of problems/abuse.  I don't
+have strong opinions on the format, but I would be surprised if this list
+becomes so complicated it can't just be line-separated.
+
+The other opportunity I see is to help logs discover witnesses that they may
+choose from.  I don't think this needs to be machine readable, but if that is
+useful for a particular subset of the community I think they can roll their own
+machine-readable list.  Or we can do this later on, but it's not the lowest
+hanging fruit imo.  Note: this is less of a technical problem.  I'd like to
+help by providing guidelines on what information a witness should share.  From
+this information I would expect those that have opinions on trust policies to
+derive the ones that make sense to them.
+
+Anyway, I don't think the central service / vantage point should (or needs to)
+have an opinion on witness groups and trust policies.  So at a first stage this
+might just boil down to a markdown table with two columns: a name and a URL to
+read more about the witness' ops.
+
+## Appendix C (misc comments)
+
+We don't seem to think that the policy-file format is great fit for
+configuring logs/witnesses.  It's a trust policy format for users/monitors.
+
+---
+
+On witness groups: When the same party operates multiple witnesses, I think
+that should be documented in the witness listing
+
+I think it could makes sense that witness listing includes (or references) the
+operator's advice on how to depend the operator's group of witnesses.
+
+I totally agree that maintenance of any suggested trust policy should be kept
+separate from the list of witnesses. Mainly to reduce the responsibilities and
+required due diligence of witness list maintenance.
+
+We can provide guidelines and good examples of how to document "this is what to
+expect from my witness". Including things like how to get in touch (contact
+info), hardware, software, key management, operational setup, how much of a
+priority it is to fix issues if they do happen, etc.
+
+We can link to the information the witness has self-declared, then it is up to
+the party that wants to depend on the witness to assess if they have the
+information they need to determine if they are honest and capable (I like this
+distinction elias). Any help/guidelines/examples we can give to make these self
+declarations as good and useful as possible as operators are onboarded to the
+system -> win.
+
+So in scope here is: to help with discovery but not to have an opinion on how
+to group in trust policies. You can view this as helping with the "inputs" to
+think about trust policies.
+
+Yep, so each witness operator has some kind of "about me" page/document.
+
+---
+
+If an operator uses a centrally managed list automatically, even removing
+things automatically when the centrally managed list says so, then whoever
+manages that central list has the power to cause lots of damage?
+
+Maybe then it would make sense to (1) discourage automatic use of centrally
+managed list and/or (2) discourage removal of things based on centrally managed
+lists unless the removal has been carefully considered, because removals are
+potentially more dangerous than additions.
+
+Yes, +1. A lot less worried about adding compared to removing and/or updating.
+
+## Appendix D
+
+What about shared formats for system logs and monitoring metrics?  Not covered
+in these notes.  See:
+
+https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2024-11-26--meeting-minutes.md?ref_type=heads#other
+
+Somewhat orthogonal to what we're trying to achieve here (which is to make it
+easier to configure logs and witnesses for *log and witness operators*; and to
+discover the *inputs* to trust policies).
+
+But, e.g., having a way to signal planned downtime -> that seems useful as
+*input* to those that construct reliable trust policies.  So may fit here.
+
+Could, e.g., fit into what most operators do as a best practise, and document
+that they're publishing such information in a common way.
