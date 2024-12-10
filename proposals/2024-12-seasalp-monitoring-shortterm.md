@@ -41,18 +41,18 @@ as expected. Store results from these submissions.
 
 Output from the monitoring system:
 
-- A public web page where current status information is shown, showing
-  both some information about the current configuration and the
-  current behavior. The number of configured witnesses is shown, as
-  well as the current size and the current number of cosignatures, and
-  some history of this such as a table showing how those numbers have
-  changed over the past few days.
-
 - Alert emails sent to sysadmin team when problems are
   detected. Problems that should be detected include failure of
   heartbeat submissions, unexpected behavior of the log size (it
   should grow at least due to the heartbeat submissions), and changes
   in the number of cosignatures.
+
+- Stretch goal: A public web page where current status information is shown, showing
+  both some information about the current configuration and the
+  current behavior. The number of configured witnesses is shown, as
+  well as the current size and the current number of cosignatures, and
+  some history of this such as a table showing how those numbers have
+  changed over the past few days.
 
 ## Timeframe
 
