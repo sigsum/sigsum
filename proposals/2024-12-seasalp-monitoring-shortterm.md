@@ -34,7 +34,7 @@ Input to the monitoring system:
 
 ## Heartbeat submissions
 
-Every 3 hours, make a submission to the log and verify that it works
+Every hour, make a submission to the log and verify that it works
 as expected. Store results from these submissions.
 
 ## Output
