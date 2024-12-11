@@ -13,6 +13,10 @@ we can realistically implement it before Christmas. This proposal is
 mainly about interfaces between the monitoring solution and other
 systems/actors.
 
+This proposal is about end-to-end uptime monitoring. Future work could
+consider more internal monitoring, but that is not part of the current
+proposal.
+
 # Proposal
 
 Create a monitoring system that regularly performs submissions to the
