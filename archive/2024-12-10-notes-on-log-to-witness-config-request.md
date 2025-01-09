@@ -63,6 +63,20 @@ stranger on the internet?  Assumption is you want to help witness others' logs.
      Another obvious "ani-spam" to run a very reliable witness that isn't
      flooded/worried by too many configuration requests: charge money for it.
 
+  5. **Is the origin reasonable for this request?**  Some kind of weak
+     authentication.
+
+     Maybe linking to an about page for the log on that origin?  This 5th point
+     was added on 2025-01-09 based on Nisse's comment in
+     https://git.glasklar.is/sigsum/project/documentation/-/merge_requests/97.
+
+     Nisse also raises: it would be good to document where the witness'
+     responsibility begins and ends wrt. "weakly verifying" the origin; maybe
+     with some form of best practise.  And also to clarify that if this weak
+     authentication fails -> don't draw the picture that the witness operator is
+     bad -- what they sign up for is to only sign locally consistent tree heads.
+
+
 XXX: applying rate limits as a witness is a bit troublesome if anyone can submit
 add-checkpoint requests.  I.e., then easy to drain someone's limit.  This would
 be a lot easier to deal with if each log had its own bastion that the witness
