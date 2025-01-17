@@ -29,7 +29,7 @@ is being enforced for `jellyfish`.
 
 ## Witnesses
 
-Three test witnesses are being operated.
+A few test witnesses are being operated.
 
 Names and public keys in policy-file format:
 
