@@ -35,15 +35,15 @@
   - nisse: Preparing fosdem slides, https://git.glasklar.is/nisse/fosdem-sigsum-2025/-/tree/main
   - nisse: Preparing for sigsum-go release, see https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/224
   - elias: want to solve "Primary is (sometimes) unable to collect cosignature from litebastion+litewitness" https://git.glasklar.is/sigsum/core/log-go/-/issues/101 -- "INTERNAL ERROR" messages
-         - nisse says: Al posted a blog link that is possibly related (see issue).
-         - TODO elias: add Milan witness to seasalp
+       - nisse: Al posted a blog link that is possibly related (see issue).
+       - TODO elias: add Milan witness to seasalp
   - filippo: pushed litebastion and litewitness v0.4.0
     - https://github.com/FiloSottile/litetlog/blob/main/NEWS.md#v040
   - filippo: discussed log/witness/monitor design with Cloudflare team, especially around Web Manifest Transparency
-        - about how to apply in browser
-        - hard problem in web setting
-        - it must be possible to take over a domain, but old owner should get notified
-        - encouraged them to write in transparency dev slack
+       - about how to apply in browser
+       - hard problem in web setting
+       - it must be possible to take over a domain, but old owner should get notified
+       - encouraged them to write in transparency dev slack
   - ln5: no status updates
 
 ## Decisions
@@ -71,12 +71,12 @@
     - https://git.glasklar.is/sigsum/core/log-go/-/issues/101
     - nisse: If we don't expect this to be fixed on the bastion side fairly soon, we could consider fixes/workarounds on the log side (e.g., enable http2 keepalive, or close and reconnect on failure, or go all the way down to using http1 only).
   - nisse: go question: I'm confused by "go language version" (e.g., go 1.22) vs "go version" (e.g., go 1.22.2), and which one is supposed to go on the go line in go.mod. The docs seems to use language version everywhere, see https://go.dev/ref/mod#go-mod-file-go. But some modules, notably trillian, use "go 1.22.0", and this issue comment https://github.com/golang/go/issues/62278#issuecomment-1693538776 says that one must use three components on the go line, only exception being if there's also a toolchain line, in which case it's fine to have tree components for toolchain line and only two for the go line.
-        - filippo: for a few releases, it was truncated at just the language version
-        - filippo: then that was changed
-        - filippo: so there was a transition period
-        - filippo: if you want 1.23 then you put 1.23.0
-        - filippo: we added an alias so that if you write 1.xx it means 1.xx.0
-        - filippo: 1.22 was before that usability fix
-        - filippo: it helps to think that it works just like a library
-        - filippo: to disable toolchain fetching: go env -w GOTOOLCHAIN=local
+       - filippo: for a few releases, it was truncated at just the language version
+       - filippo: then that was changed
+       - filippo: so there was a transition period
+       - filippo: if you want 1.23 then you put 1.23.0
+       - filippo: we added an alias so that if you write 1.xx it means 1.xx.0
+       - filippo: 1.22 was before that usability fix
+       - filippo: it helps to think that it works just like a library
+       - filippo: to disable toolchain fetching: go env -w GOTOOLCHAIN=local
     - My preference has been to have go.mod in our modules specify just language version but no toolchain version, using a go line like "go 1.22" and no toolchain line. Is that no longer possible/recommended usage? More context: https://github.com/google/trillian/issues/3689.
