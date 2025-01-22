@@ -1,0 +1,82 @@
+---Disclaimer
+
+These notes will be persisted as-is in the Sigsum archive after we've circulated
+them sufficiently.  The initial revision was typed up by rgdd on 2024-11-04.
+
+Archive URL:
+
+  https://git.glasklar.is/sigsum/project/documentation/-/tree/main/archive
+
+---Notes on sigsum/v2
+
+We are not actively working on sigsum/v2.  But below is a list of changes that
+we likely would have applied if we were doing another iteration on the design.
+
+  1. **Tiled API.**  Basically remove `/get-inclusion-proof`,
+  `/get-consistency-proof`, and `get-leaves` in favor of log clients fetching
+  tiles.  This is motivated by two things: the log server would no longer need
+  to translate leaf hashes to indices (simpler database backend), and the log
+  server's read-path would be much easier to cache (complete tiles never
+  change).  For this to work, we need to output leaf index on `/add-leaf` when
+  the status code is `200 OK` (since `/get-inclusion-proof` has been removed).
+
+  2. **GetCheckpoint endpoint.** Basically remove `/get-tree-head` in favor of
+  returning the tree-head encoded as a checkpoint.  This is a clean-up, as we
+  already converged on the checkpoint format in C2SP and use it for witnessing.
+  It is also a requirement to have a `/checkpoint` endpoint in the tiled API.
+
+  3. **Base the log identity on a human-meaningful origin line.**  Rather than
+  today's Ed25519 key hash which is fixed for the lifetime of the log.  This
+  will make it easier to talk about the log in the context of configuration and
+  operations, and allow for rotating keys and algoroithms in the future.  It is
+  also a soft requirement in the tiled API (i.e., optional / recommended).
+
+  4. **Retire the general ASCII key-value wire format**.  Because with the above
+  changes we only have one endpoint that still needs a format (`/add-leaf`).
+
+  Note: we also use the general ASCII key-value format (and new lines) for
+  Sigsum proofs.  It would be consistent to do this with "spicy note ASCII".
+
+  5. **Cryptographic agility for leaves.**  Basically keep the current semantics
+  of "signed checksum", "double hash", etc; but also have an algorithm byte to
+  allow other good choices than Ed25519.  Start by also supporting a NIST curve.
+
+  Note: this cryptographic agility should not be confused with messy negoation
+  in protocol handshakes.  The intended use would be for log clients to fixate
+  the signed-checksum algorithm(s) they support as part of their trust policies.
+
+  Note: we're also not talking about extending with gpg signatures and similar.
+  Because old tools and formats anyway need to be updated to understand tlogs.
+
+Note that it would be possible to do a sigsum/v1.1 that extends the log's API
+with (1) and (2) -- to allow tooling to already move towards a future v2 API.
+
+---References
+
+  * https://git.glasklar.is/sigsum/project/documentation/-/blob/main/log.md
+  * https://github.com/C2SP/C2SP/blob/main/tlog-tiles.md
+  * https://github.com/C2SP/C2SP/blob/main/tlog-checkpoint.md
+
+---Comments
+
+rgdd: comment by adding notes here (or reach out as you see fit).  Everything
+that ranges from concerns to suggestions and "LGTM" are more than welcome.
+
+nisse: 
+* I think (3) needs further discussion. Questions off the top of my head:
+  what are the usecases where the current keyhash-as-logid is a problem, and
+  what are the alternatives for addressing those use cases? How will it impact
+  each party in the sigsum system, in particular, how will logs be identified in
+  a verifier's trust policy, and how do we ensure that is consistent with the
+  relevant monitors?
+* On (5), it's not clear to me why leaf signatures in particular need more
+  signature types. I don't think what's proposed is sufficient for logging
+  "alien" signatures, say a signature made by a TPM. We also need to think about
+  the namespace string we use for leaf signatures (an intentional blocker to
+  inserting alien signatures into the log). And if we're thinking of
+  post-quantum issues, log and witness signatures seem as important as the
+  leaves.
+* After some offline discussion with rgdd, I think above changes are likely to
+  make sense, but we still need to document the usecases and implications.
+
+rgdd: persisting on 2025-01-22
