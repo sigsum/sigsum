@@ -39,7 +39,7 @@
   - i want acks from those that are named with responsibilities/TODOs
   - elias: roadmap suggestion look good to me (but let's not forget the TODOs)
 - rgdd: glasklar's witness about page is getting closer to 1st draft
-  - https://pad.sigsum.org/p/5be1-fba6-360e-8f55-89fb-967a-fb5c-e7c9
+  - https://git.glasklar.is/glasklar/services/witnessing/-/merge_requests/1
   - plan is to not commit to it yet, so that it's easier to collect feedback and
     make adjustments for at least 90 days. But what's in the doc is our current
     thinking wrt. SLA, setup, etc. There will be a similar doc for seasalp
