@@ -100,5 +100,5 @@ In contrast, if we had used all 9 witnesses without groups, then we would no lon
 ## Possible guidelines for creating a trust policy
 - Create witness groups based on organization, so that witnesses that are known to be controlled by the same organization are in the same witness group.
 - Within each witness group, strive for diversity to reduce the risk that the witness group as a whole becomes compromised.
-- To guard against dependency on a some infrastructure X, go through each witness group and check its dependence on X, and remove witnesses if needed.
+- To guard against dependency on some infrastructure X, go through each witness group and check its dependence on X, and remove witnesses if needed.
 - Use only witnesses that are deemed likely to stay operational for a long enough time (e.g. at least one year), then revise the policy after half that time (e.g. after 6 months) to adapt to changes in the availability of witnesses. Also adapt to other changes in the "about page" of the witnesses, such as what the witness is dependent on.
