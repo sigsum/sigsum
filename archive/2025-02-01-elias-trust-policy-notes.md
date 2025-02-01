@@ -27,7 +27,7 @@ witness, if each witness provides that.
 To protect against organizations becoming compromised, each
 organization should only control at most one witness group.
 
-Each group consists of one or more witnesses, having several witnesses
+Each group consists of one or more witnesses. Having several witnesses
 in a group can help making the group more robust, especially if there
 is diversity in how the witnesses are operated to reduce the risk that
 they would go down or be compromised at the same time.
@@ -57,6 +57,8 @@ Group 3: "witnesses run by other independent organizations (NGO Y, Company B, Co
 - CompanyC-witness relying on infraX
 
 So we have 3 witness groups, and inside each group we require 2-of-3 witnesses, and on the level of groups we again require 2-of-3 groups.
+
+## Scenarios
 
 Consider how the above trust policy works in a few different scenarios:
 
