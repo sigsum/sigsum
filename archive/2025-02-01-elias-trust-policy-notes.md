@@ -39,7 +39,8 @@ Each group should be organizationally independent from all other groups.
 Simple example with three groups:
 
 (The "infraX" below refers to some infrastructure that several
-witnesses are dependent on.)
+witnesses are dependent on, so that if infraX goes down then all those
+witnesses go down.)
 
 Group 1: "witnesses run by Company A", 3 witnesses, require 2-of-3
 - CompanyA-witness1 relying on infraX
@@ -68,6 +69,7 @@ Consider how the above trust policy works in a few different scenarios:
 
 - Scenario: infraX becomes compromised.
    - again, both groups 2 and 3 are still OK, so we still have 2-of-3 groups --> OK
+   - groups 2 and 3 are resilient against infraX failures because each of those groups has only one witness dependent on infraX
 
 - Scenario: one organization becomes compromised, and in addition some other witness goes down
    - if Company A is compromised we can still afford that one witness from group 2 or 3 does down.
