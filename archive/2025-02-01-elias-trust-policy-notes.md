@@ -1,7 +1,8 @@
+# Preliminary thoughts on how to choose witnesses to use in a trust policy
 
+## Background
 
-
-How to choose witnesses to use in a trust policy?
+When sigsum is used, a trust policy is needed.
 
 Want to protect against the following:
 - some organizations may become compromised such that all witnesses under their control become compromised
@@ -10,24 +11,35 @@ Want to protect against the following:
 
 Consider a hierarchical approach with an odd number of witness groups, where the trust policy requires a majority of those groups.
 
-Simple case: 3 groups, require 2-of-3 groups
-
-Also possible: 5 groups, require 3-of-5 groups
-
-Also possible: 7 groups, require 4-of-7 groups
-... and so on.
+- Simple case: 3 groups, require 2-of-3 groups
+- Also possible: 5 groups, require 3-of-5 groups
+- Also possible: 7 groups, require 4-of-7 groups
+- ... and so on.
 
 For simplicity, sticking with 3 groups in the example below.
 
-Assuming that the person deciding about the trust policy has some knowledge about the available witnesses, such as who operates/controls each witness and what infrastructure each witness is dependent on. Such information could come from reading the "about page" for each witness, if each witness provides that.
+Assuming that the person deciding about the trust policy has some
+knowledge about the available witnesses, such as who operates/controls
+each witness and what infrastructure each witness is dependent
+on. Such information could come from reading the "about page" for each
+witness, if each witness provides that.
 
-To protect against organizations becoming compromised, each organization should only control at most one witness group.
+To protect against organizations becoming compromised, each
+organization should only control at most one witness group.
 
-Each group consists of one or more witnesses, having several witnesses in a group can help making the group more robust, especially if there is diversity in how the witnesses are operated to reduce the risk that they would go down at the same time.
+Each group consists of one or more witnesses, having several witnesses
+in a group can help making the group more robust, especially if there
+is diversity in how the witnesses are operated to reduce the risk that
+they would go down or be compromised at the same time.
 
 Each group should be organizationally independent from all other groups.
 
-Example:
+## Example
+
+Simple example with three groups:
+
+(The "infraX" below refers to some infrastructure that several
+witnesses are dependent on.)
 
 Group 1: "witnesses run by Company A", 3 witnesses, require 2-of-3
 - CompanyA-witness1 relying on infraX
@@ -64,10 +76,12 @@ Consider how the above trust policy works in a few different scenarios:
 
 Is the above approach using 3 groups better than simply using all 9 witnesses directly without any group, and requiring 5-of-9 cosignatures?
 --> yes, maybe.
+
 One case when it is better is if we consider the scenario that infraX gets compromised. Then 5 witnesses are gone, but we would still have groups 2 and 3 so that would be OK.
+
 In contrast, if we had used all 9 witnesses without groups, then we would no longer get the required 5-of-9.
 
-Is it always good to add more witnesses?
+## Is it always good to add more witnesses?
 - it depends
 - if the new witness is both independent and reliably maintained, then likely it will be good to add that witness
 - if the new witness is dependent on the same thing that other witnesses depend on, then adding that witness may be a bad idea
@@ -75,16 +89,12 @@ Is it always good to add more witnesses?
    - adding such witnesses may still be helpful if they are added in a group that was already dependent on infraX, then our dependence on infraX does not become any worse, and we may strengthen the group in other ways.
 - if a new witness is added that is poorly maintained, then that risks making things worse, if an attacker can easily compromise that witness.
 
-How to avoid becoming dependent on one big organization?
+## How to avoid becoming dependent on one big organization?
 - If one organization runs many witnesses, make sure that organization controls no more than one witness group. Either collect all those witnesses in a single witness group, or at least ensure that the organization has only few witnesses in other groups.
 - When there is a risk of becoming dependent on a particular organization, go through each witness group and check their dependence on that organization. If a group has too many witnesses that depend on that organization, then remove some of those from the group so that the group becomes independent of the organization.
 
-Possible guidelines for creating a trust policy:
+## Possible guidelines for creating a trust policy
 - Create witness groups based on organization, so that witnesses that are known to be controlled by the same organization are in the same witness group.
 - Within each witness group, strive for diversity to reduce the risk that the witness group as a whole becomes compromised.
 - To guard against dependency on a some infrastructure X, go through each witness group and check its dependence on X, and remove witnesses if needed.
 - Use only witnesses that are deemed likely to stay operational for a long enough time (e.g. at least one year), then revise the policy after half that time (e.g. after 6 months) to adapt to changes in the availability of witnesses. Also adapt to other changes in the "about page" of the witnesses, such as what the witness is dependent on.
-
-
-
-
