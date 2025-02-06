@@ -68,7 +68,7 @@ follow the SSH key-file format.
 
 Try listing the public-key hash:
 
-    $ sigsum-key hash -k submit-key.pub
+    $ sigsum-key to-hash -k submit-key.pub
     cd53cb536660a52a95f0a46d822612b71b26bcfc1831e4bec1e55b14af9baa93
 
 Now that you have a trust policy and a signing key-pair you can start using
@@ -143,7 +143,7 @@ entry has been printed:
 
 This is indeed the public key-hash we listed earlier as well as the checksum
 we manually computed for `hello.py`.  (Your output should match the output of
-your invokation of `sigsum-key hash`, not this example.) The signature is not
+your invokation of `sigsum-key to-hash`, not this example.) The signature is not
 shown in the output since the monitor already verified it.
 
 ## Debrief
