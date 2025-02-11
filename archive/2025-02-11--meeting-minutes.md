@@ -78,11 +78,11 @@
        - /logz contains the same data as the journal at debug level
   - elias: discuss trust policy management? see https://git.glasklar.is/sigsum/project/documentation/-/blob/elias/2025-02-01-trust-policy-thoughts/archive/2025-02-01-elias-trust-policy-notes.md
 	  - nisse: Some items to keep in mind
-			* We need robustness to both witnesses becoming compromised, and witnesses being offline. Our docs are not very clear on how a single threshold is intended to cover these two cases.
-			  - elias: perhaps there is an advantage in not separating those cases, for simplicity? either a witness is up and honest, or not? I'm not sure.
-			* A compromised witness has incentive to stay online, but may be signing additional inconsistent views.
-			* A witness that appears offline may be used to *honestly* sign a different view, inconsistent with ours. 
-			* I.e., a split view attack will involve a compromised log, any compromised witnesses, as well as the *honest* witnesses, each assigned by the attacker to cosign attacker's choice of view.
+	    - We need robustness to both witnesses becoming compromised, and witnesses being offline. Our docs are not very clear on how a single threshold is intended to cover these two cases.
+		  - elias: perhaps there is an advantage in not separating those cases, for simplicity? either a witness is up and honest, or not? I'm not sure.
+		- A compromised witness has incentive to stay online, but may be signing additional inconsistent views.
+		- A witness that appears offline may be used to *honestly* sign a different view, inconsistent with ours. 
+		  - I.e., a split view attack will involve a compromised log, any compromised witnesses, as well as the *honest* witnesses, each assigned by the attacker to cosign attacker's choice of view.
     - the meeting concludes that the description and reasoning make general sense
     - there are many diversity dimensions, like geographic and legaslitive regions, operating systems, witness implementations
     - "fail close" systems require stable availability over time above all
