@@ -18,16 +18,20 @@ The change was done by first running the following "git filter-repo"
 command in the litebastion repo to move everything inside a
 roles/litebastion/ directory there:
 
+```
 git filter-repo --path-rename :roles/litebastion/
+```
 
 Then the merge was done like this in the ansible repo:
 
+```
 cd ansible/
 git checkout -b elias/merge-litebastion-repo
 git remote add litebastion /tmp/litebastion
 git fetch litebastion
 git merge --allow-unrelated-histories litebastion/main
 git remote remove litebastion
+```
 
 ## Related issue and MR:
 
