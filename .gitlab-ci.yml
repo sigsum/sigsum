@@ -1,6 +1,6 @@
 # ToCs ensures that the generated tables of contents are up-to-date.
 ToCs:
-  image: docker.io/library/golang:1.22
+  image: golang:1.22
   stage: build
   script:
   - make gentocs
