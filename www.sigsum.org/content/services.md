@@ -29,12 +29,12 @@ is being enforced for `jellyfish`.
 
 ## Witnesses
 
-### Stable witness
+### Stable witnesses
 
-One stable witness is being operated by [Glasklar Teknik](https://www.glasklarteknik.se/).
-Public key and URL in [policy-file format][]:
+A few stable witnesses are being operated. Names and public keys in policy-file format:
 
-    witness.glasklar.is b2106db9065ec97f25e09c18839216751a6e26d8ed8b41e485a563d3d1498536
+    witness witness.glasklar.is b2106db9065ec97f25e09c18839216751a6e26d8ed8b41e485a563d3d1498536
+    witness witness.mullvad.net 15d6d0141543247b74bab3c1076372d9c894f619c376d64b29aa312cc00f61ad
 
 See Glasklar's [witnessing][] repo for information on how `witness.glasklar.is` is being operated.
 
