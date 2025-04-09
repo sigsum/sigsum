@@ -1,6 +1,6 @@
 # Services
 
-This page lists services that the Sigsum project are hosting.
+This page lists services related to the Sigsum project.
 
 ## Log servers
 
