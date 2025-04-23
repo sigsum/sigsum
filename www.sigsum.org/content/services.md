@@ -4,7 +4,7 @@ This page lists services related to the Sigsum project.
 
 ## Log servers
 
-### seasalp
+### seasalp -- stable log
 
 One stable log is being operated by [Glasklar
 Teknik](https://www.glasklarteknik.se/).  Public key and URL in [policy-file
@@ -12,20 +12,36 @@ format][]:
 
     log 0ec7e16843119b120377a73913ac6acbc2d03d82432e2c36b841b09a95841f25 https://seasalp.glasklar.is
 
-### jellyfish
+[policy-file format]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md
 
-One test log is also being operated.  Public key and URL in [policy-file format][]:
+### Test logs
+
+Please note that the test logs are following the main branch of the
+[log-go](https://git.glasklar.is/sigsum/core/log-go) repository.
+
+They are intended for test and development only.
+Also note that no [rate limiting](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/log.md#4--rate-limiting)
+is being enforced for the test logs.
+
+#### jellyfish -- test log
+
+Test log `jellyfish`.
+
+Public key and URL in [policy-file format][]:
 
     log 154f49976b59ff09a123675f58cb3e346e0455753c3c3b15d465dcb4f6512b0b https://poc.sigsum.org/jellyfish
 
-Please note that `jellyfish` is a test log following the main branch of the
-[log-go](https://git.glasklar.is/sigsum/core/log-go) repository.
-In other words, it is intended for testing and development only.
-Also note that no
-[rate limiting](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/log.md#4--rate-limiting)
-is being enforced for `jellyfish`.
+#### barreleye -- test log
 
-[policy-file format]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md
+Test log `barreleye`.
+
+Public key and HTTPS URL in [policy-file format][]:
+
+    log 4644af2abd40f4895a003bca350f9d5912ab301a49c77f13e5b6d905c20a5fe6 https://test.sigsum.org/barreleye
+
+Public key and onion URL:
+
+    log 4644af2abd40f4895a003bca350f9d5912ab301a49c77f13e5b6d905c20a5fe6 http://eigepek6nl26cvk5sziwpyqkocazasy3dmibe3nc77f7s2awaijfyoyd.onion/barreleye
 
 ## Witnesses
 
