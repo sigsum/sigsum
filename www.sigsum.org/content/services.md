@@ -23,14 +23,6 @@ They are intended for test and development only.
 Also note that no [rate limiting](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/log.md#4--rate-limiting)
 is being enforced for the test logs.
 
-#### jellyfish -- test log
-
-Test log `jellyfish`.
-
-Public key and URL in [policy-file format][]:
-
-    log 154f49976b59ff09a123675f58cb3e346e0455753c3c3b15d465dcb4f6512b0b https://poc.sigsum.org/jellyfish
-
 #### barreleye -- test log
 
 Test log `barreleye`.
