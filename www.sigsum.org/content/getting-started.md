@@ -37,7 +37,7 @@ not having a public key for digital signatures.
 
 Create `~/.config/sigsum/trust_policy`:
 
-    log 154f49976b59ff09a123675f58cb3e346e0455753c3c3b15d465dcb4f6512b0b https://poc.sigsum.org/jellyfish
+    log 4644af2abd40f4895a003bca350f9d5912ab301a49c77f13e5b6d905c20a5fe6 https://test.sigsum.org/barreleye
     
     witness poc.sigsum.org/nisse 1c25f8a44c635457e2e391d1efbca7d4c2951a0aef06225a881e46b98962ac6c
     witness rgdd.se/poc-witness  28c92a5a3a054d317c86fc2eeb6a7ab2054d6217100d0be67ded5b74323c5806
@@ -111,7 +111,7 @@ would like to compute the same checksum manually for debugging purposes only
 Sign and submit for logging using the key generated earlier:
 
     $ sigsum-submit -p ~/.config/sigsum/trust_policy -k submit-key hello.py
-    2023/11/25 16:32:40 [INFO] Attempting submit to log: https://poc.sigsum.org/jellyfish
+    2025/04/29 16:30:27 [INFO] Attempting submit to log: https://test.sigsum.org/barreleye
 
 It might take about 10 seconds to get the signed checksum merged into the log in a way that makes
 the specified trust policy satisfied.  Once it has finished, you should see a proof of logging
