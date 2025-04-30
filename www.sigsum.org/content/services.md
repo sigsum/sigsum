@@ -12,7 +12,10 @@ format][]:
 
     log 0ec7e16843119b120377a73913ac6acbc2d03d82432e2c36b841b09a95841f25 https://seasalp.glasklar.is
 
+See Glasklar's [sigsum-logs][] repo for information on how `seasalp` is being operated.
+
 [policy-file format]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md
+[sigsum-logs]: https://git.glasklar.is/glasklar/services/sigsum-logs
 
 ### Test logs
 
