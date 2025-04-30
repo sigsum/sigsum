@@ -35,6 +35,12 @@ Public key and onion URL:
 
     log 4644af2abd40f4895a003bca350f9d5912ab301a49c77f13e5b6d905c20a5fe6 http://eigepek6nl26cvk5sziwpyqkocazasy3dmibe3nc77f7s2awaijfyoyd.onion/barreleye
 
+### Historic logs
+
+The test log `jellyfish` with public key
+`154f49976b59ff09a123675f58cb3e346e0455753c3c3b15d465dcb4f6512b0b` was
+decommissioned on April 30, 2025.
+
 ## Witnesses
 
 ### Stable witnesses
