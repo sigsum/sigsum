@@ -31,20 +31,34 @@ more complicated. The basic meaning of the `-p` option is to specify
 which trust policy should be used, so it makes sense to use it also
 when referring to a named policy.
 
-## Built-in named policies
+## Named policies
 
-The user can choose to specify `-p policy-name` where policy-name is a
-string that is expected to match one of the built-in policy names.
+The user can choose to specify `-p :policy-name` where `policy-name`
+is a string that is expected to match an existing policy name. The
+policy name can be either one of the built-in policy names, or a name
+added in a configuration file under `/etc/sigsum/policy/`.
 
-When a built-in policy name is used, everything should work in the
-same way as if a corresponding policy file had been specified.
+Note the `:` in `-p :policy-name` -- the purpose of the `:` character
+there is to say that the argument should be interpreted as a policy
+name.
+
+There are two kinds of named policies:
+- Built-in named policies
+- Named policies locally installed under `/etc/sigsum/policy/`
+
+A locally installed named policy with the name `xyz` would correspond
+to a file `/etc/sigsum/policy/xyz` and a user of the sigsum tools
+would use the option `-p :xyz` to use that named policy.
+
+When a named policy is used, everything should work in the same way as
+if a corresponding policy file had been specified.
 
 ## Functionality to list and show available named policies
 
 The MR
 https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/248
 already implements a `sigsum-policy` command that could be used to
-list and show available named policies.
+list and show available built-in named policies.
 
 The built-in named policy functionality could be achieved by running
 `sigsum-policy show name > policy-file` and then use the existing `-p
@@ -66,7 +80,7 @@ obsolete policies as deprecated in some way, and possibly output a
 warning if a deprecated policy is used.
 
 In a first implementation we can have only a single named policy
-called e.g. "test-policy-2025" which we use to check that the named
+called e.g. "sigsum-test-2025" which we use to check that the named
 policy functionality is working.
 
 ## Policies distributed by others
@@ -74,12 +88,12 @@ policy functionality is working.
 To make it convenient to use policies that are defined and distributed
 by others than the Sigsum project itself, we allow reading policy
 files from the `/etc/sigsum/policy/` directory: if the user specifies
-`-p xyz` then the sigsum tools will look for the file
+`-p :xyz` then the sigsum tools will look for the file
 `/etc/sigsum/policy/xyz` and use that policy file if it exists.
 
 For example, debian could define their own policy and install it as
 `/etc/sigsum/policy/debian-strict-2026` and then a user of the sigsum
-tools can specify `-p debian-strict-2026` to use that policy.
+tools can specify `-p :debian-strict-2026` to use that policy.
 
 There could be a convention for policy names saying that each name
 should have the form "org-arbitraryname-time" or similar, where "org"
@@ -90,29 +104,28 @@ contains precisely two `-` characters.
 
 ## Order of priority
 
-Given that the `-p` option can be interpreted in different ways, it is
-necessary to decide an order of priority.
+Since we use the `:` prefix to distinguish between file path and named
+policy, there is no ambiguity there.
 
-One thing we want to avoid is a user accidentally (or getting tricked
-into) using a different policy than what was intended. That can be a
-reason to give higher priority to the files under
-`/etc/sigsum/policy/` compared to files in other locations, so that a
-user does not get unintended behavior because a file happened to be in
-the current working directory.
+Given that the `-p` option with `:` can be interpreted in two
+different ways, it is necessary to decide an order of priority between
+those two.
 
-Based on the above reasoning we use the following order of priority,
-given that the user has specified `-p xyz`:
+We use the following order of priority, given that the user has
+specified `-p :xyz`:
 
 - First check if the file `/etc/sigsum/policy/xyz` exists and if so, use that file
 - Then check if `xyz` matches one of the built-in policy names and if so, use that built-in policy
-- Finally check if the file `xyz` exists and if so, use that file
 
 The above order of priority means that it is possible (although not
 recommended) to override a built-in policy name by placing a file with
 that name in the `/etc/sigsum/policy/` directory.
 
-Note that if the user has specified `-p xyz` and the given `xyz` does
-not match any built-in policy name and also does not match any file
-under `/etc/sigsum/policy/` then the behavior is as before. So things
-will be backwards compatible except when the name matches either a
-built-in policy name or a file under `/etc/sigsum/policy/`.
+We could have an environment variable for overriding the location
+`/etc/sigsum/policy`, and a documented way to use that variable to
+completely disable locally installed named policies.
+
+Note that if the user has specified `-p xyz` (without `:`) then the
+behavior is the same as before. So things will be backwards compatible
+except in the hopefully rare case where a filename starting with `:`
+has been used.
