@@ -81,6 +81,13 @@ For example, debian could define their own policy and install it as
 `/etc/sigsum/policy/debian-strict-2026` and then a user of the sigsum
 tools can specify `-p debian-strict-2026` to use that policy.
 
+There could be a convention for policy names saying that each name
+should have the form "org-arbitraryname-time" or similar, where "org"
+is the organisation name and "time" is some kind of time indication
+like year or year-month or a complete date. The sigsum tools could
+possibly check that to some extent, like checking that the name
+contains precisely two `-` characters.
+
 ## Order of priority
 
 Given that the `-p` option can be interpreted in different ways, it is
@@ -103,3 +110,9 @@ given that the user has specified `-p xyz`:
 The above order of priority means that it is possible (although not
 recommended) to override a built-in policy name by placing a file with
 that name in the `/etc/sigsum/policy/` directory.
+
+Note that if the user has specified `-p xyz` and the given `xyz` does
+not match any built-in policy name and also does not match any file
+under `/etc/sigsum/policy/` then the behavior is as before. So things
+will be backwards compatible except when the name matches either a
+built-in policy name or a file under `/etc/sigsum/policy/`.
