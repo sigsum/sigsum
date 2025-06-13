@@ -1,4 +1,10 @@
-# DRAFT: Built-in named policy functionality notes
+# 2025-06-13 - Notes about built-in named policy functionality
+
+Below are notes about the current plans to add named policy
+functionality, written by Elias with help from Nisse.
+
+The plans might still change, this just shows what the plans are right
+now.
 
 ## Affected programs
 
