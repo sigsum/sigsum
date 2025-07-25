@@ -1,4 +1,8 @@
+NOTE ADDED 2025-07-25: this was made into a proposal instead, better read that instead: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2025-07-named-policies.md
+
 # 2025-07-21 - Notes about built-in named policy functionality
+
+NOTE ADDED 2025-07-25: this was made into a proposal instead, better read that instead: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2025-07-named-policies.md
 
 Below are notes about the current plans to add named policy
 functionality, written by Elias with help from others.
@@ -158,3 +162,5 @@ Note that if the user has specified `-p xyz` (with `p` rather than
 `P`) then the behavior is the same as before. So things will be
 backwards compatible, the existing `-p` option will work in the same
 way as before.
+
+NOTE ADDED 2025-07-25: this was made into a proposal instead, better read that instead: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2025-07-named-policies.md
