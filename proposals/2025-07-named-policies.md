@@ -88,7 +88,7 @@ There are thus two kinds of named policies:
 - Named policies locally installed under `/etc/sigsum/policy/`
 
 A locally installed named policy with the name `xyz` would correspond
-to a file `/etc/sigsum/policy/xyz` and a user of the sigsum tools
+to a file `/etc/sigsum/policy/xyz.sigsum-policy` and a user of the sigsum tools
 could use the option `-P xyz` to use that named policy.
 
 When a named policy is used, everything should work in the same way as
@@ -129,18 +129,20 @@ To make it convenient to use policies that are defined and distributed
 by others than the Sigsum project itself, we allow reading policy
 files from the `/etc/sigsum/policy/` directory: if the user specifies
 `-P xyz` then the sigsum tools will look for the file
-`/etc/sigsum/policy/xyz` and use that policy file if it exists.
+`/etc/sigsum/policy/xyz.sigsum-policy` and use that policy file if it exists.
 
-For example, debian could define their own policy and install it as
-`/etc/sigsum/policy/debian-strict-2026` and then a user of the sigsum
-tools could specify `-P debian-strict-2026` to use that policy.
+For example, the project foo could define their own policy and install it as
+`/etc/sigsum/policy/foo-strict-2026.sigsum-policy` and then a user of the sigsum
+tools could specify `-P foo-strict-2026` to use that policy.
 
 There could be a convention for policy names saying that each name
 should have the form "org-arbitraryname-time" or similar, where "org"
 is the organisation name and "time" is some kind of time indication
 like year or year+month or a complete date. The sigsum tools could
-possibly check that to some extent, like checking that the name
-contains precisely two `-` characters.
+possibly check that to some extent.
+
+For policy files in `/etc/sigsum/policy/` require the filename to
+match the following regexp: `[a-z0-9][a-z0-9-]+.sigsum-policy`
 
 ### Order of priority
 
@@ -164,7 +166,7 @@ file.
 Regarding how a policy name is interpreted we use the following order
 of priority, given that the user has specified the policy name `xyz`:
 
-- First check if the file `/etc/sigsum/policy/xyz` exists and if so, use that file
+- First check if the file `/etc/sigsum/policy/xyz.sigsum-policy` exists and if so, use that file
 - Then check if `xyz` matches one of the built-in policy names and if so, use that built-in policy
 
 The above order of priority means that it is possible (although not
@@ -179,6 +181,18 @@ Note that if the user has specified `-p xyz` (with `p` rather than
 `P`) then the behavior is the same as before. So things will be
 backwards compatible, the existing `-p` option will work in the same
 way as before.
+
+It is also necessary to decide what should happen when multiple
+submitter public key files are given as input (as can happen for the
+sigsum-verify program), and the given submitter public key files
+contain different policy names. In that case the behavior should be as
+follows: if `-p` or `-P` is given, then any policy names inside
+submitter public key files are ignored. If `-p` or `-P` is not given,
+then allow the use of a policy name from a submitter public key file
+only if all the given submitter public key files contain the same
+policy name, so that there is no ambiguity. If they do not all contain
+the same policy name, exit with an error message. (In that case, the
+user will need to specify a policy explicitly using `-p` or `-P`.)
 
 ## Discussion
 
