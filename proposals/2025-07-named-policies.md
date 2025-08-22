@@ -182,6 +182,18 @@ Note that if the user has specified `-p xyz` (with `p` rather than
 backwards compatible, the existing `-p` option will work in the same
 way as before.
 
+It is also necessary to decide what should happen when multiple
+submitter public key files are given as input (as can happen for the
+sigsum-verify program), and the given submitter public key files
+contain different policy names. In that case the behavior should be as
+follows: if `-p` or `-P` is given, then any policy names inside
+submitter public key files are ignored. If `-p` or `-P` is not given,
+then allow the use of a policy name from a submitter public key file
+only if all the given submitter public key files contain the same
+policy name, so that there is no ambiguity. If they do not all contain
+the same policy name, exit with an error message. (In that case, the
+user will need to specify a policy explicitly using `-p` or `-P`.)
+
 ## Discussion
 
 It gets somewhat complicated to describe all possibilities with so
