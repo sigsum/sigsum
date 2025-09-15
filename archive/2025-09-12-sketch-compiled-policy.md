@@ -14,12 +14,20 @@ and mix it into the key material use to construct its signing key.
 Which is one reproducible compilation and a canonical representation
 is valuable.
 
+## Updated 2025-09-15
+
+* Add prefix instructions, to not have a small limit on number of
+  witnesses and groups.
+
+* Define bytecode canonicalization to sort by size first, since that
+  seems easier to implement efficiently.
+
 ## Limitations
 
 To illustrate compactness, limit support to policies listing at most
-64 logs, at most 64 witnesses, and not overly complex group and quorum
-rules. Sizes and limits are very tentative, and need more careful
-analysis before comitting to a format of this kind.
+256 logs, at most 256 witnesses, and not overly complex group and
+quorum rules. Sizes and limits are very tentative, and need more
+careful analysis before comitting to a format of this kind.
 
 Format is byte oriented, so let's get down to what each byte is.
 
@@ -73,6 +81,16 @@ encoding as follows:
  * `>=K`: Pop one value. Push 1 if that value is >= `K`, otherwise
    push 0. Encoding: `0b10kkkkkk`.
 
+To allow larger immediates, also define a prefix instruction
+`0b11pppppp`, with additinional high bits of an immediate value. E.g.,
+`X?` with `X = 43981 = 0b1010 101111 001101` would be represented as
+the three bytes `0b11001010 0b11101111 0b01001101`, and similarly for
+`>=K` with large `K`. Unnecessary leading zeros are not allowed, i.e.,
+a prefix sequence must not start with `0b11000000`.
+
+A constrained implementation that supports at most 64 witnesses and
+groups need not support the prefix instruction.
+
 In a valid program, the last instruction must not be `ADD`. I think it
 should be possible to check all program validity conditions without
 feeding the machine any actual input, since it has such low
@@ -112,23 +130,22 @@ properly sorted list of witnesses and a tree of witnesses and groups.
 We compile this recursively top-down, starting with the witness or
 group identified by the quorum line.
 
-* To compile a witness, find the witness' index, `X` and emit a `X?`
+* To compile a witness, find the witness' index, `X` and emit an `X?`
   instruction.
 
-* To compile a group, first recursively compile each of the `n`
-  members. Then sort the resulting byte code fragments
-  lexicographically. Output the first fragment, then output remaining
-  fragments, each followed by an `ADD` instruction. Finally, emit a
-  `>=K` instruction, with `K` being the group's threshold.
+* A group with a single member must have threshold = 1, and is
+  trivial. It is compiled by compiling its only member.
 
-If resulting is larger than the maximum size of 255, policy was too
-complex (unclear when this can happen, and if it makes sense to
-increase the maximum size).
+* To compile a group with more than one member, first recursively
+  compile each of the `n` members. Then sort the resulting byte code
+  fragments, first by increasing size, and then lexicographically for
+  fragments of the same size. Output the first fragment, then output
+  remaining fragments, each followed by an `ADD` instruction. Finally,
+  emit a `>=K` instruction, with `K` being the group's threshold.
 
-There are possible variations. One should optimize groups with a
-single member (then one must have threshold = 1), to improve
-canonicalization. One could tweak the instruction set for different
-tradeoffs in complexity, program size and stack usage.
+If resulting byte code is larger than the maximum size of 255, policy
+was too complex (unclear how likely this is to happen, and if it makes
+sense to increase the maximum size).
 
 ## Alternative approach, based on suggestion by florolf
 
