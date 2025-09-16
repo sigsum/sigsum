@@ -29,7 +29,7 @@ You can also file issues and submit merge requests on [GitLab][].
 Join open video/voice meetings on Tuesdays at 1215 UTC.
 
   - Jitsi: [meet.glasklar.is/sigsum][]
-  - Notes: [pad.sigsum.org/p/sigsum-YYMMDD][]
+  - Notes: [pad.sigsum.org/p/sigsum-YYYYMMDD][]
 
 [meet.glasklar.is/sigsum]: https://meet.glasklar.is/sigsum
 [pad.sigsum.org/p/sigsum-YYMMDD]: https://pad.sigsum.org/p/sigsum-YYMMDD
