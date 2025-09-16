@@ -32,4 +32,4 @@ Join open video/voice meetings on Tuesdays at 1215 UTC.
   - Notes: [pad.sigsum.org/p/sigsum-YYYYMMDD][]
 
 [meet.glasklar.is/sigsum]: https://meet.glasklar.is/sigsum
-[pad.sigsum.org/p/sigsum-YYMMDD]: https://pad.sigsum.org/p/sigsum-YYMMDD
+[pad.sigsum.org/p/sigsum-YYYYMMDD]: https://pad.sigsum.org/p/sigsum-YYYYMMDD
