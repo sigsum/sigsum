@@ -14,9 +14,11 @@ now than it was back then.
 
 ## Proposal
 
-There are two independent changes being proposed:
+There are a few independent changes being proposed:
 
 ### Clarify character set issues
+
+Lines are terminated by the newline character (0x0a).
 
 The items on each line are "separated by white space". Specify that
 only the ascii space and TAB characters are recognized. I.e., fields
@@ -28,36 +30,53 @@ aware).
 Motivation: Don't require unicode tables for parsing, and don't make
 the meaning of the policy file dependent on unicode version.
 
-Disallow all ascii control characters but TAB (in particular, disallow
-NUL characters). Motivation: policy is intended to be a text file,
-easily processable by text tools. Control characters, in particular
-NUL, is a likely source of problems.
+Disallow all ascii control characters (octets 0x00 -- 0x1f and 0x7f)
+except TAB (0x09) and new line (0x0a). Motivation: policy is intended
+to be a text file, easily processable by text tools. Control
+characters, in particular NUL, is a likely source of problems.
 
-Still allow non-ascii characters. Strongly encourage use of utf-8 for
-any non-ascii contents, but allow an implementation to treat the items
-as opaque octet strings, with no validation of utf-8 or unicode
-semantics.
+Still allow non-ascii characters. Non-ascii characters should use
+utf-8 encoding. An implementation may warn or reject invalid utf-8
+sequences, but for input that is accepted, the items must be handled
+as opaque octet strings, e.g., comparisons must not apply unicode
+normalization.
 
 Motivation: Allow using [signed note]() key names as witness names.
 Allow non-ascii in comments, and allow international domain names in
 URLs, without resorting to punycode. Do this without requiring the
 policy parser to be unicode-aware.
 
-Open question: Should the comment start character, `#`, be recognized
-only at the start of a line (possibly preceeded by space and TAB
-characters)? Or anywhere on a line, as currently implemented? It
-matters if one attempts to use the `#` character in a URL or name, and
-it is an allowed character for a [signed note]() key name.
-
 [signed note]: https://github.com/C2SP/C2SP/blob/main/signed-note.md
+
+### Comment lines
+
+Recognize comments only when the `#` (0x23) character occurs at the
+start of a line, possibly preceded by some space and TAB characters
+only. If it occurs elsewhere, it has no special meaning in the context
+of policy syntax. (The current implementation allows `#` to occur, and
+introduce a comment, anywhere on the line).
+
+Motivation: The character `#` may be used in [signed note]() key names
+and for URL anchors. Such use may be a bit obscure in a policy file,
+but there is value in not introducing syntax that is incompatible with
+these formats. The utility of having end-of-line comments, in addition
+to complete-line comments, seems rather small.
 
 ### Disallow duplicates
 
 Specify that a policy is invalid if there are multiple log lines with
-the same public key, or multiple witnesses with the same key.
+the same public key, or multiple witnesses with the same public key.
 
 Motivation: Duplicates are confusing, likely errors, and duplicate
 witnesses also violate the one-single-path rule below.
+
+Note that it is still allowed to list a log and a witness that use the
+same public key. Motivation: When an organization operates both a log
+and a witness, there's sufficient domain separation between log and
+witness signatures to make it a technically valid option to use the
+same signing key. Furthermore, if a policy file includes a log and a
+witness with the same key, by mistake, that seems likely to make
+things break in obvious rather than subtle ways.
 
 Specify that a policy is invalid if the same witness or group is
 listed as a group member more than once. No duplicates in the list of
@@ -74,9 +93,3 @@ the quorum, and as a member of one group; the quorum can be any
 defined group or witness, and the policy is allowed to define
 additional groups and witnesses that aren't actually used by the
 quorum definition.
-
-Open question: Should we also check that the set of log keys and the
-set witness keys are disjoint? Using same key for a log and a witness
-is a bit weird, but we do have needed domain separation for the
-signatures. And it doesn't seem that likely to happen by mistake and
-then make things break in only a subtle way.
