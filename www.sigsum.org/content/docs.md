@@ -18,12 +18,14 @@ Meant for operators who want to stand up bastions, logs, and witnesses:
   - [Sigsum's log-go implementation][]: introduction to the log server architecture
   - [Sigsum's log-go ansible collection][]: ansible for getting the log server software up and running
   - [Sigsum's litebastion ansible role][]: ansible for getting the litebastion software up and running
+  - [How to install a witness][]: How-to guide for installing a witness
 
 [Sigsum's log-go implementation]: https://git.glasklar.is/sigsum/core/log-go/-/blob/main/doc/readme.md
 [Sigsum's log-go ansible collection]: https://git.glasklar.is/sigsum/admin/ansible
 [Sigsum's litebastion ansible role]: https://git.glasklar.is/sigsum/admin/ansible/-/tree/main/roles/litebastion
 [Filippo's litebastion implementation]: https://github.com/FiloSottile/litetlog#litebastion
 [Filippo's litewitness implementation]: https://github.com/FiloSottile/litetlog#litewitness
+[How to install a witness]: witness-installation
 
 ## Documentation for contributors
 
