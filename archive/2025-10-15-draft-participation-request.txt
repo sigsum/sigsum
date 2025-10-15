@@ -1,0 +1,51 @@
+Draft of witness-network.org participation request email for barreleye
+test log, to be sent to the "participate (at) something" email address
+when that email address is available.
+
+----------------------------------
+
+From: elias (at) glasklarteknik.se
+
+To: "participate (at) something" (upcoming witness-network.org participate email address)
+
+CC: sigsum-logs (at) glasklarteknik.se
+
+----------------------------------
+
+Subject: Participation request for test log "barreleye" related to the Sigsum project
+
+----------------------------------
+
+Hello,
+
+We would like to participate by adding our test log "barreleye".
+
+Origin line:
+
+sigsum.org/v1/tree/4e89cc51651f0d95f3c6127c15e1a42e3ddf7046c5b17b752689c402e773bb4d
+
+Public key in vkey format:
+
+sigsum.org/v1/tree/4e89cc51651f0d95f3c6127c15e1a42e3ddf7046c5b17b752689c402e773bb4d+778629b1+AUZEryq9QPSJWgA7yjUPnVkSqzAaScd/E+W22QXCCl/m
+
+Add-checkpoint rate:
+
+Every 10 seconds
+
+Log list:
+
+This is a test log, so please add it to the "testing" list.
+
+Contact information:
+
+Email: sigsum-logs (at) glasklarteknik.se
+
+Other information:
+
+This is a test log related to the Sigsum project, you can find more information about it on this page: https://www.sigsum.org/services/
+
+Best regards,
+Elias Rudberg
+Glasklar Teknik AB
+
+----------------------------------
