@@ -42,7 +42,7 @@ Email: sigsum-logs (at) glasklarteknik.se
 
 Other information:
 
-This is a test log related to the Sigsum project, you can find more information about it on this page: https://www.sigsum.org/services/
+This is a test log related to the Sigsum project, see https://www.sigsum.org/ for more information.
 
 Best regards,
 Elias Rudberg
