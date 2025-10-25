@@ -6,16 +6,16 @@ signature is available for the generated public key.
 
 ## Install
 
-Install the [Go toolchain][].  You will need at least Go version 1.22.  If you
+Install the [Go toolchain][].  You will need at least Go version 1.23.  If you
 would like to run a few optional debug commands, also ensure that `sha256sum`,
 `cut`, and `basenc` are installed on the system.
 
 Install the following Sigsum tools:
 
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-key@v0.9.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.9.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.9.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.9.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-key@v0.11.2
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.11.2
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.11.2
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.11.2
 
 `sigsum-key` will be used to generate a public key-pair.
 
@@ -61,14 +61,14 @@ verified that the log is append-only in order for us to trust it.
 
 All signatures in the Sigsum system use Ed25519.  Create a new signing key-pair:
 
-    $ sigsum-key gen -o submit-key
+    $ sigsum-key generate -o submit-key
 
 You should see that two files, `submit-key` and `submit-key.pub`, were created.  These files
 follow the SSH key-file format.
 
 Try listing the public-key hash:
 
-    $ sigsum-key hash -k submit-key.pub
+    $ sigsum-key to-hash -k submit-key.pub
     cd53cb536660a52a95f0a46d822612b71b26bcfc1831e4bec1e55b14af9baa93
 
 Now that you have a trust policy and a signing key-pair you can start using
@@ -143,7 +143,7 @@ entry has been printed:
 
 This is indeed the public key-hash we listed earlier as well as the checksum
 we manually computed for `hello.py`.  (Your output should match the output of
-your invokation of `sigsum-key hash`, not this example.) The signature is not
+your invocation of `sigsum-key to-hash`, not this example.) The signature is not
 shown in the output since the monitor already verified it.
 
 ## Debrief
