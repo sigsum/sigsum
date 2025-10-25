@@ -8,7 +8,7 @@ signature is available for the generated public key.
 
 Install the [Go toolchain][].  You will need at least Go version 1.22.  If you
 would like to run a few optional debug commands, also ensure that `sha256sum`,
-`cut`, and `base16` are installed on the system.
+`cut`, and `basenc` are installed on the system.
 
 Install the following Sigsum tools:
 
@@ -105,7 +105,7 @@ We will sign and submit a checksum of this file.  If you
 would like to compute the same checksum manually for debugging purposes only
 (optional), apply SHA256 twice in a row:
 
-    $ sha256sum hello.py | cut -d' ' -f1 | base16 -d | sha256sum
+    $ sha256sum hello.py | cut -d' ' -f1 | basenc --base16 -d | sha256sum
     7138d30e618745ee20d3e09b81ca45cfbf3a7db0eb526557a04d34e2ef2a5039
 
 Sign and submit for logging using the key generated earlier:
