@@ -140,6 +140,8 @@ Some of the different aspects to consider are:
 
 - Jurisdiction
 
+- Type of organization: (e.g. company vs non-governmental organization)
+
 - Form of Internet access
 
 ### Decide witness groups and quorum rule
@@ -153,4 +155,48 @@ available witnesses.
 
 ### Decide a set of logs
 
-TODO
+#### Hard requirements for logs
+
+The following are hard requirements for logs:
+
+- There must be an about page for the log.
+
+- The about page must contain a commitment to keep the log
+  available and supporting the appropriate versions of the relevant
+  specifications for at least 12 months starting from the time when
+  the policy is to be published.
+
+- The log must be witnessed by all the witnesses needed for our
+  policy.
+
+#### Other factors considered for logs
+
+- Trustworthiness: are we convinced that the log operator is who they
+  say they are, and that they are honest in the information they are
+  providing?
+
+- Reliability of operations: if there is a risk of significant
+  downtime or even the log disappearing, then that log should not be
+  included.
+
+- Independence: it is preferable to have several independent log
+  operators.
+
+## Creating and publishing the policy file
+
+When a set of witnesses, witness groups, quorum rule and logs have
+been decided as described above, a corresponding policy file is
+created.
+
+For each witness and each log, carefully ensure that the correct
+public key is used.
+
+Add a comment line above each witness and each log with a link to the
+corresponding about page.
+
+Also add one or more comment lines above each witness group, briefly
+explaining why those witnesses are grouped together.
+
+The policy file is published in the form of a builtin named policy in
+the `pkg/policy/builtin/` directory in the [sigsum-go git
+repo](https://git.glasklar.is/sigsum/core/sigsum-go).
