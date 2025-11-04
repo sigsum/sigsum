@@ -175,6 +175,15 @@ The following are hard requirements for logs:
 - The log must be witnessed by all the witnesses needed for our
   policy.
 
+- The log must be configured to request cosignatures from witnesses
+  every 10 seconds.
+
+- If the log applies rate limiting then each submitter must be allowed
+  to perform at least X (TODO) submissions per hour.
+
+- The log must accept submissions from anyone that is able to control
+  a DNS name as needed for rate limiting.
+
 #### Other factors considered for logs
 
 - Trustworthiness: are we convinced that the log operator is who they
