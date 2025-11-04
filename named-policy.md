@@ -1,4 +1,4 @@
-# Sigsum named policy guidelines
+# Procedure used for Sigsum builtin named policies
 
 The Sigsum project maintains a set of named policies, currently named
 as `sigsum-generic-YYYY-n` where `YYYY` is the year the policy was
@@ -40,11 +40,12 @@ be useful for many Sigsum users.
 
 ## Procedure used to define policy
 
-To define a policy we need to decide a set of witnesses, how to group
-witnesses, a quorum rule, and a set of logs. We do it in this order:
+To define a policy we need to decide a set of witnesses, a quorum
+definition (defined via witness groups), and a set of logs. We do it
+in this order:
 
 - First decide a set of witnesses
-- Then decide witness groups and quorum rule
+- Then decide a quorum definition
 - Then decide a set of logs
 
 Each of those steps is described in detail below.
@@ -99,26 +100,26 @@ kinds of events. For example:
 
 - If a single actor (individual, company or organization) has the
   capability to compromise or take down several witnesses, then the
-  policy is vulnerable. Therefore, if many of the witnesses in the
+  policy is vulnerable. Therefore, if several of the witnesses in the
   policy are controlled by a single actor, the policy may be
   strengthened by adding witnesses that are operated outside of that
   actor's control.
 
-- If many witnesses rely on the same kind of hardware device, then the
-  policy is vulnerable to a flaw in that hardware. In that case, the
-  policy may be strengthened by adding witnesses that are operated in
-  other ways, not relying on that kind of hardware.
+- If several witnesses rely on the same kind of hardware device, then
+  the policy may be vulnerable to a flaw in that hardware. In that
+  case, the policy may be strengthened by adding witnesses that are
+  operated in other ways, not relying on that kind of hardware.
 
-- If many witnesses are physically located in the same place, for
-  example in the same city, then the policy is vulnerable with respect
-  to something (e.g. natural disaster or other crisis) happening in
-  that location. So, the policy may be strengthened by adding
-  witnesses based in other locations.
+- If several witnesses are physically located in the same place, for
+  example in the same city, then the policy may be vulnerable with
+  respect to something (e.g. natural disaster or other crisis)
+  happening in that location. So, the policy may be strengthened by
+  adding witnesses based in other locations.
 
-- If many witnesses use the same software and if they all apply
+- If several witnesses use the same software and if they all apply
   software upgrades automatically without review of individual witness
-  operators, then the policy is vulnerable with respect to flaws in
-  that software that could affect all those witnesses at the same
+  operators, then the policy may be vulnerable with respect to flaws
+  in that software that could affect all those witnesses at the same
   time. The policy may be strengthened by adding witnesses using other
   software implementations, or witness operators independently
   reviewing software changes.
@@ -144,14 +145,19 @@ Some of the different aspects to consider are:
 
 - Form of Internet access
 
-### Decide witness groups and quorum rule
+### Decide quorum definition
 
-Once a set of witnesses has been decided, group them according to
-dependencies.
+Once a set of witnesses has been decided, consider how to group them
+depending on dependencies between witnesses.
 
-At the moment we mainly group witnesses according to organization,
-because we consider that the most important aspect given the currently
-available witnesses.
+For example, several witnesses being tied to the same organization can
+be a reason to place those witnesses in a group.
+
+For each [witness group
+definition](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md#defining-a-witness-group),
+the number `k` is decided in a way that balances security and
+availability, taking into account all relevant information about the
+witnesses and groups involved.
 
 ### Decide a set of logs
 
@@ -184,8 +190,8 @@ The following are hard requirements for logs:
 
 ## Creating and publishing the policy file
 
-When a set of witnesses, witness groups, quorum rule and logs have
-been decided as described above, a corresponding policy file is
+When a set of witnesses, witness groups, quorum definition and logs
+have been decided as described above, a corresponding policy file is
 created.
 
 For each witness and each log, carefully ensure that the correct
