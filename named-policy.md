@@ -7,6 +7,11 @@ available in the form of builtin policies in the [Sigsum
 tools](https://git.glasklar.is/sigsum/core/sigsum-go). This document
 describes how these policies are maintained.
 
+There are also builtin test policies, but the procedures described in
+this document do not apply to them. Test policies should always have
+"test" in the policy name, and should only be used for test and
+development purposes.
+
 ## Policy name including year and sequence number
 
 A builtin named policy should not change once it has been
@@ -25,10 +30,8 @@ that matter:
 - Security: it should be difficult for an adversary to perform a
   split-view attack.
 
-- Availability: good availability here means that it is the likelihood
-  of being able to perform a Sigsum submission using this policy is
-  high. Relying on witnesses with a large risk of downtime could
-  result in poor availability.
+- Availability: it should be possible to perform a Sigsum submission
+  using this policy almost always.
 
 - Longevity: the policy should remain useful over a significant time
   period.
@@ -98,12 +101,11 @@ compared to not adding this witness?"
 Ideally, we want the policy to be resilient against many different
 kinds of events. For example:
 
-- If a single actor (individual, company or organization) has the
-  capability to compromise or take down several witnesses, then the
-  policy is vulnerable. Therefore, if several of the witnesses in the
-  policy are controlled by a single actor, the policy may be
-  strengthened by adding witnesses that are operated outside of that
-  actor's control.
+- If a single actor (individual or organization) has the capability to
+  compromise or take down several witnesses, then the policy is
+  vulnerable. Therefore, if several of the witnesses in the policy are
+  controlled by a single actor, the policy may be strengthened by
+  adding witnesses that are operated outside of that actor's control.
 
 - If several witnesses rely on the same kind of hardware device, then
   the policy may be vulnerable to a flaw in that hardware. In that
@@ -119,17 +121,17 @@ kinds of events. For example:
 - If several witnesses use the same software and if they all apply
   software upgrades automatically without review of individual witness
   operators, then the policy may be vulnerable with respect to flaws
-  in that software that could affect all those witnesses at the same
-  time. The policy may be strengthened by adding witnesses using other
-  software implementations, or witness operators independently
-  reviewing software changes.
+  in updates to that software that could affect all those witnesses at
+  the same time. The policy may be strengthened by adding witnesses
+  using other software implementations, or witness operators
+  independently reviewing software changes.
 
 The above are just a few examples to illustrate that independence of
 witnesses can be considered in a variety of different ways.
 
 Some of the different aspects to consider are:
 
-- Organization: which organization/company/individual is operating the witness
+- Organization: which organization/individual is operating the witness
 
 - Witnessing software
 
