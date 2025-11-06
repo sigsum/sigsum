@@ -14,7 +14,7 @@ development purposes.
 
 ## Policy name including year and sequence number
 
-A builtin named policy will not change once it has been
+A builtin named policy should not change once it has been
 released. Therefore, when a change is desired a new policy name is
 used, based on the year and with a new sequence number. The first
 policy in a given year gets the sequence number 1. As an example,
