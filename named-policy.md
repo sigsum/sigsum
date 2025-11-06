@@ -212,6 +212,41 @@ The following are hard requirements for logs:
   blocking access for certain IP addresses then that log should not be
   included.
 
+## When and why to release a new policy
+
+There is no fixed schedule for when a new policy in the
+`sigsum-generic-*` series should be released. Instead, we regularly
+check for any changes in circumstances that could motivate the
+creation of a new policy.
+
+The following are examples of changes in circumstances that can
+motivate the release of a new policy in the `sigsum-generic-*` series:
+
+- One or more new witnesses or logs have become available, and a
+  stronger policy can be creating by adding them.
+
+- One of the witnesses or logs that the latest existing policy relies
+  on has announced that it will discontinue its operations in less
+  than than the desired time frame of 12 months.
+
+- Changes in our assessment of dependencies between witnesses. For
+  example, if two witnesses that were treated as independent are now
+  regarded as dependent, they may be placed in a group.
+
+- Other changes in the factors considered for witnesses and logs, as
+  described above.
+
+Essentially, the procedure for determining a policy outlined in this
+document should be revisited regularly and if it turns out that the
+result is different from the current latest released policy, and if
+the changes are significant, then it is appropriate to release a new
+policy.
+
+Note that existing builtin named policies will not change; when a new
+policy is released that is given a new name on the form
+`sigsum-generic-YYYY-n`. Thus, usage of the previously existing builtin
+named policies will be unaffected.
+
 ## Creating and publishing the policy file
 
 When a set of witnesses, witness groups, quorum definition and logs
