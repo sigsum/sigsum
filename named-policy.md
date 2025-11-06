@@ -96,6 +96,14 @@ the aspects above as well as any other relevant information, is: "will
 adding this particular witness be an improvement of the policy,
 compared to not adding this witness?"
 
+The question of which logs are witnessed by a given witness can also
+be considered to some extent. However, if there is a witness that
+would be suitable for use in a policy and the only problem is that it
+is not witnessing enough logs, then the preferred way of solving that
+problem is to have more logs configure that witness. That could be
+solved via participation in `witness-network.org` or similar, or by
+direct communication between witness and log operators.
+
 #### Independence of witnesses
 
 Ideally, we want the policy to be resilient against many different
