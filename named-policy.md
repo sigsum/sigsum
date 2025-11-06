@@ -223,7 +223,7 @@ The following are examples of changes in circumstances that can
 motivate the release of a new policy in the `sigsum-generic-*` series:
 
 - One or more new witnesses or logs have become available, and a
-  stronger policy can be creating by adding them.
+  stronger policy can be achieved by adding them.
 
 - One of the witnesses or logs that the latest existing policy relies
   on has announced that it will discontinue its operations in less
