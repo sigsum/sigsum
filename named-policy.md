@@ -207,6 +207,11 @@ The following are hard requirements for logs:
 - Independence: it is preferable to have several independent log
   operators.
 
+- Accessibility: logs should be accessible from anywhere, ideally
+  without any restrictions. As an example, if a log is unnecessarily
+  blocking access for certain IP addresses then that log should not be
+  included.
+
 ## Creating and publishing the policy file
 
 When a set of witnesses, witness groups, quorum definition and logs
