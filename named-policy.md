@@ -286,4 +286,6 @@ about pages changing or even disappearing.
 
 The policy file is published in the form of a builtin named policy in
 the `pkg/policy/builtin/` directory in the [sigsum-go git
-repo](https://git.glasklar.is/sigsum/core/sigsum-go).
+repo](https://git.glasklar.is/sigsum/core/sigsum-go). A new policy
+file is considered released when it is part of a [sigsum-go
+release](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/RELEASES.md).
