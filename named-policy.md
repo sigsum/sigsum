@@ -177,8 +177,8 @@ The following are hard requirements for logs:
 - The log must be witnessed by all the witnesses needed for our
   policy.
 
-- The log must be configured to request cosignatures from witnesses
-  every 10 seconds.
+- The log must be configured to request cosignatures from witnesses at
+  least once every 10 seconds.
 
 - If the log applies rate limiting then each submitter must be allowed
   to perform at least X (TODO) submissions per hour.
