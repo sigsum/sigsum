@@ -21,6 +21,14 @@ policy in a given year gets the sequence number 1. As an example,
 `sigsum-generic-2026-3` would mean the third `sigsum-generic-` policy
 published during 2026.
 
+The rule that existing released named policies are not changed once
+released ensures that if verification of a given proof passed once, it
+will continue to pass as long as the same policy name is used. If, in
+the future, that rule were to be changed for any reason, then that
+change in procedures would need to be documented first. The
+documentation would need to include an explanation of the reasoning
+behind that change in procedures.
+
 ## Purpose of the `sigsum-generic-*` sequence of named policies
 
 There are several things that can be desirable for a policy, and there
