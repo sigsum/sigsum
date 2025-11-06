@@ -202,7 +202,7 @@ The following are hard requirements for logs:
   least once every 10 seconds.
 
 - If the log applies rate limiting then each submitter must be allowed
-  to perform at least X (TODO) submissions per hour.
+  to perform at least 144 submissions per 24-hour period.
 
 - The log must accept submissions from anyone that is able to control
   a DNS name as needed for rate limiting.
