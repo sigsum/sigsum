@@ -38,7 +38,7 @@ that matter:
 
 Our aim for the `sigsum-generic-*` sequence of named policies is to be
 generally useful; we aim for a balance between all the three aspects
-above. The goal is to come up with a general purpose policies that can
+above. The goal is to come up with general purpose policies that can
 be useful for many Sigsum users.
 
 ## Procedure used to define policy
