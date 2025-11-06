@@ -262,6 +262,14 @@ corresponding about page.
 Also add one or more comment lines above each witness group, briefly
 explaining why those witnesses are grouped together.
 
+As part of the release procedure for a new policy we will archive the
+current contents of the about page for each log and witness used in
+the policy, using the `archive.org` service, at the time the policy is
+released. The purpose of such archiving is to make it easier for
+anyone who later wishes to review the information that was used when
+the policy was created, removing difficulties that could arise from
+about pages changing or even disappearing.
+
 The policy file is published in the form of a builtin named policy in
 the `pkg/policy/builtin/` directory in the [sigsum-go git
 repo](https://git.glasklar.is/sigsum/core/sigsum-go).
