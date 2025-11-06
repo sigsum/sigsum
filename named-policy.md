@@ -12,6 +12,11 @@ this document do not apply to them. Test policies should always have
 "test" in the policy name, and should only be used for test and
 development purposes.
 
+This document describes how new builtin named policies are
+created. Considerations regarding any possible revocation mechanisms
+or how to communicate that an existing policy is obsolete, are out of
+scope for this document.
+
 ## Policy name including year and sequence number
 
 A builtin named policy should not change once it has been
