@@ -208,9 +208,10 @@ The following are hard requirements for logs:
   operators.
 
 - Accessibility: logs should be accessible from anywhere, ideally
-  without any restrictions. As an example, if a log is unnecessarily
-  blocking access for certain IP addresses then that log should not be
-  included.
+  without any restrictions. If a log for some reason blocks certain
+  users, e.g., based on IP address range or rate-limit domain, that
+  should be clearly documented on the log about page, including a good
+  motivation.
 
 ## When and why to release a new policy
 
