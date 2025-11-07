@@ -29,10 +29,8 @@ published during 2026.
 The rule that existing released named policies are not changed once
 released ensures that if verification of a given sigsum proof passed
 once, it will continue to pass as long as the same policy name is
-used. If, in the future, that rule were to be changed for any reason,
-then that change in procedures would need to be documented first. The
-documentation would need to include an explanation of the reasoning
-behind that change in procedures.
+used. If we ever find a good enough reason to consider exceptions to
+this rule, the motivation will be properly documented and announced.
 
 ## Purpose of the `sigsum-generic-*` sequence of named policies
 
