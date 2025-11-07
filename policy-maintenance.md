@@ -1,4 +1,4 @@
-# Procedure used for Sigsum builtin named policies
+# Procedure for maintenance of Sigsum builtin named trust policies
 
 The Sigsum project maintains a set of named policies, currently named
 as `sigsum-generic-YYYY-n` where `YYYY` is the year the policy was
