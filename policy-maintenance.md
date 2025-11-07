@@ -97,6 +97,9 @@ are for example the following:
   includes considerations regarding management of signing keys and key
   backup.
 
+- Availability: can we expect that the witness will stay available
+  almost all the time, and not go offline sporadically or permanently?
+
 - Independence in relation to other witnesses: is the witness
   independent from other witnesses in the policy in a meaningful way?
   Different kinds of dependencies between witnesses can be relevant
