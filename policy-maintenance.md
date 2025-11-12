@@ -274,6 +274,11 @@ When a set of witnesses, witness groups, quorum definition and logs
 have been decided as described above, a corresponding policy file is
 created.
 
+In the beginning of the file, add a comment line saying "This is a
+Sigsum trust policy", optionally with some brief additional
+description, followed by another comment line with a link to this
+document.
+
 For each witness and each log, carefully ensure that the correct
 public key is used.
 
@@ -289,9 +294,9 @@ the policy, using the `archive.org` service, at the time the policy is
 released. The purpose of such archiving is to make it easier for
 anyone who later wishes to review the information that was used when
 the policy was created, removing difficulties that could arise from
-about pages changing or even disappearing. A file documenting the
-resulting `archive.org` links is saved in the [archive](./archive)
-directory in this repository.
+about pages changing or even disappearing. For each released policy, a
+file documenting the resulting `archive.org` links is saved in the
+[archive](./archive) directory in this repository.
 
 The policy file is published in the form of a builtin named policy in
 the `pkg/policy/builtin/` directory in the [sigsum-go git
