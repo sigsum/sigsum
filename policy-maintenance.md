@@ -271,8 +271,8 @@ created.
 For each witness and each log, carefully ensure that the correct
 public key is used.
 
-Add a comment line above each witness and each log with a link to the
-corresponding about page.
+Add a comment line above each witness and each log with a URL to the
+corresponding about page, with an access date in parentheses.
 
 Also add one or more comment lines above each witness group, briefly
 explaining why those witnesses are grouped together.
@@ -283,7 +283,9 @@ the policy, using the `archive.org` service, at the time the policy is
 released. The purpose of such archiving is to make it easier for
 anyone who later wishes to review the information that was used when
 the policy was created, removing difficulties that could arise from
-about pages changing or even disappearing.
+about pages changing or even disappearing. A file documenting the
+resulting `archive.org` links is saved in the [archive](./archive)
+directory in this repository.
 
 The policy file is published in the form of a builtin named policy in
 the `pkg/policy/builtin/` directory in the [sigsum-go git
