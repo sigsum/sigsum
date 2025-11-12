@@ -100,6 +100,9 @@ are for example the following:
 - Availability: can we expect that the witness will stay available
   almost all the time, and not go offline sporadically or permanently?
 
+- Stability of configuration: can we expect that the witness will
+  continue to witness the logs that are currently configured?
+
 - Independence in relation to other witnesses: is the witness
   independent from other witnesses in the policy in a meaningful way?
   Different kinds of dependencies between witnesses can be relevant
@@ -226,6 +229,9 @@ The following are hard requirements for logs:
   users, e.g., based on IP address range or rate-limit domain, that
   should be clearly documented on the log about page, including a good
   motivation.
+
+- Stability of configuration: can we expect that the log will continue
+  to use the set of witnesses that are currently configured?
 
 ## When and why to release a new policy
 
