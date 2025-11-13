@@ -275,9 +275,9 @@ have been decided as described above, a corresponding policy file is
 created.
 
 In the beginning of the file, add a comment line saying "This is a
-Sigsum trust policy", optionally with some brief additional
-description, followed by another comment line with a link to this
-document.
+Sigsum trust policy that has been vetted by the Sigsum project",
+optionally with some brief additional description, followed by another
+comment line with a link to this document.
 
 For each witness and each log, carefully ensure that the correct
 public key is used.
