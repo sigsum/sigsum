@@ -100,6 +100,9 @@ are for example the following:
 - Availability: can we expect that the witness will stay available
   almost all the time, and not go offline sporadically or permanently?
 
+- Stability of configuration: can we expect that the witness will
+  continue to witness the logs that are currently configured?
+
 - Independence in relation to other witnesses: is the witness
   independent from other witnesses in the policy in a meaningful way?
   Different kinds of dependencies between witnesses can be relevant
@@ -227,6 +230,9 @@ The following are hard requirements for logs:
   should be clearly documented on the log about page, including a good
   motivation.
 
+- Stability of configuration: can we expect that the log will continue
+  to use the set of witnesses that are currently configured?
+
 ## When and why to release a new policy
 
 There is no fixed schedule for when a new policy in the
@@ -268,11 +274,16 @@ When a set of witnesses, witness groups, quorum definition and logs
 have been decided as described above, a corresponding policy file is
 created.
 
+In the beginning of the file, add a comment line saying "This is a
+Sigsum trust policy that has been vetted by the Sigsum project",
+optionally with some brief additional description, followed by another
+comment line with a link to this document.
+
 For each witness and each log, carefully ensure that the correct
 public key is used.
 
-Add a comment line above each witness and each log with a link to the
-corresponding about page.
+Add a comment line above each witness and each log with a URL to the
+corresponding about page, with an access date in parentheses.
 
 Also add one or more comment lines above each witness group, briefly
 explaining why those witnesses are grouped together.
@@ -283,7 +294,9 @@ the policy, using the `archive.org` service, at the time the policy is
 released. The purpose of such archiving is to make it easier for
 anyone who later wishes to review the information that was used when
 the policy was created, removing difficulties that could arise from
-about pages changing or even disappearing.
+about pages changing or even disappearing. For each released policy, a
+file documenting the resulting `archive.org` links is saved in the
+[archive](./archive) directory in this repository.
 
 The policy file is published in the form of a builtin named policy in
 the `pkg/policy/builtin/` directory in the [sigsum-go git
