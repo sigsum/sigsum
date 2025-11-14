@@ -20,6 +20,7 @@ Meant for operators who want to stand up bastions, logs, and witnesses:
   - [Sigsum's log-go implementation][]: introduction to the log server architecture
   - [Sigsum's log-go ansible collection][]: ansible for getting the log server software up and running
   - [Sigsum's litebastion ansible role][]: ansible for getting the litebastion software up and running
+  - [Witness Network](https://witness-network.org): community that simplifies witness configuration
 
 [Sigsum's log-go implementation]: https://git.glasklar.is/sigsum/core/log-go/-/blob/main/doc/readme.md
 [Sigsum's log-go ansible collection]: https://git.glasklar.is/sigsum/admin/ansible
