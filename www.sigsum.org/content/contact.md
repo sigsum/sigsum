@@ -7,7 +7,7 @@ does not matter which one you choose.
   - Matrix: [#sigsum:matrix.org][]
 
 [OFTC.net]: https://oftc.net/
-[#sigsum:matrix.org]: https://app.element.io/#/room/#sigsum:matrix.org
+[#sigsum:matrix.org]: https://matrix.to/#/#sigsum:matrix.org
 
 Subscribe to the Sigsum [mailing lists][] by sending an email with the subject
 `subscribe` to
