@@ -50,11 +50,11 @@ Meant for implementers who need to know about bits and bytes:
   - [Sigsum log server protocol][]: stable v1 release
   - [Sigsum proof bundle format][]: work in progress
   - [Sigsum trust policy format][]: work in progress
-  - [Witness cosignature format][]: release candidate
+  - [Witness cosignature format][]: stable v1 release
   - [Witness cosigning protocol][]: release candidate
 
 [Sigsum log server protocol]: https://git.glasklar.is/sigsum/project/documentation/-/blob/log.md-release-v1.0.0/log.md
-[Witness cosignature format]: https://c2sp.org/tlog-cosignature
+[Witness cosignature format]: https://c2sp.org/tlog-cosignature@v1.0.0
 [Witness cosigning protocol]: https://c2sp.org/tlog-witness
 [Bastion host protocol]: https://c2sp.org/https-bastion
 [Sigsum proof bundle format]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md
