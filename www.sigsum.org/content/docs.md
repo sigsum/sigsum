@@ -2,12 +2,14 @@
 
 Meant for users who want try Sigsum and understand how it works:
 
-  - [Command-line tools][]: generate keys, sign, submit, and offline verify
-  - [Getting started](/getting-started): step-by-step demo of key-usage transparency
-  - [Monitor tooling][]: poll the logs to detect signatures produced by your keys
+  - [Sigsum's command-line tools][]: generate keys, sign, submit, and offline verify
+  - [Sigsum's getting started](/getting-started): step-by-step demo of key-usage transparency
+  - [Sigsum's monitor tooling][]: poll the logs to detect signatures produced by your keys
+  - [Florian's monitor tooling][]: most complete monitor Sigsum is aware of right now
 
-[Command-line tools]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/tools.md
-[Monitor tooling]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/monitor.md
+[Sigsum's command-line tools]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/tools.md
+[Sigsum's monitor tooling]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/monitor.md
+[Florian's monitor tooling]: https://github.com/florolf/sigmon
 
 ## Documentation for operators
 
