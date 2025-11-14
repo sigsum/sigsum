@@ -25,8 +25,8 @@ Meant for operators who want to stand up bastions, logs, and witnesses:
 [Sigsum's log-go implementation]: https://git.glasklar.is/sigsum/core/log-go/-/blob/main/doc/readme.md
 [Sigsum's log-go ansible collection]: https://git.glasklar.is/sigsum/admin/ansible
 [Sigsum's litebastion ansible role]: https://git.glasklar.is/sigsum/admin/ansible/-/tree/main/roles/litebastion
-[Filippo's litebastion implementation]: https://github.com/FiloSottile/litetlog#litebastion
-[Filippo's litewitness implementation]: https://github.com/FiloSottile/litetlog#litewitness
+[Filippo's litebastion implementation]: https://github.com/FiloSottile/torchwood/blob/main/cmd/litebastion/README.md
+[Filippo's litewitness implementation]: https://github.com/FiloSottile/torchwood/blob/main/cmd/litewitness/README.md
 
 ## Documentation for contributors
 
