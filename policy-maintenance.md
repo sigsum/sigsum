@@ -91,7 +91,7 @@ are for example the following:
   backup.
 
 - Availability: can we expect that the witness will stay available
-  almost all the time, and not go offline sporadically or permanently?
+  most of the time, and not go offline sporadically or permanently?
 
 - Stability of configuration: can we expect that the witness will
   continue to witness the logs that are currently configured?
