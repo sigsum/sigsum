@@ -187,9 +187,8 @@ The following are hard requirements for logs:
   declares information about the log and surrounding operations.
 
 - The about page must contain a commitment to keep the log
-  available and supporting the appropriate versions of the relevant
-  specifications for at least 12 months starting from the time when
-  the policy is to be published.
+  available with interoperable specifications for at least 12 months
+  (starting from the time when the policy is to be published).
 
 - The log must be witnessed by all the witnesses needed for our
   policy.
