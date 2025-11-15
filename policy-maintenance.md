@@ -204,22 +204,24 @@ The following are hard requirements for logs:
 
 #### Step 2: Other factors considered for logs
 
+Below are further factors we take into account when deciding on
+logs.  This assessment is in part subjective.  We essentially ask
+ourselves if including/excluding a log improves the policy or not.
+
 - Trustworthiness: are we convinced that the log operator is who they
   say they are, and that they are honest in the information they are
   providing?
 
-- Reliability of operations: if there is a risk of significant
-  downtime or even the log disappearing, then that log should not be
-  included.
+- Availability: can we expect that the log will stay available most of
+  the time, and not go offline sporadically or permanently?
 
-- Independence: it is preferable to have several independent log
-  operators.
+- Independence: it is preferable to have several independent logs,
+  especially in relation to the risk of unavailability.
 
-- Accessibility: logs should be accessible from anywhere, ideally
-  without any restrictions. If a log for some reason blocks certain
-  users, e.g., based on IP address range or rate-limit domain, that
-  should be clearly documented on the log about page, including a good
-  motivation.
+- Accessibility: logs should be accessible from anywhere on the
+  internet.  If a log blocks certain users (e.g., based on IP address
+  range), such restrictions should be documented and motivated on the
+  log's about page.  This does not apply for temporary DoS protection.
 
 - Stability of configuration: can we expect that the log will continue
   to use the set of witnesses that are currently configured?
