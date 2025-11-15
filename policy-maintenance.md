@@ -53,15 +53,9 @@ for a balance between all the three aspects above.
 
 ## Procedure used to define policy
 
-To define a policy we need to decide a set of witnesses, a quorum
-definition (defined via witness groups), and a set of logs. We do it
-in this order:
-
-- First decide a set of witnesses
-- Then decide a quorum definition
-- Then decide a set of logs
-
-Each of those steps is described in detail below.
+To define a policy we need to decide on a set of witnesses, a quorum
+definition (defined via witness groups), and a set of logs.  We
+describe this *manual process* in greater detail below.
 
 ### Decide a set of witnesses
 
