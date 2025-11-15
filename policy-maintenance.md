@@ -183,7 +183,8 @@ Similar to witness selection, log selection is a two-step procedure.
 
 The following are hard requirements for logs:
 
-- There must be an about page for the log.
+- There must be an *about page* for the log.  Here, the operator
+  declares information about the log and surrounding operations.
 
 - The about page must contain a commitment to keep the log
   available and supporting the appropriate versions of the relevant
