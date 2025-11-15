@@ -177,7 +177,9 @@ about the group.
 
 ### Decide a set of logs
 
-#### Hard requirements for logs
+Similar to witness selection, log selection is a two-step procedure.
+
+#### Step 1: Hard requirements for logs
 
 The following are hard requirements for logs:
 
@@ -200,7 +202,7 @@ The following are hard requirements for logs:
 - The log must accept submissions from anyone that is able to control
   a DNS name as needed for rate limiting.
 
-#### Other factors considered for logs
+#### Step 2: Other factors considered for logs
 
 - Trustworthiness: are we convinced that the log operator is who they
   say they are, and that they are honest in the information they are
