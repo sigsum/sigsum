@@ -66,7 +66,7 @@ which of the candidates to include in the policy, taking into account
 additional factors including to what extent the witnesses are
 independent.
 
-#### Hard requirements for witnesses
+#### Step 1: Hard requirements for witnesses
 
 The following are hard requirements for witnesses:
 
@@ -77,7 +77,7 @@ The following are hard requirements for witnesses:
   available with interoperable specifications for at least 12 months
   (starting from the time when the policy is to be published).
 
-#### Other factors considered for witnesses
+#### Step 2: Other factors considered for witnesses
 
 Below are further factors we take into account when deciding on
 witnesses.  This assessment is in part subjective.  We essentially ask
