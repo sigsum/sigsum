@@ -79,8 +79,9 @@ The following are hard requirements for witnesses:
 
 #### Other factors considered for witnesses
 
-Other factors considered when deciding whether to include a witness
-are for example the following:
+Below are further factors we take into account when deciding on
+witnesses.  This assessment is in part subjective.  We essentially ask
+ourselves if including/excluding a witness improves the policy or not.
 
 - Trustworthiness: are we convinced that the witness operator is who
   they say they are, and that they are honest in the information they
@@ -100,11 +101,6 @@ are for example the following:
   independent from other witnesses in the policy in a meaningful way?
   Different kinds of dependencies between witnesses can be relevant
   here, see section "Independence of witnesses" below.
-
-The main question we need to answer for a given witness, considering
-the aspects above as well as any other relevant information, is: "will
-adding this particular witness be an improvement of the policy,
-compared to not adding this witness?"
 
 The question of which logs are witnessed by a given witness can also
 be considered to some extent. However, if there is a witness that
