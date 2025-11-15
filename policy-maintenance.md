@@ -20,8 +20,8 @@ scope for this document.
 ## Policy name including year and sequence number
 
 A builtin named policy should not change once it has been
-released. Therefore, when a change is desired a new policy name is
-used, based on the year and with a new sequence number. The first
+released. Therefore, when a change is desired, a new policy name is
+used based on the year and with a new sequence number. The first
 policy in a given year gets the sequence number 1. As an example,
 `sigsum-generic-2026-3` would mean the third `sigsum-generic-` policy
 published during 2026.
