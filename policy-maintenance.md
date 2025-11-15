@@ -48,9 +48,8 @@ that matter:
   period.
 
 Our aim for the `sigsum-generic-*` sequence of named policies is to be
-generally useful; we aim for a balance between all the three aspects
-above. The goal is to come up with general purpose policies that can
-be useful for many Sigsum users.
+generally useful for many different Sigsum users. Therefore, we aim
+for a balance between all the three aspects above.
 
 ## Procedure used to define policy
 
