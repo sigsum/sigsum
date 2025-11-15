@@ -163,17 +163,17 @@ Some of the different aspects to consider are:
 
 ### Decide quorum definition
 
-Once a set of witnesses has been decided, consider how to group them
-depending on dependencies between witnesses.
+Once a set of witnesses has been decided, we need to consider how to
+group them depending on dependencies between witnesses (see above).
 
 For example, several witnesses being tied to the same organization can
 be a reason to place those witnesses in a group.
 
 For each [witness group
 definition](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md#defining-a-witness-group),
-the number `k` is decided in a way that balances security and
-availability, taking into account all relevant information about the
-witnesses and groups involved.
+the number `k` is decided to strike a balance between security and
+availability.  This assessment is subjective and based on what we know
+about the group.
 
 ### Decide a set of logs
 
