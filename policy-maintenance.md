@@ -76,12 +76,12 @@ independent.
 
 The following are hard requirements for witnesses:
 
-- There must be an about page for the witness.
+- There must be an *about page* for the witness.  Here, the operator
+  declares information about the witness and surrounding operations.
 
 - The about page must contain a commitment to keep the witness
-  available and supporting the appropriate versions of the relevant
-  specifications for at least 12 months starting from the time when
-  the policy is to be published.
+  available with interoperable specifications for at least 12 months
+  (starting from the time when the policy is to be published).
 
 #### Other factors considered for witnesses
 
