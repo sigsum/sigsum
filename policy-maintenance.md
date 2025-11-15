@@ -196,8 +196,8 @@ The following are hard requirements for logs:
 - The log must be configured to request cosignatures from witnesses at
   least once every 10 seconds.
 
-- If the log applies rate limiting then each submitter must be allowed
-  to perform at least 144 submissions per 24-hour period.
+- If the log applies DNS-based rate limiting then each submitter must
+  be allowed to perform at least 144 submissions per 24-hour period.
 
 - The log must accept submissions from anyone that is able to control
   a DNS name as needed for rate limiting.
