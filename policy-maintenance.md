@@ -128,7 +128,7 @@ kinds of events. For example:
 
 - If several witnesses are physically located in the same place, for
   example in the same city, then the policy may be vulnerable with
-  respect to something (e.g. natural disaster or other crisis)
+  respect to something (e.g., natural disaster or other crisis)
   happening in that location. So, the policy may be strengthened by
   adding witnesses based in other locations.
 
