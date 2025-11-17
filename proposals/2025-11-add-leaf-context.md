@@ -50,10 +50,10 @@ using Ed25519.
 
 ### Including context
 
-To add a leaf with context, there's an additional `context` input for
-add leaf. *Open question*: Add a new endpoint `add-context-leaf`, or
-introduce an optional `context` line in the input body for the
-existing `add-leaf` end-point?
+To add a leaf with context, we need an additional `context` input for
+add leaf. Add a new endpoint `add-context-leaf`, where the request
+body format for `add-leaf` is extended with a new line with key
+`context` and value being the hex-encoded context.
 
 For a leaf with context, the `signature` is formed over the
 concatenation of the namespace string
@@ -72,6 +72,12 @@ that the leaf structure is unchanged, and that the log uses the
 `key_hash`: after this processing, the log keeps no record neither of
 presence or contents of the `context`.
 
+Alternative that's been considered: Introduce an optional `context`
+line in the input body for the existing `add-leaf` end-point. But a
+new endpoint seems preferable, both for being more explicit, and
+because optional lines would be a new convention not used elsewhere in
+the api ascii formats.
+
 ## Implementation
 
 ### Public keys
@@ -79,22 +85,23 @@ presence or contents of the `context`.
 Essentially, all submitter public keys need to have the context (if any) attached.
 For convenience, we can add this as an attribute in public key files, like
 ```
-sigsum-context="foo" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPwsfu294zCxiE157E4N5od+wkx7eZtH1Lz+L9Zg5g4r sigsum key
+sigsum-context-id="foo" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPwsfu294zCxiE157E4N5od+wkx7eZtH1Lz+L9Zg5g4r sigsum key
 ```
 or
 ```
-sigsum-context-hash="2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPwsfu294zCxiE157E4N5od+wkx7eZtH1Lz+L9Zg5g4r sigsum key
+sigsum-context-raw="LCa0a2j/xo/5m0U8HTBBNBNCLXBkg7+g+YpeiGJm564=" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPwsfu294zCxiE157E4N5od+wkx7eZtH1Lz+L9Zg5g4r sigsum key
 ```
 
-*Open questions*: Support both identifier (to be hashed) and the raw
-context? For the 32-octet raw context, use hex encoding as above, or
-base64, which is shorter and more consitent with the encoding of the
-pubkey blob? We could also consider corresponding PEM headers for
-private key files, both for sigsum-context and the recently added
-sigsum-policy.
+The identifier version is useful when the context is the hash of a
+short human-readable identifier. The raw version is useful when the
+context is the hash of some large or not human-friendly data, and it
+uses base64 (for conciseness, and consistency with the key blob
+encoding).
 
-Maybe we should add features to the `sigsum-key` command to help
-manage key attributes.
+Potential related work, for later: Consider corresponding PEM headers
+for private key files, both for sigsum-context and the recently added
+sigsum-policy. Add features to the `sigsum-key` command to help manage
+key attributes.
 
 ### Submission
 
@@ -115,11 +122,6 @@ each authorized submit key. It will likely be most practical to
 include the context to use for each key in the submitter public key
 file passed with the `-k` option.
 
-*Open questions*: How can we allow overriding the context to use on
-the command line, also for the general case of multiple submitter
-public keys, each with its own context? How should we handle the case
-of multiple valid contexts for the same public key?
-
 ### Monitoring
 
 The configuration issues for the monitor is similar to those for a
@@ -130,3 +132,11 @@ Note that this design only enables monitoring for log entries
 associated with *pairs* of (`public_key`, `context`). It is not
 possibly to monitor all log entries with valid signatures for a given
 public key, regardless of context.
+
+### UI issues
+
+There are a few UI issues left open for now, which will have to be
+sorted out when implementing tooling support. There should be command
+line options for overriding some or all of the contexts specified in
+the public key files. And we need to think about how to support the
+case of multiple valid contexts for the same public key.
