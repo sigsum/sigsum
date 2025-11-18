@@ -78,6 +78,31 @@ new endpoint seems preferable, both for being more explicit, and
 because optional lines would be a new convention not used elsewhere in
 the api ascii formats.
 
+### Context is sensitive
+
+Including the context in the keyhash implies that authenticity of the
+context is as important for discoverability as the authenticity of the
+public key. Consider the scenario that a verifier has an authentic
+copy of the public key, and the attacker is unable to persuade the
+verifier to accept a different public key of the attacker's choice.
+Assume that the signing key is comprimised; then the promise of Sigsum
+is that usage of that key can be detected.
+
+Introducing contexts as proposed here, means that if the attacker is
+able to persuade the verifier to accept a context of the attacker's
+choice together with that key, then the attacker can use the
+compromised key to sign and log items, get those items accepted by a
+verifier, without the key owner or other monitors being able to
+discover that activity in the log.
+
+It's not surprising that any trust policy difference between verifiers
+and monitors can break discoverability, but introducing contexts does
+create a new way to try to fool users. "Hey! I'm Random J. Hacker, and
+you already have my authentic public key. I'm releasing some new
+awesome secure software, just configure context 'awesome' together
+with my public key to make sure that the copy you downloaded is
+authentic and Sigsum logged".
+
 ## Implementation
 
 ### Public keys
@@ -140,3 +165,13 @@ sorted out when implementing tooling support. There should be command
 line options for overriding some or all of the contexts specified in
 the public key files. And we need to think about how to support the
 case of multiple valid contexts for the same public key.
+
+## Further work
+
+One could consider transparency of used context. E.g., require the
+signer to use a *fixed* known context to sign a statement of intent to
+use a context, and have verifiers require a Sigsum proof for that
+statement before accepting a proof involving any other context. Then a
+key-usage monitor could tail the log for those statements, and use the
+discovered contexts to construct the additional key hashes to look for
+in the log.
