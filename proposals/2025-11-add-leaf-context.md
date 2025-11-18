@@ -26,7 +26,7 @@ extract entries signed with a particular key and a specific context.
 This proposal adds a leaf `context` in a way that is backwards
 compatible, and does not require the log to store the `context`. The
 `context` is always used together with a public key, and the owner of
-the corresponding private is responsible for managing the set of
+the corresponding private key is responsible for managing the set of
 contexts used with that key.
 
 A leaf context is either empty, or a string of 32 arbitrary octets.
