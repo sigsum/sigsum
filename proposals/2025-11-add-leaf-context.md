@@ -130,7 +130,7 @@ the submitter public key file(s).
 
 Note that this design only enables monitoring for log entries
 associated with *pairs* of (`public_key`, `context`). It is not
-possibly to monitor all log entries with valid signatures for a given
+possible to monitor all log entries with valid signatures for a given
 public key, regardless of context.
 
 ### UI issues
