@@ -16,7 +16,7 @@ Another use case is software distribution using non-crypto identities.
 E.g., a service providing build machinery for a large number of
 projects, like github and gitlab, could use a well known key to sign
 and sigsum log artifacts + metadata, and use the context to identify
-the user or project reponsible for the artifact.
+the user or project responsible for the artifact.
 
 The main benefit is for monitoring; a monitor can tail the log and
 extract entries signed with a particular key and a specific context.
