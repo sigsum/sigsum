@@ -212,8 +212,8 @@ ourselves if including/excluding a log improves the policy or not.
   say they are, and that they are honest in the information they are
   providing?
 
-- Availability: can we expect that the log will stay available most of
-  the time, and not go offline sporadically or permanently?
+- Availability: can we expect that the log will stay available almost
+  all the time, and not go offline sporadically or permanently?
 
 - Independence: it is preferable to have several independent logs,
   especially in relation to the risk of unavailability.
