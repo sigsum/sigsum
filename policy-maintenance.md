@@ -221,7 +221,9 @@ ourselves if including/excluding a log improves the policy or not.
 - Accessibility: logs should be accessible from anywhere on the
   internet.  If a log blocks certain users (e.g., based on IP address
   range), such restrictions should be documented and motivated on the
-  log's about page.  This does not apply for temporary DoS protection.
+  log's about page.  This does not apply for temporary DoS protection,
+  provided that any temporary restrictions are kept to a minimum and
+  are only applied when absolutely necessary.
 
 - Stability of configuration: can we expect that the log will continue
   to use the set of witnesses that are currently configured?
