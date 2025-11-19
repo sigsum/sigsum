@@ -20,8 +20,8 @@ scope for this document.
 ## Policy name including year and sequence number
 
 A builtin named policy should not change once it has been
-released. Therefore, when a change is desired a new policy name is
-used, based on the year and with a new sequence number. The first
+released. Therefore, when a change is desired, a new policy name is
+used based on the year and with a new sequence number. The first
 policy in a given year gets the sequence number 1. As an example,
 `sigsum-generic-2026-3` would mean the third `sigsum-generic-` policy
 published during 2026.
@@ -48,21 +48,18 @@ that matter:
   period.
 
 Our aim for the `sigsum-generic-*` sequence of named policies is to be
-generally useful; we aim for a balance between all the three aspects
-above. The goal is to come up with general purpose policies that can
-be useful for many Sigsum users.
+generally useful for many different Sigsum users. Therefore, we aim
+for a balance between all the three aspects above.
 
 ## Procedure used to define policy
 
-To define a policy we need to decide a set of witnesses, a quorum
-definition (defined via witness groups), and a set of logs. We do it
-in this order:
+To define a policy we need to decide on the following:
 
-- First decide a set of witnesses
-- Then decide a quorum definition
-- Then decide a set of logs
+- a set of witnesses
+- a quorum definition (defined via witness groups)
+- a set of logs
 
-Each of those steps is described in detail below.
+We describe this *manual process* in greater detail below.
 
 ### Decide a set of witnesses
 
@@ -73,21 +70,22 @@ which of the candidates to include in the policy, taking into account
 additional factors including to what extent the witnesses are
 independent.
 
-#### Hard requirements for witnesses
+#### Step 1: Hard requirements for witnesses
 
 The following are hard requirements for witnesses:
 
-- There must be an about page for the witness.
+- There must be an *about page* for the witness.  Here, the operator
+  declares information about the witness and surrounding operations.
 
 - The about page must contain a commitment to keep the witness
-  available and supporting the appropriate versions of the relevant
-  specifications for at least 12 months starting from the time when
-  the policy is to be published.
+  available with interoperable specifications for at least 12 months
+  (starting from the time when the policy is to be published).
 
-#### Other factors considered for witnesses
+#### Step 2: Other factors considered for witnesses
 
-Other factors considered when deciding whether to include a witness
-are for example the following:
+Below are further factors we take into account when deciding on
+witnesses.  This assessment is in part subjective.  We essentially ask
+ourselves if including/excluding a witness improves the policy or not.
 
 - Trustworthiness: are we convinced that the witness operator is who
   they say they are, and that they are honest in the information they
@@ -107,11 +105,6 @@ are for example the following:
   independent from other witnesses in the policy in a meaningful way?
   Different kinds of dependencies between witnesses can be relevant
   here, see section "Independence of witnesses" below.
-
-The main question we need to answer for a given witness, considering
-the aspects above as well as any other relevant information, is: "will
-adding this particular witness be an improvement of the policy,
-compared to not adding this witness?"
 
 The question of which logs are witnessed by a given witness can also
 be considered to some extent. However, if there is a witness that
@@ -139,7 +132,7 @@ kinds of events. For example:
 
 - If several witnesses are physically located in the same place, for
   example in the same city, then the policy may be vulnerable with
-  respect to something (e.g. natural disaster or other crisis)
+  respect to something (e.g., natural disaster or other crisis)
   happening in that location. So, the policy may be strengthened by
   adding witnesses based in other locations.
 
@@ -174,30 +167,32 @@ Some of the different aspects to consider are:
 
 ### Decide quorum definition
 
-Once a set of witnesses has been decided, consider how to group them
-depending on dependencies between witnesses.
+Once a set of witnesses has been decided, we need to consider how to
+group them depending on dependencies between witnesses (see above).
 
 For example, several witnesses being tied to the same organization can
 be a reason to place those witnesses in a group.
 
 For each [witness group
 definition](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md#defining-a-witness-group),
-the number `k` is decided in a way that balances security and
-availability, taking into account all relevant information about the
-witnesses and groups involved.
+the number `k` is decided to strike a balance between security and
+availability.  This assessment is subjective and based on what we know
+about the group.
 
 ### Decide a set of logs
 
-#### Hard requirements for logs
+Similar to witness selection, log selection is a two-step procedure.
+
+#### Step 1: Hard requirements for logs
 
 The following are hard requirements for logs:
 
-- There must be an about page for the log.
+- There must be an *about page* for the log.  Here, the operator
+  declares information about the log and surrounding operations.
 
 - The about page must contain a commitment to keep the log
-  available and supporting the appropriate versions of the relevant
-  specifications for at least 12 months starting from the time when
-  the policy is to be published.
+  available with interoperable specifications for at least 12 months
+  (starting from the time when the policy is to be published).
 
 - The log must be witnessed by all the witnesses needed for our
   policy.
@@ -205,30 +200,34 @@ The following are hard requirements for logs:
 - The log must be configured to request cosignatures from witnesses at
   least once every 10 seconds.
 
-- If the log applies rate limiting then each submitter must be allowed
-  to perform at least 144 submissions per 24-hour period.
+- If the log applies DNS-based rate limiting then each submitter must
+  be allowed to perform at least 144 submissions per 24-hour period.
 
 - The log must accept submissions from anyone that is able to control
   a DNS name as needed for rate limiting.
 
-#### Other factors considered for logs
+#### Step 2: Other factors considered for logs
+
+Below are further factors we take into account when deciding on
+logs.  This assessment is in part subjective.  We essentially ask
+ourselves if including/excluding a log improves the policy or not.
 
 - Trustworthiness: are we convinced that the log operator is who they
   say they are, and that they are honest in the information they are
   providing?
 
-- Reliability of operations: if there is a risk of significant
-  downtime or even the log disappearing, then that log should not be
-  included.
+- Availability: can we expect that the log will stay available almost
+  all the time, and not go offline sporadically or permanently?
 
-- Independence: it is preferable to have several independent log
-  operators.
+- Independence: it is preferable to have several independent logs,
+  especially in relation to the risk of unavailability.
 
-- Accessibility: logs should be accessible from anywhere, ideally
-  without any restrictions. If a log for some reason blocks certain
-  users, e.g., based on IP address range or rate-limit domain, that
-  should be clearly documented on the log about page, including a good
-  motivation.
+- Accessibility: logs should be accessible from anywhere on the
+  internet.  If a log blocks certain users (e.g., based on IP address
+  range), such restrictions should be documented and motivated on the
+  log's about page.  This does not apply for temporary DoS protection,
+  provided that any temporary restrictions are kept to a minimum and
+  are only applied when absolutely necessary.
 
 - Stability of configuration: can we expect that the log will continue
   to use the set of witnesses that are currently configured?
