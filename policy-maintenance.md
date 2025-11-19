@@ -92,7 +92,7 @@ ourselves if including/excluding a witness improves the policy or not.
   backup.
 
 - Availability: can we expect that the witness will stay available
-  most of the time, and not go offline sporadically or permanently?
+  almost all the time, and not go offline sporadically or permanently?
 
 - Stability of configuration: can we expect that the witness will
   continue to witness the logs that are currently configured?
