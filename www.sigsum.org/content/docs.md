@@ -2,12 +2,14 @@
 
 Meant for users who want try Sigsum and understand how it works:
 
-  - [Command-line tools][]: generate keys, sign, submit, and offline verify
-  - [Getting started](/getting-started): step-by-step demo of key-usage transparency
-  - [Monitor tooling][]: poll the logs to detect signatures produced by your keys
+  - [Sigsum's command-line tools][]: generate keys, sign, submit, and offline verify
+  - [Sigsum's getting started](/getting-started): step-by-step demo of key-usage transparency
+  - [Sigsum's monitor tooling][]: poll the logs to detect signatures produced by your keys
+  - [Florian's monitor tooling][]: most complete monitor Sigsum is aware of right now
 
-[Command-line tools]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/tools.md
-[Monitor tooling]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/monitor.md
+[Sigsum's command-line tools]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/tools.md
+[Sigsum's monitor tooling]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/monitor.md
+[Florian's monitor tooling]: https://github.com/florolf/sigmon
 
 ## Documentation for operators
 
@@ -18,12 +20,13 @@ Meant for operators who want to stand up bastions, logs, and witnesses:
   - [Sigsum's log-go implementation][]: introduction to the log server architecture
   - [Sigsum's log-go ansible collection][]: ansible for getting the log server software up and running
   - [Sigsum's litebastion ansible role][]: ansible for getting the litebastion software up and running
+  - [Witness Network](https://witness-network.org): community that simplifies witness configuration
 
 [Sigsum's log-go implementation]: https://git.glasklar.is/sigsum/core/log-go/-/blob/main/doc/readme.md
 [Sigsum's log-go ansible collection]: https://git.glasklar.is/sigsum/admin/ansible
 [Sigsum's litebastion ansible role]: https://git.glasklar.is/sigsum/admin/ansible/-/tree/main/roles/litebastion
-[Filippo's litebastion implementation]: https://github.com/FiloSottile/litetlog#litebastion
-[Filippo's litewitness implementation]: https://github.com/FiloSottile/litetlog#litewitness
+[Filippo's litebastion implementation]: https://github.com/FiloSottile/torchwood/blob/main/cmd/litebastion/README.md
+[Filippo's litewitness implementation]: https://github.com/FiloSottile/torchwood/blob/main/cmd/litewitness/README.md
 
 ## Documentation for contributors
 
@@ -47,11 +50,11 @@ Meant for implementers who need to know about bits and bytes:
   - [Sigsum log server protocol][]: stable v1 release
   - [Sigsum proof bundle format][]: work in progress
   - [Sigsum trust policy format][]: work in progress
-  - [Witness cosignature format][]: release candidate
+  - [Witness cosignature format][]: stable v1 release
   - [Witness cosigning protocol][]: release candidate
 
 [Sigsum log server protocol]: https://git.glasklar.is/sigsum/project/documentation/-/blob/log.md-release-v1.0.0/log.md
-[Witness cosignature format]: https://c2sp.org/tlog-cosignature
+[Witness cosignature format]: https://c2sp.org/tlog-cosignature@v1.0.0
 [Witness cosigning protocol]: https://c2sp.org/tlog-witness
 [Bastion host protocol]: https://c2sp.org/https-bastion
 [Sigsum proof bundle format]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md

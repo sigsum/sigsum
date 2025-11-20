@@ -7,7 +7,7 @@ does not matter which one you choose.
   - Matrix: [#sigsum:matrix.org][]
 
 [OFTC.net]: https://oftc.net/
-[#sigsum:matrix.org]: https://app.element.io/#/room/#sigsum:matrix.org
+[#sigsum:matrix.org]: https://matrix.to/#/#sigsum:matrix.org
 
 Subscribe to the Sigsum [mailing lists][] by sending an email with the subject
 `subscribe` to
@@ -21,7 +21,11 @@ sigsum-general list by sending en email to
 
     sigsum-general (at) lists.sigsum.org
 
-You can also file issues and submit merge requests on [GitLab][].
+You can also file issues and submit merge requests on [GitLab][].  If you have
+not requested a GitLab account (you're more than welcome to do so), consider
+filing issues to our issue boards via email:
+
+    sigsum-core-REPOSITORY-issues (at) incoming.glasklar.is
 
 [mailing lists]: https://lists.sigsum.org/mailman3/postorius/lists/
 [GitLab]: https://git.glasklar.is/sigsum/
