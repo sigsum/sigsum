@@ -95,7 +95,7 @@ A monitor downloads signed checksums from the logs listed in our trust policy.
 
 Start the monitor and print all signed checksums for your public key:
 
-    $ sigsum-monitor --interval 10s -p ~/.config/sigsum/trust_policy submit-key.pub
+    $ sigsum-monitor --interval 10s -P sigsum-test1-2025 submit-key.pub
 
 Since you have not signed and logged any checksums yet, only debug
 output on the form `New <log> leaves, count 0, total processed <N>` is
@@ -125,8 +125,9 @@ would like to compute the same checksum manually for debugging purposes only
 
 Sign and submit for logging using the key generated earlier:
 
-    $ sigsum-submit -p ~/.config/sigsum/trust_policy -k submit-key hello.py
-    2025/04/29 16:30:27 [INFO] Attempting submit to log: https://test.sigsum.org/barreleye
+    $ sigsum-submit -P sigsum-test1-2025 -k submit-key hello.py
+    2025/12/12 16:15:35 [INFO] Found builtin policy '"sigsum-test1-2025"'
+    2025/12/12 16:15:35 [INFO] Attempting to submit checksum#1 to log: https://test.sigsum.org/barreleye
 
 It might take about 10 seconds to get the signed checksum merged into the log in a way that makes
 the specified trust policy satisfied.  Once it has finished, you should see a proof of logging
@@ -137,9 +138,10 @@ stored as plaintext in a file named `hello.py.proof`.
 Verifying a proof of logging is like verifying a signature.  No outbound
 network connections are needed. Verify:
 
-    $ sigsum-verify -k submit-key.pub -p ~/.config/sigsum/trust_policy hello.py.proof <hello.py
+    $ sigsum-verify -k submit-key.pub -P sigsum-test1-2025 hello.py.proof <hello.py
+    [INFO] Found builtin policy '"sigsum-test1-2025"'
 
-Silence is a good sign, no output is expected if all went well and the exit code is zero:
+No more output is expected if all went well and the exit code is zero:
 
 	$ echo $?
 	0
@@ -169,8 +171,8 @@ running a monitor that printed the event.
 
 For security, you depended on:
 
-  - Two witnesses to verify that the log shows the same signed checksums to
+  - Three witnesses to verify that the log shows the same signed checksums to
     everyone
   - Your monitor to be up-and-running (or that it eventually makes a correct run
     somewhere)
-  - The integrity and effective access restrictions of the trust-policy file
+  - The integrity and effective access restrictions of the chosen trust policy
