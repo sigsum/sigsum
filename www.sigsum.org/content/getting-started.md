@@ -16,6 +16,7 @@ Install the following Sigsum tools:
     $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.13.1
     $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.13.1
     $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.13.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-policy@v0.13.1
 
 `sigsum-key` will be used to generate a public key-pair.
 
@@ -33,7 +34,7 @@ location is specified using the GOPATH or GOBIN environment
 variables. If that directory is not in you PATH then you can add it
 like this:
 
-    $ export PATH=$HOME/go/bin
+    $ export PATH=$HOME/go/bin:$PATH
 
 Check that the installation worked by running one of the programs with
 the `--version` option:
@@ -43,31 +44,31 @@ the `--version` option:
 
 [Go toolchain]: https://go.dev/doc/install
 
-## Create a trust policy
+## Decide which trust policy to use
 
 Transparency log solutions depend on [trust policies][] being correctly configured
 in user software and monitors.  Not having a trust policy would be similar to
 not having a public key for digital signatures.
 
-Create `~/.config/sigsum/trust_policy`:
+The Sigsum tools allow you to specify which policy to use by giving
+either a policy file or a policy name. Here we will use the policy
+`sigsum-test1-2025` which is a builtin test policy.
 
-    log 4644af2abd40f4895a003bca350f9d5912ab301a49c77f13e5b6d905c20a5fe6 https://test.sigsum.org/barreleye
-    
-    witness poc.sigsum.org/nisse 1c25f8a44c635457e2e391d1efbca7d4c2951a0aef06225a881e46b98962ac6c
-    witness rgdd.se/poc-witness  28c92a5a3a054d317c86fc2eeb6a7ab2054d6217100d0be67ded5b74323c5806
-    
-    group  demo-quorum-rule any poc.sigsum.org/nisse rgdd.se/poc-witness
-    quorum demo-quorum-rule
+Available named policies can be listed using `sigsum-policy list` and
+shown using e.g. `sigsum-policy show sigsum-test1-2025`.
 
-The first line declares a Sigsum log, its public key, and its API URL.  This is
-required for interacting with a log.
+If you inspect the output from `sigsum-policy show sigsum-test1-2025`
+you will see that the first part of the policy declares a Sigsum log,
+its public key, and its API URL.  This is required for interacting
+with a log.
 
-The next two lines declare witnesses and their public keys.  Witnesses
+The next few lines declare witnesses and their public keys.  Witnesses
 verify cryptographically that logs only append new entries.  This helps you
 know that you see the same logs as everyone else.
 
-The last two lines define a quorum rule saying that at least one of the two witness must have
-verified that the log is append-only in order for us to trust it.
+The final lines in the policy define a quorum rule saying that at
+least two of the three witnesses must have verified that the log is
+append-only in order for us to trust it.
 
 [trust policies]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md
 
