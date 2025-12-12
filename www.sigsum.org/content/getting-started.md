@@ -70,6 +70,14 @@ The final lines in the policy define a quorum rule saying that at
 least two of the three witnesses must have verified that the log is
 append-only in order for us to trust it.
 
+Note that the `sigsum-test1-2025` policy used here is only intended
+for test and development purposes. For production use, the
+`sigsum-generic-2025-1` policy would be a better choice. See the
+[policy maintenance
+document](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/policy-maintenance.md)
+for a description of how the `sigsum-generic-*` named policies are
+maintained.
+
 [trust policies]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md
 
 ## Generate a signing key-pair
