@@ -45,25 +45,29 @@ Transparency log solutions depend on [trust policies][] being correctly configur
 in user software and monitors.  Not having a trust policy would be similar to
 not having a public key for digital signatures.
 
-The Sigsum tools allow you to specify which policy to use by giving
-either a policy file or a policy name. Here we will use the policy
-`sigsum-test1-2025` which is a builtin test policy.
+The Sigsum tools allow you to specify which policy to use by giving either a
+policy file or a policy name.  Here we will use a test policy that is built into
+Sigsum's tooling under the name `sigsum-test1-2025`.
 
-Available named policies can be listed using `sigsum-policy list` and
-shown using e.g. `sigsum-policy show sigsum-test1-2025`.
+    $ sigsum-policy show sigsum-test1-2025
+    log 4644af2abd40f4895a003bca350f9d5912ab301a49c77f13e5b6d905c20a5fe6 https://test.sigsum.org/barreleye
 
-If you inspect the output from `sigsum-policy show sigsum-test1-2025`
-you will see that the first part of the policy declares a Sigsum log,
-its public key, and its API URL.  This is required for interacting
-with a log.
+    witness poc.sigsum.org/nisse         1c25f8a44c635457e2e391d1efbca7d4c2951a0aef06225a881e46b98962ac6c
+    witness rgdd.se/poc-witness          28c92a5a3a054d317c86fc2eeb6a7ab2054d6217100d0be67ded5b74323c5806
+    witness witness1.smartit.nu/witness1 f4855a0f46e8a3e23bb40faf260ee57ab8a18249fa402f2ca2d28a60e1a3130e
 
-The next few lines declare witnesses and their public keys.  Witnesses
+    group quorum-rule 2 poc.sigsum.org/nisse rgdd.se/poc-witness witness1.smartit.nu/witness1
+    quorum quorum-rule
+
+The first line declares a Sigsum log, its public key, and its API URL.  This is
+required for interacting with a log.
+
+The next three lines declare witnesses and their public keys.  Witnesses
 verify cryptographically that logs only append new entries.  This helps you
 know that you see the same logs as everyone else.
 
-The final lines in the policy define a quorum rule saying that at
-least two of the three witnesses must have verified that the log is
-append-only in order for us to trust it.
+The final two lines define a quorum rule saying that at least two witnesses must have
+verified that the log is append-only in order for us to trust it.
 
 Note that the `sigsum-test1-2025` policy used here is only intended
 for test and development purposes. For production use, the
