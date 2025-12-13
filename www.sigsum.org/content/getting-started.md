@@ -170,7 +170,7 @@ running a monitor that printed the event.
 
 For security, you depended on:
 
-  - Three witnesses to verify that the log shows the same signed checksums to
+  - Two witnesses to verify that the log shows the same signed checksums to
     everyone
   - Your monitor to be up-and-running (or that it eventually makes a correct run
     somewhere)
