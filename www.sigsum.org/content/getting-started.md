@@ -31,8 +31,8 @@ its proof of logging.
 `sigsum-monitor` will be used to detect that the generated signing key was used
 with Sigsum.
 
-Check that the installation worked by running one of the programs with
-the `--version` option:
+Check that the installation worked by running one of the tools with the
+`--version` option:
 
     $ sigsum-key --version
     sigsum-key (sigsum-go module) v0.13.1
