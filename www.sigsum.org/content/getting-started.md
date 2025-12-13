@@ -60,7 +60,7 @@ Sigsum's tooling under the name `sigsum-test1-2025`.
     quorum quorum-rule
 
 The first line declares a Sigsum log, its public key, and its API URL.  This is
-required for interacting with a log.
+required to interact with a log.
 
 The next three lines declare witnesses and their public keys.  Witnesses
 verify cryptographically that logs only append new entries.  This helps you
@@ -77,16 +77,16 @@ All signatures in the Sigsum system use Ed25519.  Create a new signing key-pair:
 
     $ sigsum-key generate -o submit-key
 
-You should see that two files, `submit-key` and `submit-key.pub`, were created.  These files
-follow the SSH key-file format.
+You should see that the files `submit-key` and `submit-key.pub` were created.
+These files follow the SSH key-file format.
 
 Try listing the public-key hash:
 
     $ sigsum-key to-hash -k submit-key.pub
     cd53cb536660a52a95f0a46d822612b71b26bcfc1831e4bec1e55b14af9baa93
 
-Now that you have a trust policy and a signing key-pair you can start using
-Sigsum.
+Now that we decided on a trust policy and generated a signing key-pair we can
+start using Sigsum.
 
 ## Start the monitor
 
@@ -128,9 +128,9 @@ Sign and submit for logging using the key generated earlier:
     2025/12/12 16:15:35 [INFO] Found builtin policy '"sigsum-test1-2025"'
     2025/12/12 16:15:35 [INFO] Attempting to submit checksum#1 to log: https://test.sigsum.org/barreleye
 
-It might take about 10 seconds to get the signed checksum merged into the log in a way that makes
-the specified trust policy satisfied.  Once it has finished, you should see a proof of logging
-stored as plaintext in a file named `hello.py.proof`.
+It takes around 10 seconds to get back a proof of logging that satisfies the
+`sigsum-test1-2025` policy.  Expect a file named `hello-py.proof` to appear with
+the proof encoded as plaintext.
 
 ## Verify the proof of logging
 
