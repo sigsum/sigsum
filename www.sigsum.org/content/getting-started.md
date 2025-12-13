@@ -31,14 +31,6 @@ its proof of logging.
 `sigsum-monitor` will be used to detect that the generated signing key was used
 with Sigsum.
 
-When using `go install` as above, the installed executables are by
-default placed in the `$HOME/go/bin` directory, unless another
-location is specified using the GOPATH or GOBIN environment
-variables. If that directory is not in you PATH then you can add it
-like this:
-
-    $ export PATH=$HOME/go/bin:$PATH
-
 Check that the installation worked by running one of the programs with
 the `--version` option:
 
