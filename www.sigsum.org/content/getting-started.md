@@ -13,12 +13,15 @@ would like to run a few optional debug commands, also ensure that `sha256sum`,
 Install the following Sigsum tools:
 
     $ go install sigsum.org/sigsum-go/cmd/sigsum-key@v0.13.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-policy@v0.13.1
     $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.13.1
     $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.13.1
     $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.13.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-policy@v0.13.1
 
 `sigsum-key` will be used to generate a public key-pair.
+
+`sigsum-policy` will be used to show information about the trusted logs and
+witnesses.
 
 `sigsum-submit` will be used to sign a checksum, submit it to a log, and collect
 its proof of logging.
