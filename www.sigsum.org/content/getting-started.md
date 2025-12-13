@@ -129,7 +129,7 @@ Sign and submit for logging using the key generated earlier:
     2025/12/12 16:15:35 [INFO] Attempting to submit checksum#1 to log: https://test.sigsum.org/barreleye
 
 It takes around 10 seconds to get back a proof of logging that satisfies the
-`sigsum-test1-2025` policy.  Expect a file named `hello-py.proof` to appear with
+`sigsum-test1-2025` policy.  Expect a file named `hello.py.proof` to appear with
 the proof encoded as plaintext.
 
 ## Verify the proof of logging
