@@ -94,7 +94,7 @@
 
 ## Decisions
 
-  - Decision: Cancel weekly on 2025-12-30; 2025-01-06 due to holiday season
+  - Decision: Cancel weekly on 2025-12-30; 2026-01-06 due to holiday season
     - (meeting on Dec 23 is happening, rgdd will be there)
 
 ## Next steps
