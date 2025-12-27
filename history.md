@@ -84,3 +84,68 @@ and maintained together with other community members.
 In April, Filippo Valsorda presented many of the modern transparency-log design
 patterns that Sigsum is based on (such as witnessing and "spicy" signatures)
     [\[19\]](https://www.youtube.com/watch?v=SOfOe_z37jQ).
+
+In October, Rasmus Dahlberg presented Sigsum's design and how to use it at the
+transparency.dev summit
+    [\[20\]](https://transparency.dev/summit2024/sigsum.html).
+Several other project contributors also presented at the summit
+    [\[21](https://www.youtube.com/watch?v=uZXESulUuKA),
+    [22](https://www.youtube.com/watch?v=fY_v7yNrl2A),
+    [23\]](https://www.youtube.com/watch?v=Lo0gxBWwwQE).
+
+## 2025
+
+In January, Glasklar Teknik announced that they operate a stable Sigsum log and
+a stable cosigning witness
+    [\[24](https://git.glasklar.is/glasklar/services/sigsum-logs/-/blob/main/instances/seasalp.md),
+    [25\]](https://git.glasklar.is/glasklar/services/witnessing/-/blob/main/witness.glasklar.is/about.md).
+
+In February, Niels Möller presented how to detect rouge signatures with Sigsum
+at FOSDEM
+    [\[26\]](https://fosdem.org/2025/schedule/event/fosdem-2025-5661-sigsum-detecting-rogue-signatures-through-transparency/).
+
+In October, a witness network was launched to simplify configuration of witness
+cosigning
+    [\[27\]](https://witness-network.org/).
+This community effort is maintained by Al Cutter and two Sigsum contributors
+(Filippo Valsorda and Rasmus Dahlberg).
+
+In October, Mullvad VPN announced that they operate a stable Sigsum log and a
+stable cosigning witness.
+    [\[28](https://witness.mullvad.net/about),
+    [29\]](https://ginkgo.tlog.mullvad.net/about).
+Tillitis also announced that they operate a stable cosigning witness
+    [\[30\]](https://github.com/tillitis/tillitis.se-tillitis-witness-1/blob/main/about.md).
+
+In October, several Sigsum contributors presented at the transparency.dev summit
+    [\[31](https://www.youtube.com/watch?v=B-0ZW1ovPmk),
+    [32](https://www.youtube.com/watch?v=eCMKjWDNHTQ),
+    [33](https://www.youtube.com/watch?v=-5HtYd4O7vE),
+    [34](https://www.youtube.com/live/QTVTFxkYOT8?si=r8hnKiY0LFSusMsn&t=8539),
+    [35\]](https://www.youtube.com/live/QTVTFxkYOT8?si=f0P47aLS4VCWQRbW&t=9915).
+People and funders involved in the Sigsum project were also part of organizing
+the summit
+    [\[36\]](https://transparency.dev/summit2025/organisation/).
+
+In November, the donated C2SP.org specifications `tlog-cosignature` and
+`tlog-checkpoint` reached v1
+    [\[37](https://github.com/C2SP/C2SP/issues/176),
+    [38\]](https://github.com/C2SP/C2SP/issues/177).
+At the same time, `tlog-witness` reached release-candidate status
+    [\[39\]](https://github.com/C2SP/C2SP/issues/175).
+
+In December, the Sigsum project announced their first stable trust policy
+    [\[40\]](https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-announce@lists.sigsum.org/thread/WOS6FHEQNIA5YFV3CZNITLHMGDCIH557/).
+
+In December, a minor generalization of Sigsum's proof format landed in C2SP.org
+    [\[41\]](https://github.com/C2SP/C2SP/pull/181).
+Sigsum's trust policy format will likely be migrated as well because others
+find it useful and deployed it throughout the year
+    [\[42\]](https://github.com/transparency-dev/tessera/issues/800).
+
+Finally, several new contributors helped further Sigsum's design and use.  This
+notably includes Simon Josefsson (Debian stable packaging
+    [\[43\]](https://packages.debian.org/trixie/sigsum-go)),
+Florian Larysch (Sigsum monitor named `sigmon`
+    [\[44\]](https://github.com/florolf/sigmon)),
+and Elias Rudberg (stable trust policy).
