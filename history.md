@@ -107,8 +107,8 @@ at FOSDEM
 In October, a witness network was launched to simplify configuration of witness
 cosigning
     [\[27\]](https://witness-network.org/).
-This community effort is maintained by Al Cutter and two Sigsum contributors
-(Filippo Valsorda and Rasmus Dahlberg).
+This community effort is maintained by Al Cutter and two Sigsum contributors:
+Filippo Valsorda and Rasmus Dahlberg.
 
 In October, Mullvad VPN announced that they operate a stable Sigsum log and a
 stable cosigning witness.
@@ -123,8 +123,8 @@ In October, several Sigsum contributors presented at the transparency.dev summit
     [33](https://www.youtube.com/watch?v=-5HtYd4O7vE),
     [34](https://www.youtube.com/live/QTVTFxkYOT8?si=r8hnKiY0LFSusMsn&t=8539),
     [35\]](https://www.youtube.com/live/QTVTFxkYOT8?si=f0P47aLS4VCWQRbW&t=9915).
-People and funders involved in the Sigsum project were also part of organizing
-the summit
+Sigsum contributors Fredrik Strömberg and Rasmus Dahlberg were also part of
+organizing the summit
     [\[36\]](https://transparency.dev/summit2025/organisation/).
 
 In November, the donated C2SP.org specifications `tlog-cosignature` and
@@ -143,9 +143,9 @@ Sigsum's trust policy format will likely be migrated as well because others
 find it useful and deployed it throughout the year
     [\[42\]](https://github.com/transparency-dev/tessera/issues/800).
 
-Finally, several new contributors helped further Sigsum's design and use.  This
-notably includes Simon Josefsson (Debian stable packaging
-    [\[43\]](https://packages.debian.org/trixie/sigsum-go)),
-Florian Larysch (Sigsum monitor named `sigmon`
-    [\[44\]](https://github.com/florolf/sigmon)),
-and Elias Rudberg (stable trust policy).
+Several new contributors helped further Sigsum's design and use.  This notably
+includes Simon Josefsson who packages Sigsum's tooling in Debian stable
+    [\[43\]](https://packages.debian.org/trixie/sigsum-go),
+Florian Larysch who develops a monitor
+    [\[44\]](https://github.com/florolf/sigmon),
+and Elias Rudberg.
