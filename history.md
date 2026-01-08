@@ -123,9 +123,9 @@ Tillitis also announced that they operate a stable cosigning witness
     [\[32\]](https://github.com/tillitis/tillitis.se-tillitis-witness-1/blob/main/about.md).
 
 In October, several Sigsum contributors presented at the transparency.dev summit
-    [\[33](https://www.youtube.com/watch?v=B-0ZW1ovPmk),
-    [34](https://www.youtube.com/watch?v=eCMKjWDNHTQ),
-    [35](https://www.youtube.com/watch?v=-5HtYd4O7vE),
+    [\[33](https://transparency.dev/summit2025/talks/keynote.html),
+    [34](https://transparency.dev/summit2025/talks/silentct.html),
+    [35](https://transparency.dev/summit2025/talks/hardware.html),
     [36](https://www.youtube.com/live/QTVTFxkYOT8?si=r8hnKiY0LFSusMsn&t=8539),
     [37\]](https://www.youtube.com/live/QTVTFxkYOT8?si=f0P47aLS4VCWQRbW&t=9915).
 Sigsum contributors Fredrik Strömberg and Rasmus Dahlberg were also part of
