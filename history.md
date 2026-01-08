@@ -100,7 +100,7 @@ a stable cosigning witness
     [\[24](https://git.glasklar.is/glasklar/services/sigsum-logs/-/blob/main/instances/seasalp.md),
     [25\]](https://git.glasklar.is/glasklar/services/witnessing/-/blob/main/witness.glasklar.is/about.md).
 
-In February, Niels Möller presented how to detect rouge signatures with Sigsum
+In February, Niels Möller presented how to detect rogue signatures with Sigsum
 at FOSDEM
     [\[26\]](https://fosdem.org/2025/schedule/event/fosdem-2025-5661-sigsum-detecting-rogue-signatures-through-transparency/).
 
