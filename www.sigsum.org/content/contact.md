@@ -30,10 +30,11 @@ filing issues to our issue boards via email:
 [mailing lists]: https://lists.sigsum.org/mailman3/postorius/lists/
 [GitLab]: https://git.glasklar.is/sigsum/
 
-Join open video/voice meetings on Tuesdays at 1215 UTC.
+Join open video/voice meetings on Tuesdays at 1215 UTC (see [calendar][]).
 
   - Jitsi: [meet.glasklar.is/sigsum][]
   - Notes: [pad.sigsum.org/p/sigsum-YYYYMMDD][]
 
 [meet.glasklar.is/sigsum]: https://meet.glasklar.is/sigsum
 [pad.sigsum.org/p/sigsum-YYYYMMDD]: https://pad.sigsum.org/p/sigsum-YYYYMMDD
+[calendar]: https://nextcloud.glasklarteknik.se/index.php/apps/calendar/p/P2RDRwn8gNoCaBJd
