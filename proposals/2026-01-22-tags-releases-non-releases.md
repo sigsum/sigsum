@@ -14,11 +14,13 @@ https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/171.
 * From now on, use tags of the format vX.Y.Z (e.g., v0.14.1)
   exclusively for releases.
 
-* For non-releases, if the latest releast is vX.Y.Z, use tags of the
-  form vX.Y.(Z+1)-dev.W, with increasing W. Then semantic versioning
-  and the go tools order this version between vX.Y.X and vX.Y.(Z+1).
-  The dot before W ensures that the W field is compared numerically
-  rather than lexicographically.
+* For non-releases, if the latest release is vX.Y.Z, use tags of the
+  form vX.(Y+1).0-dev.W, with increasing W starting from W=1. Then
+  semantic versioning and the go tools orders this tag between
+  vX.Y.Z and vX.(Y+1).0. The dot before W ensures that the W field is
+  compared numerically rather than lexicographically. The middle
+  number is bumped, in order to reserve vX.Y.(Z+1) etc for any future
+  bug-fix releases.
 
 # On using raw commit hashes
 
@@ -62,24 +64,3 @@ explicit -dev tags, which can be monitored in the same way as release
 versions, e.g., via gopherwatch.org. Mixing of pseudo versions based
 on commit hashes with explicit -dev tags will likely not result in a
 sane ordering of versions.
-
-# Considerations for bug fix releases
-
-We will likely have to tweak these tagging scheme if/when we need to
-do bugfix releases. E.g., assume we have this series of events:
-
-1. Release version v1.1.0.
-
-2. Add new features, release v1.1.1-dev.0.
-
-3. A bug is discovered, and a bugfix-branch is created starting from
-   1.1.0. A bugfix is backported, and released as v1.1.1.
-
-4. Now I v1.1.0 is considered later than v1.1.1-dev.0, even though it
-   lacks features added in that dev version.
-
-Maybe this is a reason to bump the minor (middle) number rather than
-the patchlevel when making a -dev-tag? I.e., vX.(Y+1).0-dev.W? That
-would mirror our previous practice: e.g., when new features are added
-after a v0.13.1 release, our non-release tags start from v0.14.0, to
-reserve the v.13.x tag space for potential bugfix releases.
