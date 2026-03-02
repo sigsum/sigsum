@@ -1,5 +1,23 @@
 # Add an optional context to leaf signatures
 
+## Status
+
+This proposal have been up for discussion a couple of times, at Sigsum
+weekly meetings and most recently at a Glasklar-Mullvad meetup
+2026-02-18. It has *not* been adopted at this time.
+
+Motivation for non-adoption:
+
+* It adds complexity, making it harder to explain and understand the
+  system.
+
+* The main benefits relate to key management, which we have generally
+  treated as out of scope for Sigsum.
+
+The more explicit non-backwards-compatible [option 1 in
+leaf-context-for-sigsum-v2](../archive/2025-09-03-leaf-context-for-sigsum-v2.md)
+is still under consideration for later protocol versions.
+
 ## Motivation
 
 The context enables use of a single signing key for multiple purposes,
