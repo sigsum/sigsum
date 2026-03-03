@@ -2,9 +2,13 @@
 
 ## Status
 
-This proposal have been up for discussion a couple of times, at Sigsum
-weekly meetings and most recently at a Glasklar-Mullvad meetup
-2026-02-18. It has *not* been adopted at this time.
+This proposal have been up for discussion a couple of times at Sigsum
+weekly meetings
+([2025-11-04](../archive/2025-11-04--meeting-minutes.md),
+[2025-11-11](../archive/2025-11-11--meeting-minutes.md),
+[2025-11-18](../archive/2025-11-18--meeting-minutes.md)) as well as in
+offline discussions, most recently 2026-02-18. It has *not* been
+adopted at this time (2025-03-03).
 
 Motivation for non-adoption:
 
