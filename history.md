@@ -75,7 +75,7 @@ the Sigsum system to maximize the probability that we end up with an
 interoperable witnessing system
     [\[15\]](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2024-01-on-specifications-and-governance.md).
 The
-    HTTPS-bastion [\[16\]](https://c2sp.org/https-bastion).
+    HTTPS-bastion [\[16\]](https://c2sp.org/https-bastion),
     cosignature/v1 [\[17\]](https://c2sp.org/tlog-cosignature), and
     witness API [\[18\]](https://c2sp.org/tlog-witness)
 specifications have therefore been moved to C2SP.org, where they are developed
@@ -116,7 +116,7 @@ This community effort is maintained by Al Cutter and two Sigsum contributors:
 Filippo Valsorda and Rasmus Dahlberg.
 
 In October, Mullvad VPN announced that they operate a stable Sigsum log and a
-stable cosigning witness.
+stable cosigning witness
     [\[30](https://witness.mullvad.net/about),
     [31\]](https://ginkgo.tlog.mullvad.net/about).
 Tillitis also announced that they operate a stable cosigning witness
