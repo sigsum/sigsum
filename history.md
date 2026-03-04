@@ -151,6 +151,6 @@ find it useful and deployed it throughout the year
 Several new contributors helped further Sigsum's design and use.  This notably
 includes Simon Josefsson who packages Sigsum's tooling in Debian stable
     [\[44\]](https://packages.debian.org/trixie/sigsum-go),
-Florian Larysch who develops a monitor
+Florian Larysch who maintains a monitor
     [\[45\]](https://github.com/florolf/sigmon),
-and Elias Rudberg.
+and Elias Rudberg (Glasklar Teknik).
