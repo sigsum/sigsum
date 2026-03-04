@@ -75,7 +75,7 @@ the Sigsum system to maximize the probability that we end up with an
 interoperable witnessing system
     [\[15\]](https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2024-01-on-specifications-and-governance.md).
 The
-    HTTPS-bastion [\[16\]](https://c2sp.org/https-bastion).
+    HTTPS-bastion [\[16\]](https://c2sp.org/https-bastion),
     cosignature/v1 [\[17\]](https://c2sp.org/tlog-cosignature), and
     witness API [\[18\]](https://c2sp.org/tlog-witness)
 specifications have therefore been moved to C2SP.org, where they are developed
@@ -84,3 +84,73 @@ and maintained together with other community members.
 In April, Filippo Valsorda presented many of the modern transparency-log design
 patterns that Sigsum is based on (such as witnessing and "spicy" signatures)
     [\[19\]](https://www.youtube.com/watch?v=SOfOe_z37jQ).
+
+In October, Rasmus Dahlberg presented Sigsum's design and how to use it at the
+transparency.dev summit
+    [\[20\]](https://transparency.dev/summit2024/sigsum.html).
+Several other project contributors also presented at the summit
+    [\[21](https://www.youtube.com/watch?v=uZXESulUuKA),
+    [22](https://www.youtube.com/watch?v=fY_v7yNrl2A),
+    [23\]](https://www.youtube.com/watch?v=Lo0gxBWwwQE).
+
+## 2025
+
+In January, Glasklar Teknik started operating a stable Sigsum log and
+a stable cosigning witness
+    [\[24](https://git.glasklar.is/glasklar/services/sigsum-logs/-/blob/main/instances/seasalp.md),
+    [25\]](https://git.glasklar.is/glasklar/services/witnessing/-/blob/main/witness.glasklar.is/about.md).
+
+In February, Niels Möller presented how to detect rogue signatures with Sigsum
+at FOSDEM
+    [\[26\]](https://fosdem.org/2025/schedule/event/fosdem-2025-5661-sigsum-detecting-rogue-signatures-through-transparency/).
+
+In June, Niels Möller was invited to present a poster on Sigsum at the CySeP
+2025 summer school
+    [\[27](https://web.archive.org/web/20251012230217/https://cysep.conf.kth.se/call.html),
+    [28\]](https://git.glasklar.is/nisse/cysep-2025/-/blob/main/poster.pdf).
+
+In October, a witness network was launched to simplify configuration of witness
+cosigning
+    [\[29\]](https://witness-network.org/).
+This community effort is maintained by Al Cutter and two Sigsum contributors:
+Filippo Valsorda and Rasmus Dahlberg.
+
+In October, Mullvad VPN started operating a stable Sigsum log and a
+stable cosigning witness
+    [\[30](https://witness.mullvad.net/about),
+    [31\]](https://ginkgo.tlog.mullvad.net/about).
+Tillitis also started operating a stable cosigning witness
+    [\[32\]](https://github.com/tillitis/tillitis.se-tillitis-witness-1/blob/main/about.md).
+
+In October, several Sigsum contributors presented at the transparency.dev summit
+    [\[33](https://transparency.dev/summit2025/talks/keynote.html),
+    [34](https://transparency.dev/summit2025/talks/silentct.html),
+    [35](https://transparency.dev/summit2025/talks/hardware.html),
+    [36](https://www.youtube.com/live/QTVTFxkYOT8?si=r8hnKiY0LFSusMsn&t=8539),
+    [37\]](https://www.youtube.com/live/QTVTFxkYOT8?si=f0P47aLS4VCWQRbW&t=9915).
+Sigsum contributors Fredrik Strömberg and Rasmus Dahlberg were also part of
+organizing the summit
+    [\[38\]](https://transparency.dev/summit2025/organisation/).
+
+In November, the donated C2SP.org specifications `tlog-cosignature` and
+`tlog-checkpoint` reached v1
+    [\[39](https://github.com/C2SP/C2SP/issues/176),
+    [38\]](https://github.com/C2SP/C2SP/issues/177).
+At the same time, `tlog-witness` reached release-candidate status
+    [\[40\]](https://github.com/C2SP/C2SP/issues/175).
+
+In December, the Sigsum project announced their first stable trust policy
+    [\[41\]](https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-announce@lists.sigsum.org/thread/WOS6FHEQNIA5YFV3CZNITLHMGDCIH557/).
+
+In December, a minor generalization of Sigsum's proof format landed in C2SP.org
+    [\[42\]](https://github.com/C2SP/C2SP/pull/181).
+Sigsum's trust policy format will likely be migrated as well because others
+find it useful and deployed it throughout the year
+    [\[43\]](https://github.com/transparency-dev/tessera/issues/800).
+
+Several new contributors helped further Sigsum's design and use.  This notably
+includes Simon Josefsson who packages Sigsum's tooling in Debian stable
+    [\[44\]](https://packages.debian.org/trixie/sigsum-go),
+Florian Larysch who maintains a monitor
+    [\[45\]](https://github.com/florolf/sigmon),
+and Elias Rudberg (Glasklar Teknik).
