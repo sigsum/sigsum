@@ -95,7 +95,7 @@ Several other project contributors also presented at the summit
 
 ## 2025
 
-In January, Glasklar Teknik announced that they operate a stable Sigsum log and
+In January, Glasklar Teknik started operating a stable Sigsum log and
 a stable cosigning witness
     [\[24](https://git.glasklar.is/glasklar/services/sigsum-logs/-/blob/main/instances/seasalp.md),
     [25\]](https://git.glasklar.is/glasklar/services/witnessing/-/blob/main/witness.glasklar.is/about.md).
@@ -115,11 +115,11 @@ cosigning
 This community effort is maintained by Al Cutter and two Sigsum contributors:
 Filippo Valsorda and Rasmus Dahlberg.
 
-In October, Mullvad VPN announced that they operate a stable Sigsum log and a
+In October, Mullvad VPN started operating a stable Sigsum log and a
 stable cosigning witness
     [\[30](https://witness.mullvad.net/about),
     [31\]](https://ginkgo.tlog.mullvad.net/about).
-Tillitis also announced that they operate a stable cosigning witness
+Tillitis also started operating a stable cosigning witness
     [\[32\]](https://github.com/tillitis/tillitis.se-tillitis-witness-1/blob/main/about.md).
 
 In October, several Sigsum contributors presented at the transparency.dev summit
