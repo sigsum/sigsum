@@ -31,7 +31,7 @@ its proof of logging.
 `sigsum-monitor` will be used to detect that the generated signing key
 was used with Sigsum. (The above -dev version, rather than the release
 version v0.13.1, is needed due to
-https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/179).
+<https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/179>).
 
 
 Check that the installation worked by running one of the tools with the
