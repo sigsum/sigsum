@@ -16,7 +16,7 @@ Install the following Sigsum tools:
     $ go install sigsum.org/sigsum-go/cmd/sigsum-policy@v0.13.1
     $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.13.1
     $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.13.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.13.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.14.1-dev.0
 
 `sigsum-key` will be used to generate a public key-pair.
 
@@ -28,8 +28,11 @@ its proof of logging.
 
 `sigsum-verify` will be used to verify the gathered proof of logging.
 
-`sigsum-monitor` will be used to detect that the generated signing key was used
-with Sigsum.
+`sigsum-monitor` will be used to detect that the generated signing key
+was used with Sigsum. (The above -dev version, rather than the release
+version v0.13.1, is needed due to
+https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/179).
+
 
 Check that the installation worked by running one of the tools with the
 `--version` option:
