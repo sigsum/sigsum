@@ -1,0 +1,498 @@
+More comments by rgdd (2026-03-04), in the order of reading tta's explanations
+in https://pad.sigsum.org/p/00ff-06b9-5327-3c43-518e-3e7d-68df-4a8e-tta
++quick answers by tta (2026-03-04) added to it
+EDIT(@rgdd): now saved as ./2026-03-18-tta-at-feedback-2
+---
+
+% tta side-note:
+%     sorry my lunch coffee kicked in, spend 2h writing 10x more than planned, oops
+%
+% feel free to skip my ramble text!
+
+
+
+> what we do is a proof of existence [item-hash, (before, after)] pair
+
+Updated high-level utility, AT can help me gain confidence that item with hash
+$FOO existed at time T.  It doesn't necessarily mean that it started existed at
+time T, just that it did exist at time T and we all can agree on that?
+
+yes, that's the idea
+
+doing only "proof of existence" (hash $FOO existed before T) is nice because it is well-defined, lightweight, can be done by anyone, and is a good thing to focus on
+
+
+% start of ramble
+%
+% this "let's agree that $FOO = hash(item) exist at time T" is what RFC3161 trusted timestamps do, but only with a single signature of $TIMESTAMP_AUTHORITY -- this has the problem that in the long term (certs expiring +CA come & go) they becomes unverifiable
+%
+% current "trusted timestamping" practices requires regular "lifetime extension" by signing again, which is dull (and expensive, like in a pre-LetsEncrypt x509 world)
+%
+% using merkle trees to build trusted timestamping is an idea that predates certificate transparency (https://en.wikipedia.org/wiki/Linked_timestamping cc) but 15+ yrs later looks like this only gave birth to a graveyard of closed-source commercial solutions
+%
+% now that we have nice open & well-defined tlogs, the idea with archive transparency is to perform necromancy on this, write free software, and nail the problem to the wall
+%
+% global tlogs solves many problems of the old-fashioned timestamping: 
+%     - people mutualize lifetime extension for free
+%       (to participate in == to re-certify others)
+%     - anyone can become $TIMESTAMP_AUTHORITY with low requirements
+%       (hopefully with no out-of-band identities w/ risks of expiring/stolen/lost)
+%     - everyone contributes to the same global state/repositories
+%       (no patchwork of never-updated/badly supported timestamps)
+%
+% transparency solves many issues that vintage "linked timestamping" wanted to solve
+% ...this is where I am going :)
+%
+% end of ramble
+
+
+
+Document looks (abstractly) something like this:
+
+    document timestamp
+    hash, [unverified metadata, e.g., filename]
+    ...
+    hash, [unverified metadata, e.g., filename]
+
+log checks that timestamp is valid and that list syntax is valid.  If all OK,
+store the document and append it to the Merkle tree.
+
+yes, this is true ^
+
+other validation than timestamp and list syntax can be thought as $POLICY or extensions
+
+
+% start of ramble
+%
+% the idea is to make the validation process extensible with a tlog $POLICY
+%
+% the "proof of existence" is a nice starting point for many more elaborate arguments on provenance & on securing the "supply chain of information online" if done right
+% 
+% what I'm currently struggling with, is to define the minimal requirements that *must* be present in the minimal version of the system, and that's maybe why I am/look like confused on the exact "validation" because $REQUIREMENTS vs $POLICY is unclear (yet)
+%
+% end of ramble
+
+
+
+---
+
+> ...validation done later by anyone, in an offline fashion, to test how much
+> trust to put in an observer... logs must stay fast & cheap!)
+
+How do I find the files, are they assumed to be stored by the submitting
+observer at a well-known URL?  Much like it's assumed you'd somehow know other
+information about that submitting observer, such as their public key?
+
+three things to unpack here:
+    1. the files as "items to be hashed & observed" - where they are?
+    2. the "lists of files" produced by the observer - where they are?
+    3. the observer identity and other informations - where they are?
+
+
+1. where are the "files to be hashed" from the point of view of:
+    - the global tlog: don't know and don't care
+    - the observer: it depends
+        - maybe it's a real file found locally
+        - maybe it's a paragraph of a news article or a web page extract
+        - maybe observer also operate a web service where one can submit a hash
+        - etc
+    - the end-user: already has it
+        - the use-case is a user having $BLOB and now want to find a $WHEN
+        - user hash($BLOB) then search the "lists of files" available in tlog
+        - if found, user can build an inclusion proof acting as "proof of past"
+        - if not found, user can search by metadata
+             - if metadata found, user may learn "hash(???) -> $FOO"
+             - if not found, user learned nothing
+
+
+% start of ramble
+%
+% the idea here is that having observers able to be customized, can enable anyone to fit their use case (with ofc some default behaviors backed in, like POSIX files) but this open the door to $ABUSE which implies spam moderation, fighting poisoning, etc
+%
+% on the other hand, not caring about the data / the files / the items, makes the model for the tlog operator & other actors, way simpler and more enforceable
+%
+% the problem of user trying to find a file matching $FOO is out of scope for AT, but given that content-adressed storage and other similar things are gaining popularity, we can hope that in the future "hash -> file" search will be easier than today
+%
+% end of ramble
+
+
+2. the "list of file" produced by observer: let them store them (long term)
+
+
+% start of ramble
+%
+% it looks like the easier thing, would be to require observers to give an URL where they store their past documents, to help interested parties to mirror them, and to not put too much burden on the global tlogs to store all the "lists of files" for ever
+% 
+% however, monitors/auditors/verifiers/etc need to inspect the observer documents to verify that global tlogs were well-behaved, thus there should be some retention policy by tlogs to ensure that themselves stay verifiable, likely at first retention policy being "for ever" then as the system ages/scale will become "for X years/months/weeks"
+%
+% end of ramble
+
+
+3. the observer identity: this is a part i'm still struggling with
+
+
+% start of ramble
+%
+% from where I'm at, it looks like that before a $TIMESTAMP_AUTHORITY the observer will need to submit a first "special list of files" which contains no files, but its identity with its public key and the claim it is making (validated w/ domain or OICD)
+%
+% it's WIP and I'm very unsure yet (but I'm convinced that observers needs an identity)
+%
+% end of ramble
+
+
+---
+
+> - the footgun:
+>   - the only validation done on item records (and thus item metadata) is that
+>     they parse properly, that they are all ordered, no holes, etc
+
+What does "they are all ordered" mean? Do you mean that the observer's document
+format comes with ordering contstraints, such as lines being sorted on item hash
+or simliar?  Or are we talking about any other ordering somewhere else here?
+
+this "order" is not very important, a bit too abstract, I may not mention it again
+
+
+% start of ramble
+%
+% if you want to know what was on my mind when I wrote "order" or "partial order"
+%
+% there is a natural order in a merkle tree for leaves (their index at level 0), same for a list of anything (the order of appearance in the list) and as we incrementally build a large collection of lists and trees, if we tie them together enough, what we get is an appearance order for each and every hash ever included in AT
+%
+% what we have with "hash(item) -> $FOO" is a random oracle and what we build with AT is an history of queries observers claims to have made to the oracle, with claims made on the order in which these queries have been made (X comes before Y)
+%
+% this is a partial order
+%
+% the trust contract is that tlogs ensure that this partial order is always the same and is never modified, while the end-user is the one trying to reproduce the queries
+%
+% by hashing an item in its possession, an end-user verify the claim that an observer made some time ago, that "hash(item) -> $FOO", and then the end-user rely on the fact that the partial order of all queries ever recorded, is immutable and never changed
+%
+% if we insert in that partial order, entries for which an explicit link/anchor to real time from the real world have been verified (like a trusted timestamp, or witness signature, etc) we obtain a way, for any old query found in the history, to have a [before, after] window of "first time recorded"
+%
+% this is revelant as the overall log/immense pile of "lists of files" grows and some will inevitably decay/be lost/be corrupted, we **will** lose confidence in most individual older links to real time, but the partial ordering and the knowledge that "it was validated as OK when first included" helps us maintain some confidence
+%
+% end of ramble
+
+
+
+---
+
+> More details...constraints, scalability.  Around here I start getting lost.
+> % TODO: skip maybe these details, or put them at the very end, in italics etc
+> %
+
+Makes sense to have this at the end, I just couldn't make much sense of it
+yet because I didn't understand the complete picture well enough.
+
+ok!
+
+---
+
+> documents must record a recent head of the log they candidate for
+
+Why?
+
+this is up to tlog $POLICY and I'm not sure if it must be a hard requirement
+
+two ways to see it:
+    1. its a way to make the larger picture more resilient to "holes"/corruption
+    2. its a way for tlogs to get observers to timestamp themselves "for free"
+
+but this may be outside a first "minimal" set of requirements, don't know
+
+
+% start of ramble
+%
+% 1. being resilient to "holes"
+%
+% for whatever reason, upon catastrophic failure, databases becoming corrupted, documents being partially corrupted, things going bad, it's nice to have a backup plan
+%
+% for example, if observer included doc1 in logA and logB, then parts of logA are lost and it becomes difficult to verify, as both logA/B enforced that hash(logA/B) was included at time of submission, logB signed hash(logA) and vice-versa
+%
+% this is about enforcing that everything is at least partially ordered in some ways, not only as a tree, but also as a tangled mess where paths to recovery can be found
+%
+% TBH this is not permanent and looks like something that can be pushed as extension/as later $POLICY, just like one may require observers to include hash(docN) with N picked at random, or something something
+%
+% 2. tlogs get something in return from observers
+%
+% the tlog pays a price (validation+storage) to help observer gain something (acting as $TIMESTAMP_AUTHORITY) and in return for that benefit, it could be nice for observer to pay something in return: here linking the tlog to another source of "real time"
+%
+% the goal is that everytime observer try to get its "list of files" included in a new tlog, this observer must include as "special file" a "hash(tlog)" in the list before slapping a timestamp to it, opening ways for future more complex "proof arguments"
+%
+% end of ramble
+
+
+
+---
+
+> - includes a recent head of the log it is submitting to
+> - is consistent (as in tree extension proof) to the previous document
+
+Same comment as before, why / I don't follow.
+
+yeah, same as before, likely up to $POLICY or later extensions
+
+
+% start of ramble
+%
+% one thing that is cheap to do when doing timestamping is the "linking":
+%    - when building lists of files, then adding trusted timestamps to them...
+%      ...we include previous lists of files, in the list, to timestamp them again
+%
+% in earlier revisions of me describing AT, I was talking about "horizontal inclusion" (but I stopped mentioning it to not make it too terminology-heavy, heh)
+%
+% in short, it's nice to have a "vertical inclusion" with a well-formed tree linking everyone to the same head of a limited set of global transparency logs, it is good for efficiency and automation, the model is clear, easy to work with, etc
+%
+% but trees burns down
+%
+% it's cheap to have "horizontal inclusion" (new documents/lists includes previous ones) like observers doing co-inclusion with the tlog or the observer including a hash of its most recent document, but validating the "tangled mess" makes everything harder and confusing
+%
+% the idea here is to use the tlogs to force everyone into doing horizontal inclusion, validating it, so we know it's here, even if in production we don't use it all the time
+%
+% but when trees burn down, we get "holes" with missing leaves, lost identities, a messy patchwork of things, but it's not that catastrophic: we can take what's left, archive it, start with a clean state and continue
+%
+% in the meanwhile, if users from the far future, finds a very interesting item/file in the tangled mess, it will be up to them to build the very complex proof argument to show that item comes from the past, providing them a "backup plan" for burned trees
+%
+% we get the cake (in the present days, 99.9% of the time, it's simple and efficient)
+% and a backup of the cake (future day, 0.1% bad failure mode, complex slow recovery)
+%
+% end of ramble
+
+
+
+---
+
+Another comment, are you aware that witness cosignatures are timestamped? Have
+you considered making use of this for AT, or it is not applicable for $reason?
+
+I saw the timestamp, but I'm unsure how it will fit, yet
+
+
+% start of ramble
+%
+% the problem is "what we are going to tell people to keep on their hard-drives"
+% 
+% plan A is to hold the following promise:
+%     - keep a copy of the tree leaves and it'll be fine™
+% reworded with other words:
+%     - keep a copy of the observer documents/"lists of files" and it'll be fine™
+%
+% it is assumed that everything else (storing "the files" or other complementary data) is outside the picture and that only with its own output, AT can still hold its promises and provide value to its end-users
+%
+% this "value & promises self-contained" is a requirement that I don't want to drop, it relates to the difficulties encountered with archiving (we want to ensure that even after archive transparency fell out of fashion, it is useful to keep its artifacts)
+%
+% ...
+% this means that the timestamps are to be themselves included in the "list of files"
+%
+% this is not a problem: we define a "special type of file" that in its metadata includes the material needed to validate the trusted timestamp (at least for a while)
+%
+% on paper, I can see how we could use a witness cosignature as a trusted timestamp, but to hold the previous promises, it would need to be included in as "special file"
+%
+% however, we don't want the final documents we produce (and store forever) to become littered with 90% of bytes of serialized certificates and other ephemeral states, that after two decades, become irrevelant to anyone downloading the lists of files
+%
+% this imply many details on the specifics, that also affect any other type of timestamping method (RFC3161 spoils you with a certificate chain, OpenTimestamps with a whole blockchain, etc) we may implement
+%
+% to sum up, how to use witness cosignatures as timestamping, is TBD
+%
+% end of ramble
+
+---
+
+> user hash($BLOB) then search the "lists of files" available in tlog
+
+OK, so do I understand the usage model correctly here that the log is assumed to
+be online for queries by users.  And that there's an endpoint similar to:
+
+    HTTP GET /get-document-by-hash/00010203...this is a hash...ff
+
+which then, for a given hash, outputs all observer documents that contain a
+match?  (And perhaps there's filtering functionality, like I only care about
+these three observers $foo, $bar, and $baz so don't bother with other results).
+
+
+the exact usage model is described in more details below, but the "first interesting thing" we can do with archive transparency, is to include for each existing "digital bundle of archival items" that already exist, a document describing that bundle
+
+this is a niche application, but it solves the trust problem of distributing archives
+
+this usage model is the simpler one & nicer one to implement:
+  - user gets the document with the files (like user get x509 cert when get website)
+  - user verify the inclusion the document in global tlog (like cert. inclusion in CT)
+  - then user check that individual items are in document (like subdomain in cert. SAN)
+
+
+searching an individual item in the whole archive transparency, is the the same problem as searching a domain name in the whole certificate transparency, this costs resources
+
+however to maximize adoption, we do a bit of extra work (include more metadata than needed) to enable these secondary use cases, as the more useful we are, the more likely we are to see adoption by the archives (where +1% storage is cheap, but good up-to-date maintained software is very rare and very expensive to them)
+
+
+% start of ramble
+%
+% the #1 usage model I first want to target, is to include the documents / lists of files in the "bundles of files" that exists for the web, also called "WARC"/"WACZ" (for "Web ARChives" or "Web Archive Collection Zipped") which are many files concatenated
+%
+% in #1 the observer document / the "lists of files" is distributed along the "bundle of files" it authenticates, so the user is able to check offline the inclusion of a specific file from the bundle, inside the document, then verify the inclusion of the document inside the centralized global log
+%
+% this is useful because often WARC/WACZ files are 50Mo-50Go and users load them in local browsers, then want to be able to browse locally this "snapshot of the past" while being sure that yes, it comes from the past (this is done for now with bad checksums like sha1/md5 and naked rfc3161 trusted timestamps, which is ok but meh)
+%
+%
+% the #2 usage model is when users have a single file, attached to nothing, and this adds an expensive step "finding where the file has been recorded" which requires a search inside a potentially vast amount of documents
+%
+% the question for #2 becomes "who spends the resources"
+%
+% one thing useful to answer this question, is that in the current draft:
+%    - the documents / "lists of files" are also merkle trees in a trenchcoat
+%
+% the data model in archive transparency (currently) is:
+%  - digests & metadata are serialized inside "records" (a record describes "a thing")
+%  - each observer number its records, starting from 0 (which is secretly a leaf index)
+%  - documents are records concatenated (e.g. record0.bytes || record1.bytes || ...)
+%
+% the complete collection of the documents produced by an observer, concatenated, is equivalent to all the leaves of a small tree, local to the given observer, and given proper precautions, efficient proofs can be generated for a single item
+%
+% in #1 the workflow of proof looks like:
+%  1. grep "$hash" ./document.txt
+%  2. recordA := record[hash(document.txt), metadata] *this is canon and done offline
+%  3. go to API to get inclusion proof of $recordA
+%  4. verify proof [hash(0x0 || recordA), ... inclusion path ...]
+%
+% this requires "document" distributed together with the items
+%
+% in #2 what can be done by $someone is:
+%  1. go to API to get "$hash" -> document.txt (user downloads the document)
+%                              +  inclusion proof of $recordA in global tlog
+%  2. grep "$hash" ./document.txt
+%  3. recomputes $recordA and verify its inclusion proof in global tlog
+%
+% this requires $someone resolving the hash and spending bandwidth to send the document
+% (and documents for large bundles can be dozens of megabytes, which is expensive)
+%
+% if $someone wants to spend more CPU but less bandwidth, we can do a #3 as follows:
+%  1. go to API to get "$hash" -> recordB
+%                              + inclusion proof of $recordB in document.txt
+%                              + recordA
+%                              + inclusion proof of $recordA in global tlog
+%  2. echo "$recordB" | grep "$hash"
+%  3. verify inclusion proof in document.txt **using metadata found in recordA**
+%  4. verify inclusion proof of recordA in global tlog
+%
+% this #3 costs computation to $someone but user can get a proof for a single item
+% (and some of my confusion around $POLICY is defining how to support #2 and #3)
+%
+% however, initial goal is to support #1 only, which is very close to "regular tlog"
+%
+% the biggest use case for archive transparency is #1 because large archives want to enable anyone to get their "bundles" and redistribute them, and now doing this is hard because of a trust problem (and current attempts to distribute that is blockchain only)
+%
+% currently, to distribute trust:
+%  - $big_archive spends lots of effort to adopt $decentralized_technology
+%  - $decentralized_technology makes complex arguments to ensure $trust
+%
+% doing transparency is a sane model:
+%  - $big_archive generates its own text documents and store them with existing bundles
+%  - user go "haha downloaded a big bundle of files hoho" with regular HTTP
+%  - proofs and verification is done without help of $big_archive
+%
+% this enable anyone to start redistributing the bundles, and if barrier to entry is low enough for $big_archive to enroll (as easy as certbot) anyone can profit
+%
+% the #2 and #3 are just nice to have to drive adoption by adding value to the system
+%
+% end of ramble
+
+---
+
+> however, initial goal is to support #1 only, which is very close to "regular tlog"
+
+This sounds wise, option#2 and option#3 are harder to solve in a good way.  If,
+later, you also want to take a stab at additional things, make a version#2 of
+your AT work?  I.e., what I would suggest is to not let option#2 and option#3
+complicate your work prematurely, because it will slow down good progress (both
+in terms of cycles for you, cycles for other to understand and support, etc).
+
+I think it's good advice :)
+
+> in #1 the observer document / the "lists of files" is distributed along the
+> "bundle of files" it authenticates, so the user is able to check offline the
+> inclusion of a specific file from the bundle, inside the document, then verify
+> the inclusion of the document inside the centralized global log
+
+This is in particular what makes option#1 appealing.  No new outbound connection
+for the user that wants to depend on a historical document they found somewhere.
+
+---
+
+> I saw the timestamp, but I'm unsure how it will fit, yet
+
+Isn't a tlogged observer document + an inclusion proof that leads up to a
+cosigned tree head giving you more or less the timestamping property you want?
+If the witness timestamps all say T, and the document is included in the log's
+tree, then the observer document must have existed at time T (or the witnesses
+are lying, but then you are more worried about split-views than timestamps).
+
+I.e., instead of the observer setting the timestamp, witnesses timestamp when
+they observed *the tree* which happens to include the document the observer
+cares about.  It's kinda similar to asking for a timestamp from a timestamping
+authority, except that witnesses only timestamp append-only Merkle tree roots.
+
+You can read about the cosignature semantics here:
+
+  https://c2sp.org/tlog-cosignature@v1.0.0
+
+So I guess my question is, am I missing something obvious that makes the above
+not desirable or useful in your setting?
+
+I need to meditate on this, but my feeling is "yes"
+
+for the specifics, I need to play with witnesses and draw a picture
+
+
+% if I understand the proposal, is to use witnesses as timestamp authorities, like one may use a rfc3161 timestamp authority, and this looks like fine to me (at least witnesses are part of the transparency picture, and not something external)
+%
+% the question I always ask myself is "what happens if we wait 5 years, turn off the transparency for 5 years, then wait 5 more years" -- that's my brain worms
+%
+% what get stored in the archives with the items, how to be useful, even if our software is lost and forgotten, to the people that get only a collection of documents
+%
+% I think this is the same question as "where to put the identities":
+%     - where to put the observer public key
+%     - where to put the global tlogs public keys
+%     - where to put the witness public key
+%
+% this is good, but need to think about it
+
+---
+
+> for the specifics, I need to play with witnesses and draw a picture
+
+This should help you play around with witnesses for your own log:
+
+  https://witness-network.org/ <3
+
+Or if you want to just play with proofs and witness timestamps for a different log that's already up and running, you can try:
+
+  https://www.sigsum.org/getting-started will do!
+
+The guide doesn't talk about and help you with timestamps, but they're nevertheless there if you just want to poke around a bit and see what those witnesses are actually doing for a log that requests cosignatures periodically (10s interval).
+
+To understand the proof better and in particular where the timestamps are, see:
+
+  https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md ok
+
+> I think this is the same question as "where to put the identities"
+
+Yep, agreed.
+
+You might find "named policies" interesting and related, which is a way for us to help users deal with log and witness identities:
+
+  https://www.glasklarteknik.se/post/named-policies-for-sigsum/ will do
+
+if I understand correctly:
+    - what if I adopt sigsum to let observers sign their documents
+    - by proving that their sig is in sigsum tlog, they include witness co-signatures
+    - we get a timestamp "for free" that we trust up to the amount we trust sigsum
+
+a way to use "signature transparency" as timestamping services
+
+
+
+---
+
+PS. Thanks for working on AT, and I've enjoyed chatting about it :-)
+
+Thanks for taking the time, it's very helpful, it's helping me to do more with less :)

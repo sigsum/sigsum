@@ -1,0 +1,177 @@
+rgdd notes when looking at tta's current AT stuff (2026-02-25)
+% tta notes added to the original (2026-03-02)
+% https://pad.sigsum.org/p/00ff-06b9-5327-3c43-518e-3e7d-68df-4a8e
+% EDIT(@rgdd): now saved as ./2026-03-18-tta-at-feedback-1
+
+Links:
+
+* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2026-02-10--meeting-minutes.md?ref_type=heads#request-for-input-on-ircmatrix-from-tta
+
+(I glanced through the links, and went through the summary doc twice.)
+
+The idea, if I understand correctly:
+
+* The goal is to lock down file metadata, so that it will be harder to tamper
+  with it in the future (and thus gain confidence that the files are authentic).
+% TODO: add emphasis that "item metadata" is not easy falsifiable:
+%  - what we care about, is ordering "what comes before" from "what comes after"
+%  - even if we only record the item sha256 hash, we can already ensure ordering!
+%  - metadata is included as "hints" to enable search (e.g. "pdf title" -> hash)
+%
+% what we do     is a proof of existence    [item-hash, (before, after)] pair
+% what we do NOT is a proof of metadata     [item-hash, item-metadata]   pair
+%
+
+* Solution overview: use a transparency log.  Part of the admission criteria
+  is that the file metadata (or so called "constraints") are valid, and other
+  validators that follow the log also check that the constraints are valid?
+% TODO: add emphasis that
+%
+%   1. what reaches the global log are only the documents (read "lists of files")
+%       - the observed items (read "observed files") never reach the global log,
+%         as it would be too difficult for a log to validate terabytes of data
+%         - (...validation done later by anyone, in an offline fashion, to test how
+%               much trust to put in an observer... logs must stay fast & cheap!)
+%       - what reaches the log, are documents (read "lists of files") produced by
+%         the observer, submitted to global logs for inclusion, and are validated
+%
+%   2. the admission criteria in the log for documents is similar to what can
+%      exist for webpki, with CA & CT logs merged and only self-signed certs
+%       - TODO :)
+%           - some responsabilities are shifted / different from webpki
+%           - this is still vague to me
+%       - similar:
+%           - new observers must pass some domain validation (or OIDC, etc)
+%           - observers must sign all the documents they produce
+%       - different:
+%           - documents must record a recent trusted timestamp
+%           - documents must record a recent head of the log they candidate for
+%           - documents must follow other structure constraints specific to AT
+%       - the footgun:
+%           - the only validation done on item records (and thus item metadata)
+%             is that they parse properly, that they are all ordered, no holes, etc
+%
+
+* End-users are configured with trusted $parties, and will only trust a document item
+  to be from say 2015 if checksum matches and there are timestamps from 2015.
+% yes
+%
+% TODO: detail the validation process
+%       1. match the item checksums to its record
+%       2. prove the record inclusion in a global log signed by $parties
+%           2.a prove the record inclusion in an observer document
+%           2.b prove that this document is itself included in the global log
+%
+% TODO: clarify "where are the timestamps" and how they are used
+%       - some records are trusted timestamp records
+%       - all trusted timestamps must be validated before inclusion in the global log
+%       - they anchor in time of the larger global partial ordering of records
+%
+
+Some details...like having human-readable metadata with exactly one
+serialization.  And that's what gets committed to a transparency log.
+% TODO: skip maybe some of the details about serialization and/or give examples
+%
+
+More details...constraints, scalability.  Around here I start getting lost.
+% TODO: skip maybe these details, or put them at the very end, in italics etc
+%
+
+
+%
+% % summary of the feedback
+%
+
+
+I think what makes it a bit hard for me to get a good grip right now is:
+
+* record, curator observer log, observer document, AT document, AT log, curator,
+  observer, auditor, monitor, validators, different timestamps, ...; i.e.,
+  terminology wise it's pretty heavy and I think some of it overlaps?  It's hard
+  for me to draw the picture of what this system looks like.
+% WIP: terminology to be handled in "overview" (after "introduction")
+%
+%   https://gitlab.com/archive-rip/openrip-draft/-/blob/main/SUMMARY.md#2-overview
+%
+
+An overview figure with concrete parties and interactions would help a lot. And
+to clearly state the information that's exchanged between these parties, and
+% TODO: what I have is too detailed now, needs to have simpler overviews
+%
+%   https://gitlab.com/archive-rip/openrip-draft/-/blob/main/img-notes/
+%
+
+what each party is expected to verify / falsify.
+% TODO: this is a important thing to clarify
+%       - what is the minimal set of things to verify / falsify
+%       - leave out the parts up to later extensions
+%
+
+Part of why it's hard for me to get a good grip right now is maybe also that
+there are many ideas of how this could be used/deployed, and instead of zooming
+in on one or two options it's left a bit open and so it becomes scattered for
+someone that doesn't know all details yet?
+% TODO: write a little story that gives a primary example of what we want
+%
+
+Some concrete starter questions that would help me understand better, and maybe
+ask better follow up questions:
+% TODO: each of these can probably end up in faq
+%
+
+* How does an AT log work: what is the leaf and what is the admission criteria
+  to get an entry added?
+  % see previous comments about observer documents being the input of the log
+
+  What does a submitter need to do to get a leaf added?
+  % global log submitter == observer
+  % if its identity is unknown to log, submit its identity document
+  %   - some domain validation or similar must be done to accept identity
+  %   - basic checks like no public key reuse or something
+  % if its identity is known to the log, submit a document that:
+  %   - includes a recent head of the log it is submitting to
+  %   - is consistent (as in tree extension proof) to the previous document
+  %   - includes a trusted timestamp (recognized by/to be validated by the log)
+  %   - is signed by the observer identity
+  %
+  % the "files to be observed" / items themselves are not submitted to global logs
+  %
+
+* What does a log monitor do?
+  % a monitor as in "monitoring the content of the log to find misuse of identity"
+  % is something observers use to verify that no one tries to usurp their reputation
+  %
+
+I.e., what can be detected / falsified by downloading the log and doing 'validation'?
+  % a monitor as in "downloading logs and auditing their correctness" is verifying that
+  % all observer documents included in global logs are valid (coinclusion, consistency,
+  % trusted timestamp "anchor", signature) and that time order matches partial order
+  %
+  % this is an "auditor" but it is expected that all monitors are auditors (is it?)
+  %
+
+* Is there a difference between what can be verified 'now'
+  vs if I run the monitor 'tomorrow'?
+  % "now" is able to verify more things:
+  %   - identity validation (observers are expected to keep older identities available)
+  %   - trusted timestamping (these things expire, certificates get lost, etc)
+  % "tomorrow" short term is always able to verify:
+  %   - documents and logs validate together, creating a global picture
+  %   - that global picture produce a partial ordering matching what timestamps tells
+  % "tomorrow" long term will only able to verify:
+  %   - very old documents and old logs have never changed since their creation
+  %   - the latest record of the "past" order "that no longer can be verified"
+  %     is older than the oldest record "that can be verified" of the "present"
+  %
+  % "tomorrow" long term will need to rely on empirical accounts that archive
+  % transparency was properly operating at the time when the very old documents
+  % have been produced
+
+* Suppose I'm an end-user and I want to verify that a doc from three years ago
+  in sigsum's git archive hasn't been tampered with.  What do I do next,
+  assuming AT existed three years ago and someone helped us become part of AT?
+  We can assume that i have "at-clitool" installed.  What does that tool do?
+  % TODO: this can be explicited in the user story I need to do
+  %
+
+% lots of things to improve, happy \o/

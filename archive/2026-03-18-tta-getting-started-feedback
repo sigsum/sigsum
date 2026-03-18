@@ -1,0 +1,364 @@
+reading https://www.sigsum.org/getting-started/ the 11-03-2026
+
+tta personal feelings when "getting started" with sigsum
+
+
+#
+# Review
+#
+
+
+#1. Install
+
+Everything clear.
+
+
+#2. Decide which trust policy to use
+
+Everything clear.
+
+
+#3. Generate a signing key-pair
+
+Everything clear.
+
+
+#4. Start the monitor
+
+Something unexpected happened:
+
+$ sigsum-monitor --interval 10s -P sigsum-test1-2025 submit-key.pub
+
+2026/03/11 10:28:04 [FATA] Alert log 4e89cc51651f0d95f3c6127c15e1a42e3ddf7046c5b17b752689c402e773bb4d: invalid response from "https://test.sigsum.org/barreleye/get-leaves/19968/20480": context deadline exceeded
+
+
+Trying again:
+
+$ sigsum-monitor --interval 120s -P sigsum-test1-2025 submit-key.pub
+
+This works as expected.
+
+%
+% rgdd: thanks for reporting, fixed in
+% <https://git.glasklar.is/sigsum/core/sigsum-go/-/merge_requests/305>.
+%
+
+Question:
+ - is there a way to configure sigsum-monitor to keep in ~/.cache all leaves?
+
+    (context: I have a lot of disk and very bad internet where I live)
+
+%
+% rgdd: not yet, but it's something that needs to (and will) be added in the future.
+% Afraid sigsum-monitor is the most 'wip' tool that comes out of the sigsum/core
+% repository. For a monitor that's more mature, see
+% <https://github.com/florolf/sigmon>.
+%
+
+#5. Log a signed checksum
+
+Everything clear (almost)
+
+Question:
+
+ - it seems that when doing "sigsum-submit" several times in a row with the
+   same input, given the (version,log,leaf) triplet is the same, the tool is
+   not making a "new signature" and silently retrieve the existing one?
+
+    - if the tree has the same size, only cosignatures may change
+    - if the tree is larger, new size, root_hash, log signature, cosignatures
+        +the inclusion path slightly changed
+
+    - this seems to be "expected" and makes sense when thinking about it
+
+%
+% rgdd: thanks, filed
+% <https://git.glasklar.is/sigsum/project/documentation/-/issues/91>.
+%
+
+For a tool that seems build to "submit" a local file to an external party, as
+a new user, this first confused me that it does not "submit" every time.
+
+The tools being silent by default makes also sense (and the on-boarding doc
+skipping this kind of details is too) however maybe the "sigsum-submit" tool
+may need a "--fail-if-exists" to force a tool fail if (version,log,leaf)
+already exists and is retrieved instead of being appended as new to the log.
+
+This would help clarifying the behavior to a curious user and may be useful.
+
+However, I have no experience in CLI design, I'm just "writing out loud" here!
+
+%
+% rgdd: also commented in
+% <https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/125#note_32324>.
+%
+
+#6. Detect the signed checksum
+
+Everything clear.
+
+
+However, I have a regret. Imagine I become a heavy user of sigsum and I start
+having a large collection of "<something>.proof" that I am keeping around for
+some operational reason, like keeping track of what I have done in my systems.
+
+I have "hello.py"
+I can compute 7138d30e618745ee20d3e09b81ca45cfbf3a7db0eb526557a04d34e2ef2a5039
+
+If I want to find all the valid ".proof" files for "hello.py" locally:
+
+    grep -rni 7138d30e618745ee20d3e09b81ca45cfbf3a7db0eb526557a04d34e2ef2a5039
+
+This does not work. If I still have my private key, I can reproduce signature
+and search for the signature itself. However, if my private key has been lost
+or if I have rotated my identity, I can not search my older ".proof" files.
+
+If someone else, ten years in the future, inherit my collection of ".proof"
+files, is it relatively safe for that person to assume that most signatures
+have not been compromised (assuming PQ fud did not materialized) however it
+makes it computationally intensive to search a checksum in all the ".proof"
+
+In the example given for "hello.py" I store 3745 bytes of data, this is fine
+disk is cheap, among those 2170 bytes are cosignatures, this is fine, however
+
+    checksum=7138d30e618745ee20d3e09b81ca45cfbf3a7db0eb526557a04d34e2ef2a5039
+
+would add 74 bytes (2%) and makes local offline search easy & cheap.
+
+This also help if for whatever reason, the exact bytes of the signature have
+been corrupted, it makes recovery easier, assuming future people knows best.
+
+
+This "belt and suspenders" kind of brain worms may not be relevant to sigsum
+and if so please ignore this, however in my personal taste for such systems,
+I am fond of having the output bytes of my hash functions written to disk.
+
+% nisse: Regarding #6, it's intentional that checksum is not included in the proof,
+% since the verifier should have the data needed to compute it. We used to have a
+% truncated checksum, but dropped that a year ago, see
+% <https://git.glasklar.is/sigsum/project/documentation/-/blob/main/proposals/2024-11-proof-with-no-leaf-checksum.md>.
+% To correlate checksums with a collection of proof files, you'd could use log hash +
+% leaf index in the proof to get the checksum from the log (and if it's no longer
+% online, you would need archived data). So that's not a trivial operation.
+%
+% In general, you will need an archive of all submitted data, indexed by checksum.
+% Maybe the practical solution is to hook corresponding proof files into the same
+% archive.
+
+%
+% tta: Maybe the practical solution // noted, I'll continue playing more with sigsum!
+% (and maybe rename my proof files <checksum>.proof and move on)
+%
+
+# 7. Verify the proof of logging
+
+Everything clear, small "wtf" when playing with the files.
+
+The good:
+
+ - It is easy to test modifying files -- the example works & is helpful!
+
+The surprising:
+
+ - The thing work even if I modify a cosignature!
+
+This makes sense when you think about it, but having a "--verbose" flag and
+telling the user what it should expects when playing with cosignatures, would
+be a bonus (and avoid these 5 minutes of "wtf? is this NOT authenticated???")
+
+However, maybe this is intentional, as a learning experience, dunno :)
+
+%
+% nisse: regarding tool verbosity, feel free to file specific feature requests. We do
+% have a few existing issues:
+% <https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/164>
+% <https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/81>
+%
+
+%
+% rgdd: not intentional that this is confusing during getting started, filed
+% <https://git.glasklar.is/sigsum/project/documentation/-/issues/92>.
+%
+
+# 8. Debrief
+
+Everything clear.
+
+When reading "Ready to move beyond testing?" I want to jump to some other pages
+that motivates me to make more experiments and/or learn more about the system.
+
+However, the guide sends me toward policy, where my immediate "feel" is that it
+seems like I am likely to default to the maintained Sigsum default policies.
+
+The linked page also exposes me to a lot of new details about something that
+will be important later on, while I may not be up-to-speed on other concepts.
+
+Ideas:
+
+ - maybe link to a monitor implementation (or directly to florof's monitor)?
+
+   as a user I would like a easy way to trigger local behaviors when my keys
+   are logged signing stuff, and this is the next thing I want to try now!
+
+ - maybe link to some further reading material, that clarify the differences
+   between "traditional signatures" and "signatures +key-usage transparency"
+   as this can be very helpful to people not aware of transparency benefits
+
+ - maybe link to some usage policy or overall guidelines when interacting with
+   sigsum, as a user that want to engage with sigsum, I don't want to mess by
+   accident with things that are important to other people, and will need to be
+   reassured about the things that I can do (and that I cannot do)
+
+        for example the TXT DNS _sigsum_v1 thingy (or a guide for this)
+
+%
+% rgdd: good ideas, and yes you're spot on that we need a better 'next page'. And
+% probably several additional "getting started" like docs. Filed
+% <https://git.glasklar.is/sigsum/project/documentation/-/issues/93> to keep track of
+% the above ideas / first impressions of what was missing.
+%
+
+#
+# Summary
+#
+
+
+My overall feeling with this document, is that things are simple & working \ô/
+
+
+What I liked especially:
+
+ - I was immediately directed to a test sigsum log where I can experiment
+ - I have files that I can inspect and modify to easily test things
+ - I can see what is happening, because what matters to me is:
+
+    - where are the bytes being read, can you show them to me?
+    - where are the bytes being written, can you show them to me?
+    - where is the network interaction happening?
+
+
+What I would have liked:
+
+ - some "--verbose" verbose flag that makes the tools very noisy
+
+    - maybe add it and only mention its existence at the start?
+    - tools being silent when my attention is not needed is good
+
+    - however, when I feel dumb, I like having an option to say
+
+        "explain to me what you are doing, reading, writing, etc"
+
+            +especially what other computers I am talking to
+            +what unexpected branches I am triggering (*.proof already exists)
+
+    - this is close but not exactly "--diagnostics=info" or debug
+
+        as a user that will never look at sigsum implementation, I want a way
+        to say to my machine "tell me the work you are doing" so it becomes
+        easier to me to grasp what the tool is doing, w-o looking at the docs
+
+%
+% rgdd: added the above as a comment in
+% <https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/81#note_32325>.
+
+ - some way to "see the log" or the tiles (some "~/.cache/sigsum/tiles/<log>"
+   directory) because without the "transparency log" feels like a black box
+
+    - as a smart user, I known that this does not matter that much
+
+        I known that I need to rely on sigsum and the ecosystem to properly
+        operate the logs, the online services and me operate my monitor, for
+        the "value of transparency" to exist, it is ok to "not look at it"
+
+    - as a dumb user, I feel better if I can "look at the bytes"
+
+        transparency logs are transitioning to tile-based transparency logs, I
+        am not entirely sure where sigsum stands as of for now, but I am quite
+        sure that an added value of tile-based logs, is that as a human, I can
+        "look at the file" on my machine and this "feels better" than abstract
+        trees in a database somewhere on the internet, it is a good property
+
+        sigsum enabling such kind of "reassuring behavior" would be nice
+
+%
+% rgdd: i think the 'look at the bytes' kinda thing would probably fit better on a
+% monitor page. Added a comment in
+% <https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/46#note_32326>.
+%
+% As for tiles, yes that's definitely something we want to transition towards in the
+% future.  For some v2 (and possibly v1.1 or similar) pointers/ideas, see:
+%
+%https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2024-11-04-sigsum-v2-ideas
+%https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2025-09-03-leaf-context-for-sigsum-v2.md
+%
+% And when going up to sigsum/v2, we would most likely start using Tessera as the
+% backend instead of Trillian.
+%
+
+What I disliked:
+
+ - none, for now!
+
+ - maybe I'm not 100% sure how I feel about policy & witnesses
+
+    I *understand* why they exist, they feel like a good/sane answer to a real
+    problem, however this does take space (in the proofs and in the guide)
+
+    You need to learn about these /before/ it makes sense, why the quorum, why
+    when I modify a cosignature my hello.py.proof still works, why the policy,
+    what problem it is solving, and all is not very straightforward
+
+    My *feelings* at the end of the guide, are:
+
+        - ok, I heard about certificate transparency
+        - ok, key-usage transparency seems very reasonable to me
+        - nice, the thing work, I want to use it already!
+        - ...
+        - hum
+        - what is exactly "policy" and "witness" and "quorum" and this nuanced
+          validation mechanism around cosignatures I never heard about?
+        - I don't know!
+        - ...
+        - is this a strange useless invention of sigsum? or is this sound?
+        - ...
+        - I need to learn more because this is "too new to me" to be sure :/
+
+    (for context, I known that this is recent and watched many talks about it
+     from the transparency summit youtube channel, these are *feelings* only)
+
+    This may be solved by linking at the end of the "getting started" to a post
+    or something else written for people unaware of "why?"+"how?" of all these
+    cosignatures/policy/witness/quorum things.
+
+    Or maybe it's me, too new to the stuff, not feeling confident :o)
+
+%
+% rgdd: it's good feedback, thanks. Keep it coming! Not 100% sure which is the easy doc
+% we want to be adding right now to solve this -- i think what we really need to do is
+% do a bit of an overhaul and get a few more 'getting started' like docs. I don't think
+% it's exactly what you're asking for, but maybe
+% <https://www.glasklarteknik.se/post/named-policies-for-sigsum/> is helpful and in the
+% direction you want to read more.
+%
+
+
+> I want to emphasize that this is not criticism, just an "on-boarding feeling"
+> from someone new to the technology -- and I also feel like this is inevitable
+> to have "first confusing" parts in such sufficiently complex system.
+>
+> Here I wanted to highlight the "aftertaste" at the end of the experience.
+>
+> I want to *feel confident* about the new tools, after reading the guide!
+
+%
+% rgdd: your feedback is fantastic, thanks so much for writing it down!
+%
+
+#
+# TL;DR
+#
+
+
+I have appreciated the good work polishing sigsum +the words used to describe
+it, the guide gave me tools that are working and my first experience was nice!
+

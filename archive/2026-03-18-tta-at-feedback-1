@@ -1,0 +1,52 @@
+rgdd notes when looking at tta's current AT stuff (2026-02-25)
+> https://pad.sigsum.org/p/00ff-06b9-5327-3c43-518e-3e7d-68df-4a8e-tta
+
+Links:
+
+* https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2026-02-10--meeting-minutes.md?ref_type=heads#request-for-input-on-ircmatrix-from-tta
+
+(I glanced through the links, and went through the summary doc twice.)
+
+The idea, if I understand correctly:
+
+* The goal is to lock down file metadata, so that it will be harder to tamper
+  with it in the future (and thus gain confidence that the files are authentic).
+* Solution overview: use a transparency log.  Part of the admission criteria
+  is that the file metadata (or so called "constraints") are valid, and other
+  validators that follow the log also check that the constraints are valid?
+* End-users are configured with trusted $parties, and will only trust a document
+  to be from say 2015 if checksum matches and there are timestamps from 2015.
+
+Some details...like having human-readable metadata with exactly one
+serialization.  And that's what gets committed to a transparency log.
+
+More details...constraints, scalability.  Around here I start getting lost.
+
+I think what makes it a bit hard for me to get a good grip right now is:
+
+* record, curator observer log, observer document, AT document, AT log, curator,
+  observer, auditor, monitor, validators, different timestamps, ...; i.e.,
+  terminology wise it's pretty heavy and I think some of it overlaps?  It's hard
+  for me to draw the picture of what this system looks like.
+
+An overview figure with conrete parties and interactions would help a lot.  And
+to clearly state the information that's exchanged between these parties, and
+what each party is expected to verify / falsify.
+
+Part of why it's hard for me to get a good grip right now is maybe also that
+there are many ideas of how this could be used/deployed, and instead of zooming
+in on one or two options it's left a bit open and so it becomes scattered for
+someone that doesn't know all details yet?
+
+Some concrete starter questions that would help me understand better, and maybe
+ask better follow up questions:
+
+* How does an AT log work: what is the leaf and what is the admission criteria
+  to get an entry added?  What does a submitter need to do to get a leaf added?
+* What does a log monitor do? I.e., what can be detected / falsified by
+  downloading the log and doing 'validation'?  Is there a difference between
+  what can be verified 'now' vs if I run the monitor 'tomorrow'?
+* Suppose I'm an end-user and I want to verify that a doc from three years ago
+  in sigsum's git archive hasn't been tampered with.  What do I do next,
+  assuming AT existed three years ago and someone helped us become part of AT?
+  We can assume that i have "at-clitool" installed.  What does that tool do?
