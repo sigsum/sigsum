@@ -33,7 +33,7 @@
     - looks like it's not very much work needed to use sigsum there
     - gregoire: could be interesting for updates of mullvad browser as well
   - rgdd: went through the feedback in tta's pad + filed some issues
-    - https://pad.sigsum.org/p/qqZN2UhFSwYTFnoYwwJ9
+    - https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2026-03-18-tta-getting-started-feedback
     - (also got ack to persist the 3x pads from last week + the 1x pad above)
     - lots of good comments and suggestions there
   - rgdd: at Glasklar we are making progress on our upcoming high-availability witnessing deployment

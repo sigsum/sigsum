@@ -25,9 +25,9 @@
   - https://git.glasklar.is/sigsum/project/documentation/-/blob/main/history.md
 - rgdd: looked through tta's AT and tried to understand more past 1-2 weeks
   - most of our exchanges are in pads, see below if you're interested
-  - 1st: https://pad.sigsum.org/p/00ff-06b9-5327-3c43-518e-3e7d-68df-4a8e
-  - 2nd: https://pad.sigsum.org/p/00ff-06b9-5327-3c43-518e-3e7d-68df-4a8e-tta
-  - 3rd: https://pad.sigsum.org/p/67fc-50da-a03f-a1e0-4483-eb9b-bb22-c5ce
+  - 1st: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2026-03-18-tta-at-feedback-1
+  - 2nd: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2026-03-18-tta-at-feedback-2
+  - 3rd: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2026-03-18-tta-at-feedback-3
   - sounds like tta will work on an updated SUMMARY.md and ping us again
   - nisse: this ensure that an archived has not changed after it was archived
   - rgdd: does item with hash h exists at time t, hard to tamper statement
