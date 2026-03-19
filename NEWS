@@ -1,3 +1,19 @@
+NEWS for log.md, version v1.0.1
+
+	This release includes only minor bugfixes to the Sigsum Log
+	Server Protocol, i.e., the file log.md.
+
+	Bug fixes:
+
+	* Correct description of the get-leaves response. The fields
+	  on each leaf line are ordered: checksum, signature, keyhash.
+	  This is the same order as when serialized for the
+	  computation of the leaf hash, and the order used by all
+	  known implementations.
+
+	* Correct table-of-contents links, to work with gitlab's html
+	  rendering.
+
 NEWS for log.md, version v1.0.0
 
 	This is the first official release of the Sigsum Log Server

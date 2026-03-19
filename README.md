@@ -12,7 +12,7 @@ documentation related to the [Sigsum project][].
   - [proposals/](./proposals) - proposals relating to design or the project at large
   - [www.sigsum.org/](./www.sigsum.org) - source code of the project website
   - Top-level - documents like [log server protocol](./log.md), and
-    [project history](HISTORY.md)
+    [project history](./history.md)
 
 ## Contributing
 
@@ -87,6 +87,7 @@ for older patch versions.
 
   - Linus Nordberg (ln5)
   - Rasmus Dahlberg (rgdd)
+  - Niels Möller (nisse)
 
 ## Licence
 
