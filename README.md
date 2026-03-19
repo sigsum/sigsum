@@ -87,6 +87,7 @@ for older patch versions.
 
   - Linus Nordberg (ln5)
   - Rasmus Dahlberg (rgdd)
+  - Niels Möller (nisse)
 
 ## Licence
 
