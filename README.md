@@ -26,9 +26,9 @@ decision is decided on Tuesdays at 1100 UTC during [weekly project meets][].
 
 ## Releases
 
-When technical specifications are released, that means that we assing
+When technical specifications are released, that means that we assign
 a version number to a particular version of a specification, e.g.,
-[log server protocol](./log.md), version `v1.0.0`.
+[log server protocol](./log.md), version `v1.0.1`.
 
 ### Release principles
 
@@ -64,7 +64,7 @@ principles:
 ### Publishing released specifications
 
 Released versions are identified by git tags of the form
-`<filename>-release-<version>`, e.g., `log.md-release-v1.0.0`. The
+`<filename>-release-<version>`, e.g., `log.md-release-v1.0.1`. The
 initial prefix ensures we can have several specifications in the same
 git-repository, with independent releases and version numbers.
 

@@ -53,7 +53,7 @@ Meant for implementers who need to know about bits and bytes:
   - [Witness cosignature format][]: stable v1 release
   - [Witness cosigning protocol][]: release candidate
 
-[Sigsum log server protocol]: https://git.glasklar.is/sigsum/project/documentation/-/blob/log.md-release-v1.0.0/log.md
+[Sigsum log server protocol]: https://git.glasklar.is/sigsum/project/documentation/-/blob/log.md-release-v1.0.1/log.md
 [Witness cosignature format]: https://c2sp.org/tlog-cosignature@v1.0.0
 [Witness cosigning protocol]: https://c2sp.org/tlog-witness
 [Bastion host protocol]: https://c2sp.org/https-bastion
