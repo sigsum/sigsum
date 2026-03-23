@@ -75,8 +75,8 @@ If we ever reach a v2 specification while still wanting to make
 another release of a v1 specification, we would do the latter on a
 dedicated v1 branch.
 
-We intend to publish the latest patch version of each major and minor
-release of each specification on
+**TODO:** We intend to publish the latest patch version of each major
+and minor release of each specification on
 [www.sigsum.org/specs](https://www.sigsum.org/specs). We don't intend
 to publish each patch version there, but refer to the git repository
 for older patch versions.
