@@ -24,7 +24,7 @@
 ## Status round
 
   - rgdd: glanced at spicytool status
-    - https://pad.sigsum.org/p/9226-359f-8422-1636-74ac-254d-410f-83d2
+    - [See notes](./2026-02-24-spicytool-notes)
     - cli for generating keys for signing and verifying?
       - using hard-coded policy
       - using Tessera

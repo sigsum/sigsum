@@ -1,0 +1,19 @@
+EDIT: persisted 2026-03-27 when rgdd noticed this wasn't persisted.
+[notes by rgdd.]
+
+Glancing at spicytool source [1] to see current status (2026-02-24)
+
+* keygen, sign, verify
+* "keygen", basically get a soft key pair for a local tlog
+* local tlog = use tessera posix backend
+* looks like it's not "one-shot", but rather run tlog while running spicytool?
+  * or did i misunderstand? "Checkpoint interval" lead me to this conclusion
+* hardcoded witness policy; only works out of the box $someone's private key,
+  since setup/configuration is needed by the selected witnessed.
+* leaf format: essentially H(data) + optional hint (could e.g. be filename)
+* "sign", basically append leaf; sign tlog; gather proof
+* "verify", basically check that the entry is in the local tlog for a policy
+* so tl;dr: spicytool's "signing" component is the signing of the locally stored
+  log, not individual entries.  Because only the signer that adds to the log.
+
+1: https://github.com/warpfork/spicytool
