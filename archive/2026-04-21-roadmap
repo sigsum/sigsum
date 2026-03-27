@@ -1,0 +1,159 @@
+# 2026-04-21
+
+This document provides an overview of Sigsum's roadmap and people with standing
+responsibilities.  A new roadmap will be decided towards the end of June, 2026.
+
+## High-level priorities
+
+In roughly this order whenever possible:
+
+  1. Sigsum logs are operated with good business continuity
+  2. Witnesses are operated with good business continuity
+  3. It is easy to use Sigsum
+     - Wrt. integrating into something existing
+     - Wrt. being a party that offline-verifies
+     - Wrt. being a party that monitors
+  4. Further development (broader and possibly experimental)
+
+From these high-level priorities we define shorter-term activities.
+
+## Main activities until mid June, 2026
+
+(The below is just a start; based on left overs from the previous roadmap.)
+
+  - TODO: fix me, more things we will be working on.
+  - **TKey log signer app and integration with log-go**
+    - Work by: nisse
+    - Review by: mw/rgdd
+    - Expected outcome:
+      - https://git.glasklar.is/sigsum/core/log-go/-/issues/136
+    - Estimated done: TBD
+  - **High availability witnessing operations**
+    - Work and review by: elias, ln5, rgdd
+    - Expected outcome:
+      - Glasklar can operate a witness group with a 99% SLA
+      - Associated documentation that can help other operators
+    - Estimated done: TBD
+  - **Misc projects filippo is considering**
+    - To be added?
+  - **Misc projects florolf is considering**
+    - To be added?
+
+As usual: support, bug fixing, and other maintenance is in scope and planned
+separately when needed.
+
+## People and their standing responsibilities
+
+  - elias:
+    - Maintains Sigsum's [ansible collection][]
+    - Responsible for the Sigsum project's test log, [barreleye][]
+    - Point of contact for log and witness operators who would like user support
+  - filippo
+    - Maintains [C2SP.org][] specifications
+    - Maintains [litebastion][]
+    - Maintains [litewitness][]
+    - Maintains <https://witness-network.org>
+  - florolf:
+    - Maintains [sigmon][]
+  - ln5:
+    - Maintains Sigsum specifications in [project/documentation][]
+    - Responsible for the Sigsum project's test log, [barreleye][]
+    - Point of contact for log and witness operators who would like user support
+  - nisse
+	- Maintains [C2SP.org][] specifications
+    - Maintains Sigsum specifications in [project/documentation][]
+    - Maintains Sigsum's [core/][] repositories
+	- Maintains Sigsum's [app/][] repositories
+  - rgdd
+    - Maintains [C2SP.org][] specifications
+    - Maintains Sigsum specifications in [project/documentation][]
+    - Maintains the content on [Sigsum's website][]
+    - Maintains <https://witness-network.org>
+    - Responsible for planning, coordinating, chairing, "catch all", etc
+
+mw is currently being onboarded and does not have any standing responsibilities
+yet.  In the future, mw will contribute to Sigsum as a developer and maintainer.
+
+[ansible collection]: https://git.glasklar.is/sigsum/admin/ansible
+[barreleye]: https://test.sigsum.org/barreleye
+[C2SP.org]: https://c2sp.org/
+[litebastion]: https://github.com/FiloSottile/torchwood/blob/main/cmd/litebastion/README.md
+[litewitness]: https://github.com/FiloSottile/torchwood/blob/main/cmd/litewitness/README.md
+[sigmon]: https://github.com/florolf/sigmon
+[project/documentation]: https://git.glasklar.is/sigsum/project/documentation
+[core/]: https://git.glasklar.is/sigsum/core
+[app/]: https://git.glasklar.is/sigsum/apps
+[Sigsum's website]: https://www.sigsum.org/
+
+## What happens after June, 2026
+
+To be decided, but we don't expect any major changes in high-level priorities.
+
+A natural next TKey app after the planned log-signer is a witness-signer.  In
+other words, it is likely such work might make it into the roadmap soon.
+
+Something we're considering ramping up is progress on [sigsum/next][].  The
+first step here will likely be to take Tessera for a test drive (POXIS backend)
+with the current Sigsum leaf, then start hashing out what the next leaf should
+be.  It seems more likely that this is a candidate activity after the summer.
+
+For further hints on what might be selected as the main activities in the
+future, refer to Sigsum's [issue boards][] and (sometimes "DRAFT:")
+[milestones][].  Try filtering on the GitLab ["Future" tag][].  If you have
+input on what you want to see work on, file and comment on issues or reach out
+as you see fit.  Contact information can be found on <https://www.sigsum.org/>.
+
+[issue boards]: https://git.glasklar.is/groups/sigsum/-/issues
+[milestones]: https://git.glasklar.is/groups/sigsum/-/milestones
+["Future" tag]: https://git.glasklar.is/groups/sigsum/-/issues/?sort=created_date&state=opened&label_name%5B%5D=Future&first_page_size=20
+[sigsum/next]: https://git.glasklar.is/sigsum/project/documentation/-/issues/66
+
+## Previous roadmap from February, 2026
+
+  - https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2026-02-03-roadmap.md
+  - https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2025-02-03--meeting-minutes.md#decisions
+
+## Summary of progress since February, 2026
+
+A few highlights:
+
+  - Release candidate of sigsum-c, v1.0.0-dev.0
+    - git.glasklar.is/sigsum/core/sigsum-c/
+	- Scoped to support offline verification (library and command-line tool)
+  - Release candidate of `sign-if-logged`, v1.0.0-dev.0
+    - https://git.glasklar.is/sigsum/apps/sign-if-logged
+	- Signs a message using a TKey iff that message has already been logged with
+	  Sigsum for a given submitter key and trust policy.
+  - Sigsum ansible release, v1.6.0.
+    - https://git.glasklar.is/sigsum/admin/ansible/-/blob/v1.6.0/NEWS?ref_type=tags#L1-48
+    - Includes witness network and per-log bastion support
+  - Mullvad VPN and Glasklar Teknik deployed per-log bastions for their logs
+    - TODO: add links
+  - We attended Tor gathering and had sessions on transparency
+    - https://onionize.space/2026/sessions/tsigs/
+    - https://onionize.space/2026/sessions/tb-auto-updates/
+  - We attended ATmosphereConf and had a lightning talk on transparency
+    - https://atmosphereconf.org/event/000TLog
+  - New errata release of Sigsum's log specification, v1.0.1.
+    - https://git.glasklar.is/sigsum/project/documentation/-/blob/log.md-release-v1.0.1/NEWS?ref_type=tags#L1-15
+  - First draft of tlog-policy in C2SP.org is available (based on [Sigsum's
+	policy spec](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/policy.md))
+    - TODO: add link
+  - Second draft of tlog-proof in C2SP.org is available (based on [Sigsum's
+	proof spec](https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md))
+    - https://github.com/C2SP/C2SP/blob/main/tlog-proof.md
+	- Now also includes verification steps
+    - TODO: remind filippo to get https://github.com/C2SP/C2SP/pull/193 merged
+  - Staging opened in <https://witness-network.org>
+  - Reading suggestions for learning some Sigsum and transparency log details
+    - https://git.glasklar.is/sigsum/project/documentation/-/blob/main/archive/2026-03-16-sigsum-reading-suggestions.md
+  - Rough Ed25519 (co)signature benchmarks for TKey and YubiHSM
+    - TODO: link when sigsum weekly minutes are persisted
+  - TODO: any update from ln5 regarding Tor consensus transparency?
+
+Our work on high availability witnessing is progressing, but there is no consize
+write up we can point towards yet.  This work continues in the upcoming roadmap,
+and for a summary of where we're at see TODO: add link.
+
+We did not have time to start working on a TKey log signer app with integration
+in log-go.  This work also continues in the upcoming roadmap.
