@@ -128,6 +128,14 @@ A few highlights:
     - https://git.glasklar.is/sigsum/admin/ansible/-/blob/v1.6.0/NEWS?ref_type=tags#L1-48
     - Includes witness network and per-log bastion support
   - Mullvad VPN and Glasklar Teknik deployed per-log bastions for their logs
+	- **Testing:**
+	   - bastion-driftwood.tlog.devmole.eu:443
+       - https://driftwood.tlog.devmole.eu/about
+    - **Staging:**
+	  - bastion-serviceberry.tlog.stagemole.eu:443
+      - https://serviceberry.tlog.stagemole.eu/about
+    - **Production:** bastion-ginkgo.tlog.mullvad.net:443
+      - https://ginkgo.tlog.mullvad.net/about
     - TODO: add links
   - We attended Tor gathering and had sessions on transparency
     - https://onionize.space/2026/sessions/tsigs/
