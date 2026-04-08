@@ -224,3 +224,11 @@ requests_per_second = 15.26810705234099494776
 requests_per_second = 15.28293705216280606265
 success_rate = 0 %
 ```
+
+## Note added 2026-04-08
+
+Tested also for stage-witness.glasklar.is with "log-level: debug"
+enabled for yubihsm-connector to see if that had any effect on the
+performance, but the resulting `requests_per_second` values were
+similar to the above. So based on that test, the yubihsm-connector
+"log-level: debug" option does not seem to affect performance.
