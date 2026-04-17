@@ -1,11 +1,10 @@
-TODO(@elias): add glasklar's status + the witnesses you know uses this.
-
 Summary of per-log bastion deployment as of mid April
 
 ---Testing
 
 * bastion-driftwood.tlog.devmole.eu:443 -- https://driftwood.tlog.devmole.eu/about
- 
+* barreleye-bastion.sigsum.org:443 -- https://git.glasklar.is/glasklar/admin/-/blob/main/archive/2026-04-08-per-log-bastion-deploy.md
+
 ---Staging
 
 * bastion-serviceberry.tlog.stagemole.eu:443 -- https://serviceberry.tlog.stagemole.eu/about
@@ -13,6 +12,7 @@ Summary of per-log bastion deployment as of mid April
 ---Production
 
 * bastion-ginkgo.tlog.mullvad.net:443 -- https://ginkgo.tlog.mullvad.net/about
+* seasalp-bastion.glasklar.is:443 -- https://git.glasklar.is/glasklar/services/sigsum-logs/-/blob/main/instances/seasalp.md
 
 ---Witness network support?
 
@@ -23,4 +23,7 @@ https://github.com/transparency-dev/witness-network/issues/32
 
 A few of them include:
 
-* To be added.
+* witness.glasklar.is uses seasalp-bastion.glasklar.is:443 for seasalp -- https://git.glasklar.is/glasklar/services/witnessing/-/blob/main/witness.glasklar.is/about.md
+* stage-witness.glasklar.is uses barreleye-bastion.sigsum.org:443 for barreleye -- https://git.glasklar.is/glasklar/admin/-/blob/main/archive/2026-04-08-per-log-bastion-deploy.md
+* rgdd.se/poc-witness uses barreleye-bastion.sigsum.org:443 for barreleye
+* witness2.smartit.nu/witness2 uses barreleye-bastion.sigsum.org:443 for barreleye
