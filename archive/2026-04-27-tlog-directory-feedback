@@ -1,0 +1,119 @@
+warpfork's wip docs (unstable links)
+
+* https://hackmd.io/UfsG7EE3TXKp9QGuekUr0g?edit=
+* https://hackmd.io/93nYqgZqR3u6Bcj2rBglEA?both=
+
+# rgdd feedback 2026-04-27
+
+My TL;DR comment is probably: I see the most value for tlog.directory if you
+can lead with what is a tlog + a few subsections in 'WTF tlog' style.  Then
+perhaps glossary + massive amounts of links with short context.  Good format
+because easy to maintain and easy to extend and keep scoped.  See a bit more
+context to this TL;DR in the higher-level comments below.
+
+I'm (trying to) not comment on too much details, in hope that you can first get
+the format and framing good enough for a take 1 -> then iterate.  And inviting
+others to help iterate is good (e.g., "we know we haven't linked everything yet,
+if you see something missing here's the frame -- help us fill things out").
+
+---
+
+Higher level comments:
+
+* When it comes to target audience, I agree it makes sense to target people that
+  are technical but doesn't know tlogs.  That said, if you explain tlogs in a
+  way that's not technical (from your pov) you'll still most likely come across
+  as technical to the people that doesn't know tlogs.  Striking good balance.
+* I think it's good that you're leading with what is a tlog.  The more you can
+  do this without being technical -> I think it helps ppl form an intuition.
+  I would recommend doing more of this at the start, not less.  Then fill in
+  the gaps with selected technical details, and lots of further reading links.
+  FWIW I think the WTF tlog doc has the 'right' tone. If I could pick I would
+  recommend continuing to work on that and then add links/details at the bottom.
+* Looks like the intended format here is "text with the most important stuff
+  you think is worth telling the reader", then "all links you think are good
+  with minimal context"?  Seems like a good format/goal to me.  I'd prefer if
+  this became even sharper, i.e., right now it feels a bit like a mix of "here
+  are a bunch of links under some topic categories" and here is a bunch of
+  supporting text. I'd recommend keeping the link stuff shorter -- link + short
+  description. Interestingt to the reader? Click and read more.  And the stuff
+  that we think is essential for tlog.directory to maintain text for -> write
+  proper sections that are not on a 'link' format (rather refs if makes sense).
+  I think this will also make it easier to maintain and extend -- either one is
+  adding a link (and overhead to get it added is pretty low), or one is adding
+  something that's kinda core and then it goes into a dedicated section.  Will
+  probably also help with scoping of what to describe vs not describe in detail.
+* I wonder if it might be good with 1-2 sentences at the start of the page that
+  frames what to expect here. Outline. 1) wtf is a tlog -- the core stuff 2)
+  this is a space with lots of standard specs and development, this page will
+  also help you navigate and orient yourself.
+* Figures. Where are they? Add them :-)
+
+---
+
+More detailed comments:
+
+* `Behaviorally an in application` -> i think you can give a better elevator
+  pitch than this. I doubt someone that doesn't know a tlog will get this.  I
+  also doubt you will be able to do this in just one paragraph, it's too short.
+* `## Why use a Transparency Log?` -> I like 1st paragraph, it would be helpful
+  to also have some examples.
+* Auditor -> in my schooling auditor is someone that does log(n) work, and it is
+  a misconception to make it a synonym to monitor. I like monitor description.
+* Observer -- is this a party people talk about? I think it can be removed.
+* Witnessing vs monitoring -- key section!
+* More tlog-* specs should be listed under `## specifications`? E.g.,
+  tlog-proof, tlog-policy, tlog-cosignature? ...
+* s/SigSum/Sigsum/
+* SumDB -- it's debatable whether this is single-tentant or multi-tentant.
+  Anyone can get an entry sequenced by creating a Go module, so in that sense it
+  behaves like a multi-tentant log where each Go module has it's own namespace.
+  It's just that the API is "knock here and Google's job will observe your
+  repo", rather than "knock knock my repo has this state just sequence pls".
+  Feels like some nuance here is missing / people might find this confusing.
+* `## Community`, feel free to add sigsum's details, weekly meets & calendar
+  is https://nextcloud.glasklarteknik.se/index.php/apps/calendar/p/P2RDRwn8gNoCaBJd/dayGridMonth/now
+  and sigsum/matrix also available (see www.sigsum.org/contact for links)
+* Merkle Search Trees (and variants) -> should probably be explained what it is
+  before starting to compose, i.e., reads a bit confusing right now.
+* Advice for Log Entry Design -- key section, touches many important parts.
+* "remember that anything you might want to partition or index the log by must
+  still be in the entry leaf directly", risks being misleading. Many things
+  that one wants to partition on is stable and can then be hashed, e.g., email,
+  phone number, public key, github username, ...; but to discover and partition
+  based on something that isn't known in advance, yes. But ...scary values :-)
+  It's good to talk about this and explain, but the text could use more work.
+
+---
+
+More misc:
+
+* I'm sad that bastion:ed witness is not mentioned anywhere
+* Maybe i missed it, but if it's not there, it's worth calling out that tiles
+  are great because they can be served statically.  Compared to RFC 6962, where
+  the get-proof-by-hash endpoint is 'expensive' and the query API is generally
+  much harder to cache.
+
+---
+
+If it helps as inspiration -- rgdd's tlog elevator pitch:
+
+A list, typically append only.  Hosted by a single party, think database.  In
+theory anyone can talk to the single central party and see what's in the list,
+to detect issues (give examples -- basically what a monitor could do).  Not a
+great setup though -- what if the single party show different answers to
+different people?  To solve this we add cryptographic glue to to the list.
+Called a transparency log. Now we can 'trust but verify'.  Tamper evidence.
+Detection, deterrance. Not prevention.  Now 'monitoring' can be secure.  fyi,
+it is possible to transform the list to a dictionary so don't worry about it.
+
+Then if I have time, i'd take a step back and introduce claims and witnessing
+(as the thing that adds security).  And maybe talk about the Merkle tree props.
+Followed by Merkle tree.  But this stuff, usually not in the initial elevator
+pitch and comes after.  Or well, claims are sometimes in the pitch depending on
+how the basic monitoring examples are mentioned.  So that's where I'd work that
+in quickly.
+
+Also, on this topic, maybe you find this link interesting:
+
+* https://gitlab.torproject.org/rgdd/ct/-/blob/main/doc/tlog-preliminaries.md
