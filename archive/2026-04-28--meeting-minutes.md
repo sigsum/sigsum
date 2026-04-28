@@ -120,8 +120,8 @@
           - see https://archive.rip/static/tmp/merkle/ (for fun, throw-away code)
   - Justin: is the sigsum-design-cats-2023.pdf paper the most complete security analysis of Sigsum?
     - rgdd: yes, that's definitely a good one to look at
-    - rgdd: there is also the specifications
-    - rgdd: there is some thread modelling in the log.md document
+    - rgdd: there is also the specifications - https://www.sigsum.org/docs/
+    - rgdd: there is some thread modelling in the log.md document - https://git.glasklar.is/sigsum/project/documentation/-/blob/log.md-release-v1.0.1/log.md
     - trying to understand the boundaries around what you are trying to do, in corner cases
       - very difficult to reason about how to use a tool if you don't understand the corner cases
     - justin: would it be of interest to have a document saying "if attacker does this, then the system works like this"?
@@ -129,6 +129,7 @@
     - justing: what's the best way for us to ask questions?
       - rgdd: best way is sigsum matrix room
       - rgdd: then there is also the sigsum mailing list
+      - https://www.sigsum.org/contact/
       - rgdd: there is also this meeting every week
       - rgdd: you can also schedule time to talk outside these meetings
   - next week is a Sigsum/ST meetup, should we have the Sigsum weekly meeting anyway?
