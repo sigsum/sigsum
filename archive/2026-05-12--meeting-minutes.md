@@ -138,42 +138,42 @@
           - no, it will cost in terms of wasting the rate-limit quota for the submitter
     - If rate-limit counter is incremented each time a submission is initiated, poisoning would become expensive for the submitter.
  - nisse: about prevention vs detection:
-       - if you want prevention then tlogs will not do much for you
-       - but if you have done all you can about prevention and you want to improve further, then you can add detection using tlogs
-       - rgdd: we are not in the business of prevention, basically
-       - filippo: the reason I love tlogs is that they let me deploy mechanisms
-         - filippo: the go checksum database is an example
-         - filippo; tlogs let us do prevention in context of the go checksum database
-         - filippo: so we don't need to just say "just trust google"
-         - filippo: now there is a system where you get protection, because if you try to publish two different versions of a package you will not suceed
-         - filippo: so tlogs in a systems way let you achieve prevention
-         - rgdd: you're right that it's hard to change the same version, but you can create new versions
-           - filippo: yes, but this means you cannot affect an existing build
-         - justin: I think, what I'd rather do is take the Go sumdb and some other examples and do a security analysis of that
-             - justin: you can never get perfect security, so it's always a question of if an improvement can be made
-             - filippo: these are two known shortcomings about Go at the moment:
-                   - go sumdb is not using witness cosigning (but will soon have it!)
-                   - we are putting the monitoring ability into the Go tools
-            - justin: I need things that are well-formed that I can look at
-              - justin: sometimes people say "version 2 will solve everything" and that's not always clear what that means
-              - rgdd: an example of existing tooling is gopherwatch
-              - rgdd: there is work on a academic paper at Chalmers, but from a more mathematical approach
-              - justin: what is the right thing for me to be looking at?
-                - rgdd: we are moving to C2SP, all specs should be there longterm
-                - rgdd: the only spec not yet in C2SP is log.md
-                  - rgdd: the log.md spec basically says "we are building LEGO with these specs"
-              - rgdd: if you want to schedule a call, let us know
-        - justin: building blocks are good, the question is if the building block that Sigsum is now, if that fits into other places where it could be used
-          - let's think about if there is something we can do to make it better
-        - rgdd: we are more than happy to hear if you spot somthing that is bad or that could be improved
-          - rgdd: regardless of the outcome it will be good
-          - justin: you have a superpower, which is that you can say "this is out of scope"!
-            - justin: it's good to be clear about what the scope is
-        - filippo: with my Go hat on, I'm happy to read anything about the Go sumdb
-        - filippo: I want to read something that pokes at the things I need to fix that I did not know about before
-        - tta: I'm going to spend the next 10-12 months is talking to people who have never heard of transparency, regarding digital archives
-          - tta: I will try to get them to ask questions about transparency
-          - tta: I would very much like a resource that I can point to where I can say: "I am proposing this thing but it has its limitations"
-          - tta: the thing justin is talking about is going to be useful to me
-          - justin: yes, it's good to be able to say "here is what this is, caution about this"
-          - justin: I expect in about a month that we will have something, we will also come back with questions
+   - if you want prevention then tlogs will not do much for you
+   - but if you have done all you can about prevention and you want to improve further, then you can add detection using tlogs
+   - rgdd: we are not in the business of prevention, basically
+   - filippo: the reason I love tlogs is that they let me deploy mechanisms
+     - filippo: the go checksum database is an example
+     - filippo; tlogs let us do prevention in context of the go checksum database
+     - filippo: so we don't need to just say "just trust google"
+     - filippo: now there is a system where you get protection, because if you try to publish two different versions of a package you will not suceed
+     - filippo: so tlogs in a systems way let you achieve prevention
+     - rgdd: you're right that it's hard to change the same version, but you can create new versions
+       - filippo: yes, but this means you cannot affect an existing build
+     - justin: I think, what I'd rather do is take the Go sumdb and some other examples and do a security analysis of that
+         - justin: you can never get perfect security, so it's always a question of if an improvement can be made
+         - filippo: these are two known shortcomings about Go at the moment:
+               - go sumdb is not using witness cosigning (but will soon have it!)
+               - we are putting the monitoring ability into the Go tools
+        - justin: I need things that are well-formed that I can look at
+          - justin: sometimes people say "version 2 will solve everything" and that's not always clear what that means
+          - rgdd: an example of existing tooling is gopherwatch
+          - rgdd: there is work on a academic paper at Chalmers, but from a more mathematical approach
+          - justin: what is the right thing for me to be looking at?
+            - rgdd: we are moving to C2SP, all specs should be there longterm
+            - rgdd: the only spec not yet in C2SP is log.md
+              - rgdd: the log.md spec basically says "we are building LEGO with these specs"
+          - rgdd: if you want to schedule a call, let us know
+    - justin: building blocks are good, the question is if the building block that Sigsum is now, if that fits into other places where it could be used
+      - let's think about if there is something we can do to make it better
+    - rgdd: we are more than happy to hear if you spot somthing that is bad or that could be improved
+      - rgdd: regardless of the outcome it will be good
+      - justin: you have a superpower, which is that you can say "this is out of scope"!
+        - justin: it's good to be clear about what the scope is
+    - filippo: with my Go hat on, I'm happy to read anything about the Go sumdb
+    - filippo: I want to read something that pokes at the things I need to fix that I did not know about before
+    - tta: I'm going to spend the next 10-12 months is talking to people who have never heard of transparency, regarding digital archives
+      - tta: I will try to get them to ask questions about transparency
+      - tta: I would very much like a resource that I can point to where I can say: "I am proposing this thing but it has its limitations"
+      - tta: the thing justin is talking about is going to be useful to me
+      - justin: yes, it's good to be able to say "here is what this is, caution about this"
+      - justin: I expect in about a month that we will have something, we will also come back with questions
