@@ -1,0 +1,136 @@
+Post-session notes on topic "sigsum next", based both on the session on
+2026-05-08 and follow-up dinner talk and more discussion the following day.
+
+2026-05-06: whiteboard session with rgdd, elias, tta, nisse, gregoire, kommendorkaptenen.
+
+2026-05-06: rgdd, kommendorkaptenen, others...more dinner conversation
+
+2026-05-11: rgdd, kommendorkaptenen (end of pad)
+
+Typed up by rgdd, with a little bit of help from others :-).
+
+---Intro
+
+What Sigsum already noted down for 'next', TL;DR:
+
+* Extensibility wrt. signing scheme (more than Ed25519) <-- esp. PQ resistance
+* Signing context that's captured by the leaf as H(H(ctx)) <-- helps monitors
+* Fully migrate to C2SP specs (tlog-tiles, tlog-policy, tlog-proof, ...)
+* Define a new add-leaf endpoint, parser likely 'checkpoint like'.  This and
+  the above migration to C2SP specs means we have no ASCII key-value
+
+What rgdd gathered from hayden's thoughts going into Rekor 'next', TL;DR:
+
+* PQ resistance
+* Leaf / API without poisoning risks and large blobs
+* Clean up / apply improvements based on learning outcomes
+  * Backwards compatibility is out of scope
+* Rekor and Sigstore OIDC CA might become the same component
+
+Three stages of possible alignment:
+
+* Align on a compatible leaf <-- cryptographic compatibibility
+* Align on read API <-- can share monitoring tooling, docs
+* Align on write API(s) <-- can get more log redundancy
+
+The idea is to iterate a bit on the leaf and take it from there.  Hayden
+has created an PR to kick things off.  Some discussion ongoing.
+
+* https://github.com/C2SP/C2SP/pull/244
+
+---TL;DR
+
+If we designed the leaf just for sigsum it would probably be namespace,
+H(H(data)), H(H(ctx)), H(submit key), H(signature).  Serve signature as extra
+data, i.e., this is OK as long as H(signature) is in the tree.  It's either way
+nice with a smaller leaf, and to have the option of not storing the signature
+forever.  I.e., storage of signature can be framed as "log policy", ranging from
+"I always store signature", "I store them for a month / a year", "I never store
+signatures for this particular submit key because it equals the log key", etc.
+
+The signed message would have been namespace, H(H(data)), H(H(ctx)).  And if
+there are extension key-value things, then this would be signed as well unless
+there is a good reason for not doing it that way.
+
+The optional (hashed) key-value pairs seems fine.  More discussion needed to
+figure out if it should be a semi-closed set of keys (so no hashing needed) vs
+leaving it completely open.  Also unclear how many keys we're talking etc.
+So some things to talk about and consider, but overall direction seems fine.
+
+Seems like there might be some things that the sigstore folks need to figure
+out: particularly if the plan is to merge Sigstore OIDC CA and log or not.  This
+changes the design a bit.  It seems unlikely we (Q from elias: who are "we" here? rgdd: i meant we as in sigsum log operators -- will clarify) would want to take
+signature-less entries from a CA that doesn't run its own log.
+
+---Slightly longer notes
+
+Namespace -- we want to make it stronger than just a version byte.  The argument
+is that even if we removed the namespace string it will *anyway* not be
+backwards compatible with anything relevant.  So it might as well be strong.
+
+(After some more discussion, we more or less resolved the open thread by
+kommendorkaptenen related to this.  I.e., it seems fine to not take DSSE into
+account here; and to define a new DSSE-like thing for this tlog setting.  And if
+someone runs a private sigstore CA without a log, that can use today's DSSE.
+kommendorkaptenen will think some more, but seems like this is probably fine.)
+
+Everyone seems fine with H(signature) in the leaf -- a smaller leaf is nice, and
+it opens up for not storing the signature or only storing it for some time.
+Whether the signature is stored, for how long, etc., can be considered "policy".
+
+It might look a bit more coherent with a single leaf that always contains
+H(signature), as opposed to more or less two leaves where one is signature-less.
+Note: doesn't mean that the signature must be stored, just that it's "policy".
+
+No one seems to object strongly to a signature-less leaf though (elias note: but then there must also be another leaf variant that includes hashed signature? rgdd: yes, correct! tta: two variants is one extra code path and explainer, if the benefit of a signature-less leaf is a feeling of "being elegant" is it worth it?).  But, we think
+that design option mainly makes sense if the Sigstore CA and the log are tigthly
+coupled, i.e., the CA is logging to its own log.  If the CA is standalone and
+want to log to a different log operator, it seems better to store the signature
+(at least for a while) to reduce the risk of one more party fabricating entries.
+
+How many extensions are expected? Right now maybe tops 10-15 ish.  It's a bit
+unclear if it should be a semi-closed set defined by a spec; if it is left
+completely undefined and just something that is defined via configuration files
+that the ecosystems' software use.  A pro of defining them and keeping it
+semi-closed is that it's easier to get interoperability, especially in
+monitoring tooling.  We can also have keys (maybe a single byte) as opposed to
+hashes.  Downside is that it might be harder to come up with your own thing and
+innovate, i.e., if we would want to facilitate more extensibility here.  Another
+idea someone mentioned was that maybe we should just have something like key 0,
+key 1, key 2, ... key 10; and when specifying the numbered key then being able
+to associated it with a hash.  But what that key number means = app specific.
+I.e., this would avoid having a bunch of additional hashes in the leaf.  So:
+
+    0x00 || H(val0) || 0x01 H(val1) ...
+
+We didn't reach any particular conclusion here wrt. extensions, other than:
+
+* should probably be signed unless there is a clear reason not to sign them
+* should be motivated based on being useful to *monitors*, such as
+  H(email), H(github user), etc.  I.e., keeping the door open for random
+  extensions that are not useful for monitors seems like the wrong trade-off.
+
+Someone asked a question about if it will be easy to split multiple leaves when
+fetching them via tlog-tiles.  After double-checking, yes a length+payload thing
+is defined in tlog-tiles so we don't have to account for this in the leaf.
+
+Even though Sigsum wouldn't have the OIDC CA stuff, we still discussed a bit the
+difference between merging the Sigstore OIDC CA and the log vs keeping them as
+separate entities.  There is however no helpful summary relating to this. (elias note: I think that a summary could mention that we discussed that an advantage with having separate entities is that it then becomes possible to use external logs in addition to your own log, for redundancy, something that kommendorkaptenen was interested in. Also that the log software could potentially be simpler and more stable (tta: +1) when it's a separate entity, if the OIDC CA things are changing more over time.) (tta: keeping them separate makes the picture feels nicer 1/ it has a good argument around CA vs log reliability 2/ mirrors how responsibilities are split in current Sigstore (and IIRC in its private deployments) 3/ esp. relevant with lesser # of logs & CA and a lesser amount of coordination between them -- I get the feeling that MTCs w/ merged CA+log are solving for other issues too, that are not directly applicable to sigsum/sigstore)
+
+That said, it would be good to figure out if it is (or isn't) a design goal to push
+the deployment model to the sigstore OIDC CA being standalone or always
+integrated into the log.  Because this will likely influence the leaf design.
+
+---Few more notes when rgdd/kommendorkaptenen messages 2026-05-11
+
+* If we want a signature-less leaf to be possible, H(sig) could be an extension.
+* The other option that would give a more coherent leaf is: required H(sig), and
+  log policy to not store the signature if the log operator is also an OIDC CA.
+* A risk we see: too many extensions and loose ends, which might lead to a leaf
+  that's compatible on paper but in practise doesn't give interoperability
+  between logs and monitor tooling.  A few well-defined extensions that move
+  forward slowly -> increases PR["interoperability in practise"].
+* Note: extensions here should not be confused with negotation.  An ecosystem's
+  end-user software knows exactly which extensions it requires and ignores the
+  rest.  In other words: the verifying software doesn't do any negotiation.
