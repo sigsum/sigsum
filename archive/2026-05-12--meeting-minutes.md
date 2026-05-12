@@ -134,8 +134,8 @@
   - elias: could anti-poisoning be improved by additional ping-pong for each submission?
     - (related to what tta wrote above) 
     - log server would pick a salt that the submitter must use, so that the submitter cannot predict what the logged double-hash will look like
-        - if the submitter computes fast enough, he can still do the same thing, no?
-          - no, it will cost in terms of wasting the rate-limit quota for the submitter
+      - if the submitter computes fast enough, he can still do the same thing, no?
+        - no, it will cost in terms of wasting the rate-limit quota for the submitter
     - If rate-limit counter is incremented each time a submission is initiated, poisoning would become expensive for the submitter.
  - nisse: about prevention vs detection:
    - if you want prevention then tlogs will not do much for you
@@ -152,8 +152,8 @@
      - justin: I think, what I'd rather do is take the Go sumdb and some other examples and do a security analysis of that
          - justin: you can never get perfect security, so it's always a question of if an improvement can be made
          - filippo: these are two known shortcomings about Go at the moment:
-               - go sumdb is not using witness cosigning (but will soon have it!)
-               - we are putting the monitoring ability into the Go tools
+           - go sumdb is not using witness cosigning (but will soon have it!)
+           - we are putting the monitoring ability into the Go tools
         - justin: I need things that are well-formed that I can look at
           - justin: sometimes people say "version 2 will solve everything" and that's not always clear what that means
           - rgdd: an example of existing tooling is gopherwatch
