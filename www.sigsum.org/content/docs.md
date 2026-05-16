@@ -3,7 +3,8 @@
 Meant for users who want try Sigsum and understand how it works:
 
   - [Sigsum's command-line tools][]: generate keys, sign, submit, and offline verify
-  - [Sigsum's getting started](/getting-started): step-by-step demo of key-usage transparency
+  - [Sigsum's getting started guide](/getting-started): step-by-step demo of key-usage transparency
+  - [Sigsum's next step pointers](/beyond-testing): hints on how to move beyond testing
   - [Sigsum's monitor tooling][]: poll the logs to detect signatures produced by your keys
   - [Florian's monitor tooling][]: most complete monitor Sigsum is aware of right now
 

@@ -1,19 +1,101 @@
-Work in progress -- let's see if this is useful to continue working on.
-
 # Beyond testing
 
-Ready to move beyond testing but is unsure where to start?  This document
-aims to help you forward by going through a few important considerations
-while also linking to relevant HOW-TO documentation.
+Ready to move beyond testing but unsure where to start?  This document aims to
+help you forward by going through a few important considerations while also
+linking to relevant HOW-TO documentation.
 
-Please help us extend this page with more relevant sections and HOW-TO guides.
+Missing a section or HOW-TO guide?  Please let us know and/or help with a
+contribution on your own.
 
-## Select which logs and witnesses to depend on
+## Table of contents
+
+<!-- toc -->
+- [Know what your claims are](#know-what-your-claims-are)
+- [Know how a Sigsum signature works](#know-how-a-sigsum-signature-works)
+- [Have a plan for your trust policy](#have-a-plan-for-your-trust-policy)
+- [Select logs and witnesses to depend on](#select-logs-and-witnesses-to-depend-on)
+- [Generate Ed25519 submission keys](#generate-ed25519-submission-keys)
+<!-- /toc -->
+
+## Know what your claims are
+
+The point of using a transparency log like Sigsum is to detect *unwanted
+events*.  An unwanted event could be that your signing key is used without your
+participation, e.g., due to key compromise.
+
+Another way to describe the point of using a transparency log like Sigsum is to
+make a [claim][] about what you're doing.  Thanks to the added transparency, a
+monitor can try to *falsify* these claims by enumerating the log and then
+following your instructions on what to (not) expect.
+
+An easy claim would be that the signed message can be retrieved at a well-known
+URL.  For example, it is common to always publish the signed message at
+`BASE-URL/<checksum>`.  Upon finding a new checksum in the log, the monitor can
+fetch the message out of band and raise a flag if it's missing.
+
+Another claim could be that the signing key is only used for signing binaries
+that build reproducibly in a well-known repository.  Upon finding a new checksum
+in the log, the monitor can check if there are any new releases of the software
+and raise a flag if that's not the case or if the release doesn't rebuild.
+
+If you're unable to describe what unwanted event you want to detect or which
+claims can be falsified, then odds are that the value you'll be able to extract
+from Sigsum is limited.  Therefore, we recommend that you think about which
+notifications you would like to receive from a monitor as early as possible.
+
+We have a few guides that might help you forward in this area.
+
+* Guide: [unexpected signature event](/how-to/claims/unwanted-signature-event)
+* Guide: [claim: data is published](/how-to/claims/claim-published-data)
+* Guide: [claim: binary is reproducible](/how-to/claims/claim-rb)
+* Guide: [claim: backup sysadmin behaved](/how-to/claims/claim-backup-sysadmin)
+
+If you publish data for monitors that falsify claims, then we recommend that the
+data is published *before* submission to a log.  This reduces the risk of data
+loss, e.g., in case the submitter crashes.
+
+We recommend that you publish what your unwanted events or claims are, e.g.,
+nearby your trust policy.  In the future, we may provide further pointers on how
+to tie this more strongly to a trust policy.
+
+[claim]: TODO-ADD-LINK-CLAIMANT-MODEL
+
+## Know how a Sigsum signature works
+
+To be added ("Sigsum proof").
+
+Make it super clear, traditional signature vs transparent signature.
+Similarities and differences.
+
+Link something that plays with invalidating a proof in detail?
+
+## Have a plan for your trust policy
+
+In Sigsum, the term *trust policy* typically refers to your submission keys and
+which logs and witnesses to depend on.  It is helpful to think of your trust
+policy as a regular key pair: it needs to be communicated to users and monitors.
+Sometimes, an update may be necessary to bring keys in or out of the rotation.
+
+Sigsum does not have an opinion on how you manage your trust policy over time.
+This is because Sigsum is a *building block* that facilitates transparency for
+key-usage; and the key management strategy that works well in one application
+does not necessarily work as well in another setting.
+
+To help with inspiration, we have documented a few approaches separately.
+
+* Guide: [publish trust policy in a README file](/how-to/readme-trust-policy),
+  e.g., used by the encryption tool `age`.
+* Guide: [embed trust policy in the verifying software](/how-to/trust/embed-trust-policy),
+  e.g., applicable in an automatic updater.
+
+## Select logs and witnesses to depend on
 
 The Sigsum project maintains a default policy named `sigsum-generic`.  Logs and
-witnesses are selected based on [a number of criteria][criteria].  The short
-summary is that the participating parties have committed publicly to not
+witnesses are selected based on [a number of criteria][criteria].  A short
+summary would be that the participating parties have committed publicly to not
 discontinue their operations without first providing a one year heads up.
+This is meant to offer stability and continuity, giving you some time to evolve
+the selected policy if needed.
 
 Use `sigsum-policy` to list information about the latest
 `sigsum-generic` policy.
@@ -27,93 +109,46 @@ Use `sigsum-policy` to list information about the latest
 You should see that there are two logs and three witnesses.  To reach a quorum,
 two of the three witnesses need to provide valid cosignatures.  This means you
 should be able to submit new signed checksums even if one log or witness is
-down.  To detect issues, 2-of-3 witnesses must follow protocol.
+down.  For security, 2-of-3 witnesses must follow protocol.
 
-<!---Worth calling out, or better to keep this brief?
-(Your observation that `sigsum-generic-2025-1` would benefit from further
-organizational diversity is correct.  Iterations of `sigsum-generic` are
-expected once other operators commit to stable services.)
---->
+We recommend you keep an eye on the [sigsum-announce][] list to discover policy
+changes.  Alternatively, you may subscribe directly to information from logs and
+witnesses as specified in their about pages.
 
 If you have a different set of logs or witnesses that you prefer to use, please
 feel free to define your own custom policy.  Still unsure about which policy to
 select? See [contact info][] on how to reach out.
 
 **Note:** production logs typically apply rate-limits.  See the [rate-limit
-HOW-TO][] for pointers.
+HOW-TO][] for further pointers.
 
+[criteria]: https://git.glasklar.is/sigsum/project/documentation/-/blob/main/policy-maintenance.md
+[sigsum-announce]: https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-announce@lists.sigsum.org/
+[contact info]: /contact
 [rate-limit HOW-TO]: /how-to/rate-limits
 
-[contact info]: /contact
+## Generate Ed25519 submission keys
 
-[criteria]: TO-BE-ADDED
+You will need at least one long-term Ed25519 submission key.  You already
+generated a soft key-pair in the [getting started guide][].  If you prefer to
+store your signing key on a hardware security module or a security key, refer to
+the below HOW-TO guides.  Please help us document missing options that work.
 
-## Generate one or more signing key-pairs
+* Guide: [Soft signing key](/how-to/soft-signing-key)
+* Guide: [TKey signing key](/how-to/tkey-signing-key)
+* Guide: [YubiHSM2 signing key](/how-to/yubihsm2-signing-key)
+* Guide: [YubiKey signing key](/how-to/yubikey-signing-key)
 
-You will need at least one long-term signing key-pair that the Sigsum tools can
-access using the SSH agent protocol.  You already tried this in the [getting
-started guide][] using a [soft key][].  If you prefer to use a hardware-backed
-key, you might find any of the following HOW-TO documents helpful.
+Depending on how hard it is to recover from key loss, consider having a
+secondary key-pair in a safe location.  If the secondary key is ever used, you
+and others will know thanks to Sigsum's transparency.
 
-* HOW-TO: [YubiHSM 2](/how-to/yubihsm2)
-* HOW-TO: [TKey](/how-to/tkey)
+Regardless of if you run with a soft key in a less protected environment (e.g.,
+a CI pipeline) or a hardware-backed key, we recommend that you think about the
+recovery procedure upfront.  The exact procedure will depend on your
+application.  [See above](#have-a-plan-for-your-trust-policy) if you want
+inspiration from a few examples.
+
+TODO: say something about named policy + key on the same key line SSH format?
 
 [getting started guide]: /getting-started
-[soft key]: /how-to/soft-key
-
-## Communicate submitter keys and trust policy
-
-Sigsum does not come with its own opinionated public-key infrastructure (PKI).
-Therefore, you will need to bring your own PKI.  In some cases, this might be as
-simple as publishing the appropriate keys and corresponding policy file in a
-README.  This is how [trust is established for the encryption-tool age][age].
-In other cases, it might be more reasonable to embed the appropriate keys and
-corresponding policy file directly into the verifying software.  For example,
-this would be [easy to integrate in an automatic updater like the one in Tor
-Browser][tb].  What makes the most sense varies depending on the application.
-
-Take a look if any of the HOW-TO documents on this topic help you forward.
-
-* HOW-TO: [Use a README file](/how-to/trust/readme)
-* HOW-TO: [Embed in the verifying software](/how-to/trust/embedded)
-
-[age]: TODO-LINK
-[tb]: TODO-LINK
-
-## Communicate what your claims are
-
-The point of using a transparency log like Sigsum is to detect unwanted events.
-Another way to describe the point of using a transparency log is to make a claim
-about what you're doing.  Thanks to the added transparency, these claims can be
-discovered so that others can try *falsify* them.
-
-
-[claimant model]: TODO-LINK
-
-If you're unable to describe what unwanted event you want to detect (e.g., "I
-want a ping every time my signing key is used because *I will know* if I didn't
-click the sign button") or which claim can be falsified (e.g., "the signed data
-is available at `example.org/<checksum>` or perhaps "the signed binary can be
-reproduced from source at `git@git.example.org/source`"), then odds are that the
-value you're able to extract from using a transparency log is limited.
-
-An exercise that can be helpful here is to figure out what notification you
-would like to receive if an interesting event occurs.  In the reproducible
-builds example, it could be an issue being filed that the signed binary everyone
-agrees on (thanks to transparency) doesn't build reproducibly.  Or even worse,
-the inputs to start the build are completely missing.  Both of these events
-would be fantastic to detect.
-
-Take a look if any of the user contributed HOW-TO documents help you forward.
-
-* HOW-TO: [unexpected signature](/how-to/claims/unwanted-signature)
-* HOW-TO: [data is published](/how-to/claims/published-data)
-* HOW-TO: [thing is reproducible](/how-to/claims/rb)
-* HOW-TO: [backup sysadmin behaved](/how-to/claims/backup-sysadmin)
-
-We recommend that you write down your claims and/or what you're able to get out
-of using a transparency log somewhere.  If you start simple and just type this
-in a README you will be ahead of most other users of transparency!
-
-**Note:** the [claimant model][] by Martin Hutchinson is a great resource on
-this topic.
