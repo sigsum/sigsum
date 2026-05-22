@@ -11,7 +11,7 @@ Meant for users who want try Sigsum and understand how it works:
 [Sigsum's monitor tooling]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/monitor.md
 [Florian's monitor tooling]: https://github.com/florolf/sigmon
 
-Libraries meant for users that do integration work:
+Libraries implementing some or all of the Sigsum specifications:
 
   - [sigsum-c](https://git.glasklar.is/sigsum/core/sigsum-c/)
   - [sigsum-go](https://git.glasklar.is/sigsum/core/sigsum-go)
