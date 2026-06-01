@@ -13,25 +13,32 @@ verbatim from the `get-tree-head` response (even though filtering the
 list to remove some cosignature lines have been under consideration).
 
 Handling of any duplicates is also not explicitly described, but I
-think the reasonable interpretation (and current implementation)
-considers a known witness to have cosigned the check point if there is
-at least one csignature line with that witness' key hash and a
-signature that is valid.
+think the reasonable interpretation is to consider a known witness to
+have cosigned the check point if there is at least one cosignature
+line with that witness' key hash and a signature that is valid.
 
 [log api]: ../log.md
 [Sigsum proof]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md
 
 ## Duplicates according to the current implementation
 
-In `sigsum-go` currently represents the set of cosignatures in a
-`CosignedTreeHead`as a `map[crypto.Hash]Cosignature`, and the
-corresponding parsing functions already fail on duplicates,
+The `sigsum-go` implementation currently represents the set of
+cosignatures in a `CosignedTreeHead`as a
+`map[crypto.Hash]Cosignature`, and the corresponding parsing functions
+already fail on duplicates,
 ```
 if _, ok := cosignatures[keyHash]; ok {
 	return nil, false, fmt.Errorf("duplicate cosignature keyhash")
 }
 cosignatures[keyHash] = cs
 ```
+
+The `sigsum-c` implementation currently handles cosignatures as a
+plain list, and allows duplicate key hashes.
+
+The `sigmon` implementation currently allows multiple cosignatures,
+and in the case of multiple valid cosignatures for the same witness it
+uses the latest timestamp.
 
 ## Semantics of duplicate cosignatures
 
@@ -45,10 +52,21 @@ for same tree head and same witness would mean that the tree head was
 the latest seen by a witness as of time T1, but in addition, witness says
 it was unchanged since time T2, with T2 < T1.
 
-It will cause additional complexity and confusion when reasoning about
-timestamps, e.g., to aggregate available witness timestamp based on
-the quorum definition, as was discussed at
+This makes reasoning about timestamps more complex, e.g., when
+aggregating available witness timestamp based on the quorum
+definition, as was discussed at
 https://github.com/florolf/sigmon/pull/10.
+
+## Proposal
+
+Update the [log api][] spec to say that an implementation of the
+`get-tree-head` endpoint must respond with at most one cosignature for
+each key hash. Similarly, update the [Sigsum proof][] specification to
+say that a implementations that produce proofs must include at most
+one cosignature for each key hash.
+
+Implementation receiving these items should reject input with
+duplicate cosignature key hashes.
 
 ## Risks
 
