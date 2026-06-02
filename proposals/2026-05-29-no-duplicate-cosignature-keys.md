@@ -73,10 +73,12 @@ duplicate cosignature key hashes.
 I see no significant risks; I'm not aware of anything using or
 depending on duplicate cosignatures.
 
-One possible complication is compatibility with
-https://github.com/C2SP/C2SP/blob/main/tlog-proof.md and
-https://github.com/C2SP/C2SP/blob/main/tlog-checkpoint.md. Ideally,
-those specs could be amended to say that duplicates (which I think
-would mean "same witness name and same key id") are invalid. Less
-clear if it makes sense to try to propagate that all the way back to
+## Next steps
+
+It's desirably to maintain compatibility/consistency with the C2SP
+specs https://github.com/C2SP/C2SP/blob/main/tlog-proof.md and
+https://github.com/C2SP/C2SP/blob/main/tlog-checkpoint.md. Those specs
+could be amended to say that duplicates (which I think would mean
+"same witness name and same key id") are invalid. Less clear if it
+makes sense to try to propagate that all the way back to
 https://github.com/C2SP/C2SP/blob/main/signed-note.md.
