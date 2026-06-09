@@ -12,11 +12,11 @@ would like to run a few optional debug commands, also ensure that `sha256sum`,
 
 Install the following Sigsum tools:
 
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-key@v0.13.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-policy@v0.13.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.13.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.13.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.14.1-dev.0
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-key@v0.14.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-policy@v0.14.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.14.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.14.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.14.1
 
 `sigsum-key` will be used to generate a public key-pair.
 
