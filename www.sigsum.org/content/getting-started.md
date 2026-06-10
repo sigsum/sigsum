@@ -12,11 +12,11 @@ would like to run a few optional debug commands, also ensure that `sha256sum`,
 
 Install the following Sigsum tools:
 
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-key@v0.13.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-policy@v0.13.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.13.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.13.1
-    $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.14.1-dev.0
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-key@v0.14.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-policy@v0.14.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-submit@v0.14.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-verify@v0.14.1
+    $ go install sigsum.org/sigsum-go/cmd/sigsum-monitor@v0.14.1
 
 `sigsum-key` will be used to generate a public key-pair.
 
@@ -29,16 +29,13 @@ its proof of logging.
 `sigsum-verify` will be used to verify the gathered proof of logging.
 
 `sigsum-monitor` will be used to detect that the generated signing key
-was used with Sigsum. (The above -dev version, rather than the release
-version v0.13.1, is needed due to
-<https://git.glasklar.is/sigsum/core/sigsum-go/-/issues/179>).
-
+was used with Sigsum.
 
 Check that the installation worked by running one of the tools with the
 `--version` option:
 
     $ sigsum-key --version
-    sigsum-key (sigsum-go module) v0.13.1
+    sigsum-key (sigsum-go module) v0.14.1
 
 [Go toolchain]: https://go.dev/doc/install
 
