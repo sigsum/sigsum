@@ -81,7 +81,9 @@ values.
 TODO: Any use for an algorithm prefix when hashing submitter keys?
 
 TODO: Details of compatibility with leaf format worked on in
-https://github.com/C2SP/C2SP/pull/244.
+https://github.com/C2SP/C2SP/pull/244. See [companion
+file](./2026-08-25-nisse-cases-for-unified-leaf.md) for some thoughts
+on related use cases.
 
 ## Leaf retrieval
 
