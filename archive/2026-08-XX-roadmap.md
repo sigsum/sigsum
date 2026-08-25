@@ -1,4 +1,4 @@
-# 2026-08-XX
+# 2026-08-25
 
 This document provides an overview of Sigsum's roadmap and people with standing
 responsibilities.  A new roadmap will be decided around ~mid of November, 2026.
@@ -21,7 +21,7 @@ From these high-level priorities we define shorter-term activities.
 **Change note:** we put specification work back at priority one, to reflect that
 there's a flurry of activity already and more spec work is needed (see below).
 
-## Main activities until mid June, 2026
+## Main activities until mid November, 2026
 
   - **Talk at and attend the transparency.dev summit 2026 (29 Sep - 1 Oct)**
     - https://transparency.dev/summit2026/
