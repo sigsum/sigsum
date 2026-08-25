@@ -357,7 +357,8 @@ number of cosignatures. The list of cosignatures may change over time.
     consists of 3 fields, separated by single space characters. The
     first field is the hash of the witness' public key, in hex, the
     second field is the cosignature timestamp, in decimal, and the
-    third field is the witness' cosignature, in hex.
+    third field is the witness' cosignature, in hex. The cosignature
+    lines must carry *distinct* key hashes, no duplicates.
 
 **Example:**
 
