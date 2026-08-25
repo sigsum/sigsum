@@ -191,4 +191,6 @@ We won't have enough time to start working on a TKey log signer app with
 integration in log-go.  We're putting this back into our backlog for now.
 
 Glasklar did not have time to do a proper write about about witness-g1 yet.
-Glasklar still plans to document how witness-g1 was designed and developed.
+Glasklar still plans to document how witness-g1 was designed and developed, and
+is still working on [sysadm related to improving this witness
+service](https://git.glasklar.is/glasklar/admin/-/blob/main/archive/2026-08-24-roadmap.md).
