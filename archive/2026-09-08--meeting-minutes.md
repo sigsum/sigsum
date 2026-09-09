@@ -66,6 +66,6 @@ Work on the proposal should be done before the meet. And we
 
 ## Other
 
-  - q for filippo: torchwood release soon?
+  - q for filippo: torchwood release soon?
      - the joys of monorepo makes gives more administrative work around the release unfortunately
      - will do soon
