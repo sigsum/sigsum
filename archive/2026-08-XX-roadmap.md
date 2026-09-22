@@ -33,13 +33,13 @@ there's a flurry of activity already and more spec work is needed (see below).
         [branch](https://git.glasklar.is/sigsum/core/key-mgmt/-/tree/elias/parallel-signing)
         so that it can be merged to main
       - Release engineering / make the release
-    - Estimated done: TODO(@elias)
+    - Estimated done: during this roadmap
   - **Release log-go with Prometheus metrics**
     - Work by: nisse
     - Expected outcome:
       - A few minor improvements (sockerfri/nisse have been discussing)
       - Release engineering / make the release
-    - Estimated done: TODO(@nisse)
+    - Estimated done: during this roadmap
   - **Various specification-related work:**
     - **Work by:** rgdd, nisse, others
     - **Expected outcome:**
@@ -78,9 +78,6 @@ there's a flurry of activity already and more spec work is needed (see below).
       exploring gpg signature support (to bring transparency to legacy places).
     - No definite expected outcome/timeline yet, talk to mw for current status.
     - Input and review from nisse, quite can also help with TKey questions
-
-  - **TODO:** anyone else want to contribute something to this list to let folks
-    know what they're working on?  No need to commit to when/if it will be done.
 
 As usual: support, bug fixing, and other maintenance is in scope and planned
 separately when needed.  Please reach out if there are any off-roadmap needs!
@@ -162,10 +159,9 @@ as you see fit.  Contact information can be found on <https://www.sigsum.org/>.
     - https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-announce@lists.sigsum.org/thread/4JIBPYQXICPHQZLXRI34HENNUPQ7W3PB/
   - sigsum-c v1.1.0 is available, see announcement for details.
     - https://lists.sigsum.org/mailman3/hyperkitty/list/sigsum-announce@lists.sigsum.org/thread/7G3SKN73UDYFHGH2VQAVJAPFWDDO6KZY/
-  - torchwood vX.Y.Z is available, see NEWS file for details.
-    - TODO: add link
+  - torchwood has several commits in main but no new release yet
     - Among other things, litewitness now supports pipelined SSH agent signing
-      requests and logs that sign checkpoints with ML-DSA-44.
+      requests.
   - There's a branch of sigsum-agent that supports >1 YubiHSM (not in main yet)
     - https://git.glasklar.is/sigsum/core/key-mgmt/-/tree/elias/parallel-signing
   - There's a branch of what might become Sigsum's v2 ansible collection
@@ -176,13 +172,12 @@ as you see fit.  Contact information can be found on <https://www.sigsum.org/>.
   - Glasklar started operating a high-availability witness group
     - https://git.glasklar.is/glasklar/services/witnessing/-/blob/about-witness-g1/g1.witness.glasklar.is/about.md
     - Current status is that it's up and running but still being finalized
-  - Drafty C2SP.org specifications with ML-DSA-44 support are available
-    - TODO: add brief summary and/or links -- current status etc.
+  - Drafty C2SP.org specifications with ML-DSA-44 support are available,
+    see tlog-witness and tlog-cosignature.
   - C2SP.org now renders specifications (as opposed to redirecting to GitHub)
     - https://C2SP.org/
   - We attended PETS, where kfs had a keynote that mentioned Sigsum's work
     - https://www.youtube.com/watch?v=FZy20hw4uok&t=0s
-  - TODO: more summary items?
 
 We did not have time to release a version of sigsum-agent with support for >1
 YubiHSM (parallell signing).  This work continues in the upcoming roadmap.
