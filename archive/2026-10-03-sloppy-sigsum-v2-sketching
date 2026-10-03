@@ -44,6 +44,8 @@ when mirror mirrored. Truncates tiles until the latest thing that was mirrored.
 
 ---Cutting and drafting in the current log.md
 
+TODO: Strongly weave in strongly recommend that log operators operate a per-log bastion.
+
 # Sigsum v2 [DRAFT]
 
 ## 1.  Introduction
@@ -131,6 +133,8 @@ Below is a visual overview of the sigsum system and its interactions.
 ## X. API to talk for witnesses
 
 Log is expected to use tlog-witness.
+
+Witnesses can use Ed25519, MLDSA-44, both, ...
 
 ## X. Formats at rest
 
