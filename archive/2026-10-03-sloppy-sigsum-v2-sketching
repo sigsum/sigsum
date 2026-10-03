@@ -1,0 +1,469 @@
+This is a very sloppy document when rgdd, nisse, and mw was sketching a bit on
+what we will probably want to put in a first "sigsum v2" spec that we can
+iterate on in smaller increments.
+
+---Maybe this is roughly the topics and outline we want
+
+# Sigsum v2 [DRAFT]
+## Introduction
+## Objective and Threat Model
+## System Overview
+## Companion specifications
+List all companion specifications and overview of what we use them for.  Maybe
+forward reference where we use these companion specifications to compose sigsum
+v2 in this spec. And call out what's left for us to define in this spec?
+## Conventions used in this document
+MUST SHOULD language ref?
+Ed25519 refers to...
+MLDSA-44 refers to...
+Hybrid refers to...
+B64 refers to...
+SHA256 refers to...
+## Merkle tree
+### Tree leaf
+### Tree head
+## Log API
+### GET /checkpoint
+### GET /tile
+### GET /tile/entries
+### TODO: extra data...
+### POST /leaf
+## Collecting witness cosignatures
+## Formats at rest
+### tlog-policy
+### tlog-proof
+## Appendix A. Rate limiting
+
+(rgdd might have forgotten something when drafting on this outline based on what
+we have below, so take it as a very rought sketch that forgot something.)
+
+---Implementation notes
+
+impl detail: primary 2nd key pair & pushes mirror. Only moves checkpoint forward
+when mirror mirrored. Truncates tiles until the latest thing that was mirrored.
+
+---Cutting and drafting in the current log.md
+
+# Sigsum v2 [DRAFT]
+
+## 1.  Introduction
+
+A sigsum log publishes signed checksums.  Together with other parties in the
+sigsum system (so called witnesses and monitors), this makes it difficult for
+attackers to perform undetected signature operations.
+
+### 1.1.  Objective and Threat Model
+
+The objective is as follows: if an unauthorized signature is made, then
+that signature will either be refused by an offline verifier or it will
+be detected after the fact by a monitor that takes an interest in the
+associated public key.  "Offline" refers to the verifier not making any
+additional outbound connections, neither while verifying nor later.
+
+The threat model includes compromise of the submitter's signing key and
+distribution system, compromise of the log itself, and compromise of
+some (but not too many, subject to configured policy) of the witnesses.
+In this setting, the attacker can sign a data item and produce a valid
+_proof of logging_ accepted by the verifier.  However, as long as a
+sufficient number of witnesses are not compromised, the unauthorized
+signature stays in the public record and is thus detectable by monitors.
+
+General denial-of-service attacks against log servers are out of scope.
+In other words, attacks against the sigsum system need to go unnoticed
+for the class of risk-averse attackers that we consider in scope.
+
+### 1.2.  System Overview
+
+There are several parties to the sigsum system:
+
+  1. **Log**.  A log maintains an append-only Merkle-tree where each
+     leaf in the tree is signed by the leaf's submitter.  The log signs
+     its tree heads, and it also collects cosignatures from witnesses.
+  2. **Witness**.  A witness observes tree heads from one or several
+     logs, checking that they are consistent.  In other words, witnesses
+     certify that each later tree head that they cosign includes
+     everything that was contained by the tree heads signed previously.
+  3. **Submitter**.  A submitter signs and submits a leaf to a log,
+     collecting a cosigned tree head and an inclusion proof that ties
+     the submitted leaf to that tree head.  This data (leaf, cosigned
+     tree head, and inclusion proof) can be used as a proof of logging.
+  4. **Verifier**.  A verifier receives a data item together with a
+     proof of logging (using the same distribution mechanism already in
+     place for the data item) and verifies, offline, that the proof is
+     valid and complies with the verifier's policy.  This policy defines
+     known logs and which witnesses to be depended on for security.
+  5. **Monitor**.  A monitor periodically requests the latest tree head
+     and corresponding leaves from one or more logs.  It ensures that
+     the tree heads carry recent cosignatures by trusted witnesses, and
+     that the monitor gets all leaves that make up the published tree
+     heads.  A monitor usually takes particular interest in certain
+     submission keys, and will output all leaves that they produced to
+     enable detection of unexpected or unauthorized signatures.  Some
+     monitors may additionally obtain the associated data out-of-band.
+
+Below is a visual overview of the sigsum system and its interactions.
+
+                        +-----------+
+             +----------| Submitter |----------+
+             | signed   +-----------+          | data
+             | checksum       ^                | proof of logging
+             v                |                v
+        +---------+     proof |               ///
+        |   Log   |-----------+           Distribution
+        +---------+                           ///
+            ^ |                               | |
+            | | leaves                        | |
+            | | proofs   +---------+    data  | | data
+            | +--------->| Monitor |<---------+ | proof of logging
+            |            +---------+            |
+            |cosign           |                 v
+        +---------+           |           +----------+
+        | Witness |           v           | Verifier |
+        +---------+         alarm         +----------+
+    
+    Figure 1: An overview of the sigsum system.  Depending on the
+    use-case, monitors may perform additional verification of claims
+    associated with the downloaded data (or not download it at all).
+
+
+### 1.3.  Overview of companion Specifications ???
+
+## X. API to talk for witnesses
+
+Log is expected to use tlog-witness.
+
+## X. Formats at rest
+
+tlog-proof. We need to define "extra", except:
+- Everything needed to reproduce the leaf, except for the checksum.
+- Version of leaf
+- Signature type
+- Signature
+- (not checksum, and not context...passed to the tool. E.g., on cli or
+  via pubkey.)
+
+tlog-policy.
+- No opinion on if it's ed25519, mldsa-44, both, etc. It's up to policy
+  builder.
+
+vkey for keys? Argument against:
+- Named policy and 'context' attributes would be nice to put 'in the
+  key', and vkey does not allow for that.
+- So actually...we start with ssh keys becuase of this, and we need a
+  proposal to use vkey that can satisify this if we wanna change.
+
+
+## 2.  Algorithms and Formats
+
+### 2.1.  Cryptography
+
+A log uses the Merkle tree hash strategy defined in [RFC 6962, Section
+2][].  Any mentions of hash functions refer
+to [SHA256][].
+
+Ed25519 public keys are encoded as in [RFC 8032, section 5.1.2][].
+
+MLDSA-44 keys are encoded as in TODO.
+
+Ed25519-MLDSA-44-hybrid are encoded as in SSH spec. Signature too (i.e., using
+SSH constants when signing sigsum's message.)
+
+<!--
+A _namespace_ string is attached as a prefix to all messages signed in
+the sigsum system (to provide domain separation).  The namespace string
+is defined as `sigsum.org/v2/leaf`.  TODO: probably C2SP name...
+
+Note: This is important for leaf signatures: a sigsum log should only
+publish signatures that were intended for the sigsum system.  In other
+words, it should not be possible to take any valid signature, regardless
+of the purpose for which it was made, and submit it to a sigsum log.
+
+In objects using binary serialization, the namespace is separated from
+the body of the message with a NUL character.  For Merkle tree heads,
+the signed data is formatted to be compatible with the [checkpoint
+format][], and in this case the namespace is new-line terminated.
+--->
+
+[RFC 6962, Section 2]: https://tools.ietf.org/html/rfc6962#section-2
+[SHA256]: https://csrc.nist.gov/csrc/media/publications/fips/180/4/final/documents/fips180-4-draft-aug2014.pdf
+[RFC 8032, section 5.1.2]: https://tools.ietf.org/html/rfc8032#section-5.1.2
+[Ed25519]: https://tools.ietf.org/html/rfc8032
+[checkpoint format]: https://github.com/transparency-dev/formats/blob/main/log/README.md#checkpoint-format
+
+### 2.2.  Serialization
+
+### 2.2.2.  Checkpoint
+
+C2SP.org/tlog-checkpoint
+
+TODO: describe.
+
+<!--
+A tree head is composed of a size (i.e., the number of leaves) and an
+associated root hash.  It is serialized before signing as three lines:
+
+  1. `sigsum.org/v1/tree/` followed by the _lowercase hex encoding_ of
+     the log's key hash.
+  2. The number of leaves in decimal with no leading zero or signs,
+     regex `0|[1-9][0-9]*`.
+  3. The [base64-encoding][] of the Merkle tree root hash.
+
+A log signs the serialized tree head directly using Ed25519.  The same
+public key must never be used to sign tree heads from other logs.
+
+Example serialization:
+
+    sigsum.org/v1/tree/d99ec0951097ff7b46d6e333ab0f7a68f443846bc81c44b97a7888b6aec31040
+    15368405
+    31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
+
+Note that each line is terminated by a new-line (`0x0a`), and that this
+format happens to be compatible with the existing [checkpoint format][].
+
+[base64-encoding]: https://datatracker.ietf.org/doc/html/rfc4648#section-4
+-->
+
+### 2.2.3. Cosignatures
+
+C2SP.org/tlog-cosignature
+
+TODO: describe.
+
+<!--
+When a witness cosigns a tree head, two additional lines are
+prepended to the above serialization of the tree head,
+for a total of 5 lines.
+
+The first line is the fixed string "cosignature/v1", to provide domain
+separation. The convention of using a "sigsum.org" namespace is not
+applied here, since we aim for interoperability with witnesses
+otherwise unrelated to the Sigsum project. The second line consists of
+the string "time", a single space, and a decimal timestamp
+representing the number of seconds since the UNIX epoch (January 1, 1970
+00:00 UTC). The next three lines are the serialized tree head, i.e.,
+the same data that is signed by the log itself.
+
+Example serialization:
+
+    cosignature/v1
+    time 1679315147
+    sigsum.org/v1/tree/3620c0d515f87e60959d29a4682fd1f0db984704981fda39b3e9ba0a44f57e2f
+    15368405
+    31JQUq8EyQx5lpqtKRqryJzA+77WD2xmTyuB4uIlXeE=
+
+To cosign a tree head, a witness signs this serialization directly
+using Ed25519. Semantically, a v1 cosignature is a statement that, as
+of the given time, the *consistent* tree head *with the largest size*
+the witness has observed for the log identified by that key has the
+specified hash.
+
+See [A witness protocol][] for more details on the witness protocol.
+-->
+
+### 2.2.4.  Merkle Tree Leaf
+
+C2SP.org/identity-transparency
+
+Extension named "Context".
+
+Supporter receipt types:
+- 0x01: Ed25519 signature
+- 0x02: MLDSA-44 signature
+- 0x03: Ed25519-MLDSA-44-hybrid (SSH) signature
+
+The signed message: everything above the receipt + namespace (from c2sp
+spec).  TODO: think about if version and H(LeafOwner) should be
+excluded, e.g., for consistency with future ZKP (???).
+
+Note: with ssh sig -> then the above is the 'message', and it is signed
+with the SSH constants as well...
+
+TODO: short description of double hash construct?
+
+## 3.  HTTP Endpoints
+
+A log must have at least one fixed and unique URL.  A few examples:
+
+  - `https://sigsum.org/`
+  - `https://logs.sigsum.org:8443/prod/`
+  - `http://er3n3jnvoyj2t37yngvzr35b6f4ch5mgzl3i6qlkvyhzmaxo62nlqmqd.onion/`
+
+This URL is henceforth referred to as a log's _base URL_.  To form a
+complete URL, an endpoint's name and parameters (if any) are appended.
+
+The HTTP status code is 200 OK to indicate success.  A different HTTP
+status code is used to indicate partial success or failure.  Note that
+other HTTP components, e.g., a caching frontend, can generate errors
+before requests reach the log server.  For this reason, clients must be
+prepared to encounter arbitrary status codes.
+
+This specification documents the status codes that should be generated
+by an implementation of the sigsum log endpoints.  See Table 1 for a
+short summary.  Some status codes are documented further for each
+endpoint.  Unless the status code is 2XX, the response-body must contain
+a human-readable string describing the error, e.g., "Invalid signature".
+
+  **Table 1:** Overview of HTTP status codes used by log servers.
+
+  | Status code               | Description                                       |
+  | ------------------------- | ------------------------------------------------- |
+  | 200 Success               | Successful request                                |
+  | 202 Accepted              | Partially successful request, see Section 3.5     |
+  | 400 Bad Request           | Invalid encoding or missing/invalid parameters    |
+  | 403 Forbidden             | Invalid signature                                 |
+  | 404 Not Found             | Endpoint or requested data does not exist         |
+  | 405 Method Not Allowed    | GET request to POST-only endpoint (or vice versa) |
+  | 429 Too Many Requests     | Some rate-limit kicked-in, see, e.g., Section 3.5 |
+  | 500 Internal Server Error | Backend failure or implementation bug             |
+
+TODO: sync with any C2SP.org specs?
+
+### 3.1.  get-checkpoint
+
+API inheritet from tiles.
+
+Selection of origin line: 'yolo'. TODO: do we want to keep self
+authenticated origin line? If yes, 'proposal' and 'get this into C2SP'
+so that it's not just a sigsum thing.  TODO -- needs digging.
+
+Use 0x06 cosignature type (MLDSA-44).
+
+### 3.2.  fetch the tree
+
+API inheritet from tiles.
+
+Serve 'extra data' (signatures) as tiles.  (If we ever need more than
+2^16 per extra data, it's probably a new tiled API for this?)
+
+TODO: after take 1, consider defining not storing extra data forever?
+
+TODO: tlog-addenda to locate the extra data? -> tlog-
+
+### 3.5.  add-leaf
+
+    POST <base URL>/add-leaf
+
+**Input:**
+
+  - `message`: the message used to compute `tree_leaf.checksum`,
+    base64 encoded (same b64 as C2SP -- TODO fixme, maybe also specify
+    earlier in doc that we always use a particular B64).
+  - `context`: TODO: describe me.
+  - `signature type`: TODO: describe me.
+  - `signature`: TODO: describe me.
+  - `public_key`: public key that can be used to verify the above
+    signature, b64.
+
+**Output on success:**
+
+  - index: 
+
+A submission must not be accepted if `signature` is invalid.
+
+Processing of the add-leaf request may be subject to rate limiting.
+When a public log is configured to allow submissions from anyone, it is
+expected to require an authentication token in HTTP headers as defined
+in Section 4.  A submission may be refused if the submitter has exceeded
+its rate limit.  Adding a leaf typically involves multiple add-leaf
+requests, described further below.  The rate limit is not applied to the
+number of requests, but rather to the number of unique leaves added.
+
+HTTP status 202 Accepted indicates partial success: the log has accepted
+the request, but it is not yet committed to publishing it, e.g, the leaf
+may not be permanently stored and replicated yet.  A submitter should
+(re)send their add-leaf request until observing HTTP status 200 OK.
+
+Status 200 OK means that the log is committed to publishing the leaf,
+and it will be included in the next signed tree head.
+
+Status code 429 Too Many Requests is returned if the submitter is
+exceeding the log's configured rate limits.
+
+**Example:** TODO
+
+## 4.  Rate limiting
+
+TODO: do we want some expirery in tokens, that can be set to 'forever'?
+- motivation would probably be if we can do a convention that's useful
+  in other cases.
+
+Domain-based rate limiting is an optional feature of the protocol, but
+it is expected that a public log that allows submissions from anyone
+will require it.  Using this mechanism is required only for the
+`add-leaf` request, and it is intended to limit the rate at which leaves
+are added to the Merkle tree, by submitter domain.
+
+### 4.1.  Setup
+
+To be allowed to post add-leaf requests to a public log, the submitter
+must do a one-time setup, with these three steps.
+
+  1. Create a new Ed25519 key pair, which we refer to as the rate limit
+     key pair.
+  2. Publish the public key in DNS, as a TXT record under a domain that
+     the submitter controls.  The left most label must be `_sigsum_v1`,
+     e.g., `_sigsum_v1.foo.example.com`.  The contents of the TXT record
+     is the hex-encoded public key.
+  3. Use the private key to sign the target log's public key.  More
+     precisely, the data signed are the 59 octets formed by
+     concatenating the namespace string `sigsum.org/v1/submit-token`, a
+     single NUL character, and the log's public Ed25519 key.
+
+The signature will act as the submit token. Since it's a signature on
+the log's key hash, it is not valid for submission to any other log.
+
+It is strongly recommended that this key pair is different from the one
+used for the leaf signatures to be published by the log, and it may be
+stored on a separate machine with looser security requirements.  There
+is also no need for this key to be long-lived; it can be rotated as
+frequently as desired by just adding and removing corresponding TXT
+records, in accordance with the DNS TTL settings.  One could even
+discard the private key as soon as the needed token has been created.
+
+### 4.2.  Request header
+
+When the submitter is ready to submit an `add-leaf` request to the log,
+it adds a custom HTTP header `sigsum-token` to the request.  The header
+value is the domain on which the rate limit key was registered (without
+the left-most `_sigsum_v1` label, which is implicit), and the
+hex-encoded signature created as above, separated by spaces.  Example:
+
+    sigsum-token: foo.example.com 0b849ed46b71b550d47ae320a8a37401129d71888edcc387b6a604b2fe1579e25479adb0edd1769f9b525d44b843ac0b3527ea12b8d9574676464b2ec6077401
+
+The log will validate this by retrieving the public key by a DNS query
+on the given domain, and check that the token is a valid signature on
+the log's key hash. 
+
+If there are multiple TXT records with public keys in DNS, the log
+should try them all up to an implementation-dependent limit.  We
+recommend that implementations should support at least 10 keys, to
+support key rotation and some flexibility in key management.  If the
+signature is valid for any of those keys it is accepted, and rate limit
+is applied on the domain, e.g., using [the public suffix list][] to
+identify the appropriate "registered domain".
+
+[the public suffix list]: https://publicsuffix.org/list/
+
+### 4.3.  Security considerations
+
+Rate limiting is not intended to protect the log server from arbitrary
+denial of service attacks that overload the log's capacity in terms of
+computational resources or network bandwidth.  It is only intended to
+enable limiting, per domain, of the rate at which leaves are added to
+the append-only Merkle tree.
+
+Similarly to HTTP authorization using basic auth or cookies, the
+submitter must use an encrypted channel for the requests that include
+sigsum's submit token.  E.g., use HTTPS rather than plain HTTP.
+
+The fixed token implies that there is no way to prevent replay attacks.
+There are a couple of reasons that makes this acceptable here:
+
+  * The tokens are visible only to submitter and log, assuming a
+    properly encrypted channel.
+  * Including the target log's key hash in the token means that it will
+    be rejected if sent anywhere else.  So, the log cannot use it for
+    submission to other logs on the submitter's behalf.
+
+If a token is leaked, the remedy is to create a new rate limit key pair
+and token and then delete the DNS record for the old compromised key.
