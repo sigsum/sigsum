@@ -392,7 +392,9 @@ with ongoing work on authentication for the witness protocol.
 
 We need weak deduplication to support the submission process where
 submitter repeats the same sigsum-submit call as long as response
-status is 202.
+status is 202. That is, a request to add an entry that either already
+exists in the log, or is in the process of being added (previous 202
+response), is supposed to return 200 and the index.
 
 Strong deduplication implies that a Sigsum proof for an item with
 index N (including a cosigned checkpoint for size > N) and an
@@ -416,6 +418,11 @@ where the leaf hash may be, and then do a linear or binary search of
 that section of disk storage. When the size of the mapping in RAM
 exceeds some threshold, do a linear merge operation rewriting some or
 all of the files on disk.
+
+Rate limit logic could maybe be tweaked to count not only requests
+that add a new entry, but count all requests where the leaf hash isn't
+found in the map in RAM, but the leaf hash lookup requires access to
+the index on disk.
 
 A large log (say, 2^40 entries) will need about 160 TB storage for
 leaves, and 32 TB each for the level 0 tiles and the deduplication
@@ -451,8 +458,8 @@ configuration is outdated, or a signature with an unauthorized context
 has been made.
 
 The benefits of using such a structured context compared to the
-alternatives are a bit unclear; it can be seens as a middle way
-between these two alternatives:
+alternatives are a bit unclear; it can be seen as a middle way between
+these two alternatives:
 
 1. Use two name/value pairs in the leaf, one for package name, one for
    arch.
