@@ -404,7 +404,7 @@ those two checkpoints. This may be a useful property, however, it
 clearly can't exclude that the item was present elsewhere at an
 earlier time.
 
-To get an indication of the cost of the large index needed for strict
+To get an indication of the cost of the large index needed for strong
 deduplication, consider this implementation strategy (suggested by Per
 Zetterlund):
 
