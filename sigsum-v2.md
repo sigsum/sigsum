@@ -404,6 +404,11 @@ those two checkpoints. This may be a useful property, however, it
 clearly can't exclude that the item was present elsewhere at an
 earlier time.
 
+In case a log does promise strong deduplication, monitors should check
+this. However, this adds monitoring cost, since also monitors need to
+maintain an index of all old entries. And if a monitor alerts that
+some duplicate entries were found, is that actionable?
+
 To get an indication of the cost of the large index needed for strong
 deduplication, consider this implementation strategy (suggested by Per
 Zetterlund):
