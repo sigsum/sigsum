@@ -16,7 +16,7 @@ To support mldsa cosignatures, we need:
 
 3. A way to include such cosignatures in a sigsum proof.
 
-4. Support in tools, primarily, sigsum-submit and sigsum-verify.
+4. Support in tools, primarily sigsum-submit and sigsum-verify.
 
 This proposal sketches what needs to be done in each case.
 
@@ -27,9 +27,21 @@ with mldsa signatures according to tlog-witness@v1.1.0.
 
 We should probably support getting both Ed25519 and mldsa44
 cosignatures in the same response. The log server is configured via a
-policy file with one key per witness (see below on mldsa44 extenstions
-to the policy file), so this means that the listed witnesses would
-have to be grouped by URL.
+policy file with one key per witness-line (see below on mldsa44
+extensions to the policy file). If we make independent requests for
+each configured witness key, and two lines are actually backed by the
+same witness instance with shared "latest seen state", the exchange
+would be something like:
+
+    log -> witness: add-checkpoint request, checkpoint of size 20, old size 10.
+    log <- witness: response with two cosignatures, one used, one ignored
+    log -> witness: add-checkpoint request, checkpoint of size 20, old size 10.
+    log <- witness: conflict, should use old size 20
+    log -> witness: add-checkpoint request, checkpoint of size 20, old size 20.
+    log <- witness: response with two cosignatures, the other one used, one ignored
+
+This is extra work for both log and witness, and could be avoided by
+grouping the witness keys by URL before making the requests.
 
 Returning mldsa cosignatures from the `get-tree-head` endpoint would
 break old clients. We can add a new endpoint `get-tree-head2` or the
