@@ -16,7 +16,8 @@ To support mldsa cosignatures, we need:
 
 3. A way to include such cosignatures in a sigsum proof.
 
-4. Support in tools, primarily sigsum-submit and sigsum-verify.
+4. Support in tools, primarily sigsum-key, sigsum-submit and
+   sigsum-verify.
 
 This proposal sketches what needs to be done in each case.
 
@@ -44,13 +45,17 @@ This is extra work for both log and witness, and could be avoided by
 grouping the witness keys by URL before making the requests.
 
 Returning mldsa cosignatures from the `get-tree-head` endpoint would
-break old clients. We can add a new endpoint `get-tree-head2` or the
+break old clients. We could add a new endpoint `get-tree-head2` or the
 like, with the difference that the last field of a cosignature line
 may be larger, 4840 hex digits for mldsa44 (unclear if it's worth
 switching to bas64 to save 1600 characters). The old endpoint simply
-omits all non-Ed25519 signatures.
+omits all non-Ed25519 signatures. A slightly larger step towards
+sigsum-v2 would be to introduce a new `checkpoint` endpoint,
+compatible with tlog-tiles (without supporting the rest of the tiles
+api at this time).
 
-Key hash can be the raw sha256 hash of the public key.
+To support a checkpoint endpoint, the log server logic would also
+have to be extended to handle witness names.
 
 ## Policy file
 
@@ -64,30 +69,35 @@ It seems desirable to make algorithm explicit when configuring a
 public key. One could have a format like `mldsa44:<base64 pubkey>`,
 but for consistency with tlog-policy, it seems nicer to allow either a
 hex string (for backwards compatibility) or a vkey, with type 0x04 for
-plain old Ed25519 witnesses, and 0x06 for mldsa44. For now, the vkey
-key name would be ignored.
+plain old Ed25519 witnesses, and 0x06 for mldsa44.
 
 A policy file with vkey would obviously be rejected by old tools.
 
 ## Sigsum proof
 
-Define a Sigsum proof `version=3` format, with the only difference
-from version 2 being that the last field on a cosignature line may be
-longer, using same format as `get-tree-head2`.
+Use the tlog-proof format. The information from the `leaf` line in
+current sigsum proof would need to move to the base64-encoded `extra`
+line. This line could contain a version prefix, say
+"sigsum.org/v1/proof-leaf\x00", followed by the leaf keay hash (32
+bytes) and the ed25519 signature (64 bytes).
 
 ## Tooling
 
 The sigsum-verify tool should be updated to support all of version 1,
-2 and 3 of the proof format.
+2 and tlog-proof.
 
 The sigsum-submit tool should support the updated policy format, and
 check if any mldsa keys are listed. If so, it should use the new
-endpoint `get-tree-head2`. Maybe it needs a fallback to old
-`get-tree-head`, e.g., if some but not all of the listed logs support
-`get-tree-head2` and talk to mldsa44-capable witnesses.
+`checkpoint`. Maybe it needs a fallback to old `get-tree-head`, e.g.,
+if some but not all of the listed logs support `checkpoint` and talk
+to mldsa44-capable witnesses. In case there are no mldsa witness
+cosignature, it could produce either the current sigsum proof format,
+or a tlog proof. A reasonable default behavior could be to produce a
+tlog-proof if all witnesses in the policy file were configured using
+vkeys.
 
-It should produce a `version=3` proof only if there are any mldsa44
-signatures in the proof.
+The sigsum-key tool needs to be updated to support mldsa key
+generation, and relevant format conversions.
 
 ## Plumbing
 
@@ -99,5 +109,5 @@ The sigsum-c library would also need some refactoring to support more
 signature algorithms (and underlying Nettle library doesn't yet
 support mldsa at all). I think adaptation of sigsum-c can be postponed
 until sigsum-v2 design is a bit more mature. Maybe some easy changes
-are helpful, e.g., reading a `version=3` proof and ignore all
-non-Ed25519 signatures.
+are helpful, e.g., reading a tlog-proof and ignore all non-Ed25519
+signatures.
