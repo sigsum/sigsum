@@ -67,7 +67,7 @@ So I think that this is a neat feature that lacks a clear usecase.
 In our threat model, the log is not highly trusted. Hence, a
 promise by the log operator to not allow duplicates should not be
 sufficient for any security-related decisions. If we want to rely on
-log deduplication, it ought to be monitored.
+log deduplication, it ought to be monitored (which it can be).
 
 Monitoring for duplicates is somewhat expensive; each monitor that
 wants to do that needs to maintain a complete index. If a monitor
