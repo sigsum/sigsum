@@ -10,16 +10,48 @@ This may also be a nice incremental step towards sigsum-v2.
 
 To support mldsa cosignatures, we need:
 
-1. Support for log-server to collect and publish signatures
+1. Support for log-server to collect and publish signatures.
 
-2. A way to specify mldsa44 pubkeys in a policy file
+2. A way to specify mldsa44 pubkeys in a policy file.
 
 3. A way to include such cosignatures in a sigsum proof.
 
 4. Support in tools, primarily sigsum-key, sigsum-submit and
    sigsum-verify.
 
-This proposal sketches what needs to be done in each case.
+This proposal suggests addressing these as follows:
+
+1. Add a `/checkpoint` endpoint to log-go, as specified by
+   [tlog-tiles][] (but without support for the other parts of the
+   tiles api). A checkpoint can carry mldsa cosignatures, and it
+   allows both ed25519 and mldsa signatures for the same witness name.
+
+2. Use [tlog-policy][]. For backwards compatibility, adopt the
+   extension that raw hex Ed25519 public keys can be used as an
+   alternative to vkeys. A witness using multiple keys would be
+   represented as one witness line per key. See [hybrid notes][] for
+   how to use this to get the effect of hybrid signatures.
+
+3. Adopt [tlog-proof][] as an alternative proof format. The `extra`
+   line is used to provide the submitter's key hash and signature, in
+   the form of a the prefix "sigsum.org/v1/proof-leaf\x00", followed
+   by the leaf key hash (32 bytes) and the ed25519 signature (64
+   bytes), and the resulting data then base64-encoded.
+
+4. Detailed tool and ui changes are not nailed down in this proposal.
+   One important questions is how the sigsum-submit tool decides if it
+   should use the `/get-tree-head` endpoint or the new `/checkpoint`,
+   and which output to emit, old `version=2` [sigsum proof][], or
+   tlog-proof.
+
+These choices and some implementation details are discussed in more
+detail below.
+
+[tlog-tiles]: https://c2sp.org/tlog-tiles@v1.0.0
+[tlog-policy]: https://c2sp.org/tlog-policy
+[tlog-proof]: https://c2sp.org/tlog-proof
+[sigsum proof]: https://git.glasklar.is/sigsum/core/sigsum-go/-/blob/main/doc/sigsum-proof.md
+[hybrid notes]: ../archive/2026-08-26-hybrid-sigs-in-sigsum.md
 
 ## Log server protocol
 
@@ -48,7 +80,7 @@ Returning mldsa cosignatures from the `get-tree-head` endpoint would
 break old clients. We could add a new endpoint `get-tree-head2` or the
 like, with the difference that the last field of a cosignature line
 may be larger, 4840 hex digits for mldsa44 (unclear if it's worth
-switching to bas64 to save 1600 characters). The old endpoint simply
+switching to base64 to save 1600 characters). The old endpoint simply
 omits all non-Ed25519 signatures. A slightly larger step towards
 sigsum-v2 would be to introduce a new `checkpoint` endpoint,
 compatible with tlog-tiles (without supporting the rest of the tiles
@@ -62,8 +94,7 @@ have to be extended to handle witness names.
 For each mldsa44 key used by a witness, there should be a separate
 witness line with a name for that key. To get the effect of a hydrid
 signature scheme, one can define groups combining Ed25519 and mldsa44
-keys in various ways, see
-[hybrid notes](../archive/2026-08-26-hybrid-sigs-in-sigsum.md).
+keys in various ways, see [hybrid notes][].
 
 It seems desirable to make algorithm explicit when configuring a
 public key. One could have a format like `mldsa44:<base64 pubkey>`,
@@ -78,7 +109,7 @@ A policy file with vkey would obviously be rejected by old tools.
 Use the tlog-proof format. The information from the `leaf` line in
 current sigsum proof would need to move to the base64-encoded `extra`
 line. This line could contain a version prefix, say
-"sigsum.org/v1/proof-leaf\x00", followed by the leaf keay hash (32
+"sigsum.org/v1/proof-leaf\x00", followed by the leaf key hash (32
 bytes) and the ed25519 signature (64 bytes).
 
 ## Tooling
