@@ -51,7 +51,7 @@
       - wrote spec for the text format used
     - learning how to deploy things :o)
       - want to have a testing server for next week
-    - ex: http://wit26n0.testing.archive.rip/ (should bastion? EDIT: see below)
+    - ex: http://wit26n0.testing.archive.rip/ (should bastion? EDIT: see below)
       - rgdd: about bastion, do you mean having a bastion for a witness or for a log?
         - tta: I did not think about it yet
         - rgdd: quick summary: the current thinking is that the bastion is a property of a log
@@ -144,7 +144,7 @@
 ## Other
 
   - warpfork is confessedly sketching what pkgman<3tlogs looks like.
-  - tta: build https://tsa.testing.archive.rip/ last week
+  - tta: build https://tsa.testing.archive.rip/ last week
     - made me think about rfc3161+tlog use cases? (dunno, won't try anytime soon tho)
     - there's a signed "serial" field in .tsr certs that we can hack
     - you can have a "CA for time" the TSA, you give a hash and get back a signature
