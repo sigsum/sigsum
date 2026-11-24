@@ -72,7 +72,7 @@ A lot about boot modes, SDP and flashing:
 https://github.com/usbarmory/usbarmory/wiki/Boot-Modes-(Mk-II)
 
 
-# Where the tamago-example does not run very well
+# Running the tamago-example
 
 I also tried building and launching https://github.com/usbarmory/tamago-example
 (`make imx`). Again over SDP using `armory-boot-usb -i example.imx`. Something
@@ -81,7 +81,7 @@ worked, partly.
 After armory-boot-usb finished, the white and blue leds turned on (or got
 brighter, not flashing), and a new network interface using cdc_ether appeared
 on my laptop (running `dmesg -w`). Bringing it up according to the repo's
-README:
+README (here using the specific MAC-based altname of the specimen I'm testing):
 
 ```
 ip addr add 10.0.0.2/24 dev enx1a5589a26942
@@ -89,13 +89,23 @@ ip link set up dev enx1a5589a26942
 ```
 
 I can now ping the Armory over the USB-cable at `10.0.0.1`, and also ssh to
-port 22. But very soon it just freezes and stops responding on the network.
-Actually, trying this again, it often freezes before I see anything over ssh,
-and often also after only 1 or 2 ping-roundtrips.
+port 22.
 
-I also tried plugging the Armory's RJ45 into my laptop (by way of a
-RJ45-USB-dongle). Bringing up 10.0.0.2 on that interface on the laptop and
-trying to access the Armory at .1 resulted in the same freezing.
+Beware of your OS/networking setup deciding it wants manage the new interface
+automatically, and suddenly removing the manually added IP from it. For
+`NetworkManager`, the following can be placed in a file
+`/etc/NetworkManager/conf.d/99-unmanaged-devices.conf`:
+```
+[device-usbarmory-unmanaged]
+match-device=mac:1A:55:89:A2:69:42
+managed=0
+```
+Then `systemctl restart NetworkManager`, and when the interface appears run
+`nmcli device status` to verify STATE==unmanaged.
+
+I also tried plugging the Armory's RJ45 into my laptop, by way of a
+RJ45-USB-dongle. After bringing up 10.0.0.2 on the dongle interface, the Armory
+can be now accessed in the same way, but over the TP-cable.
 
 I also learned that it should be possible to write a .imx directly to the eMMC
 at offset 1024, and to have the firmware boot it. After launching
