@@ -96,9 +96,8 @@ automatically, and suddenly removing the manually added IP from it. For
 `NetworkManager`, the following can be placed in a file
 `/etc/NetworkManager/conf.d/99-unmanaged-devices.conf`:
 ```
-[device-usbarmory-unmanaged]
-match-device=mac:1A:55:89:A2:69:42
-managed=0
+[keyfile]
+unmanaged-devices=mac:1A:55:89:A2:69:42
 ```
 Then `systemctl restart NetworkManager`, and when the interface appears run
 `nmcli device status` to verify STATE==unmanaged.
