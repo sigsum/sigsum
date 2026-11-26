@@ -55,14 +55,13 @@ dd if=usbarmory-mark-two-emmc-debian_trixie-base_image-20260904.raw of=/dev/SDZ 
 ```
 
 Then push the boot switch towards USB-C, for eMMC-boot ("towards usb-**C** for
-emm-**C**"), and power cycle the Armory. It does seem to boot something up, and
+emm-**C**"), and power-cycle the Armory. It does seem to boot something up, and
 then the blue/white leds flicker a little (they are apparently configured to
 reflect CPU load average).
 
 But, according to Andrej Rosano, the Debian image does not support this
 variant's LAN-interface. I'm guessing USB-ethernet is only supported on the
-USB-C plug of other variants (if at all), not on the receptacle of this
-variant.
+USB-C plug of other variants, not on the receptacle of this variant.
 
 Some references:
 - https://github.com/usbarmory/usbarmory-debian-base_image
@@ -106,19 +105,23 @@ I also tried plugging the Armory's RJ45 into my laptop, by way of a
 RJ45-USB-dongle. After bringing up 10.0.0.2 on the dongle interface, the Armory
 can be now accessed in the same way, but over the TP-cable.
 
-I also learned that it should be possible to write a .imx directly to the eMMC
-at offset 1024, and to have the firmware boot it. After launching
-armory-ums.imx to access the eMMC from the laptop as mass storage:
+I also learnt that it is possible to write a .imx binary directly to the eMMC
+at offset 1024, and to have the firmware boot it. After switching to SDP-boot
+mode, power-cycling, and launching armory-ums.imx to access the eMMC from the
+laptop as mass storage, the example.imx can be written like this:
 
 ```
 dd if=example.imx of=/dev/SDZ bs=512 seek=2 conv=fsync
 ```
 
-But this did not seem to boot the tamago-example (which had bright blue/white
-leds, stable orange LAN-led). Was there something leftover from my attempt to
-boot the Debian image? But I did first write some MBs of /dev/zero to offset 0
-on the eMMC.
+Then switch over to eMMC-boot mode and power-cycle. But there is a quirk in
+this mode. To be able to boot the Armory from eMMC when powering over USB, it
+must not be powered over a straight USB-C cable, because then USB Power
+Delivery (PD) will interfere; in eMMC mode, the Armory also tries to deliver
+powered on its USB receptacle. It must instead be plugged in to (powered from)
+a USB-A port. Use a USB-C to USB-A adapter.
 
+If powering using PoE (only!), then eMMC boot just works.
 
 # Vitrum on the Armory LAN-variant?
 
